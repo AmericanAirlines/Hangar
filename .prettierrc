@@ -1,0 +1,24 @@
+{
+  "arrowParens": "always",
+  "semi": true,
+  "printWidth": 100,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "useTabs": false,
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": "packages/api/src/migrations/*.ts",
+      "options": {
+        "printWidth": 99999
+      }
+    },
+    {
+      "files": "**/*.md",
+      "options": {
+        "printWidth": 99999
+      }
+    }
+  ]
+}

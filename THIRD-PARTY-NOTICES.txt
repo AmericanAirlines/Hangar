@@ -1,0 +1,1 @@
+With the exception of dependencies documented within package.json and code written by those listed in Authors.md, this project is entirely composed of custom code. If 3rd party code is utilized in the future, attribution will be added here.
