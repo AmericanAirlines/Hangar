@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "moduleResolution": "node",
+        "outDir": "../dist",
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "noEmitOnError": true,
+        "sourceMap": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["esnext", "esnext.asynciterable"],
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
+    },
+    "include": [
+        "./**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "./**/*.test.ts"
+    ]
+}

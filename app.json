@@ -1,0 +1,7 @@
+{
+  "name": "American Airlines Hangar: Hackathon Sponsor Toolkit",
+  "description": "One stop for all the tools hackathon sponsors need",
+  "repository": "https://github.com/AmericanAirlines/Hangar",
+  "logo": "https://avatars2.githubusercontent.com/u/28813424?s=200&v=4",
+  "keywords": ["node", "express", "typescript", "jest", "react", "American Airlines", "hackathon sponsor"]
+}
