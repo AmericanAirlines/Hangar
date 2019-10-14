@@ -1,5 +1,5 @@
 import { KnownBlock, Block } from '@slack/types';
-import { registerTeamCallbackId } from '../constants';
+import { registerTeamActionId } from '../constants';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -28,7 +28,7 @@ const blocks: (KnownBlock | Block)[] = [
         type: 'plain_text',
         text: 'Register',
       },
-      action_id: registerTeamCallbackId,
+      action_id: registerTeamActionId,
     },
   },
 ];

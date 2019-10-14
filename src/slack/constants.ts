@@ -1,1 +1,1 @@
-export const registerTeamCallbackId = 'registerTeam';
+export const registerTeamActionId = 'registerTeam';
