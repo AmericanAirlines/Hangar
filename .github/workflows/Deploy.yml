@@ -3,6 +3,7 @@ name: Deploy
 on:
   push:
     branches: 
+      - master
       # Deploy on hack branches (keeps env clean and prevents data loss on deploy)
       - hack/* 
 
