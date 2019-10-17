@@ -1,4 +1,4 @@
-![](./workflows/Build/badge.svg)
+![](./workflows?branch=master/Build/badge.svg)
 ![](./workflows/Deploy/badge.svg)
 
 # Hangar
