@@ -40,6 +40,6 @@ jobs:
         heroku config:set SLACK_SIGNING_SECRET=${{ secrets.SLACK_SIGNING_SECRET }}
         heroku config:set SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
     - name: deploy
-      run: git push heroku master
+      run: git push heroku HEAD:master
 
     
