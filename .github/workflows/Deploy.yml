@@ -35,7 +35,7 @@ jobs:
         heroku config:set SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
     - name: deploy
       run: |
-      git remote add heroku https://:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.APP_NAME }}.git
-      git push heroku HEAD:master
+        git remote add heroku https://:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.APP_NAME }}.git
+        git push heroku HEAD:master
 
     
