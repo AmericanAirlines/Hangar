@@ -13,12 +13,6 @@ jobs:
     - uses: actions/checkout@v1
     - name: Use Heroku CLI
       uses: actions/heroku@master
-    - name: login
-      uses: actions/heroku@master
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      with:
-        args: login
     - name: create app if it doesn't exist
       uses: actions/heroku@master
       continue-on-error: true
@@ -42,9 +36,7 @@ jobs:
         heroku config:set SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }} -a ${{ secrets.APP_NAME }}
     - name: deploy
       run: |
-        heroku git:remote -a ${{ secrets.APP_NAME }}
+        git remote add https://${{ secrets.HEROKU_EMAIL }}:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.APP_NAME }}.git
         git push heroku HEAD:master
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
     
