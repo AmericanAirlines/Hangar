@@ -41,8 +41,8 @@ jobs:
         heroku config:set SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
     - name: deploy
       run: |
-      git config --global user.name ""
-      git config --global user.password ${{ secrets.HEROKU_API_KEY }}
-      git push heroku HEAD:master
+        git config --global user.name ""
+        git config --global user.password ${{ secrets.HEROKU_API_KEY }}
+        git push heroku HEAD:master
 
     
