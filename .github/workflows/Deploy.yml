@@ -27,12 +27,6 @@ jobs:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
         args: addons:create heroku-postgresql:hobby-dev --as TYPEORM_URL --name ${{ secrets.APP_NAME }}-postgres
-    - name: add remote
-      uses: actions/heroku@master
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      with:
-        args: git:remote -a ${{ secrets.APP_NAME }}
     - name: set env variables
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
@@ -41,8 +35,7 @@ jobs:
         heroku config:set SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
     - name: deploy
       run: |
-      git config --global user.name ""
-      git config --global user.password ${{ secrets.HEROKU_API_KEY }}
+      git remote add heroku https://:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.APP_NAME }}.git
       git push heroku HEAD:master
 
     
