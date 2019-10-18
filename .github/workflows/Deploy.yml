@@ -10,8 +10,9 @@ jobs:
   release:
    runs-on: ubuntu-latest
    steps:
+    - uses: actions/checkout@v1
     - name: Use Heroku CLI
-    - uses: actions/heroku@master
+      uses: actions/heroku@master
     - name: login
       uses: actions/heroku@master
       env:
