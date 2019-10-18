@@ -37,7 +37,7 @@ jobs:
     - name: deploy
       run: |
         heroku authorizations:create -e 300
-        heroku git:remote -a ${{ secrets.APP_NAME }}
+        heroku git:remote --ssh-git -a ${{ secrets.APP_NAME }}
         git push heroku HEAD:master
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
