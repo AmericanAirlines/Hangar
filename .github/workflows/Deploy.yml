@@ -30,12 +30,16 @@ jobs:
     - name: set env variables
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP: ${{ secrets.APP_NAME }}
       run: |
         heroku config:set SLACK_SIGNING_SECRET=${{ secrets.SLACK_SIGNING_SECRET }} -a ${{ secrets.APP_NAME }}
         heroku config:set SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }} -a ${{ secrets.APP_NAME }}
     - name: deploy
       run: |
+        heroku login
         git remote add heroku https://:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.APP_NAME }}.git
         git push heroku HEAD:master
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
     
