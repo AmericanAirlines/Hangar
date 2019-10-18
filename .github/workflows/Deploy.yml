@@ -3,7 +3,7 @@ name: Deploy
 on:
   push:
     branches: 
-      - migration/heroku-cli-deploy
+      - migration/heroku-cli-deployment
       - master
 
 jobs:
