@@ -3,30 +3,48 @@ name: Deploy
 on:
   push:
     branches: 
+      - migration/heroku-cli-deploy
       - master
-      # Deploy on hack branches (keeps env clean and prevents data loss on deploy)
-      - hack/* 
 
 jobs:
   release:
    runs-on: ubuntu-latest
    steps:
-    - uses: actions/checkout@master
+    - name: Use Heroku CLI
+    - uses: actions/heroku@master
     - name: login
       uses: actions/heroku@master
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
-        args: container:login
-    - name: push
+        args: login
+    - name: create app if it doesn't exist
+      uses: actions/heroku@master
+      continue-on-error: true
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      with:
+        args: create ${{ secrets.APP_NAME }}
+    - name: create addons if they doesn't exist
+      uses: actions/heroku@master
+      continue-on-error: true
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      with:
+        args: addons:create heroku-postgresql:hobby-dev --as TYPEORM_URL --name ${{ secrets.APP_NAME }}-postgres
+    - name: add remote
       uses: actions/heroku@master
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       with:
-        args: container:push -a american-hangar web
-    - name: release
-      uses: actions/heroku@master
+        args: git:remote -a ${{ secrets.APP_NAME }}
+    - name: set env variables
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-      with:
-        args: container:release -a american-hangar web
+      run: |
+        heroku config:set SLACK_SIGNING_SECRET=${{ secrets.SLACK_SIGNING_SECRET }}
+        heroku config:set SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
+    - name: deploy
+      run: git push heroku master
+
+    
