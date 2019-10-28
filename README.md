@@ -25,6 +25,10 @@ When you're ready to deploy your app, simply change the URL for the `Deploy to H
 
 <!-- After the front end display for help queue is created, describe overriding the template here -->
 
+## CI/CD
+This project uses GitHub Actions for Continuous Integration and leverages Heroku for Continuous Deployment.
+
+If you fork this project, deploy your app using the `Deploy to Heroku` button above, then navigate to the `Deploy` tab of your app in Heroku and configure Continuous Deployment as relevant for your app.
 
 # Contributing
 Interested in contributing to the project? Check out our [Contributing Guidelines](./.github/CONTRIBUTING.md).
