@@ -8,11 +8,13 @@
   "env": {
     "SLACK_SIGNING_SECRET": {
       "description": "Your Slack App's signing secret",
-      "value": ""
+      "value": "",
+      "required": true
     },
     "SLACK_BOT_TOKEN": {
-      "description": "Your Slack App's signing secret",
-      "value": "xoxb- ..."
+      "description": "Your Slack Bot's token",
+      "value": "xoxb- ...",
+      "required": true
     }
   }
 }
