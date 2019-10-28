@@ -1,7 +1,7 @@
 # Slack App Setup
-To get your app up and running, you'll need to follow two sets of instructions: one before you create your Hangar and one after.
+To get your app up and running, you'll need to follow two sets of instructions: one before you deploy your Hangar app and one after it's up and running.
 
-## Getting Started
+## Initial Setup
 Before you deploy your Hangar, follow these steps to generate secrets needed for deployment:
 - Create an app on the [Slack API Site](api.slack.com/apps)
 - Using the sidebar, navigate to the "_Bot Users_" and enable your bot
@@ -11,7 +11,9 @@ Before you deploy your Hangar, follow these steps to generate secrets needed for
 - Using the sidebar, navigate to the "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and write it down somewhere safe
 
-## After Starting Hangar
+  At this point, you can deploy and start your Hangar app. Once you're done, complete the section below to complete your configuration.
+
+## After Deploying Hangar
 Once your Hangar app is up and running, use it's URL for the following steps:
 - Using the sidebar, navigate to "_Interactive Components_" and enable them
   - For the `Request URL` field, use your Hangar app's URL and then append `/slack/events`
