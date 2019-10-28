@@ -13,7 +13,7 @@
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "lint:staged": "lint-staged",
-    "checkstyle": "prettier -l src/**/*.ts",
+    "checkstyle": "prettier -l \"src/**/*.ts\"",
     "checkstyle:fix": "npm run checkstyle -- --write",
     "test": "jest",
     "test:changed": "jest -o"
