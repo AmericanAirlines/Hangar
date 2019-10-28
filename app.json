@@ -4,5 +4,15 @@
   "repository": "https://github.com/AmericanAirlines/Hangar",
   "logo": "https://avatars2.githubusercontent.com/u/28813424?s=200&v=4",
   "keywords": ["node", "express", "typescript", "jest", "react", "American Airlines", "hackathon sponsor"],
-  "image": "heroku/heroku"
+  "image": "heroku/heroku",
+  "env": {
+    "SLACK_SIGNING_SECRET": {
+      "description": "Your Slack App's signing secret",
+      "value": ""
+    },
+    "SLACK_BOT_TOKEN": {
+      "description": "Your Slack App's signing secret",
+      "value": "xoxb- ..."
+    }
+  }
 }
