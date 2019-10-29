@@ -3,6 +3,7 @@ import express from 'express';
 import { createConnection, getConnectionOptions } from 'typeorm';
 import path from 'path';
 import { WebClient } from '@slack/web-api';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { slackApp } from './slack';
 import { apiApp } from './api';
 import logger from './logger';
@@ -22,10 +23,12 @@ const init = async (): Promise<void> => {
     const options = await getConnectionOptions();
     await createConnection({
       ...options,
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
       entities: [path.join(__dirname, 'models/*')],
       migrations: [path.join(__dirname, '/migration/*')],
       migrationsRun: true,
-    });
+    } as PostgresConnectionOptions);
   }
 
   try {
