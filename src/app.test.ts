@@ -1,7 +1,7 @@
 import 'jest';
 import supertest from 'supertest';
 
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
 describe('GET /', () => {
   beforeAll(() => {

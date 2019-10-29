@@ -19,6 +19,7 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.ts'] }],
     'max-len': [0],
     'import/prefer-default-export': ['off'],
+    'object-curly-newline': ['off'],
   },
   settings: {
     'import/resolver': {
@@ -27,4 +28,12 @@ module.exports = {
       },
     },
   },
+  overrides: [
+    {
+      files: ['src/migration/**/*.ts'],
+      rules: {
+        'class-methods-use-this': 'off',
+      },
+    },
+  ],
 };
