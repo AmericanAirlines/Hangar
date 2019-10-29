@@ -1,0 +1,10 @@
+{
+  "type": "postgres",
+  "url": "postgres://localhost:5432/hangar",
+  "entities": ["src/models/**/*.ts"],
+  "migrations": ["src/migration/**/*.ts"],
+  "cli": {
+    "entitiesDir": "src/models",
+    "migrationsDir": "src/migration"
+  }
+}
