@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import app from './app';
 import logger from './logger';
 

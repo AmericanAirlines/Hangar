@@ -16,7 +16,8 @@
     "checkstyle": "prettier -l \"src/**/*.ts\"",
     "checkstyle:fix": "npm run checkstyle -- --write",
     "test": "jest",
-    "test:changed": "jest -o"
+    "test:changed": "jest -o",
+    "typeorm": "ts-node --compiler-options \"{\\\"experimentalDecorators\\\": true, \\\"emitDecoratorMetadata\\\": true}\" ./node_modules/typeorm/cli.js"
   },
   "repository": {
     "type": "git",
@@ -62,6 +63,9 @@
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
+    "pg": "^7.12.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.19",
     "typescript": "^3.3.3333",
     "winston": "^3.2.1"
   },
@@ -86,6 +90,7 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^1.18.2",
     "supertest": "^4.0.2",
-    "ts-jest": "^24.0.0"
+    "ts-jest": "^24.0.0",
+    "ts-node": "^8.4.1"
   }
 }
