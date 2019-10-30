@@ -18,6 +18,7 @@ export const blocks: KnownBlock[] = [
   },
   {
     type: 'input',
+    optional: true,
     block_id: registerTeamViewConstants.fields.teamMembers,
     label: {
       type: 'plain_text',
@@ -111,13 +112,20 @@ export const registerTeamView: View = {
   blocks,
 };
 
-export function registeredTeamSummary(registeringUser: string, teamName: string, tableNumber: string, projectDescription: string): KnownBlock[] {
+export function registeredTeamSummary(
+  registeringUser: string,
+  teamMembers: string[],
+  teamName: string,
+  tableNumber: string,
+  projectDescription: string,
+): KnownBlock[] {
+  const userString = teamMembers.length === 1 ? 'You have' : `<@${registeringUser}> has`;
   return [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `<@${registeringUser}> has registered your team for sponsor judging. Our team will stop by during judging to see your hack. Best of luck and see you soon!
+        text: `${userString} registered your team for sponsor judging. Our team will stop by during judging to see your hack. Best of luck and see you soon!
 
 *Team Name*: ${teamName}
 *Table Number*: ${tableNumber}

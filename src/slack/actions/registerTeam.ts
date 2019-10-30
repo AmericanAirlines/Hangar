@@ -59,8 +59,8 @@ function register(bolt: App): void {
   bolt.view<ViewSubmitAction>(registerTeamViewConstants.viewId, async ({ ack, context, view, body }) => {
     const registeringUser = body.user.id;
 
-    const teamMembers = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect');
-    const allTeamMembers = Array.from(new Set([...teamMembers, registeringUser]));
+    const teamMembers = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect') || [];
+    const allTeamMembers = Array.from(new Set([registeringUser, ...teamMembers]));
 
     const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
     const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
@@ -93,15 +93,17 @@ function register(bolt: App): void {
         token: context.botToken,
         channel: dm.channel.id,
         text: '',
-        blocks: registeredTeamSummary(registeringUser, teamName, tableNumber, projectDescription),
+        blocks: registeredTeamSummary(registeringUser, allTeamMembers, teamName, tableNumber, projectDescription),
       });
     } catch (err) {
+      // TODO: Determine a more appropriate error to share with the user
       logger.error('Error registering team: ', err);
       const dm = (await bolt.client.conversations.open({
         token: context.botToken,
         users: registeringUser,
       })) as DmOpenResult;
 
+      const formattedTeamMembers = allTeamMembers.map((member) => `<@${member}>`);
       await bolt.client.chat.postMessage({
         token: context.botToken,
         channel: dm.channel.id,
@@ -111,9 +113,12 @@ To help with resubmitting, here's the info you tried to submit:
 Team Name: ${teamName}
 TableNumber: ${tableNumber}
 Project Description: ${projectDescription}
+Team Members: ${formattedTeamMembers.join(', ')}
 
 Here's what went wrong, it may be helpful (but probably not):
+\`\`\`
 ${JSON.stringify(err, null, 2)}
+\`\`\`
 `,
       });
     }

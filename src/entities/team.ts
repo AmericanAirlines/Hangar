@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
 // TODO: Enforce only one team registered per person
-// TODO: Enforce uniqueness of table number
 @Entity()
 export class Team extends BaseEntity {
   constructor(name: string, tableNumber: string, projectDescription: string, members?: string[]) {

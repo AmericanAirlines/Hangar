@@ -33,6 +33,7 @@ module.exports = {
       files: ['src/migration/**/*.ts'],
       rules: {
         'class-methods-use-this': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
       },
     },
   ],

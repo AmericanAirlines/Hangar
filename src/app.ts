@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import { createConnection, getConnectionOptions } from 'typeorm';
+import { createConnection, getConnectionOptions, ConnectionOptions } from 'typeorm';
 import path from 'path';
 import { WebClient } from '@slack/web-api';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
@@ -20,11 +20,12 @@ export default app;
 
 const init = async (): Promise<void> => {
   if (process.env.NODE_ENV !== 'test') {
-    const options = await getConnectionOptions();
+    // Pull connection options from ormconfig.json
+    const options: ConnectionOptions = await getConnectionOptions();
+    const url = process.env.DATABASE_URL || (options as PostgresConnectionOptions).url;
     await createConnection({
       ...options,
-      type: 'postgres',
-      url: process.env.DATABASE_URL,
+      url,
       entities: [path.join(__dirname, 'entities/*')],
       migrations: [path.join(__dirname, '/migration/*')],
       migrationsRun: true,
