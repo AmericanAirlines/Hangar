@@ -1,5 +1,6 @@
 import { KnownBlock, View } from '@slack/types';
 import { registerTeamViewConstants } from '../constants';
+import openSourceFooter from './openSourceFooter';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -37,19 +38,31 @@ export const blocks: KnownBlock[] = [
     element: {
       action_id: registerTeamViewConstants.fields.teamName,
       type: 'plain_text_input',
+      placeholder: {
+        type: 'plain_text',
+        text: '404 - Name not found',
+      },
     },
     label: {
       type: 'plain_text',
-      text: "What's your team name?",
+      text: "What's your team/app name?",
       emoji: false,
     },
   },
   {
     type: 'input',
     block_id: registerTeamViewConstants.fields.tableNumber,
+    hint: {
+      type: 'plain_text',
+      text: "Make sure your table number is correct or we won't be able to find you!",
+    },
     element: {
       action_id: registerTeamViewConstants.fields.tableNumber,
       type: 'plain_text_input',
+      placeholder: {
+        type: 'plain_text',
+        text: 'e.g., 42',
+      },
     },
     label: {
       type: 'plain_text',
@@ -64,6 +77,10 @@ export const blocks: KnownBlock[] = [
       action_id: registerTeamViewConstants.fields.projectDescription,
       type: 'plain_text_input',
       multiline: true,
+      placeholder: {
+        type: 'plain_text',
+        text: 'What does your project do? How will make a difference? What technologies are used?',
+      },
     },
     label: {
       type: 'plain_text',
@@ -93,3 +110,21 @@ export const registerTeamView: View = {
   callback_id: registerTeamViewConstants.viewId,
   blocks,
 };
+
+export function registeredTeamSummary(registeringUser: string, teamName: string, tableNumber: string, projectDescription: string): KnownBlock[] {
+  return [
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: `<@${registeringUser}> has registered your team for sponsor judging. Our team will stop by during judging to see your hack. Best of luck and see you soon!
+
+*Team Name*: ${teamName}
+*Table Number*: ${tableNumber}
+*Project Description*: ${projectDescription}
+        `,
+      },
+    },
+    openSourceFooter,
+  ];
+}

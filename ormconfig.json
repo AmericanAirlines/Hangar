@@ -1,8 +1,9 @@
 {
-  "entities": ["src/models/**/*.ts"],
+  "type": "postgres",
+  "entities": ["src/entities/**/*.ts"],
   "migrations": ["src/migration/**/*.ts"],
   "cli": {
-    "entitiesDir": "src/models",
+    "entitiesDir": "src/entities",
     "migrationsDir": "src/migration"
   }
 }

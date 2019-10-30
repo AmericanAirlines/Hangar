@@ -25,7 +25,7 @@ const init = async (): Promise<void> => {
       ...options,
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [path.join(__dirname, 'models/*')],
+      entities: [path.join(__dirname, 'entities/*')],
       migrations: [path.join(__dirname, '/migration/*')],
       migrationsRun: true,
     } as PostgresConnectionOptions);

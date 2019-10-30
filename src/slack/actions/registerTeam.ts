@@ -1,11 +1,13 @@
-import { App, BlockAction, ViewSubmitAction } from '@slack/bolt';
+import { App, BlockAction, ViewSubmitAction, ViewOutput, RespondArguments } from '@slack/bolt';
 import { WebAPICallResult } from '@slack/web-api';
+import { isNumber } from 'util';
 import { registerTeamActionId, registerTeamViewConstants } from '../constants';
-import { registerTeamView } from '../blocks/registerTeam';
+import { registerTeamView, registeredTeamSummary } from '../blocks/registerTeam';
 import logger from '../../logger';
+import { Team } from '../../entities/team';
 
 // Ignore snake_case types from @slack/bolt
-/* eslint-disable @typescript-eslint/camelcase */
+/* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */
 
 interface DmOpenResult extends WebAPICallResult {
   channel: {
@@ -27,6 +29,19 @@ interface ViewSubmitState {
   values: { [actionId: string]: ViewSubmitStateValues };
 }
 
+function retrieveViewValuesForField(view: ViewOutput, actionId: string, type: 'multiUsersSelect' | 'plainTextInput'): string | string[] {
+  const { values } = view.state as ViewSubmitState;
+  const blockData = values[actionId][actionId];
+  switch (type) {
+    case 'multiUsersSelect':
+      return blockData.selected_users;
+    case 'plainTextInput':
+      return blockData.value;
+    default:
+      return null;
+  }
+}
+
 function register(bolt: App): void {
   bolt.action<BlockAction>({ action_id: registerTeamActionId }, async ({ body, ack, context }) => {
     ack();
@@ -41,31 +56,66 @@ function register(bolt: App): void {
     }
   });
 
-  bolt.view<ViewSubmitAction>(registerTeamViewConstants.viewId, async ({
-    ack, context, view, body,
-  }) => {
-    // TODO: Validate that users aren't already on a team
-    // TODO: validate that table number hasn't already been used
+  bolt.view<ViewSubmitAction>(registerTeamViewConstants.viewId, async ({ ack, context, view, body }) => {
+    const registeringUser = body.user.id;
+
+    const teamMembers = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect');
+    const allTeamMembers = Array.from(new Set([...teamMembers, registeringUser]));
+
+    const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
+    const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
+    const tableNumber = retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput') as string;
+
+    if (!isNumber(+tableNumber)) {
+      // This is a hacky workaround until this issue is closed: https://github.com/slackapi/bolt/issues/305
+      const error: any = {
+        response_action: 'errors',
+        errors: {
+          [registerTeamViewConstants.fields.tableNumber]: 'Table number must be a valid number',
+        },
+      };
+      ack(error as RespondArguments);
+      return;
+    }
+
     ack();
+
     try {
-      const { values } = view.state as ViewSubmitState;
-      const teamMembersBlock = values[registerTeamViewConstants.fields.teamMembers];
-      const teamMembersField = teamMembersBlock[registerTeamViewConstants.fields.teamMembers];
-      const teamMembers = new Set([...teamMembersField.selected_users, body.user.id]);
-      logger.info(JSON.stringify([...teamMembersField.selected_users, body.user.id]));
+      const team = new Team(teamName, tableNumber, projectDescription, allTeamMembers);
+      await team.save();
 
       const dm = (await bolt.client.conversations.open({
         token: context.botToken,
-        users: Array.from(teamMembers).join(','),
+        users: allTeamMembers.join(','),
       })) as DmOpenResult;
 
       await bolt.client.chat.postMessage({
         token: context.botToken,
         channel: dm.channel.id,
-        text: "Team registered successfully! We'll be around to your table sometime after judging starts",
+        text: '',
+        blocks: registeredTeamSummary(registeringUser, teamName, tableNumber, projectDescription),
       });
     } catch (err) {
       logger.error('Error registering team: ', err);
+      const dm = (await bolt.client.conversations.open({
+        token: context.botToken,
+        users: registeringUser,
+      })) as DmOpenResult;
+
+      await bolt.client.chat.postMessage({
+        token: context.botToken,
+        channel: dm.channel.id,
+        text: `:warning: Something went wrong while registering your team... come chat with our team for help.
+
+To help with resubmitting, here's the info you tried to submit:
+Team Name: ${teamName}
+TableNumber: ${tableNumber}
+Project Description: ${projectDescription}
+
+Here's what went wrong, it may be helpful (but probably not):
+${JSON.stringify(err, null, 2)}
+`,
+      });
     }
   });
 }

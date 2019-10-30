@@ -30,5 +30,8 @@ This project uses GitHub Actions for Continuous Integration and leverages Heroku
 
 If you fork this project, deploy your app using the `Deploy to Heroku` button above, then navigate to the `Deploy` tab of your app in Heroku and configure Continuous Deployment as relevant for your app.
 
+# Local Development
+Hangar uses Postgres, so you'll need to set it up on your machine, create a database (we suggest `hangar`, if you chose something else make sure to update the value in `.env`), and then run the app.
+
 # Contributing
 Interested in contributing to the project? Check out our [Contributing Guidelines](./.github/CONTRIBUTING.md).

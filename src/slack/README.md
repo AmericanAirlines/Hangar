@@ -15,7 +15,6 @@ Before you deploy your Hangar, follow these steps to generate secrets needed for
 
 ## After Deploying Hangar
 Once your Hangar app is up and running, use it's URL for the following steps:
-- Using the sidebar, naviate to "__"
 - Using the sidebar, navigate to "_Interactive Components_" and enable them
   - For the `Request URL` field, use your Hangar app's URL and then append `/slack/events`
 - Using the sidebar, navigate to "_Event Subscriptions_" and enable them
