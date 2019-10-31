@@ -64,9 +64,9 @@ function register(bolt: App): void {
 
     const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
     const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
-    const tableNumber = retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput') as string;
+    const tableNumber = +retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput');
 
-    if (!isNumber(+tableNumber)) {
+    if (!isNumber(tableNumber)) {
       // This is a hacky workaround until this issue is closed: https://github.com/slackapi/bolt/issues/305
       const error: any = {
         response_action: 'errors',

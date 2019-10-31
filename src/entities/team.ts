@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 // TODO: Enforce only one team registered per person
 @Entity()
 export class Team extends BaseEntity {
-  constructor(name: string, tableNumber: string, projectDescription: string, members?: string[]) {
+  constructor(name: string, tableNumber: number, projectDescription: string, members?: string[]) {
     super();
 
     this.name = name;
@@ -19,7 +19,7 @@ export class Team extends BaseEntity {
   name: string;
 
   @Column({ unique: true })
-  tableNumber: string;
+  tableNumber: number;
 
   @Column()
   projectDescription: string;

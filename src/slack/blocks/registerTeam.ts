@@ -116,7 +116,7 @@ export function registeredTeamSummary(
   registeringUser: string,
   teamMembers: string[],
   teamName: string,
-  tableNumber: string,
+  tableNumber: number,
   projectDescription: string,
 ): KnownBlock[] {
   const userString = teamMembers.length === 1 ? 'You have' : `<@${registeringUser}> has`;
