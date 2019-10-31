@@ -7,7 +7,7 @@ Sponsoring a student hackathon? You've come to the right place! American Airline
 Whether you need help with judging which hack did the best job of tackling your challenge (if you need insipiration, check out some of [our past challenges](https://github.com/AmericanAirlines/Flight-Engine/wiki)), you want to connect with students who need help, or you want to recruit students and capture resumes, *_Hangar_* will make your experience easy and enjoyable for everyone.
 
 #### Work in Progress
-This app is still in the early stages of development and only some functionality is currently avaiable. If you want to help expedite our development, [become a contributor](#contibuting)!
+This app is still in the early stages of development and only some functionality is currently avaiable. If you want to help expedite our development, [become a contributor](./.github/CONTRIBUTING.md)!
 
 # Using Hangar
 You don't need to be technical to create your own instance of Hangar. Follow they steps below and you'll be up and running in less than 5 minutes!
