@@ -1,14 +1,15 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 
+// TODO: Enforce only one team registered per person
 @Entity()
 export class Team extends BaseEntity {
-  constructor(name: string, location: string, description: string) {
+  constructor(name: string, tableNumber: number, projectDescription: string, members?: string[]) {
     super();
 
     this.name = name;
-    this.location = location;
-    this.description = description;
-    this.members = [];
+    this.tableNumber = tableNumber;
+    this.projectDescription = projectDescription;
+    this.members = members || [];
   }
 
   @PrimaryGeneratedColumn()
@@ -17,11 +18,11 @@ export class Team extends BaseEntity {
   @Column()
   name: string;
 
-  @Column()
-  location: string;
+  @Column({ unique: true })
+  tableNumber: number;
 
   @Column()
-  description: string;
+  projectDescription: string;
 
   @Column('text', { array: true })
   members: string[];
