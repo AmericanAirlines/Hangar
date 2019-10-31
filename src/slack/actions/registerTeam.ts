@@ -1,6 +1,5 @@
 import { App, BlockAction, ViewSubmitAction, ViewOutput, RespondArguments } from '@slack/bolt';
 import { WebAPICallResult } from '@slack/web-api';
-import { isNumber } from 'util';
 import { registerTeamActionId, registerTeamViewConstants } from '../constants';
 import { registerTeamView, registeredTeamSummary } from '../blocks/registerTeam';
 import logger from '../../logger';
@@ -64,9 +63,9 @@ function register(bolt: App): void {
 
     const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
     const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
-    const tableNumber = +retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput');
+    const tableNumber = parseInt(retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput') as string, 10);
 
-    if (!isNumber(tableNumber)) {
+    if (Number.isNaN(tableNumber)) {
       // This is a hacky workaround until this issue is closed: https://github.com/slackapi/bolt/issues/305
       const error: any = {
         response_action: 'errors',
