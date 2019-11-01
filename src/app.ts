@@ -48,8 +48,10 @@ const init = async (): Promise<void> => {
     }
   }
 
-  await nextApp.prepare();
-  app.get('*', (req, res) => nextHandler(req, res));
+  if (process.env.NODE_ENV !== 'test') {
+    await nextApp.prepare();
+    app.get('*', (req, res) => nextHandler(req, res));
+  }
 };
 
 init();
