@@ -13,7 +13,7 @@ export class Judge extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('integer', { array: true })
+  @Column('simple-json')
   visitedTeams: number[];
 
   @Column({ nullable: true })

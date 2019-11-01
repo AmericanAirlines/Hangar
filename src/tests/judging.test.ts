@@ -6,7 +6,7 @@ describe('judging', () => {
     expect(0).toBe(0);
   });
 
-  it('judge inconsistency won\'t significantly impact scoring', () => {
+  it("judge inconsistency won't significantly impact scoring", () => {
     // Judge teams with perfect judge accuracy
     // Judge teams with slight imperfections (90% judge accuracy)
     // Compare final results
