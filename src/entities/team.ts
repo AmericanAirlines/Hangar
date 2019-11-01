@@ -10,6 +10,8 @@ export class Team extends BaseEntity {
     this.tableNumber = tableNumber;
     this.projectDescription = projectDescription;
     this.members = members || [];
+    this.judgeVisits = 0;
+    this.activeJudgeCount = 0;
   }
 
   @PrimaryGeneratedColumn()
@@ -26,4 +28,10 @@ export class Team extends BaseEntity {
 
   @Column('text', { array: true })
   members: string[];
+
+  @Column()
+  judgeVisits: number;
+
+  @Column()
+  activeJudgeCount: number;
 }

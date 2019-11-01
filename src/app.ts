@@ -33,7 +33,7 @@ const init = async (): Promise<void> => {
       url,
       entities: [path.join(__dirname, 'entities/*')],
       migrations: [path.join(__dirname, 'migration/*')],
-      // migrationsRun: true,
+      migrationsRun: true,
     } as PostgresConnectionOptions);
   }
 

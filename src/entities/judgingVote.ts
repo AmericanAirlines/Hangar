@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { Team } from './team';
 
 interface TeamScore {
   id: number;
@@ -7,6 +8,12 @@ interface TeamScore {
 
 interface TeamResult extends TeamScore {
   name: string;
+}
+
+function updateTeamScoreWithVote(teamScore: TeamScore, vote: JudgingVote): TeamScore {
+  // TODO: Implement actual score calculation
+  const updatedTeamScore = teamScore || { id: vote.currentTeam, score: 0 };
+  return updatedTeamScore;
 }
 
 @Entity()
@@ -33,15 +40,24 @@ export class JudgingVote extends BaseEntity {
 
   static async tabulate(): Promise<TeamResult[]> {
     const votes = await JudgingVote.find();
-    const results: TeamResult[] = [];
-    const scores: TeamScore[] = [];
+    const scores: { [id: string]: TeamScore } = {};
 
-    votes.forEach((vote) => {
-      scores.push({ score: 0, id: vote.currentTeam });
-    });
+    for (let i = 0; i < votes.length; i += 1) {
+      const vote = votes[i];
+      scores[vote.currentTeam] = updateTeamScoreWithVote(scores[vote.currentTeam], vote);
+    }
 
-    // TODO: Get team names and create TeamScore elements from them
-
-    return results;
+    const teamResults: TeamResult[] = await Promise.all(
+      Object.keys(scores).map(async (key) => {
+        const teamScore = scores[key];
+        const team = await Team.findOne({ id: teamScore.id });
+        return {
+          name: team.name,
+          ...teamScore,
+        };
+      }),
+    );
+    // TODO: Determine if ties are likely and figure out how to break them
+    return teamResults.sort((a, b) => (a.score > b.score ? -1 : 1));
   }
 }
