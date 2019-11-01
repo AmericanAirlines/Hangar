@@ -26,12 +26,37 @@ export class Team extends BaseEntity {
   @Column()
   projectDescription: string;
 
-  @Column('text', { array: true })
+  @Column('simple-array')
   members: string[];
 
+  // TODO: Make the below two attributes private once this issue is closed: https://github.com/typeorm/typeorm/issues/3548
   @Column()
   judgeVisits: number;
 
   @Column()
   activeJudgeCount: number;
+
+  async decrementActiveJudgeCount() {
+    await Team.createQueryBuilder()
+      .update()
+      .set({ activeJudgeCount: () => 'activeJudgeCount - 1' })
+      .where('id = :id AND activeJudgeCount > 0', { id: this.id })
+      .execute();
+  }
+
+  async incrementActiveJudgeCount() {
+    await Team.createQueryBuilder()
+      .update()
+      .set({ activeJudgeCount: () => 'activeJudgeCount + 1' })
+      .where('id = :id', { id: this.id })
+      .execute();
+  }
+
+  async incrementJudgeVisits() {
+    await Team.createQueryBuilder()
+      .update()
+      .set({ judgeVisits: () => 'judgeVisits + 1' })
+      .where('id = :id', { id: this.id })
+      .execute();
+  }
 }
