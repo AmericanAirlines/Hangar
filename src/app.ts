@@ -13,8 +13,6 @@ const app = express();
 const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
 const nextHandler = nextApp.getRequestHandler();
 
-app.use(express.json());
-
 app.get('/', (_req, res) => {
   res.send('👋');
 });
