@@ -170,11 +170,13 @@ describe('judging', () => {
     const teamsVisited: number[] = [];
     for (let i = 0; i < numJudges; i += 1) {
       const judge = judges[i];
-      const promise = judge.getNextTeam()
+      const promise = judge
+        .getNextTeam()
         .then((team) => {
           teamsVisited.push(team.id);
           return judge.continue();
-        }).then(() => judge.getNextTeam())
+        })
+        .then(() => judge.getNextTeam())
         .then((team) => {
           teamsVisited.push(team.id);
         });
