@@ -10,12 +10,6 @@ interface TeamResult extends TeamScore {
   name: string;
 }
 
-function updateTeamScoreWithVote(teamScore: TeamScore, vote: JudgingVote): TeamScore {
-  // TODO: Implement actual score calculation
-  const updatedTeamScore = teamScore || { id: vote.currentTeam, score: 0 };
-  return updatedTeamScore;
-}
-
 @Entity()
 export class JudgingVote extends BaseEntity {
   constructor(previousTeam: number, currentTeam: number, currentTeamChosen: boolean) {
@@ -44,7 +38,7 @@ export class JudgingVote extends BaseEntity {
 
     for (let i = 0; i < votes.length; i += 1) {
       const vote = votes[i];
-      scores[vote.currentTeam] = updateTeamScoreWithVote(scores[vote.currentTeam], vote);
+      scores[vote.currentTeam] = updateTeamScoreWithVote(vote, scores[vote.currentTeam]);
     }
 
     const teamResults: TeamResult[] = await Promise.all(
@@ -60,4 +54,10 @@ export class JudgingVote extends BaseEntity {
     // TODO: Determine if ties are likely and figure out how to break them
     return teamResults.sort((a, b) => (a.score > b.score ? -1 : 1));
   }
+}
+
+function updateTeamScoreWithVote(vote: JudgingVote, teamScore?: TeamScore): TeamScore {
+  // TODO: Implement actual score calculation
+  const updatedTeamScore = teamScore || { id: vote.currentTeam, score: 0 };
+  return updatedTeamScore;
 }

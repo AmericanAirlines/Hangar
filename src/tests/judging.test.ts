@@ -5,7 +5,7 @@ import { Judge } from '../entities/judge';
 
 /* eslint-disable no-await-in-loop */
 
-describe('judging', () => {
+describe('judging logistics', () => {
   beforeEach(async () => {
     await createDbConnection();
   });
@@ -14,7 +14,7 @@ describe('judging', () => {
     await closedbConnection();
   });
 
-  it('the in memory database works', async () => {
+  it('the in-memory database works', async () => {
     const team = await new Team('Does this work?', 123, 'Databases are cool', ['123456']).save();
     Team.findOneOrFail(team.id);
   });
@@ -40,80 +40,6 @@ describe('judging', () => {
 
     expect(team.activeJudgeCount).toBe(0);
     expect(team.judgeVisits).toBe(1);
-    done();
-  });
-
-  it('teams are visited evenly', async (done) => {
-    // Score 100 teams for 10 judges and make sure team visits are roughly the same
-    // Create mock teams, sorted by performance (0 index == winner)
-    const numTeams = 25;
-    const numJudges = 10;
-    const teams = await createTeamData(numTeams);
-    const judges = await createJudgeData(numJudges);
-
-    const percentVisitation = 0.7;
-
-    let currJudgeIdx = 0;
-    let allJudgesHaveContinued = false;
-
-    for (let i = 0; i < percentVisitation * numTeams * numJudges; i += 1) {
-      const judge = judges[currJudgeIdx];
-      await judge.getNextTeam();
-
-      // If necessary, continue before moving on
-      if (!allJudgesHaveContinued) {
-        await judge.continue();
-        await judge.getNextTeam();
-        if (currJudgeIdx === judges.length - 1) {
-          allJudgesHaveContinued = true;
-        }
-      }
-
-      // Prepare index for next loop
-      if (currJudgeIdx === judges.length - 1) {
-        currJudgeIdx = 0;
-      } else {
-        currJudgeIdx += 1;
-      }
-
-      // Evaluate teams for voting
-      const previousTeamId = judge.getLastJudgedTeamId();
-      let previousTeamIdx = Number.POSITIVE_INFINITY;
-      let currentTeamIdx = 0;
-
-      teams.forEach((t, index) => {
-        if (t.id === previousTeamId) {
-          previousTeamIdx = index;
-        } else if (t.id === judge.currentTeam) {
-          currentTeamIdx = index;
-        }
-      });
-
-      // Vote using position in original array
-      const currTeamChosen = currentTeamIdx < previousTeamIdx;
-      await judge.vote(currTeamChosen);
-    }
-
-    // Now that judging has ended, validate results
-    const judgedTeams = await Team.find();
-    let min: number;
-    let max: number;
-
-    judgedTeams.forEach((judgedTeam) => {
-      if (min === undefined || judgedTeam.judgeVisits < min) {
-        min = judgedTeam.judgeVisits;
-      }
-
-      if (max === undefined || judgedTeam.judgeVisits > max) {
-        max = judgedTeam.judgeVisits;
-      }
-    });
-
-    expect(min).toBeGreaterThan(0);
-    expect(max).toBeLessThan(judges.length);
-    expect(max - min).toBeLessThanOrEqual(1);
-
-    // TODO: Evaluate scoring
     done();
   });
 
@@ -190,26 +116,104 @@ describe('judging', () => {
     });
   });
 
-  // it('judging a team adds the currentTeam to visitedTeams', () => {
-  //   // Judge teams with perfect judge accuracy
-  //   // Judge teams with slight imperfections (90% judge accuracy)
-  //   // Compare final results
-  //   expect(0).toBe(0);
-  // });
+  it('judging a team adds the currentTeam to visitedTeams', async (done) => {
+    const judge = await new Judge().save();
+    const team = await new Team('Some Team', 123, 'A new app', ['123']).save();
 
-  // it("judge inconsistency won't significantly impact scoring", () => {
-  //   // Judge teams with perfect judge accuracy
-  //   // Judge teams with slight imperfections (90% judge accuracy)
-  //   // Compare final results
-  //   expect(0).toBe(0);
-  // });
+    await judge.getNextTeam();
+    expect(judge.currentTeam).toEqual(team.id);
 
-  // it('if all teams are being judged, the one with the least judges visiting will be used next', () => {
-  //   // Have a judge meet with all teams
-  //   // have a second team visit all but 1 team
-  //   // see if that last team is used
-  //   expect(0).toBe(0);
-  // });
+    await judge.continue();
+    expect(judge.currentTeam).toBeNull();
+
+    expect(judge.visitedTeams).toContain(team.id);
+    done();
+  });
+});
+
+describe('score calculation', () => {
+  beforeAll(async () => {
+    await createDbConnection();
+  });
+
+  afterAll(async () => {
+    await closedbConnection();
+  });
+
+  it('teams are visited evenly', async (done) => {
+    // Score 100 teams for 10 judges and make sure team visits are roughly the same
+    // Create mock teams, sorted by performance (0 index == winner)
+    const numTeams = 25;
+    const numJudges = 10;
+    const teams = await createTeamData(numTeams);
+    const judges = await createJudgeData(numJudges);
+
+    const percentVisitation = 0.7;
+
+    let currJudgeIdx = 0;
+    let allJudgesHaveContinued = false;
+
+    for (let i = 0; i < percentVisitation * numTeams * numJudges; i += 1) {
+      const judge = judges[currJudgeIdx];
+      await judge.getNextTeam();
+
+      // If necessary, continue before moving on
+      if (!allJudgesHaveContinued) {
+        await judge.continue();
+        await judge.getNextTeam();
+        if (currJudgeIdx === judges.length - 1) {
+          allJudgesHaveContinued = true;
+        }
+      }
+
+      // Prepare index for next loop
+      if (currJudgeIdx === judges.length - 1) {
+        currJudgeIdx = 0;
+      } else {
+        currJudgeIdx += 1;
+      }
+
+      // Evaluate teams for voting
+      const previousTeamId = judge.getLastJudgedTeamId();
+      let previousTeamIdx = Number.POSITIVE_INFINITY;
+      let currentTeamIdx = 0;
+
+      teams.forEach((t, index) => {
+        if (t.id === previousTeamId) {
+          previousTeamIdx = index;
+        } else if (t.id === judge.currentTeam) {
+          currentTeamIdx = index;
+        }
+      });
+
+      // Vote using position in original array
+      const currTeamChosen = currentTeamIdx < previousTeamIdx;
+      await judge.vote(currTeamChosen);
+    }
+
+    // Now that judging has ended, validate results
+    const judgedTeams = await Team.find();
+    let min: number;
+    let max: number;
+
+    judgedTeams.forEach((judgedTeam) => {
+      if (min === undefined || judgedTeam.judgeVisits < min) {
+        min = judgedTeam.judgeVisits;
+      }
+
+      if (max === undefined || judgedTeam.judgeVisits > max) {
+        max = judgedTeam.judgeVisits;
+      }
+    });
+
+    expect(min).toBeGreaterThan(0);
+    expect(max).toBeLessThan(judges.length);
+    expect(max - min).toBeLessThanOrEqual(1);
+
+    // TODO: Evaluate scoring
+
+    done();
+  });
 });
 
 async function createTeamData(numTeams: number): Promise<Team[]> {
