@@ -39,19 +39,53 @@ export class Team extends BaseEntity {
 
   static async getNextAvailableTeamExcludingTeams(vistedTeamIds: number[]): Promise<Team> {
     let team: Team;
-    const queryRunner = getConnection().createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-
-    const retrieveQueryBuilder = queryRunner.manager
-      .createQueryBuilder(Team, 'team')
-      .select()
-      // TODO: Update to be have a retry with active judges
-      .where(`activeJudgeCount == 0 AND id NOT IN (${vistedTeamIds.join(',')})`)
-      .orderBy('team.judgeVisits', 'ASC');
-
+    let queryRunner;
     try {
-      team = (await retrieveQueryBuilder.getOne()) || null;
+      let retriesRemaining = 5;
+      queryRunner = getConnection().createQueryRunner();
+
+      let retrieveQueryBuilder = queryRunner.manager.createQueryBuilder(Team, 'team').select();
+      if (vistedTeamIds.length > 0) {
+        if (process.env.NODE_ENV === 'test') {
+          // SQLite
+          retrieveQueryBuilder = retrieveQueryBuilder.where(`id NOT IN (${vistedTeamIds.join(',')})`);
+        } else {
+          // Postgres
+          retrieveQueryBuilder = retrieveQueryBuilder.where('team.id NOT IN (:...teams)', { teams: vistedTeamIds });
+        }
+      }
+
+      do {
+        /* eslint-disable no-await-in-loop */
+        try {
+          await queryRunner.connect();
+          await queryRunner.startTransaction();
+          team = (await retrieveQueryBuilder
+            .andWhere('activeJudgeCount == 0')
+            .orderBy('team.judgeVisits', 'ASC')
+            .getOne()) || null;
+
+          if (team) {
+            // Query suceeded; break
+            break;
+          }
+
+          // Query succeeded, but no matching results
+          team = (await retrieveQueryBuilder.orderBy('team.activeJudgeCount', 'ASC').getOne()) || null;
+          break;
+        } catch (err) {
+          // Query failed, likely because of a current transaction
+          // Retry but decrement the counter
+          // Wait for .25 seconds before trying again
+          retriesRemaining -= 1;
+          await new Promise((resolve) => {
+            setTimeout(resolve, Math.random() * 500);
+          });
+        }
+        /* eslint-enable no-await-in-loop */
+      } while (retriesRemaining > 0);
+
+      // A team was found; update it
       if (team) {
         await queryRunner.manager
           .createQueryBuilder(Team, 'team')
@@ -64,8 +98,8 @@ export class Team extends BaseEntity {
           })
           .execute();
         await team.reload();
+        await queryRunner.commitTransaction();
       }
-      await queryRunner.commitTransaction();
     } catch (err) {
       logger.error('Something went wrong...', err);
       // since we have errors lets rollback changes we made

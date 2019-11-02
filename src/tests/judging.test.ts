@@ -112,6 +112,8 @@ describe('judging', () => {
     expect(min).toBeGreaterThan(0);
     expect(max).toBeLessThan(judges.length);
     expect(max - min).toBeLessThanOrEqual(1);
+
+    // TODO: Evaluate scoring
     done();
   });
 
@@ -158,33 +160,54 @@ describe('judging', () => {
     done();
   });
 
-  it('judges will all get different teams if they exist', () => {
-    // Create 10 judges and 10 teams
-    // Have all judges request a team at the same time
-    // All team id's should be unique (set length == 10)
-    expect(0).toBe(0);
+  it('judges will all get different teams if they exist', async (done) => {
+    const numTeams = 20;
+    const numJudges = 10;
+    await createTeamData(numTeams);
+    const judges = await createJudgeData(numJudges);
+
+    const teamPromises = [];
+    const teamsVisited: number[] = [];
+    for (let i = 0; i < numJudges; i += 1) {
+      const judge = judges[i];
+      const promise = judge.getNextTeam()
+        .then((team) => {
+          teamsVisited.push(team.id);
+          return judge.continue();
+        }).then(() => judge.getNextTeam())
+        .then((team) => {
+          teamsVisited.push(team.id);
+        });
+      teamPromises.push(promise);
+    }
+
+    await Promise.all(teamPromises).then(() => {
+      const uniqueTeams = Array.from(new Set(teamsVisited));
+      expect(uniqueTeams.length).toEqual(numTeams);
+      done();
+    });
   });
 
-  it('judging a team adds the currentTeam to visitedTeams', () => {
-    // Judge teams with perfect judge accuracy
-    // Judge teams with slight imperfections (90% judge accuracy)
-    // Compare final results
-    expect(0).toBe(0);
-  });
+  // it('judging a team adds the currentTeam to visitedTeams', () => {
+  //   // Judge teams with perfect judge accuracy
+  //   // Judge teams with slight imperfections (90% judge accuracy)
+  //   // Compare final results
+  //   expect(0).toBe(0);
+  // });
 
-  it("judge inconsistency won't significantly impact scoring", () => {
-    // Judge teams with perfect judge accuracy
-    // Judge teams with slight imperfections (90% judge accuracy)
-    // Compare final results
-    expect(0).toBe(0);
-  });
+  // it("judge inconsistency won't significantly impact scoring", () => {
+  //   // Judge teams with perfect judge accuracy
+  //   // Judge teams with slight imperfections (90% judge accuracy)
+  //   // Compare final results
+  //   expect(0).toBe(0);
+  // });
 
-  it('if all teams are being judged, the one with the least judges visiting will be used next', () => {
-    // Have a judge meet with all teams
-    // have a second team visit all but 1 team
-    // see if that last team is used
-    expect(0).toBe(0);
-  });
+  // it('if all teams are being judged, the one with the least judges visiting will be used next', () => {
+  //   // Have a judge meet with all teams
+  //   // have a second team visit all but 1 team
+  //   // see if that last team is used
+  //   expect(0).toBe(0);
+  // });
 });
 
 async function createTeamData(numTeams: number): Promise<Team[]> {
