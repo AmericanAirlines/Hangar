@@ -21,31 +21,33 @@ export class Judge extends BaseEntity {
   @Column({ nullable: true })
   currentTeam?: number;
 
-  async getNextTeam(): Promise<number> {
-    // TODO: Get next team for judge
-    // Sort Teams by #visits
-    // Omit those the judge has already seen
-    // Omit those in progress (to a new array)
-    // If there are none in that array, sort others by activeJudgeCount
-    // Update one to increment activeJudgeCount
-    return this.id;
+  async getNextTeam(): Promise<Team> {
+    const newTeam = await Team.getNextAvailableTeamExcludingTeams(this.visitedTeams);
+    this.currentTeam = newTeam ? newTeam.id : null;
+    await this.save();
+    return newTeam;
   }
 
-  async vote(currentTeamChosen: boolean): Promise<void> {
+  getLastJudgedTeamId(): number {
+    return this.visitedTeams[this.visitedTeams.length - 1];
+  }
+
+  async continue(): Promise<void> {
+    await this.recordCurrentTeamAndSave();
+  }
+
+  async vote(currentTeamChosen?: boolean): Promise<void> {
     // Create a new vote object with the outcome of the vote
     await new JudgingVote(this.visitedTeams[this.visitedTeams.length - 1], this.currentTeam, currentTeamChosen).save();
+    await this.recordCurrentTeamAndSave();
+  }
 
-    // Add the current team to visitedTeams
+  async recordCurrentTeamAndSave(): Promise<void> {
     this.visitedTeams.push(this.currentTeam);
-
-    // Modify current team's judge values
     const currentTeam = await Team.findOne(this.currentTeam);
     await currentTeam.decrementActiveJudgeCount();
     await currentTeam.incrementJudgeVisits();
-
-    // Remove current team
     this.currentTeam = null;
-
     await this.save();
   }
 }
