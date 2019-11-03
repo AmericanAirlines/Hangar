@@ -1,5 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, getConnection } from 'typeorm';
-import logger from '../logger';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+
+const genHash = (): string => {
+  const prefix = Math.random()
+    .toString(36)
+    .substring(2, 15);
+
+  const suffix = Math.random()
+    .toString(36)
+    .substring(2, 15);
+
+  return prefix + suffix;
+};
 
 // TODO: Enforce only one team registered per person
 @Entity()
@@ -13,6 +24,7 @@ export class Team extends BaseEntity {
     this.members = members || [];
     this.judgeVisits = 0;
     this.activeJudgeCount = 0;
+    this.syncHash = genHash();
   }
 
   @PrimaryGeneratedColumn()
@@ -37,93 +49,78 @@ export class Team extends BaseEntity {
   @Column()
   activeJudgeCount: number;
 
-  static async getNextAvailableTeamExcludingTeams(vistedTeamIds: number[]): Promise<Team> {
-    let team: Team;
-    let queryRunner;
-    try {
-      let retriesRemaining = 5;
-      queryRunner = getConnection().createQueryRunner();
+  /**
+   * This is used for running concurrent operations
+   */
+  @Column()
+  syncHash: string;
 
-      let retrieveQueryBuilder = queryRunner.manager.createQueryBuilder(Team, 'team').select();
-      if (vistedTeamIds.length > 0) {
-        if (process.env.NODE_ENV === 'test') {
-          // SQLite
-          retrieveQueryBuilder = retrieveQueryBuilder.where(`id NOT IN (${vistedTeamIds.join(',')})`);
-        } else {
-          // Postgres
-          retrieveQueryBuilder = retrieveQueryBuilder.where('team.id NOT IN (:...teams)', { teams: vistedTeamIds });
-        }
+  static async getNextAvailableTeamExcludingTeams(excludedTeamIds: number[]): Promise<Team> {
+    let team: Team = null;
+    let retries = 5;
+
+    /* eslint-disable no-await-in-loop */
+    do {
+      const queryBuilder = Team.createQueryBuilder('team').select();
+
+      if (excludedTeamIds.length > 0) {
+        queryBuilder.where('id NOT IN (:...teams)', { teams: excludedTeamIds });
       }
 
-      do {
-        /* eslint-disable no-await-in-loop */
-        try {
-          await queryRunner.connect();
-          await queryRunner.startTransaction();
-          team = (await retrieveQueryBuilder
-            .andWhere('activeJudgeCount == 0')
-            .orderBy('team.judgeVisits', 'ASC')
-            .getOne()) || null;
+      team = await queryBuilder
+        .clone()
+        .andWhere('"team"."activeJudgeCount" = 0')
+        .orderBy('"team"."judgeVisits"', 'ASC')
+        .getOne();
 
-          if (team) {
-            // Query suceeded; break
-            break;
-          }
+      if (!team) {
+        team = await queryBuilder
+          .clone()
+          .orderBy('"team"."activeJudgeCount"', 'ASC')
+          .addOrderBy('"team"."judgeVisits"', 'ASC')
+          .getOne();
+      }
 
-          // Query succeeded, but no matching results
-          team = (await retrieveQueryBuilder.orderBy('team.activeJudgeCount', 'ASC').getOne()) || null;
-          break;
-        } catch (err) {
-          // Query failed, likely because of a current transaction
-          // Retry but decrement the counter
-          // Wait for .25 seconds before trying again
-          retriesRemaining -= 1;
-          await new Promise((resolve) => {
-            setTimeout(resolve, Math.random() * 500);
-          });
-        }
-        /* eslint-enable no-await-in-loop */
-      } while (retriesRemaining > 0);
-
-      // A team was found; update it
       if (team) {
-        await queryRunner.manager
-          .createQueryBuilder(Team, 'team')
+        const newHash = genHash();
+        const result = await Team.createQueryBuilder()
           .update()
-          .set({
-            activeJudgeCount: team.activeJudgeCount + 1,
-          })
-          .where({
-            id: team.id,
-          })
+          .set({ activeJudgeCount: team.activeJudgeCount + 1, syncHash: newHash })
+          .whereInIds(team.id)
+          .andWhere('syncHash = :syncHash', { syncHash: team.syncHash })
           .execute();
+
         await team.reload();
-        await queryRunner.commitTransaction();
+
+        if (result.affected > 0 || team.syncHash === newHash) {
+          return team;
+        }
+      } else {
+        return null;
       }
-    } catch (err) {
-      logger.error('Something went wrong...', err);
-      // since we have errors lets rollback changes we made
-      // await queryRunner.rollbackTransaction();
-    } finally {
-      // you need to release query runner which is manually created:
-      await queryRunner.release();
-    }
+
+      await new Promise((resolve) => setTimeout(resolve, Math.random() * 500));
+
+      retries -= 1;
+    } while (retries > 0);
+    /* eslint-enable no-await-in-loop */
+
     return team;
   }
 
   async decrementActiveJudgeCount(): Promise<void> {
-    await Team.createQueryBuilder()
+    await Team.createQueryBuilder('team')
       .update()
-      .set({ activeJudgeCount: () => 'activeJudgeCount - 1' })
-      .where('id = :id AND activeJudgeCount > 0', { id: this.id })
+      .set({ activeJudgeCount: () => '"team"."activeJudgeCount" - 1' })
+      .where('"team"."id" = :id AND "team"."activeJudgeCount" > 0', { id: this.id })
       .execute();
   }
 
   async incrementJudgeVisits(): Promise<void> {
-    await Team.createQueryBuilder()
+    await Team.createQueryBuilder('team')
       .update()
-      .set({ judgeVisits: () => 'judgeVisits + 1' })
-      .where('id = :id', { id: this.id })
+      .set({ judgeVisits: () => '"team"."judgeVisits" + 1' })
+      .where('"team"."id" = :id', { id: this.id })
       .execute();
   }
 }

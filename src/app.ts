@@ -48,13 +48,6 @@ const init = async (): Promise<void> => {
 
   if (process.env.NODE_ENV !== 'test') {
     await nextApp.prepare();
-    app.get('/judge/:secret', (req, res) => {
-      if (req.params.secret !== process.env.JUDGE_SECRET) {
-        return nextApp.render404(req, res);
-      }
-
-      return nextApp.render(req, res, 'judge');
-    });
     app.get('*', (req, res) => nextHandler(req, res));
   }
 };

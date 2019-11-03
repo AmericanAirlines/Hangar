@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
+import { Judge } from '../entities/judge';
+import { Team } from '../entities/team';
 
 const api = express();
 
@@ -7,19 +9,46 @@ api.get('/', (_req, res) => {
   res.send('🌊');
 });
 
-api.post('/judge', () => {
-  // TODO: Create a new judge and return the id
-  // The site will save the id to local storage and use it for future requests
+api.post('/judge', async (_req, res) => {
+  const judge = await new Judge().save();
+
+  res.send(judge.id.toString());
 });
 
-api.get('/judge/teams', () => {
-  // TODO: Return the judge's (req.query.judgeId) previous team and a new current team
+const getJudgeTeams = async (judge: Judge): Promise<{ currentTeam: Team; previousTeam: Team }> => {
+  const previousTeamId = judge.visitedTeams.pop();
+
+  let currentTeam;
+  if (judge.currentTeam) {
+    currentTeam = await Team.findOne(judge.currentTeam);
+  } else {
+    currentTeam = ((await judge.getNextTeam()) as unknown) as Team;
+  }
+
+  const previousTeam = await Team.findOne(previousTeamId);
+
+  return {
+    currentTeam,
+    previousTeam,
+  };
+};
+
+api.get('/judge/teams', async (req, res) => {
+  const judge = await Judge.findOneOrFail(parseInt(req.query.id, 10));
+
+  res.send(await getJudgeTeams(judge));
 });
 
-api.post('/vote', () => {
-  // TODO: Do this
-  // Find judge by req.body.judgeId
-  // Save vote record with req.body.previousTeamId, req.body.currenTeamId, and req.body.currentTeamChosen
+api.post('/vote', async (req, res) => {
+  const judge = await Judge.findOneOrFail(req.body.id);
+
+  if (req.body.currentTeamChosen === null) {
+    await judge.continue();
+  } else {
+    await judge.vote(req.body.currentTeamChosen);
+  }
+
+  res.send(await getJudgeTeams(judge));
 });
 
 export const apiApp = api;

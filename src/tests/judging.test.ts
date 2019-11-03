@@ -19,7 +19,7 @@ describe('judging logistics', () => {
     Team.findOneOrFail(team.id);
   });
 
-  it('judging correctly increments and decrements team counters', async (done) => {
+  it('judging correctly increments and decrements team counters', async () => {
     const judge = await new Judge().save();
     const team = await new Team('Some Team', 123, 'A new app', ['123']).save();
 
@@ -40,10 +40,9 @@ describe('judging logistics', () => {
 
     expect(team.activeJudgeCount).toBe(0);
     expect(team.judgeVisits).toBe(1);
-    done();
   });
 
-  it('getNextTeam will only pull unvisited teams', async (done) => {
+  it('getNextTeam will only pull unvisited teams', async () => {
     const judge = await new Judge().save();
     const team1 = await new Team('Some Team', 123, 'A new app', ['123']).save();
     const team2 = await new Team('Another team', 456, 'Another new app', ['456']).save();
@@ -56,11 +55,9 @@ describe('judging logistics', () => {
 
     await judge.getNextTeam();
     expect(judge.currentTeam).toEqual(team2.id);
-
-    done();
   });
 
-  it('current team will be null when all teams have been visted', async (done) => {
+  it('current team will be null when all teams have been visted', async () => {
     const judge = await new Judge().save();
     const team1 = await new Team('Some Team', 123, 'A new app', ['123']).save();
     const team2 = await new Team('Another team', 456, 'Another new app', ['456']).save();
@@ -82,11 +79,22 @@ describe('judging logistics', () => {
     // All teams visited
     await judge.getNextTeam();
     expect(judge.currentTeam).toBeNull();
-
-    done();
   });
 
-  it('judges will all get different teams if they exist', async (done) => {
+  it('judging a team adds the currentTeam to visitedTeams', async () => {
+    const judge = await new Judge().save();
+    const team = await new Team('Some Team', 123, 'A new app', ['123']).save();
+
+    await judge.getNextTeam();
+    expect(judge.currentTeam).toEqual(team.id);
+
+    await judge.continue();
+    expect(judge.currentTeam).toBeNull();
+
+    expect(judge.visitedTeams).toContain(team.id);
+  });
+
+  it('judges will all get different teams if they exist', async () => {
     const numTeams = 20;
     const numJudges = 10;
     await createTeamData(numTeams);
@@ -112,22 +120,7 @@ describe('judging logistics', () => {
     await Promise.all(teamPromises).then(() => {
       const uniqueTeams = Array.from(new Set(teamsVisited));
       expect(uniqueTeams.length).toEqual(numTeams);
-      done();
     });
-  });
-
-  it('judging a team adds the currentTeam to visitedTeams', async (done) => {
-    const judge = await new Judge().save();
-    const team = await new Team('Some Team', 123, 'A new app', ['123']).save();
-
-    await judge.getNextTeam();
-    expect(judge.currentTeam).toEqual(team.id);
-
-    await judge.continue();
-    expect(judge.currentTeam).toBeNull();
-
-    expect(judge.visitedTeams).toContain(team.id);
-    done();
   });
 });
 
@@ -140,7 +133,7 @@ describe('score calculation', () => {
     await closedbConnection();
   });
 
-  it('teams are visited evenly', async (done) => {
+  it('teams are visited evenly', async () => {
     // Score 100 teams for 10 judges and make sure team visits are roughly the same
     // Create mock teams, sorted by performance (0 index == winner)
     const numTeams = 25;
@@ -211,14 +204,12 @@ describe('score calculation', () => {
     expect(max - min).toBeLessThanOrEqual(1);
 
     // TODO: Evaluate scoring
-
-    done();
   });
 });
 
 async function createTeamData(numTeams: number): Promise<Team[]> {
   const teams: Team[] = [];
-  for (let i = 0; i <= numTeams; i += 1) {
+  for (let i = 0; i < numTeams; i += 1) {
     const team = await new Team(`Team ${i}`, i, `Project for Team ${i}`, [String(i)]).save();
     teams.push(team);
   }
@@ -227,7 +218,7 @@ async function createTeamData(numTeams: number): Promise<Team[]> {
 
 async function createJudgeData(numJudges: number): Promise<Judge[]> {
   const judges: Judge[] = [];
-  for (let i = 0; i <= numJudges; i += 1) {
+  for (let i = 0; i < numJudges; i += 1) {
     judges.push(await new Judge().save());
   }
   return judges;

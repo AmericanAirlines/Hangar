@@ -17,7 +17,8 @@
     "checkstyle:fix": "npm run checkstyle -- --write",
     "test": "jest",
     "test:changed": "jest -o",
-    "clean": "rimraf dist",
+    "test:sync": "npm run test -- --runInBand",
+    "clean": "rimraf dist .next",
     "typeorm": "ts-node --skip-project --compiler-options \"{\\\"experimentalDecorators\\\": true, \\\"emitDecoratorMetadata\\\": true}\" ./node_modules/typeorm/cli.js"
   },
   "repository": {
