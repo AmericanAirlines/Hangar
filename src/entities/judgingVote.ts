@@ -40,22 +40,21 @@ export class JudgingVote extends BaseEntity {
     // Initialize score keeping
     const ascScores: { [id: string]: TeamScore } = {};
     const descScores: { [id: string]: TeamScore } = {};
-    const calibrationCount: { [id: string]: number } = {};
 
     // Use a designated percent of the votes for calibration
     const avgNumVotesPerTeam = allVotes.length / numTeams;
-    const percentOfVotesToUseForCalibration = 0.1;
+    const percentOfVotesToUseForCalibration = 0.2;
     const percentBasedCalibrationVotes = Math.round(percentOfVotesToUseForCalibration * avgNumVotesPerTeam);
     // Use percentOfVotesToUseForCalibration percent of the votes OR 2, whichever is bigger
-    const votesNeededForCalibration = Math.max(percentOfVotesToUseForCalibration, 2);
+    const votesNeededForCalibration = Math.max(percentBasedCalibrationVotes, 2);
 
-    // If the number of votes needed to calibrate drops below 2 (e.g., less than 5 votes per team); throw error
     // If the number of calibration votes is >= 50% of the votes for the team; throw error
-    if (percentBasedCalibrationVotes < 2 || votesNeededForCalibration / avgNumVotesPerTeam >= 0.5) {
+    if (votesNeededForCalibration / avgNumVotesPerTeam >= 0.5) {
       throw new Error('Insufficient vote count for judging');
     }
 
     for (let j = 0; j < 2; j += 1) {
+      const calibrationCount: { [id: string]: number } = {};
       // First pass is ascending, second pass is descending
       const asc = j === 0;
       // Reference corresponding scores dictionary
@@ -91,7 +90,7 @@ export class JudgingVote extends BaseEntity {
           calibrationCount[previousTeamId] = calibrationCount[previousTeamId] ? calibrationCount[previousTeamId] + 1 : 1;
 
           // Apply score impact based on vote outcome
-          const currentTeamScoreImpact = vote.currentTeamChosen ? 50 : -50;
+          const currentTeamScoreImpact = vote.currentTeamChosen ? 25 : -25;
           currentTeamScore.score += currentTeamScoreImpact;
           previousTeamScore.score += -currentTeamScoreImpact;
         } else {
@@ -119,7 +118,6 @@ export class JudgingVote extends BaseEntity {
         scores[currentTeamId] = currentTeamScore;
         scores[previousTeamId] = previousTeamScore;
       }
-    }
 
     // Average scores from both passes
     const teamResults: TeamResult[] = [];
