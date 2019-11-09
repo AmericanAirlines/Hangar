@@ -58,7 +58,7 @@ function register(bolt: App): void {
   bolt.view<ViewSubmitAction>(registerTeamViewConstants.viewId, async ({ ack, context, view, body }) => {
     const registeringUser = body.user.id;
 
-    const teamMembers = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect') || [];
+    const teamMembers = (retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect') as string[]) || [];
     const allTeamMembers = Array.from(new Set([registeringUser, ...teamMembers]));
 
     const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
