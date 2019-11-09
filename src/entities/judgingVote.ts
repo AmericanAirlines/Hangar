@@ -118,6 +118,7 @@ export class JudgingVote extends BaseEntity {
         scores[currentTeamId] = currentTeamScore;
         scores[previousTeamId] = previousTeamScore;
       }
+    }
 
     // Average scores from both passes
     const teamResults: TeamResult[] = [];
