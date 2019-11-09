@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import next from 'next';
 import { createConnection, getConnectionOptions, ConnectionOptions } from 'typeorm';
 import path from 'path';
 import { WebClient } from '@slack/web-api';
@@ -9,6 +10,8 @@ import { apiApp } from './api';
 import logger from './logger';
 
 const app = express();
+const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
+const nextHandler = nextApp.getRequestHandler();
 
 app.get('/', (_req, res) => {
   res.send('👋');
@@ -27,7 +30,7 @@ const init = async (): Promise<void> => {
       ...options,
       url,
       entities: [path.join(__dirname, 'entities/*')],
-      migrations: [path.join(__dirname, '/migration/*')],
+      migrations: [path.join(__dirname, 'migration/*')],
       migrationsRun: true,
     } as PostgresConnectionOptions);
   }
@@ -41,6 +44,11 @@ const init = async (): Promise<void> => {
     if (process.env.NODE_ENV !== 'test') {
       process.exit(1);
     }
+  }
+
+  if (process.env.NODE_ENV !== 'test') {
+    await nextApp.prepare();
+    app.get('*', (req, res) => nextHandler(req, res));
   }
 };
 
