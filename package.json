@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/AmericanAirlines/Hangar#readme",
   "engines": {
-    "node": ">=10.0.0"
+    "node": ">=11.0.0"
   },
   "husky": {
     "hooks": {
