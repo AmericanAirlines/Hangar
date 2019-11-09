@@ -171,14 +171,22 @@ describe('score calculation', () => {
     const scoredOrder = scores.flatMap((score) => score.id);
 
     let errorCount = 0;
+    let dissimilarCount = 0;
     for (let i = 0; i < expectedOrder.length; i += 1) {
       if (expectedOrder[i] !== scoredOrder[i]) {
         errorCount += 1;
+        const scoredIndex = scoredOrder.findIndex((teamId) => teamId === expectedOrder[i]);
+        if (Math.abs(i - scoredIndex) > 2) {
+          dissimilarCount += 1;
+        }
       }
     }
 
-    const percentCorrect = (expectedOrder.length - errorCount) / expectedOrder.length;
-    expect(percentCorrect).toBeGreaterThanOrEqual(0.7);
+    // const percentCorrect = (expectedOrder.length - errorCount) / expectedOrder.length;
+    // expect(percentCorrect).toBeGreaterThanOrEqual(0.3);
+
+    const similarityPercent = 1 - (dissimilarCount / expectedOrder.length);
+    expect(similarityPercent).toBeGreaterThanOrEqual(0.85);
 
     // TODO: Achieve 100% in tests with perfect judging
     // expect(scoredOrder).toEqual(expectedOrder);
