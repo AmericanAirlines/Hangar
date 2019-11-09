@@ -185,7 +185,7 @@ describe('score calculation', () => {
     // const percentCorrect = (expectedOrder.length - errorCount) / expectedOrder.length;
     // expect(percentCorrect).toBeGreaterThanOrEqual(0.3);
 
-    const similarityPercent = 1 - (dissimilarCount / expectedOrder.length);
+    const similarityPercent = 1 - dissimilarCount / expectedOrder.length;
     expect(similarityPercent).toBeGreaterThanOrEqual(0.85);
 
     // TODO: Achieve 100% in tests with perfect judging
