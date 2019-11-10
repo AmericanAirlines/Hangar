@@ -106,6 +106,39 @@ const judge = (): JSX.Element => {
     setLoading(false);
   };
 
+  const skipHandler = () => async () => {
+    setLoading(true);
+
+    const res = await fetch('/api/skip', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: judgeId }),
+    });
+
+    if (!res.ok) {
+      setError('Problem fetching teams');
+      setLoading(false);
+      return;
+    }
+
+    const { currentTeam: cTeam, previousTeam: pTeam } = await res.json();
+
+    if (cTeam) {
+      setCurrentTeam(cTeam);
+      if (pTeam) {
+        setPreviousTeam(pTeam);
+      } else {
+        setPreviousTeam(null);
+      }
+    } else {
+      setCurrentTeam(null);
+      setPreviousTeam(null);
+    }
+    setLoading(false);
+  };
+
   if (loading) {
     return <h1>Loading</h1>;
   }
@@ -158,11 +191,14 @@ const judge = (): JSX.Element => {
       {!firstTeam && (
         <>
           <h3>Which team was better?</h3>
-          <div className="btn-group btn-group-lg" role="group">
-            <button type="button" className="btn btn-default" onClick={voteHandler(false)}>
+          <div className="btn-group" role="group">
+            <button type="button" className="btn btn-primary" onClick={voteHandler(false)}>
               Previous Team
             </button>
-            <button type="button" className="btn btn-default" onClick={voteHandler(false)}>
+            <button type="button" className="btn btn-default" onClick={skipHandler()}>
+              Skip Team
+            </button>
+            <button type="button" className="btn btn-primary" onClick={voteHandler(true)}>
               Current Team
             </button>
           </div>

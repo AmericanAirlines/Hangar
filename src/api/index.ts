@@ -61,4 +61,17 @@ api.post('/vote', async (req, res) => {
   res.send(await getJudgeTeams(judge));
 });
 
+api.post('/skip', async (req, res) => {
+  if (!req.body.id) {
+    res.sendStatus(500).send('No id');
+    return;
+  }
+
+  const judge = await Judge.findOne(req.body.id);
+
+  await judge.skip();
+
+  res.send(await getJudgeTeams(judge));
+});
+
 export const apiApp = api;
