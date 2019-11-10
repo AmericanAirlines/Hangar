@@ -94,6 +94,9 @@ describe('judging logistics', () => {
     expect(judge.currentTeam).toBeNull();
 
     expect(judge.visitedTeams).toContain(team.id);
+
+    const dbJudge = await Judge.findOne(judge.id);
+    expect(dbJudge.visitedTeams).toEqual(judge.visitedTeams);
   });
 
   it('judges will all get different teams if they exist', async () => {

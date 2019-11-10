@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import { JudgingVote } from './judgingVote';
 import { Team } from './team';
-// import { Team } from './team';
 
 @Entity()
 export class Judge extends BaseEntity {
