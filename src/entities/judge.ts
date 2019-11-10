@@ -35,6 +35,10 @@ export class Judge extends BaseEntity {
     await this.recordCurrentTeamAndSave();
   }
 
+  async skip(): Promise<void> {
+    await this.clearCurrentTeamAndSave();
+  }
+
   async vote(currentTeamChosen?: boolean): Promise<void> {
     // Create a new vote object with the outcome of the vote
     await new JudgingVote(this.visitedTeams[this.visitedTeams.length - 1], this.currentTeam, currentTeamChosen).save();
@@ -43,6 +47,15 @@ export class Judge extends BaseEntity {
 
   async recordCurrentTeamAndSave(): Promise<void> {
     this.visitedTeams.push(this.currentTeam);
+    const currentTeam = await Team.findOne(this.currentTeam);
+    await currentTeam.decrementActiveJudgeCount();
+    await currentTeam.incrementJudgeVisits();
+    this.currentTeam = null;
+    await this.save();
+  }
+
+  async clearCurrentTeamAndSave(): Promise<void> {
+    this.visitedTeams.unshift(this.currentTeam);
     const currentTeam = await Team.findOne(this.currentTeam);
     await currentTeam.decrementActiveJudgeCount();
     await currentTeam.incrementJudgeVisits();
