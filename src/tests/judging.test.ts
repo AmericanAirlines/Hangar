@@ -167,8 +167,8 @@ describe('score calculation', () => {
 
     const scores = await JudgingVote.tabulate();
 
-    const expectedOrder = orderedTeams.flatMap((team) => team.id);
-    const scoredOrder = scores.flatMap((score) => score.id);
+    const expectedOrder = orderedTeams.map((team) => team.id);
+    const scoredOrder = scores.map((score) => score.id);
 
     // let errorCount = 0;
     let dissimilarCount = 0;
