@@ -5,6 +5,8 @@ import { Team } from '../entities/team';
 
 const api = express();
 
+api.use(express.json());
+
 api.get('/', (_req, res) => {
   res.send('🌊');
 });
@@ -16,7 +18,7 @@ api.post('/judge', async (_req, res) => {
 });
 
 const getJudgeTeams = async (judge: Judge): Promise<{ currentTeam: Team; previousTeam: Team }> => {
-  const previousTeamId = judge.visitedTeams.pop();
+  const previousTeamId = judge.visitedTeams[judge.visitedTeams.length - 1];
 
   let currentTeam;
   if (judge.currentTeam) {
@@ -25,7 +27,10 @@ const getJudgeTeams = async (judge: Judge): Promise<{ currentTeam: Team; previou
     currentTeam = ((await judge.getNextTeam()) as unknown) as Team;
   }
 
-  const previousTeam = await Team.findOne(previousTeamId);
+  let previousTeam;
+  if (previousTeamId) {
+    previousTeam = await Team.findOne(previousTeamId);
+  }
 
   return {
     currentTeam,
@@ -40,9 +45,14 @@ api.get('/judge/teams', async (req, res) => {
 });
 
 api.post('/vote', async (req, res) => {
-  const judge = await Judge.findOneOrFail(req.body.id);
+  if (!req.body.id) {
+    res.sendStatus(500).send('Whoops');
+    return;
+  }
 
-  if (req.body.currentTeamChosen === null) {
+  const judge = await Judge.findOne(req.body.id);
+
+  if (req.body.currentTeamChosen === null || req.body.currentTeamChosen === undefined) {
     await judge.continue();
   } else {
     await judge.vote(req.body.currentTeamChosen);
