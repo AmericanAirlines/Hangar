@@ -133,6 +133,9 @@ const judge = (): JSX.Element => {
         <div className="alert alert-info text-left" role="alert">
           <h3>Current Team</h3>
           <h4>{currentTeam.name}</h4>
+          <p>
+            <strong>Location: {currentTeam.tableNumber}</strong>
+          </p>
           <p>{currentTeam.projectDescription}</p>
         </div>
       )}
@@ -140,6 +143,9 @@ const judge = (): JSX.Element => {
         <div className="alert alert-info text-left" role="alert">
           <h3>Previous Team</h3>
           <h4>{previousTeam.name}</h4>
+          <p>
+            <strong>Location: {previousTeam.tableNumber}</strong>
+          </p>
           <p>{previousTeam.projectDescription}</p>
         </div>
       )}
