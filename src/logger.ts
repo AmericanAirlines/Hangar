@@ -1,4 +1,4 @@
-import winston, { format } from 'winston';
+import * as winston from 'winston';
 
 const level = process.env.LOG_LEVEL || 'debug';
 
@@ -41,7 +41,7 @@ const simpleErrorFormat = winston.format((info) => {
 });
 
 const logger = winston.createLogger({
-  format: format.combine(format.colorize(), format.splat(), simpleErrorFormat(), format.simple()),
+  format: winston.format.combine(winston.format.colorize(), winston.format.splat(), simpleErrorFormat(), winston.format.simple()),
   transports: [new winston.transports.Console({ level })],
   levels: {
     emerg: 0,

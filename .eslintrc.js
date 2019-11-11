@@ -20,6 +20,7 @@ module.exports = {
     'max-len': [0],
     'import/prefer-default-export': ['off'],
     'object-curly-newline': ['off'],
+    '@typescript-eslint/no-use-before-define': ['off'],
   },
   settings: {
     'import/resolver': {
