@@ -2,6 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import { JudgingVote } from './judgingVote';
 import { Team } from './team';
 
+// Test
+
 @Entity()
 export class Judge extends BaseEntity {
   constructor() {
