@@ -23,7 +23,7 @@ jobs:
     - name: npm install, build, test, and lint/checkstyle
       run: |
         npm ci      
-        npm run build:ci
+        npm run build
         npm test -- --coverage
         npm run checkstyle
         npm run lint
