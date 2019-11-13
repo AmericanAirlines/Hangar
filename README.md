@@ -1,4 +1,5 @@
 ![](../../workflows/Build/badge.svg)
+[![codecov](https://codecov.io/gh/AmericanAirlines/Hangar/branch/master/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Hangar)
 
 
 # Hangar
