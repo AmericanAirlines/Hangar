@@ -12,4 +12,5 @@ module.exports = {
   testMatch: ['**/*.test.(ts|js)'],
   testEnvironment: 'node',
   preset: 'ts-jest',
+  collectCoverageFrom: ['src/**/*.{ts}', '!src/migrations'],
 };
