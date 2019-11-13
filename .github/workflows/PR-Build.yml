@@ -32,3 +32,4 @@ jobs:
       with:
         token: ${{secrets.CODECOV_TOKEN}}
         file: ./clover.xml
+        name: codecov-${{ matrix.node-version }}
