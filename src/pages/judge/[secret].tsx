@@ -160,7 +160,6 @@ const judge = (): JSX.Element => {
   return (
     <div className="container-fluid text-center">
       <h1>Welcome Judge!</h1>
-      {loading && <p>Loading ...</p>}
       {error && <p style={{ color: 'red' }}>{error}, refresh and try again</p>}
       {currentTeam && (
         <div className="alert alert-info text-left" role="alert">
