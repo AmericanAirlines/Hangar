@@ -15,7 +15,7 @@ jobs:
         node-version: [11.x, 12.x]
 
     steps:
-    - name: Cache
+    - name: Enable dependency caching
       uses: actions/cache@v1.0.0
     - uses: actions/checkout@v1
     - name: Use Node.js ${{ matrix.node-version }}
