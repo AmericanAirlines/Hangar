@@ -23,7 +23,13 @@ jobs:
     - name: npm install, build, test, and lint/checkstyle
       run: |
         npm ci      
-        npm run build:ci
-        npm test
+        npm run build
+        npm test -- --coverage
         npm run checkstyle
         npm run lint
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1.0.3
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: ./clover.xml
+        name: codecov-master-${{ matrix.node-version }}

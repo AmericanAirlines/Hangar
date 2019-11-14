@@ -11,7 +11,6 @@
     "build:ts": "tsc -p src/ --pretty",
     "build:next": "next build",
     "build:watch": "npm run build:ts -- -w",
-    "build:ci": "run-s lint build test",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "lint:staged": "lint-staged",
