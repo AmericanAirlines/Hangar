@@ -1,6 +1,7 @@
 ![](../../workflows/Build/badge.svg)
 [![codecov](https://codecov.io/gh/AmericanAirlines/Hangar/branch/master/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Hangar)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/AmericanAirlines/Hangar.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Hangar/alerts/)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Hangar.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Hangar/context:javascript)
 
 
 # Hangar
