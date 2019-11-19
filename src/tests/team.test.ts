@@ -52,14 +52,16 @@ describe('judging', () => {
   });
 
   it('retrieving a team for judging will retry up to 5 times on collisions', async () => {
-    const mockMethod = jest.fn((): Promise<UpdateResult> => {
-      const result: UpdateResult = {
-        affected: 0,
-        raw: undefined,
-        generatedMaps: undefined,
-      };
-      return Promise.resolve(result);
-    });
+    const mockMethod = jest.fn(
+      (): Promise<UpdateResult> => {
+        const result: UpdateResult = {
+          affected: 0,
+          raw: undefined,
+          generatedMaps: undefined,
+        };
+        return Promise.resolve(result);
+      },
+    );
 
     Team.updateSelectedTeam = mockMethod;
 
