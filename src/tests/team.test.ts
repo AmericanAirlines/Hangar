@@ -17,10 +17,6 @@ describe('judging', () => {
     await closedbConnection();
   });
 
-  it('the in memory database works', async () => {
-    Team.findOneOrFail(team.id);
-  });
-
   it('decrement reduces activeJudgeCount by 1', async () => {
     team.activeJudgeCount = 2;
     await team.save();

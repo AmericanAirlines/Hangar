@@ -6,9 +6,10 @@ import logger from '../../logger';
 function register(bolt: App): void {
   bolt.message(async ({ say }) => {
     // TODO: get context (toggles), use to generate specific dashboard blocks
-    const teamRegistrationToggle = (await Config.findOne({ key: 'teamRegistrationActive' })) || { key: 'teamRegistrationActive', value: 'false' };
+    const teamRegistrationActiveKey = 'teamRegistrationActive';
+    const teamRegistrationActive = await Config.findToggleForKey(teamRegistrationActiveKey);
     const context = {
-      [teamRegistrationToggle.key]: teamRegistrationToggle.value === 'true',
+      teamRegistrationActiveKey: teamRegistrationActive,
     };
     try {
       say({
