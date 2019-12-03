@@ -4,6 +4,7 @@ import { createDbConnection, closedbConnection } from './testdb';
 import { Team } from '../entities/team';
 import { Judge } from '../entities/judge';
 import { JudgingVote } from '../entities/judgingVote';
+import logger from '../logger';
 
 /* eslint-disable no-await-in-loop, no-continue */
 
@@ -54,6 +55,7 @@ describe('judging logistics', () => {
 
     await judge.continue();
     expect(judge.currentTeam).toBeNull();
+
 
     await judge.getNextTeam();
     expect(judge.currentTeam).toEqual(team2.id);
@@ -169,15 +171,16 @@ describe('score calculation', () => {
     const orderedTeams = await visitTeamsAndJudge(judges, teams, 1.0);
 
     const scores = await JudgingVote.tabulate();
+    const scores2 = await JudgingVote.tabulate();
 
     const expectedOrder = orderedTeams.map((team) => team.id);
     const scoredOrder = scores.map((score) => score.id);
 
-    // let errorCount = 0;
+    let errorCount = 0;
     let dissimilarCount = 0;
     for (let i = 0; i < expectedOrder.length; i += 1) {
       if (expectedOrder[i] !== scoredOrder[i]) {
-        // errorCount += 1;
+        errorCount += 1;
         const scoredIndex = scoredOrder.findIndex((teamId) => teamId === expectedOrder[i]);
         if (Math.abs(i - scoredIndex) > 2) {
           dissimilarCount += 1;
@@ -185,14 +188,13 @@ describe('score calculation', () => {
       }
     }
 
-    // const percentCorrect = (expectedOrder.length - errorCount) / expectedOrder.length;
-    // expect(percentCorrect).toBeGreaterThanOrEqual(0.3);
-
     const similarityPercent = 1 - dissimilarCount / expectedOrder.length;
+    logger.info(`Judging Similarity: ${similarityPercent}`);
     expect(similarityPercent).toBeGreaterThanOrEqual(0.85);
 
     // TODO: Achieve 100% in tests with perfect judging
-    // expect(scoredOrder).toEqual(expectedOrder);
+    logger.info(`Judging Errors: ${errorCount}`);
+    // expect(errorCount).toEqual(0);
   });
 
   // it('scoring works as expected without judge volatility and minimal visitation', async () => {
