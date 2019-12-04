@@ -20,6 +20,9 @@ export class Judge extends BaseEntity {
   @Column({ nullable: true })
   currentTeam?: number;
 
+  @Column({ nullable: true })
+  previousTeam?: number;
+
   async getNextTeam(): Promise<Team> {
     const newTeam = await Team.getNextAvailableTeamExcludingTeams(this.visitedTeams);
     this.currentTeam = newTeam ? newTeam.id : null;
@@ -27,16 +30,13 @@ export class Judge extends BaseEntity {
     return newTeam;
   }
 
-  getLastJudgedTeamId(): number {
-    return this.visitedTeams[this.visitedTeams.length - 1];
-  }
-
   async continue(): Promise<void> {
     await this.recordCurrentTeamAndSave();
   }
 
   async skip(): Promise<void> {
-    await this.clearCurrentTeamAndSave();
+    const updatePrevious = false;
+    await this.recordCurrentTeamAndSave(updatePrevious);
   }
 
   async vote(currentTeamChosen?: boolean): Promise<void> {
@@ -45,17 +45,11 @@ export class Judge extends BaseEntity {
     await this.recordCurrentTeamAndSave();
   }
 
-  async recordCurrentTeamAndSave(): Promise<void> {
+  async recordCurrentTeamAndSave(updatePrevious = true): Promise<void> {
     this.visitedTeams.push(this.currentTeam);
-    const currentTeam = await Team.findOne(this.currentTeam);
-    await currentTeam.decrementActiveJudgeCount();
-    await currentTeam.incrementJudgeVisits();
-    this.currentTeam = null;
-    await this.save();
-  }
-
-  async clearCurrentTeamAndSave(): Promise<void> {
-    this.visitedTeams.unshift(this.currentTeam);
+    if (updatePrevious) {
+      this.previousTeam = this.currentTeam;
+    }
     const currentTeam = await Team.findOne(this.currentTeam);
     await currentTeam.decrementActiveJudgeCount();
     await currentTeam.incrementJudgeVisits();
