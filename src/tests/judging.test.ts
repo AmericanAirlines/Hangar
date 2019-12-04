@@ -124,6 +124,26 @@ describe('judging logistics', () => {
     const uniqueTeams = Array.from(new Set(visitedTeams));
     expect(uniqueTeams.length).toEqual(numTeams);
   });
+
+  it('if a judge skips a team, they will be marked as being visited but will not be the previous team', async () => {
+    const judge = await new Judge().save();
+    const team1 = await new Team('Some Team', 123, 'A new app', ['123']).save();
+
+    await judge.getNextTeam();
+    expect(judge.currentTeam).toEqual(team1.id);
+
+    const team2 = await new Team('Another Team', 456, 'A new app', ['456']).save();
+
+    await judge.continue();
+    await judge.getNextTeam();
+
+    await judge.skip();
+
+    expect(judge.currentTeam).toBeNull();
+    expect(judge.previousTeam).toEqual(team1.id);
+    expect(judge.visitedTeams).toContain(team1.id);
+    expect(judge.visitedTeams).toContain(team2.id);
+  });
 });
 
 describe('score calculation', () => {
@@ -133,6 +153,19 @@ describe('score calculation', () => {
 
   afterEach(async () => {
     await closedbConnection();
+  });
+
+  it('if minimal data is provided, tabulation will throw an error', async () => {
+    const numTeams = 7;
+    const numJudges = 10;
+    const teams = await createTeamData(numTeams);
+    const judges = await createJudgeData(numJudges);
+
+    await visitTeamsAndJudge(judges, teams, 0.2);
+    await expect(JudgingVote.tabulate()).rejects.toThrow();
+
+    await visitTeamsAndJudge(judges, teams);
+    await expect(JudgingVote.tabulate()).resolves;
   });
 
   it('teams are visited evenly', async () => {
@@ -252,7 +285,7 @@ async function visitTeamsAndJudge(judges: Judge[], teams: Team[], percentVisitat
     }
 
     // Evaluate teams for voting
-    const previousTeamId = judge.getLastJudgedTeamId();
+    const previousTeamId = judge.previousTeam;
     let previousTeamIdx = Number.POSITIVE_INFINITY;
     let currentTeamIdx = 0;
 
