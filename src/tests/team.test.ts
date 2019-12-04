@@ -1,4 +1,5 @@
 import 'jest';
+import { UpdateResult } from 'typeorm';
 import { Team } from '../entities/team';
 import { createDbConnection, closedbConnection } from './testdb';
 
@@ -44,5 +45,30 @@ describe('judging', () => {
     await team.incrementJudgeVisits();
     updatedTeam = await Team.findOneOrFail(team.id);
     expect(updatedTeam.judgeVisits).toEqual(2);
+  });
+
+  it('retrieving a team for judging will retry up to 5 times on collisions', async () => {
+    const mockMethod = jest.fn(
+      (): Promise<UpdateResult> => {
+        const result: UpdateResult = {
+          affected: 0,
+          raw: undefined,
+          generatedMaps: undefined,
+        };
+        return Promise.resolve(result);
+      },
+    );
+
+    Team.updateSelectedTeam = mockMethod;
+
+    let newTeam: Team;
+    try {
+      newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
+      // FAILURE
+    } catch (err) {
+      // SUCCESS
+    }
+    expect(newTeam).toBeUndefined();
+    expect(mockMethod.mock.calls.length).toBe(5);
   });
 });
