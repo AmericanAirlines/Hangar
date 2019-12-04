@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateResult } from 'typeorm';
 
 const genHash = (): string => {
   const prefix = Math.random()
@@ -83,13 +83,7 @@ export class Team extends BaseEntity {
 
       if (team) {
         const newHash = genHash();
-        const result = await Team.createQueryBuilder()
-          .update()
-          .set({ activeJudgeCount: team.activeJudgeCount + 1, syncHash: newHash })
-          .whereInIds(team.id)
-          .andWhere('syncHash = :syncHash', { syncHash: team.syncHash })
-          .execute();
-
+        const result = await Team.updateSelectedTeam(team, newHash);
         await team.reload();
 
         if (result.affected > 0 || team.syncHash === newHash) {
@@ -105,7 +99,16 @@ export class Team extends BaseEntity {
     } while (retries > 0);
     /* eslint-enable no-await-in-loop */
 
-    return team;
+    throw new Error('Unable to retrieve a team due to concurrency issues');
+  }
+
+  static async updateSelectedTeam(team: Team, hash: string): Promise<UpdateResult> {
+    return Team.createQueryBuilder()
+      .update()
+      .set({ activeJudgeCount: team.activeJudgeCount + 1, syncHash: hash })
+      .whereInIds(team.id)
+      .andWhere('syncHash = :syncHash', { syncHash: team.syncHash })
+      .execute();
   }
 
   async decrementActiveJudgeCount(): Promise<void> {

@@ -17,6 +17,7 @@
     "checkstyle": "prettier -l \"src/**/*.ts\"",
     "checkstyle:fix": "npm run checkstyle -- --write",
     "test": "jest",
+    "test:coverage": "npm run test -- --coverage",
     "test:changed": "jest -o",
     "test:sync": "npm run test -- --runInBand",
     "clean": "rimraf dist .next",
