@@ -63,61 +63,7 @@ export class JudgingVote extends BaseEntity {
       } else {
         // Reverse to achieve descending order
         votes.reverse();
-      }
-
-      let minScore = Number.POSITIVE_INFINITY;
-      let maxScore = Number.NEGATIVE_INFINITY;
-
-      for (let i = 0; i < votes.length; i += 1) {
-        const vote = votes[i];
-
-        const currentTeamId = vote.currentTeam;
-        const previousTeamId = vote.previousTeam;
-
-        const currentTeamScore = scores[currentTeamId] || { id: currentTeamId, score: 0 };
-        const previousTeamScore = scores[previousTeamId] || { id: previousTeamId, score: 0 };
-
-        // Update min and max score
-        minScore = Math.min(minScore, currentTeamScore.score, previousTeamScore.score);
-        maxScore = Math.max(maxScore, currentTeamScore.score, previousTeamScore.score);
-
-        if ((calibrationCount[currentTeamId] || 0) + (calibrationCount[previousTeamId] || 0) < votesNeededForCalibration * 2) {
-          // SIMPLE SCORING - one or both of the teams is uncalibrated
-          // Increment calibration count for each team
-          calibrationCount[currentTeamId] = calibrationCount[currentTeamId] ? calibrationCount[currentTeamId] + 1 : 1;
-          calibrationCount[previousTeamId] = calibrationCount[previousTeamId] ? calibrationCount[previousTeamId] + 1 : 1;
-
-          // Apply score impact based on vote outcome
-          const currentTeamScoreImpact = vote.currentTeamChosen ? 25 : -25;
-          currentTeamScore.score += currentTeamScoreImpact;
-          previousTeamScore.score += -currentTeamScoreImpact;
-        } else {
-          // ELO SCORING - both teams have been calibrated and have an ELO score
-          // In order to determine differential between scores, "shift" minScore to 0, If...
-          //   Positive min: shift is negative
-          //   Negative min: shift is positive (double negative)
-          //   Zero min: shift is zero (-1 * 0 = 0)
-          const normalizationShift = -minScore;
-          const normalizedMaxScore = maxScore + normalizationShift;
-
-          // Calculate team percentiles using the normalizationShift and normalizedMaxScore
-          const currentTeamPercentile = (currentTeamScore.score + normalizationShift) / normalizedMaxScore;
-          const previousTeamPercentile = (previousTeamScore.score + normalizationShift) / normalizedMaxScore;
-
-          // Determine whether the scoreImpact should be positive or negative
-          // Current Team Advantage: potential positive decreases, potential negative increases
-          const advantageCoeficient = currentTeamPercentile > previousTeamPercentile ? -1 : 1;
-          const currentTeamScoreImpact = advantageCoeficient * Math.round(100 * Math.abs(currentTeamPercentile - previousTeamPercentile));
-          const previousTeamScoreImpact = -advantageCoeficient * Math.round(100 * Math.abs(currentTeamPercentile - previousTeamPercentile));
-
-          // Apply score impact based on vote outcome
-          currentTeamScore.score += (vote.currentTeamChosen ? 100 : -100) + currentTeamScoreImpact;
-          previousTeamScore.score += (vote.currentTeamChosen ? -100 : 100) + previousTeamScoreImpact;
-        }
-
-        // Update scores for both teams
-        scores[currentTeamId] = currentTeamScore;
-        scores[previousTeamId] = previousTeamScore;
+        descScores = this.scoreVotes(votesNeededForCalibration, votes);
       }
     }
 
@@ -178,7 +124,7 @@ export class JudgingVote extends BaseEntity {
         calibrationCount[previousTeamId] = calibrationCount[previousTeamId] ? calibrationCount[previousTeamId] + 1 : 1;
 
         // Apply score impact based on vote outcome
-        const currentTeamScoreImpact = vote.currentTeamChosen ? 50 : -50;
+        const currentTeamScoreImpact = vote.currentTeamChosen ? 100 : -100;
         currentTeamScore.score += currentTeamScoreImpact;
         previousTeamScore.score += -currentTeamScoreImpact;
       } else {
@@ -190,7 +136,6 @@ export class JudgingVote extends BaseEntity {
         // Calculate team percentiles using the normalizationShift and normalizedMaxScore
         const currentTeamPercentile = (currentTeamScore.score + normalizationShift) / normalizedMaxScore;
         const previousTeamPercentile = (previousTeamScore.score + normalizationShift) / normalizedMaxScore;
-
 
         // Determine whether the scoreImpact should be positive or negative
         // Current Team Advantage: potential positive decreases, potential negative increases
