@@ -141,8 +141,11 @@ export class JudgingVote extends BaseEntity {
         previousTeamScore.score += -currentTeamScoreImpact;
       } else {
         // ELO SCORING - both teams have been calibrated and have an ELO score
-        // In order to determine differential between scores, "shift" minScore to 0
-        const normalizationShift = minScore <= 0 ? Math.abs(minScore) : -minScore;
+        // In order to determine differential between scores, "shift" minScore to 0, If...
+        //   Positive min: shift is negative
+        //   Negative min: shift is positive (double negative)
+        //   Zero min: shift is zero (-1 * 0 = 0)
+        const normalizationShift = -minScore;
         const normalizedMaxScore = maxScore + normalizationShift;
 
         // Calculate team percentiles using the normalizationShift and normalizedMaxScore
