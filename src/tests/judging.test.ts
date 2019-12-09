@@ -56,7 +56,6 @@ describe('judging logistics', () => {
     await judge.continue();
     expect(judge.currentTeam).toBeNull();
 
-
     await judge.getNextTeam();
     expect(judge.currentTeam).toEqual(team2.id);
   });
@@ -196,38 +195,57 @@ describe('score calculation', () => {
   });
 
   it('scoring works as expected without judge volatility and full visitation', async () => {
-    const numTeams = 15;
-    const numJudges = 10;
-    const teams = await createTeamData(numTeams);
-    const judges = await createJudgeData(numJudges);
+    const numTeamsSet = [5, 10, 15];
+    const numJudgesSet = [5, 10, 15];
+    const visitationSet = [1.0];
 
-    const orderedTeams = await visitTeamsAndJudge(judges, teams, 1.0);
+    await closedbConnection();
+    for (let i = 0; i < numTeamsSet.length; i += 1) {
+      const numTeams = numTeamsSet[i];
+      for (let j = 0; j < numJudgesSet.length; j += 1) {
+        const numJudges = numJudgesSet[j];
+        for (let k = 0; k < visitationSet.length; k += 1) {
+          const visitation = visitationSet[0];
 
-    const scores = await JudgingVote.tabulate();
-    const scores2 = await JudgingVote.tabulate();
+          await createDbConnection();
 
-    const expectedOrder = orderedTeams.map((team) => team.id);
-    const scoredOrder = scores.map((score) => score.id);
+          const teams = await createTeamData(numTeams);
+          const judges = await createJudgeData(numJudges);
 
-    let errorCount = 0;
-    let dissimilarCount = 0;
-    for (let i = 0; i < expectedOrder.length; i += 1) {
-      if (expectedOrder[i] !== scoredOrder[i]) {
-        errorCount += 1;
-        const scoredIndex = scoredOrder.findIndex((teamId) => teamId === expectedOrder[i]);
-        if (Math.abs(i - scoredIndex) > 2) {
-          dissimilarCount += 1;
+          const orderedTeams = await visitTeamsAndJudge(judges, teams, visitation);
+
+          const scores = await JudgingVote.tabulate();
+
+          const expectedOrder = orderedTeams.map((team) => team.id);
+          const scoredOrder = scores.map((score) => score.id);
+
+          let errorCount = 0;
+          let dissimilarCount = 0;
+          // Distance is an index distance of 10%
+          const similarIndexDistance = Math.ceil(teams.length * 0.15) || 1;
+          for (let l = 0; l < expectedOrder.length; l += 1) {
+            if (expectedOrder[l] !== scoredOrder[l]) {
+              errorCount += 1;
+              const scoredIndex = scoredOrder.findIndex((teamId) => teamId === expectedOrder[i]);
+              if (Math.abs(i - scoredIndex) > similarIndexDistance) {
+                dissimilarCount += 1;
+              }
+            }
+          }
+
+          const similarityPercent = 1 - dissimilarCount / expectedOrder.length;
+          logger.info(`Finished Judge Pass - ${numTeams} Teams x ${numJudges} Judges
+    Similarity: ${similarityPercent * 100}% (Max position dissimilarity: ${similarIndexDistance})
+    Errors: ${errorCount}`);
+          expect(similarityPercent).toBeGreaterThanOrEqual(0.85);
+
+          // TODO: Achieve 100% in tests with perfect judging
+          // expect(errorCount).toEqual(0);
+          await closedbConnection();
         }
       }
     }
-
-    const similarityPercent = 1 - dissimilarCount / expectedOrder.length;
-    logger.info(`Judging Similarity: ${similarityPercent}`);
-    expect(similarityPercent).toBeGreaterThanOrEqual(0.85);
-
-    // TODO: Achieve 100% in tests with perfect judging
-    logger.info(`Judging Errors: ${errorCount}`);
-    // expect(errorCount).toEqual(0);
+    await createDbConnection();
   });
 
   // it('scoring works as expected without judge volatility and minimal visitation', async () => {

@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import shuffle from 'shuffle-array';
 import { Team } from './team';
 
 interface TeamScore {
@@ -38,8 +39,7 @@ export class JudgingVote extends BaseEntity {
     const numTeams = teams.length;
 
     // Initialize score keeping
-    let ascScores: { [id: string]: TeamScore };
-    let descScores: { [id: string]: TeamScore };
+    const initialScores: { [id: string]: TeamScore }[] = [];
 
     // Use a designated percent of the votes for calibration
     const avgNumVotesPerTeam = allVotes.length / numTeams;
@@ -49,36 +49,45 @@ export class JudgingVote extends BaseEntity {
     const votesNeededForCalibration = Math.max(percentBasedCalibrationVotes, 2);
 
     // If the number of calibration votes is >= 50% of the votes for the team; throw error
-    if (votesNeededForCalibration / avgNumVotesPerTeam >= 0.5) {
+    if (votesNeededForCalibration / avgNumVotesPerTeam >= 0.75) {
       throw new Error('Insufficient vote count for judging');
     }
 
-    for (let j = 0; j < 2; j += 1) {
-      // First pass is ascending, second pass is descending
-      const asc = j === 0;
-      // Copy votes for scoring
-      const votes = Object.assign([], allVotes);
-      if (asc) {
-        ascScores = this.scoreVotes(votesNeededForCalibration, votes);
-      } else {
-        // Reverse to achieve descending order
-        votes.reverse();
-        descScores = this.scoreVotes(votesNeededForCalibration, votes);
-      }
+    // Pass over the data in random order to obtain an unbiased baseline
+    const randomJudgingIterations = 10;
+    for (let j = 0; j < randomJudgingIterations; j += 1) {
+      // Copy votes and randomize order to prevent bias based on vote ordering
+      const votes = shuffle(Object.assign([], allVotes));
+      // Score votes and add to array of scores
+      initialScores.push(this.scoreVotes(votesNeededForCalibration, votes));
     }
 
-    // Average scores from both passes
-    const avgScores = Object.assign([], ascScores);
-    Object.values(avgScores).forEach((teamScore) => {
-      avgScores[teamScore.id].score = Math.round((teamScore.score + descScores[teamScore.id].score) / 2);
+    // Average scores from all passes
+    const normalizedPosition: { [id: number]: number } = {};
+    Object.values(initialScores).forEach((scores) => {
+      // Convert object of team scores into a sortable array
+      // Sort by pushing highest scored teams to the front of the array
+      const teamScores = Object.values(scores).sort((a, b) => (a.score > b.score ? -1 : 1));
+
+      // Record each team's position
+      // This is necessary to avoid normalization
+      // (i.e., the max/min scores from each pass aren't the same, so we can't avg those)
+      teamScores.forEach((teamScore, position) => {
+        normalizedPosition[teamScore.id] = (normalizedPosition[teamScore.id] || 0) + position;
+      });
     });
 
-    // Sort based on match up difficulty by using existing scores
+    // Calculate averge position based on outcome of each randomized pass
+    const avgPositions: number[] = Object.keys(normalizedPosition)
+      .map((key) => Number(key))
+      .sort((a, b) => (normalizedPosition[a] > normalizedPosition[b] ? 1 : -1));
+
+    // Sort based on match up difficulty by using averaged scores
     const votes = Object.assign([], allVotes).sort((a: JudgingVote, b: JudgingVote) => {
-      const aScoreDifferential = Math.abs(avgScores[a.previousTeam].score - avgScores[a.currentTeam].score);
-      const bScoreDifferential = Math.abs(avgScores[b.previousTeam].score - avgScores[b.currentTeam].score);
+      const aScoreDifferential = avgPositions.indexOf(a.previousTeam) + avgPositions.indexOf(a.currentTeam);
+      const bScoreDifferential = avgPositions.indexOf(b.previousTeam) + avgPositions.indexOf(b.currentTeam);
       // Sort from largest difference to smallest; save the more difficult matches until the end of scoring
-      return aScoreDifferential < bScoreDifferential ? 1 : -1;
+      return aScoreDifferential > bScoreDifferential ? -1 : 1;
     });
 
     const finalScores = this.scoreVotes(votesNeededForCalibration, votes);
@@ -94,6 +103,9 @@ export class JudgingVote extends BaseEntity {
     });
 
     return teamResults.sort((a, b) => (a.score > b.score ? -1 : 1));
+
+    // TODO: Max final pass
+    // TODO: Pass new value for calibration votes needed and/or calibration score
   }
 
   static scoreVotes(votesNeededForCalibration: number, votes: JudgingVote[]): { [id: string]: TeamScore } {
