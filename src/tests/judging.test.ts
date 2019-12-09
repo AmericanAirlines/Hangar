@@ -8,6 +8,8 @@ import logger from '../logger';
 
 /* eslint-disable no-await-in-loop, no-continue */
 
+jest.setTimeout(10000);
+
 describe('judging logistics', () => {
   beforeEach(async () => {
     await createDbConnection();
