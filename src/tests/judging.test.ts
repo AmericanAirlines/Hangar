@@ -212,7 +212,6 @@ describe('score calculation', () => {
         for (let k = 0; k < visitationSet.length; k += 1) {
           const visitation = visitationSet[k];
 
-
           await createDbConnection();
 
           const teams = await createTeamData(numTeams);
@@ -242,7 +241,12 @@ describe('score calculation', () => {
     Errors: ${errorCount}`;
 
           if (similarity < similarityThreshold) {
-            errors.push(`Scoring with ${numTeams} teams, ${numJudges} judges, and visitation of ${visitation * 100}% visitation failed to meet similarity threshold of ${(similarityThreshold * 100).toFixed(1)}% with ${(similarity * 100).toFixed(1)}%`);
+            errors.push(
+              `Scoring with ${numTeams} teams, ${numJudges} judges, and visitation of ${visitation *
+                100}% visitation failed to meet similarity threshold of ${(similarityThreshold * 100).toFixed(1)}% with ${(similarity * 100).toFixed(
+                1,
+              )}%`,
+            );
             logger.error(outputString);
           } else {
             logger.info(outputString);
