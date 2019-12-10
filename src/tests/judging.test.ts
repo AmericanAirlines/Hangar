@@ -197,9 +197,12 @@ describe('score calculation', () => {
   });
 
   it('scoring works as expected without judge volatility and full visitation', async () => {
+    const similarityThreshold = 0.75;
     const numTeamsSet = [5, 10, 15];
     const numJudgesSet = [5, 10, 15];
     const visitationSet = [1.0];
+
+    const errors: string[] = [];
 
     await closedbConnection();
     for (let i = 0; i < numTeamsSet.length; i += 1) {
@@ -233,11 +236,17 @@ describe('score calculation', () => {
 
           const avgErrorDistance = errorDistanceSum / expectedOrder.length;
           const similarity = 1 - avgErrorDistance / expectedOrder.length;
-          logger.info(`Finished Judge Pass - ${numTeams} Teams x ${numJudges} Judges
+
+          const outputString = `Finished Scoring - ${numTeams} Teams x ${numJudges} Judges
     Similarity: ${(similarity * 100).toFixed(1)}%
-    Errors: ${errorCount}`);
-          
-          expect(similarity).toBeGreaterThanOrEqual(0.75);
+    Errors: ${errorCount}`;
+
+          if (similarity < similarityThreshold) {
+            errors.push(`Scoring with ${numTeams} teams, ${numJudges} judges, and visitation of ${visitation * 100}% visitation failed to meet similarity threshold of ${(similarityThreshold * 100).toFixed(1)}% with ${(similarity * 100).toFixed(1)}%`);
+            logger.error(outputString);
+          } else {
+            logger.info(outputString);
+          }
 
           // TODO: Achieve 100% in tests with perfect judging
           // expect(similarity).toEqual(1);
@@ -245,6 +254,11 @@ describe('score calculation', () => {
         }
       }
     }
+
+    if (errors.length > 0) {
+      throw new Error(`At least one scoring tabulation failed: \n\t${errors.join('\n\t')}`);
+    }
+
     await createDbConnection();
   });
 
