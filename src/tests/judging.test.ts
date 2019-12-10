@@ -207,7 +207,7 @@ describe('score calculation', () => {
       for (let j = 0; j < numJudgesSet.length; j += 1) {
         const numJudges = numJudgesSet[j];
         for (let k = 0; k < visitationSet.length; k += 1) {
-          const visitation = visitationSet[0];
+          const visitation = visitationSet[k];
 
           await createDbConnection();
 
@@ -222,27 +222,23 @@ describe('score calculation', () => {
           const scoredOrder = scores.map((score) => score.id);
 
           let errorCount = 0;
-          let dissimilarCount = 0;
-          // Distance is an index distance of 10%
-          const similarIndexDistance = Math.ceil(teams.length * 0.15) || 1;
+          let errorDistanceSum = 0;
           for (let l = 0; l < expectedOrder.length; l += 1) {
             if (expectedOrder[l] !== scoredOrder[l]) {
               errorCount += 1;
-              const scoredIndex = scoredOrder.findIndex((teamId) => teamId === expectedOrder[i]);
-              if (Math.abs(i - scoredIndex) > similarIndexDistance) {
-                dissimilarCount += 1;
-              }
+              errorDistanceSum += Math.abs(expectedOrder[l] - scoredOrder[l]);
             }
           }
 
-          const similarityPercent = 1 - dissimilarCount / expectedOrder.length;
+          const avgErrorDistance = errorDistanceSum / expectedOrder.length;
+          const similarity = 1 - avgErrorDistance / expectedOrder.length;
           logger.info(`Finished Judge Pass - ${numTeams} Teams x ${numJudges} Judges
-    Similarity: ${similarityPercent * 100}% (Max position dissimilarity: ${similarIndexDistance})
+    Similarity: ${similarity * 100.0}%
     Errors: ${errorCount}`);
-          expect(similarityPercent).toBeGreaterThanOrEqual(0.85);
+          expect(similarity).toBeGreaterThanOrEqual(0.75);
 
           // TODO: Achieve 100% in tests with perfect judging
-          // expect(errorCount).toEqual(0);
+          // expect(similarity).toEqual(1);
           await closedbConnection();
         }
       }
