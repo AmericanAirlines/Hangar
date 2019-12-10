@@ -209,6 +209,7 @@ describe('score calculation', () => {
         for (let k = 0; k < visitationSet.length; k += 1) {
           const visitation = visitationSet[k];
 
+
           await createDbConnection();
 
           const teams = await createTeamData(numTeams);
@@ -233,8 +234,9 @@ describe('score calculation', () => {
           const avgErrorDistance = errorDistanceSum / expectedOrder.length;
           const similarity = 1 - avgErrorDistance / expectedOrder.length;
           logger.info(`Finished Judge Pass - ${numTeams} Teams x ${numJudges} Judges
-    Similarity: ${similarity * 100.0}%
+    Similarity: ${(similarity * 100).toFixed(1)}%
     Errors: ${errorCount}`);
+          
           expect(similarity).toBeGreaterThanOrEqual(0.75);
 
           // TODO: Achieve 100% in tests with perfect judging
