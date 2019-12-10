@@ -201,6 +201,7 @@ describe('score calculation', () => {
     const numTeamsSet = [5, 10, 15];
     const numJudgesSet = [5, 10, 15];
     const visitationSet = [1.0];
+    // TODO: Add lower visitation
 
     const errors: string[] = [];
 
@@ -240,6 +241,7 @@ describe('score calculation', () => {
     Similarity: ${(similarity * 100).toFixed(1)}%
     Errors: ${errorCount}`;
 
+          // TODO: Achieve 100% in tests with perfect judging
           if (similarity < similarityThreshold) {
             errors.push(
               `Scoring with ${numTeams} teams, ${numJudges} judges, and visitation of ${visitation *
@@ -252,8 +254,6 @@ describe('score calculation', () => {
             logger.info(outputString);
           }
 
-          // TODO: Achieve 100% in tests with perfect judging
-          // expect(similarity).toEqual(1);
           await closedbConnection();
         }
       }
@@ -265,22 +265,6 @@ describe('score calculation', () => {
 
     await createDbConnection();
   });
-
-  // it('scoring works as expected without judge volatility and minimal visitation', async () => {
-  //   const numTeams = 12;
-  //   const numJudges = 10;
-  //   const teams = await createTeamData(numTeams);
-  //   const judges = await createJudgeData(numJudges);
-
-  //   const orderedTeams = await visitTeamsAndJudge(judges, teams, 0.6);
-
-  //   const scores = await JudgingVote.tabulate();
-
-  //   const expectedOrder = orderedTeams.flatMap((team) => team.id);
-  //   const scoredOrder = scores.flatMap((score) => score.id);
-
-  //   expect(scoredOrder).toEqual(expectedOrder);
-  // });
 });
 
 /**
