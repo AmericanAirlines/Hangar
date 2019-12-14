@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import shuffle from 'shuffle-array';
 import { Team } from './team';
-import logger from '../logger';
 
 interface TeamScore {
   id: number;
@@ -57,10 +56,8 @@ export class JudgingVote extends BaseEntity {
     // Pass over the data in random order to obtain an unbiased baseline
     const randomJudgingIterations = 10;
     for (let j = 0; j < randomJudgingIterations; j += 1) {
-      // Copy votes and randomize order to prevent bias based on vote ordering
-      const votes = shuffle([...allVotes]);
-      // Score votes and add to array of scores
-      initialScores.push(this.scoreVotes(votesNeededForCalibration, votes, shuffle([...teams])));
+      // Randomize order to prevent bias based on vote ordering
+      initialScores.push(this.scoreVotes(votesNeededForCalibration, shuffle([...allVotes]), shuffle([...teams])));
     }
 
     // Average scores from all passes
@@ -93,9 +90,10 @@ export class JudgingVote extends BaseEntity {
 
     const orderedTeams = teams.sort((a: Team, b: Team) => (avgPositions.indexOf(a.id) < avgPositions.indexOf(b.id) ? -1 : 1));
 
-    const finalScores = this.scoreVotes(votesNeededForCalibration, votes, orderedTeams);
+    const finalScores = this.scoreVotes(votesNeededForCalibration, votes, orderedTeams, 300);
 
     const teamResults: TeamResult[] = [];
+
     Object.values(finalScores).forEach((teamScore) => {
       const matchingTeam = teams.find((team) => team.id === teamScore.id);
       teamResults.push({
@@ -108,10 +106,14 @@ export class JudgingVote extends BaseEntity {
     return teamResults.sort((a, b) => (a.score > b.score ? -1 : 1));
 
     // TODO: Max final pass
-    // TODO: Pass new value for calibration votes needed and/or calibration score
   }
 
-  static scoreVotes(votesNeededForCalibration: number, votes: JudgingVote[], teams: Team[]): { [id: string]: TeamScore } {
+  static scoreVotes(
+    votesNeededForCalibration: number,
+    votes: JudgingVote[],
+    teams: Team[],
+    calibrationScoreImpact = 150,
+  ): { [id: string]: TeamScore } {
     // Reference corresponding scores dictionary
     const scores: { [id: string]: TeamScore } = {};
 
@@ -122,45 +124,29 @@ export class JudgingVote extends BaseEntity {
     let calibrationComplete = false;
     const remainingVotes = [...votes];
 
-    // console.log(`Starting to judge ${teams.length} teams: ${teams}`);
+    // Iterate over all votes
     for (let i = 0; i < votes.length; i += 1) {
       if (!calibrationComplete) {
-        // let team = teams[i % teams.length];
-        // let otherTeam = teams[(Math.ceil(teams.length / 2) + i) % teams.length];
-        // let vote = remainingVotes.filter(
-        //   (currVote) =>
-        //     (currVote.currentTeam === team.id && currVote.previousTeam === otherTeam.id) ||
-        //     (currVote.currentTeam === otherTeam.id && currVote.previousTeam === team.id),
-        // )[0];
+        // Not all teams have been calibrated
+        // Select the team with the lowest calibration count
+        const team = teams.sort((teamA, teamB) => ((calibrationCount[teamA.id] || 0) <= (calibrationCount[teamB.id] || 0) ? -1 : 1))[0];
 
-        // if (!vote) {
-        const team = teams
-          .filter((teamToCalibrate) => (calibrationCount[teamToCalibrate.id] || 0) < votesNeededForCalibration)
-          .sort((teamA, teamB) => ((calibrationCount[teamA.id] || 0) <= (calibrationCount[teamB.id] || 0) ? -1 : 1))[0];
-        let teamVotes = remainingVotes.filter((voteToCompare) => voteToCompare.currentTeam === team.id || voteToCompare.previousTeam === team.id);
+        // Retrieve all remaining votes where the selected team is evaluated
+        const teamVotes = remainingVotes.filter((voteToCompare) => voteToCompare.currentTeam === team.id || voteToCompare.previousTeam === team.id);
 
         // Sort team votes by the team with the lowest calibration count
-        teamVotes = teamVotes.sort((a, b) => {
+        const vote = teamVotes.sort((a, b) => {
           const otherTeamIdA = a.currentTeam !== team.id ? a.currentTeam : a.previousTeam;
           const otherTeamIdB = b.currentTeam !== team.id ? b.currentTeam : b.previousTeam;
           return (calibrationCount[otherTeamIdA] || 0) <= (calibrationCount[otherTeamIdB] || 0) ? -1 : 1;
-        });
-        const vote = teamVotes[0];
+        })[0];
 
+        // Get team details for other team
         const otherTeamId = vote.currentTeam !== team.id ? vote.currentTeam : vote.previousTeam;
         const otherTeam = teams.find((teamToCompare) => teamToCompare.id === otherTeamId);
-        // }
 
-        // Remove that votes from the remaining votes
+        // Remove that vote from the remaining votes
         remainingVotes.splice(votes.indexOf(vote), 1);
-
-        if (calibrationCount[otherTeam.id] >= votesNeededForCalibration || calibrationCount[otherTeam.id] >= votesNeededForCalibration) {
-          // logger.error('A calibrated team was just used for calibration; this shouldn\'t have happened.');
-          // logger.error(`A calibrated team was just used for calibration; this shouldn't have happened. ${votesNeededForCalibration} votes needed for calibration, teams ${team.id} and ${otherTeam.id} were chosen: \n${JSON.stringify(calibrationCount, null, 2)}`);
-          // console.log('Calibration votes needed: ', votesNeededForCalibration, ' Teams: ', otherTeam, team.id);
-          // console.log(JSON.stringify(calibrationCount, null, 2));
-          // console.log(JSON.stringify(teamVotes, null, 2));
-        }
 
         // Increment calibration counts for both teams
         calibrationCount[team.id] = calibrationCount[team.id] ? calibrationCount[team.id] + 1 : 1;
@@ -171,7 +157,7 @@ export class JudgingVote extends BaseEntity {
         const otherTeamScore = scores[otherTeam.id] || { id: otherTeam.id, score: 0 };
 
         // Apply score impact based on vote outcome
-        const currentTeamScoreImpact = vote.currentTeamChosen ? 100 : -100;
+        const currentTeamScoreImpact = vote.currentTeamChosen ? calibrationScoreImpact : -calibrationScoreImpact;
         teamScore.score += currentTeamScoreImpact;
         otherTeamScore.score += -currentTeamScoreImpact;
 
@@ -179,11 +165,18 @@ export class JudgingVote extends BaseEntity {
         scores[team.id] = teamScore;
         scores[otherTeam.id] = otherTeamScore;
 
+        // Check to see if all teams have been calibrated
         if (
-          Object.keys(calibrationCount).length === teams.length &&
-          !Object.values(calibrationCount).some((value) => value < votesNeededForCalibration)
+          Object.keys(calibrationCount).length === teams.length
+          && !Object.values(calibrationCount).some((value) => value < votesNeededForCalibration)
         ) {
           calibrationComplete = true;
+          // Update min/max score for traditional scoring
+          const calibratedScores = Object.values(scores);
+          for (let j = 0; j < calibratedScores.length; j += 1) {
+            minScore = Math.min(minScore, calibratedScores[j].score);
+            maxScore = Math.max(maxScore, calibratedScores[j].score);
+          }
         }
       } else {
         const vote = remainingVotes.shift();
