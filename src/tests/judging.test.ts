@@ -249,8 +249,8 @@ describe('score calculation', () => {
 
           if (accuracy < accuracyThreshold) {
             errors.push(
-              `Scoring with ${numTeams} teams, ${numJudges} judges, and visitation of ${visitation
-                * 100}% visitation failed to meet accuracy threshold of ${(accuracyThreshold * 100).toFixed(1)}% with ${(accuracy * 100).toFixed(1)}%`,
+              `Scoring with ${numTeams} teams, ${numJudges} judges, and visitation of ${visitation *
+                100}% visitation failed to meet accuracy threshold of ${(accuracyThreshold * 100).toFixed(1)}% with ${(accuracy * 100).toFixed(1)}%`,
             );
             logger.error(outputString);
           } else {
