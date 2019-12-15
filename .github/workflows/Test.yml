@@ -1,9 +1,12 @@
-name: PR-Build
+name: Test
 
 on:
   pull_request:
-    branches:
-    - master
+    branches: 
+      - master
+  push:
+    branches: 
+      - master
 
 jobs:
   build:
@@ -26,9 +29,13 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and lint/checkstyle
+    - name: npm test
       run: |
         npm ci
-        npm run build
-        npm run checkstyle
-        npm run lint
+        npm run test:coverage
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1.0.3
+      with:
+        token: ${{secrets.CODECOV_TOKEN}}
+        file: ./coverage/clover.xml
+        name: codecov-${{ matrix.node-version }}
