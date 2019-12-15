@@ -154,10 +154,9 @@ export class JudgingVote extends BaseEntity {
         scores[otherTeam.id] = otherTeamScore;
 
         // Check to see if all teams have been calibrated
-        if (
-          Object.keys(calibrationCount).length === teams.length
-          && !Object.values(calibrationCount).some((value) => value < votesNeededForCalibration)
-        ) {
+        const allTeamsAreInCalibration = Object.keys(calibrationCount).length === teams.length;
+        const allTeamsAreCalibrated = !Object.values(calibrationCount).some((value) => value < votesNeededForCalibration);
+        if (allTeamsAreInCalibration && allTeamsAreCalibrated) {
           calibrationComplete = true;
           // Update min/max score for traditional scoring
           const calibratedScores = Object.values(scores);
