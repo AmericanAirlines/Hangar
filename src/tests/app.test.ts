@@ -10,7 +10,7 @@ describe('GET /', () => {
   });
 
   it('responds successfully', (done) => {
-    const app = require('./app').default;
+    const app = require('../app').default;
     supertest(app)
       .get('/')
       .expect(200, done);
