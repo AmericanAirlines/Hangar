@@ -200,6 +200,7 @@ describe('score calculation', () => {
   it('scoring works as expected without judge volatility and full visitation', async (done) => {
     // TODO: Achieve 100% in tests with perfect judging
     const accuracyThreshold = 0.5;
+    const overallAverageAccuracyThreshold = 0.75;
     // TODO: Add lower visitation
     const visitationSet = [1.0];
     const numTeamsSet = [5, 10, 15];
@@ -265,15 +266,18 @@ describe('score calculation', () => {
 
     await createDbConnection();
 
+    const overallAverageAccuracy = accuracySum / testCount;
+
     logger.info(`SCORING OVERVIEW
     Number of Tests: ${testCount}
-    Average Accuracy: ${((accuracySum / testCount) * 100).toFixed(2)}%
-    `);
+    Average Accuracy: ${(overallAverageAccuracy * 100).toFixed(2)}%`);
 
     if (errors.length > 0) {
       throw new Error('At least one scoring tabulation failed');
       // throw new Error(`At least one scoring tabulation failed: \n\t${errors.join('\n\t')}`);
     }
+
+    expect(overallAverageAccuracy).toBeGreaterThanOrEqual(overallAverageAccuracyThreshold);
     done();
   });
 });
