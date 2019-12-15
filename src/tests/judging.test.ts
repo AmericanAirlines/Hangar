@@ -197,14 +197,16 @@ describe('score calculation', () => {
     expect(maxVisits - minVisits).toBeLessThanOrEqual(1);
   });
 
-  it('scoring works as expected without judge volatility and full visitation', async () => {
+  it('scoring works as expected without judge volatility and full visitation', async (done) => {
     // TODO: Achieve 100% in tests with perfect judging
-    const similarityThreshold = 0.5;
+    const accuracyThreshold = 0.5;
     // TODO: Add lower visitation
     const visitationSet = [1.0];
     const numTeamsSet = [5, 10, 15];
     const numJudgesSet = [5, 10, 15];
 
+    let testCount = 0;
+    let accuracySum = 0;
     const errors: string[] = [];
 
     await closedbConnection();
@@ -213,6 +215,7 @@ describe('score calculation', () => {
       for (let i = 0; i < numTeamsSet.length; i += 1) {
         const numTeams = numTeamsSet[i];
         for (let j = 0; j < numJudgesSet.length; j += 1) {
+          testCount += 1;
           const numJudges = numJudgesSet[j];
 
           await createDbConnection();
@@ -237,18 +240,17 @@ describe('score calculation', () => {
           }
 
           const avgErrorDistance = errorDistanceSum / expectedOrder.length;
-          const similarity = 1 - avgErrorDistance / expectedOrder.length;
+          const accuracy = 1 - avgErrorDistance / expectedOrder.length;
+          accuracySum += accuracy;
 
           const outputString = `Finished Scoring - ${numTeams} Teams x ${numJudges} Judges x ${(visitation * 100).toFixed(2)}% Visitation
-    Similarity: ${(similarity * 100).toFixed(1)}%
+    Accuracy: ${(accuracy * 100).toFixed(1)}%
     Errors: ${errorCount}`;
 
-          if (similarity < similarityThreshold) {
+          if (accuracy < accuracyThreshold) {
             errors.push(
               `Scoring with ${numTeams} teams, ${numJudges} judges, and visitation of ${visitation
-                * 100}% visitation failed to meet similarity threshold of ${(similarityThreshold * 100).toFixed(1)}% with ${(similarity * 100).toFixed(
-                1,
-              )}%`,
+                * 100}% visitation failed to meet accuracy threshold of ${(accuracyThreshold * 100).toFixed(1)}% with ${(accuracy * 100).toFixed(1)}%`,
             );
             logger.error(outputString);
           } else {
@@ -262,10 +264,16 @@ describe('score calculation', () => {
 
     await createDbConnection();
 
+    logger.info(`SCORING OVERVIEW
+    Number of Tests: ${testCount}
+    Average Accuracy: ${((accuracySum / testCount) * 100).toFixed(2)}%
+    `);
+
     if (errors.length > 0) {
       throw new Error('At least one scoring tabulation failed');
       // throw new Error(`At least one scoring tabulation failed: \n\t${errors.join('\n\t')}`);
     }
+    done();
   });
 });
 

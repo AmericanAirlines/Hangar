@@ -54,7 +54,7 @@ export class JudgingVote extends BaseEntity {
     }
 
     // Pass over the data in random order to obtain an unbiased baseline
-    const randomJudgingIterations = 10;
+    const randomJudgingIterations = 20;
     for (let j = 0; j < randomJudgingIterations; j += 1) {
       // Randomize order to prevent bias based on vote ordering
       initialScores.push(this.scoreVotes(votesNeededForCalibration, shuffle([...allVotes]), shuffle([...teams])));
@@ -80,32 +80,20 @@ export class JudgingVote extends BaseEntity {
       .map((key) => Number(key))
       .sort((a, b) => (normalizedPosition[a] > normalizedPosition[b] ? 1 : -1));
 
-    // Sort based on match up difficulty by using averaged scores
-    const votes = [...allVotes].sort((a: JudgingVote, b: JudgingVote) => {
-      const aScoreDifferential = avgPositions.indexOf(a.previousTeam) + avgPositions.indexOf(a.currentTeam);
-      const bScoreDifferential = avgPositions.indexOf(b.previousTeam) + avgPositions.indexOf(b.currentTeam);
-      // Sort from largest difference to smallest; save the more difficult matches until the end of scoring
-      return aScoreDifferential > bScoreDifferential ? -1 : 1;
-    });
-
     const orderedTeams = teams.sort((a: Team, b: Team) => (avgPositions.indexOf(a.id) < avgPositions.indexOf(b.id) ? -1 : 1));
-
-    const finalScores = this.scoreVotes(votesNeededForCalibration, votes, orderedTeams, 300);
 
     const teamResults: TeamResult[] = [];
 
-    Object.values(finalScores).forEach((teamScore) => {
+    orderedTeams.forEach((teamScore, position) => {
       const matchingTeam = teams.find((team) => team.id === teamScore.id);
       teamResults.push({
         id: matchingTeam.id,
         name: matchingTeam.name,
-        score: teamScore.score,
+        score: position,
       });
     });
 
-    return teamResults.sort((a, b) => (a.score > b.score ? -1 : 1));
-
-    // TODO: Max final pass
+    return teamResults;
   }
 
   static scoreVotes(
