@@ -16,7 +16,7 @@ describe('app', () => {
       .expect(200, done);
   });
 
-  it('fails to start when Slack tokens are not provided and env isn\'t test', () => {
+  it("fails to start when Slack tokens are not provided and env isn't test", () => {
     delete process.env.SLACK_BOT_TOKEN;
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
     expect(require('../app').default).toThrow();
