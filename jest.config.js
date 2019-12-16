@@ -27,11 +27,11 @@ module.exports = {
       functions: 100,
       lines: 100,
     },
-    './src/slack/blocks': {
-      statements: 0,
+    './src/slack': {
+      statements: 30,
       branches: 0,
       functions: 0,
-      lines: 0,
-    }
+      lines: 30,
+    },
   },
 };
