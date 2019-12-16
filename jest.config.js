@@ -27,7 +27,7 @@ module.exports = {
       functions: 100,
       lines: 100,
     },
-    './src/slack': {
+    './src/slack/': {
       statements: 30,
       branches: 0,
       functions: 0,
