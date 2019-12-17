@@ -74,6 +74,7 @@
     "react-confetti": "^5.0.1",
     "react-dom": "^16.11.0",
     "reflect-metadata": "^0.1.13",
+    "shuffle-array": "^1.0.1",
     "typeorm": "^0.2.19",
     "typescript": "^3.3.3333",
     "winston": "^3.2.1"
@@ -103,7 +104,6 @@
     "nodemon": "^1.19.4",
     "prettier": "^1.18.2",
     "rimraf": "^3.0.0",
-    "shuffle-array": "^1.0.1",
     "sqlite3": "^4.1.0",
     "supertest": "^4.0.2",
     "ts-jest": "^24.0.0",

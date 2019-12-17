@@ -4,8 +4,12 @@ import { createDbConnection, closedbConnection } from './testdb';
 import { Team } from '../entities/team';
 import { Judge } from '../entities/judge';
 import { JudgingVote } from '../entities/judgingVote';
+import logger from '../logger';
 
 /* eslint-disable no-await-in-loop, no-continue */
+
+// Bump Jest timeout to accomodate tabulation test matrix
+jest.setTimeout(15000);
 
 describe('judging logistics', () => {
   beforeEach(async () => {
@@ -193,56 +197,89 @@ describe('score calculation', () => {
     expect(maxVisits - minVisits).toBeLessThanOrEqual(1);
   });
 
-  it('scoring works as expected without judge volatility and full visitation', async () => {
-    const numTeams = 15;
-    const numJudges = 10;
-    const teams = await createTeamData(numTeams);
-    const judges = await createJudgeData(numJudges);
+  it('scoring works as expected without judge volatility and full visitation', async (done) => {
+    // TODO: Achieve 100% in tests with perfect judging
+    const accuracyThreshold = 0.5;
+    const overallAverageAccuracyThreshold = 0.75;
+    // TODO: Add lower visitation
+    const visitationSet = [1.0];
+    const numTeamsSet = [5, 10, 15];
+    const numJudgesSet = [5, 10, 15];
 
-    const orderedTeams = await visitTeamsAndJudge(judges, teams, 1.0);
+    let testCount = 0;
+    let accuracySum = 0;
+    const errors: string[] = [];
 
-    const scores = await JudgingVote.tabulate();
+    await closedbConnection();
+    for (let k = 0; k < visitationSet.length; k += 1) {
+      const visitation = visitationSet[k];
+      for (let i = 0; i < numTeamsSet.length; i += 1) {
+        const numTeams = numTeamsSet[i];
+        for (let j = 0; j < numJudgesSet.length; j += 1) {
+          testCount += 1;
+          const numJudges = numJudgesSet[j];
 
-    const expectedOrder = orderedTeams.map((team) => team.id);
-    const scoredOrder = scores.map((score) => score.id);
+          await createDbConnection();
 
-    // let errorCount = 0;
-    let dissimilarCount = 0;
-    for (let i = 0; i < expectedOrder.length; i += 1) {
-      if (expectedOrder[i] !== scoredOrder[i]) {
-        // errorCount += 1;
-        const scoredIndex = scoredOrder.findIndex((teamId) => teamId === expectedOrder[i]);
-        if (Math.abs(i - scoredIndex) > 2) {
-          dissimilarCount += 1;
+          const teams = await createTeamData(numTeams);
+          const judges = await createJudgeData(numJudges);
+
+          const orderedTeams = await visitTeamsAndJudge(judges, teams, visitation);
+
+          const scores = await JudgingVote.tabulate();
+
+          const expectedOrder = orderedTeams.map((team) => team.id);
+          const scoredOrder = scores.map((score) => score.id);
+
+          let errorCount = 0;
+          let errorDistanceSum = 0;
+          for (let l = 0; l < expectedOrder.length; l += 1) {
+            if (expectedOrder[l] !== scoredOrder[l]) {
+              errorCount += 1;
+              errorDistanceSum += Math.abs(expectedOrder[l] - scoredOrder[l]);
+            }
+          }
+
+          const avgErrorDistance = errorDistanceSum / expectedOrder.length;
+          const accuracy = 1 - avgErrorDistance / expectedOrder.length;
+          accuracySum += accuracy;
+
+          const outputString = `Finished Scoring - ${numTeams} Teams x ${numJudges} Judges x ${(visitation * 100).toFixed(2)}% Visitation
+    Accuracy: ${(accuracy * 100).toFixed(1)}%
+    Errors: ${errorCount}`;
+
+          if (accuracy < accuracyThreshold) {
+            errors.push(
+              `Scoring with ${numTeams} teams, ${numJudges} judges, and visitation of ${(visitation * 100).toFixed(
+                1,
+              )}% visitation failed to meet accuracy threshold of ${(accuracyThreshold * 100).toFixed(1)}% with ${(accuracy * 100).toFixed(1)}%`,
+            );
+            logger.error(outputString);
+          } else {
+            logger.info(outputString);
+          }
+
+          await closedbConnection();
         }
       }
     }
 
-    // const percentCorrect = (expectedOrder.length - errorCount) / expectedOrder.length;
-    // expect(percentCorrect).toBeGreaterThanOrEqual(0.3);
+    await createDbConnection();
 
-    const similarityPercent = 1 - dissimilarCount / expectedOrder.length;
-    expect(similarityPercent).toBeGreaterThanOrEqual(0.85);
+    const overallAverageAccuracy = accuracySum / testCount;
 
-    // TODO: Achieve 100% in tests with perfect judging
-    // expect(scoredOrder).toEqual(expectedOrder);
+    logger.info(`SCORING OVERVIEW
+    Number of Tests: ${testCount}
+    Average Accuracy: ${(overallAverageAccuracy * 100).toFixed(2)}%`);
+
+    if (errors.length > 0) {
+      throw new Error('At least one scoring tabulation failed');
+      // throw new Error(`At least one scoring tabulation failed: \n\t${errors.join('\n\t')}`);
+    }
+
+    expect(overallAverageAccuracy).toBeGreaterThanOrEqual(overallAverageAccuracyThreshold);
+    done();
   });
-
-  // it('scoring works as expected without judge volatility and minimal visitation', async () => {
-  //   const numTeams = 12;
-  //   const numJudges = 10;
-  //   const teams = await createTeamData(numTeams);
-  //   const judges = await createJudgeData(numJudges);
-
-  //   const orderedTeams = await visitTeamsAndJudge(judges, teams, 0.6);
-
-  //   const scores = await JudgingVote.tabulate();
-
-  //   const expectedOrder = orderedTeams.flatMap((team) => team.id);
-  //   const scoredOrder = scores.flatMap((score) => score.id);
-
-  //   expect(scoredOrder).toEqual(expectedOrder);
-  // });
 });
 
 /**
