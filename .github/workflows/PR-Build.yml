@@ -6,7 +6,7 @@ on:
     - master
 
 jobs:
-  build:
+  pr-build:
 
     runs-on: ubuntu-latest
 
