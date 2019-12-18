@@ -2,6 +2,7 @@ import { App } from '@slack/bolt';
 import dashboardBlocks from '../blocks/dashboardBlocks';
 import { Config } from '../../entities/config';
 import logger from '../../logger';
+import openSourceBlock from '../blocks/openSourceFooter';
 
 function register(bolt: App): void {
   bolt.message(async ({ say }) => {
@@ -13,10 +14,10 @@ function register(bolt: App): void {
     try {
       say({
         text: '',
-        blocks: dashboardBlocks(context),
+        blocks: [...dashboardBlocks(context), openSourceBlock],
       });
     } catch (err) {
-      logger.error('Something went messaging the user...', err);
+      logger.error('Something went wrong messaging the user...', err);
     }
   });
 }
