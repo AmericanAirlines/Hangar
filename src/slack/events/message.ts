@@ -1,8 +1,8 @@
 import { App } from '@slack/bolt';
 import dashboardBlocks from '../blocks/dashboardBlocks';
+import openSourceBlock from '../blocks/openSourceFooter';
 import { Config } from '../../entities/config';
 import logger from '../../logger';
-import openSourceBlock from '../blocks/openSourceFooter';
 
 function register(bolt: App): void {
   bolt.message(async ({ say }) => {
