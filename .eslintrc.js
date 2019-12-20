@@ -7,7 +7,7 @@ module.exports = {
     node: true,
     'jest/globals': true,
   },
-  extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended'],
+  extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended', 'plugin:react/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -27,6 +27,9 @@ module.exports = {
       node: {
         extensions: ['.js', '.ts'],
       },
+    },
+    react: {
+      version: 'detect',
     },
   },
   overrides: [
