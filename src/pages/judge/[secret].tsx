@@ -106,7 +106,7 @@ const judge = (): JSX.Element => {
     setLoading(false);
   };
 
-  const skipHandler = () => async () => {
+  const skipHandler = () => async (): Promise<void> => {
     setLoading(true);
 
     const res = await fetch('/api/skip', {
@@ -151,7 +151,7 @@ const judge = (): JSX.Element => {
           Congratulations!
         </h1>
         <h4 className="text-center">You are a supreme judger</h4>
-        <h5 className="text-center">You're done with judging</h5>
+        <h5 className="text-center">You&apos;re done with judging</h5>
         <h6 className="text-center">Thanks</h6>
       </>
     );
@@ -181,7 +181,7 @@ const judge = (): JSX.Element => {
           <p>{previousTeam.projectDescription}</p>
         </div>
       )}
-      {firstTeam && <h3>Once you've judged the current team, press continue</h3>}
+      {firstTeam && <h3>Once you&apos;ve judged the current team, press continue</h3>}
       {firstTeam && (
         <button type="button" className="btn btn-primary btn-lg" onClick={voteHandler()}>
           Next Team
