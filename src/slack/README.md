@@ -3,7 +3,7 @@ To get your app up and running, you'll need to follow two sets of instructions: 
 
 ## Initial Setup
 Before you deploy your Hangar, follow these steps to generate secrets needed for deployment:
-- Create an app on the [Slack API Site](http://api.slack.com/apps)
+- Create an app on the [Slack API Site](https://api.slack.com/apps)
 - Using the sidebar, navigate to the "_Bot Users_" and enable your bot
   - We reccommend using your company name as the app name (e.g., `American Airlines`/`@americanairlines` for the display name and username respectively)
   - We also recommend enabling "Always Show My Bot as Online"
