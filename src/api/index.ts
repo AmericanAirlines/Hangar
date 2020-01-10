@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';
+import sendUpdateMessage from './sendUpdateMessage';
 
 const api = express();
 
@@ -73,5 +74,7 @@ api.post('/skip', async (req, res) => {
 
   res.send(await getJudgeTeams(judge));
 });
+
+api.post('/sendUpdateMessage', sendUpdateMessage);
 
 export const apiApp = api;

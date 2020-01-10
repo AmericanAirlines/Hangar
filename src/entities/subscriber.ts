@@ -13,4 +13,7 @@ export class Subscriber extends BaseEntity {
 
   @Column()
   slackId: string;
+
+  @Column({ default: true })
+  isActive: boolean;
 }
