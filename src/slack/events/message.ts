@@ -16,7 +16,7 @@ function register(bolt: App): void {
       if (!message.subtype) {
         say({
           text: '',
-          blocks: dashboardBlocks(context),
+          blocks: [...dashboardBlocks(context), openSourceBlock],
         });
       }
     } catch (err) {
