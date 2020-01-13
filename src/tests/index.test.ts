@@ -31,7 +31,7 @@ describe('Server', () => {
 
     const server = require('../index').default;
 
-    // Because starting the server is synchronous, we need to wait before seeing if the
+    // Because starting the server is asynchronous, we need to wait before seeing if the
     // notice of the current port is logged
     await new Promise((resolve) => {
       setTimeout(() => {

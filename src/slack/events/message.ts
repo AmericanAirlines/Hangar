@@ -10,7 +10,7 @@ function register(bolt: App): void {
     const teamRegistrationActiveKey = 'teamRegistrationActive';
     const teamRegistrationActive = await Config.findToggleForKey(teamRegistrationActiveKey);
     const context = {
-      teamRegistrationActiveKey: teamRegistrationActive,
+      [teamRegistrationActiveKey]: teamRegistrationActive,
     };
     try {
       say({
