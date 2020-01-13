@@ -1,6 +1,8 @@
 // ACTIONS
 export const registerTeamActionId = 'registerTeam';
 export const ignoreActionId = 'ignore';
+export const subscribeActionId = 'subscribe';
+export const unsubscribeActionId = 'unsubscribe';
 
 // VIEWS
 // Register Team View

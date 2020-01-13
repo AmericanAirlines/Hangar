@@ -1,32 +1,12 @@
 import { App, BlockAction, ViewSubmitAction, ViewOutput, RespondArguments } from '@slack/bolt';
-import { WebAPICallResult } from '@slack/web-api';
 import { registerTeamActionId, registerTeamViewConstants } from '../constants';
 import { registerTeamView, registeredTeamSummary } from '../blocks/registerTeam';
 import logger from '../../logger';
 import { Team } from '../../entities/team';
+import { ViewSubmitState, DmOpenResult } from '../types';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */
-
-interface DmOpenResult extends WebAPICallResult {
-  channel: {
-    id: string;
-  };
-}
-
-interface ViewSubmitInputFieldState {
-  type: string;
-  value?: string;
-  selected_users?: string[];
-}
-
-interface ViewSubmitStateValues {
-  [blockId: string]: ViewSubmitInputFieldState;
-}
-
-interface ViewSubmitState {
-  values: { [actionId: string]: ViewSubmitStateValues };
-}
 
 function retrieveViewValuesForField(view: ViewOutput, actionId: string, type: 'multiUsersSelect' | 'plainTextInput'): string | string[] {
   const { values } = view.state as ViewSubmitState;

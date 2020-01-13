@@ -1,12 +1,7 @@
-import { WebAPICallResult } from '@slack/web-api';
 import { slackAPI } from '..';
 import logger from '../../logger';
 
-interface DmOpenResult extends WebAPICallResult {
-  channel: {
-    id: string;
-  };
-}
+import { DmOpenResult } from '../types';
 
 export default async function messageUsers(users: string[], message: string): Promise<void> {
   const errors: { [userId: string]: Error }[] = [];

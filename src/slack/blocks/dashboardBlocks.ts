@@ -1,5 +1,6 @@
 import { KnownBlock } from '@slack/types';
-import { registerTeamActionId } from '../constants';
+import { registerTeamActionId, subscribeActionId, unsubscribeActionId } from '../constants';
+import openSourceBlock from './openSourceFooter';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -15,6 +16,39 @@ const headerBlock: KnownBlock = {
 
 const dividerBlock: KnownBlock = {
   type: 'divider',
+};
+
+const subscribeBlock: KnownBlock = {
+  type: 'section',
+  text: {
+    type: 'mrkdwn',
+    text:
+      "*Subscribe to Updates*\nWant to stay informed throughout the event? Subscribe and we'll send you occasional updates here in Slack (_you can unsubscribe at any time_).",
+  },
+  accessory: {
+    type: 'button',
+    text: {
+      type: 'plain_text',
+      text: 'Subscribe',
+    },
+    action_id: subscribeActionId,
+  },
+};
+
+const unsubscribeBlock: KnownBlock = {
+  type: 'section',
+  text: {
+    type: 'mrkdwn',
+    text: "*Unsubscribe from Updates*\nWant us to stop sending you messages about the event? Don't worry, we can still be friends.",
+  },
+  accessory: {
+    type: 'button',
+    text: {
+      type: 'plain_text',
+      text: 'Unsibscribe',
+    },
+    action_id: unsubscribeActionId,
+  },
 };
 
 const teamRegistrationBlock: KnownBlock = {
@@ -48,6 +82,8 @@ function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
 
   const defaultBlocksLengh = blocks.length;
 
+  blocks.push(context.isSubscribed ? unsubscribeBlock : subscribeBlock);
+
   if (context.teamRegistrationActive) {
     blocks.push(teamRegistrationBlock);
   }
@@ -55,6 +91,9 @@ function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
   if (blocks.length === defaultBlocksLengh) {
     blocks.push(comingSoonBlock);
   }
+
+  blocks.push(openSourceBlock);
+
   return blocks;
 }
 

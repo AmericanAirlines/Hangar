@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Subscriber } from '../entities/subscriber';
 import messageUsers from '../slack/utilities/messageUsers';
+import logger from '../logger';
 
 export default async function sendUpdateMessage(req: Request, res: Response): Promise<void> {
   const { message, secret } = req.body;
@@ -23,6 +24,7 @@ export default async function sendUpdateMessage(req: Request, res: Response): Pr
     await messageUsers(users, message);
     res.sendStatus(200);
   } catch (err) {
-    res.status(500).send(err);
+    res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
+    logger.error(err);
   }
 }
