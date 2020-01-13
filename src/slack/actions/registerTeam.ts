@@ -57,12 +57,6 @@ function register(bolt: App): void {
 
   bolt.view<ViewSubmitAction>(registerTeamViewConstants.viewId, async ({ ack, context, view, body }) => {
     const registeringUser = body.user.id;
-
-    const teamMembers = (retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect') as string[]) || [];
-    const allTeamMembers = Array.from(new Set([registeringUser, ...teamMembers]));
-
-    const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
-    const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
     const tableNumber = parseInt(retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput') as string, 10);
 
     if (Number.isNaN(tableNumber)) {
@@ -73,11 +67,19 @@ function register(bolt: App): void {
           [registerTeamViewConstants.fields.tableNumber]: 'Table number must be a valid number',
         },
       };
+      // Invalid table number, show errors in the view and leave it open
       ack(error as RespondArguments);
       return;
     }
 
+    // Before doing additional work, let's tell Slack know we can take it from here (we have to respond in < 3 seconds)
     ack();
+
+    const teamMembers = (retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect') as string[]) || [];
+    const allTeamMembers = Array.from(new Set([registeringUser, ...teamMembers]));
+
+    const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
+    const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
 
     try {
       const team = new Team(teamName, tableNumber, projectDescription, allTeamMembers);
