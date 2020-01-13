@@ -6,14 +6,8 @@ const testPort = 3212;
 
 describe('Server', () => {
   beforeAll(() => {
-    global.console = {
-      ...global.console,
-      log: jest.fn(), // console.log are ignored in tests
-      //   error: jest.fn(),
-      //   warn: jest.fn(),
-      //   info: jest.fn(),
-      //   debug: jest.fn(),
-    };
+    // Hide Bolt API key warnings
+    process.env.LOG_LEVEL = 'emerg';
   });
 
   beforeEach(() => {
@@ -55,14 +49,10 @@ describe('Server', () => {
     server.close();
   });
 
-  it('listens to defaults to port 3000', () => {
+  it('listens on port 3000 as default port', () => {
+    // NOTE: This test can only be run if the app is not currently running on 3000
+    // This likely won't be an issue because this should only run in CI OR when index.ts is modified
     delete process.env.PORT;
-    try {
-      const server = require('../index').default;
-      server.close();
-    } catch (err) {
-      // The app is likely already running but we don't need the server anyways
-    }
 
     const { port } = require('../index');
     expect(port).toBe(String(3000));
