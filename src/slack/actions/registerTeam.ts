@@ -4,6 +4,7 @@ import { registerTeamView, registeredTeamSummary } from '../blocks/registerTeam'
 import logger from '../../logger';
 import { Team } from '../../entities/team';
 import { ViewSubmitState, DmOpenResult } from '../types';
+import { Config } from '../../entities/config';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */
@@ -25,6 +26,21 @@ function register(bolt: App): void {
   bolt.action<BlockAction>({ action_id: registerTeamActionId }, async ({ body, ack, context }) => {
     ack();
     try {
+      const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
+      if (!teamRegistrationActive) {
+        const dm = (await bolt.client.conversations.open({
+          token: context.botToken,
+          users: body.user.id,
+        })) as DmOpenResult;
+
+        await bolt.client.chat.postMessage({
+          token: context.botToken,
+          channel: dm.channel.id,
+          text: ":warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.",
+        });
+        return;
+      }
+
       await bolt.client.views.open({
         token: context.botToken,
         trigger_id: body.trigger_id,
@@ -57,9 +73,31 @@ function register(bolt: App): void {
 
     const teamMembers = (retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect') as string[]) || [];
     const allTeamMembers = Array.from(new Set([registeringUser, ...teamMembers]));
-
     const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
     const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
+
+    const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
+    if (!teamRegistrationActive) {
+      const formattedTeamMembers = allTeamMembers.map((member) => `<@${member}>`);
+
+      const dm = (await bolt.client.conversations.open({
+        token: context.botToken,
+        users: registeringUser,
+      })) as DmOpenResult;
+
+      await bolt.client.chat.postMessage({
+        token: context.botToken,
+        channel: dm.channel.id,
+        text: `:warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.
+
+Team Name: ${teamName}
+TableNumber: ${tableNumber}
+Project Description: ${projectDescription}
+Team Members: ${formattedTeamMembers.join(', ')}
+      `,
+      });
+      return;
+    }
 
     try {
       const team = new Team(teamName, tableNumber, projectDescription, allTeamMembers);

@@ -14,4 +14,15 @@ export class Config extends BaseEntity {
 
   @Column()
   value: string;
+
+  static async findToggleForKey(key: string): Promise<boolean> {
+    const toggle = await this.findOne({ key });
+    if (toggle) {
+      toggle.value = toggle.value.toLowerCase();
+      if (toggle.value !== 'false' && toggle.value !== 'true') {
+        throw new Error('Config item found but cannot be cast to boolean');
+      }
+    }
+    return toggle ? toggle.value === 'true' : false;
+  }
 }
