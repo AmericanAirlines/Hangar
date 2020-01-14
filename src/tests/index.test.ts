@@ -31,24 +31,22 @@ describe('Server', () => {
     // notice of the current port is logged
     await new Promise((resolve) => {
       setTimeout(() => {
-        try {
-          expect(loggerSpy).toHaveBeenCalledWith(`Listening on port ${testPort}`);
-          server.close();
-        } finally {
+        expect(loggerSpy).toHaveBeenCalledWith(`Listening on port ${testPort}`);
+        server.close(() => {
           resolve();
-        }
+        });
       }, 250);
     });
   });
 
-  it('listens to the specified port if provided in process.env', () => {
+  it('listens to the specified port if provided in process.env', (done) => {
     const server = require('../index').default;
 
     const { port } = require('../index');
     expect(port).toBe(String(testPort));
 
     expect(server.address().port).toBe(testPort);
-    server.close();
+    server.close(done);
   });
 
   // it('listens on port 3000 as default port', () => {
