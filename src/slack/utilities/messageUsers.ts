@@ -26,7 +26,7 @@ export default async function messageUsers(users: string[], message: string): Pr
 
   if (errors.length) {
     logger.error(`Unable to send update to ${errors.length === users.length ? 'all' : 'some'} users:`, errors);
-    throw errors;
+    throw new Error(`Unable to send update to ${errors.length === users.length ? 'all' : 'some'} users: ${JSON.stringify(errors)}`);
   }
 }
 
