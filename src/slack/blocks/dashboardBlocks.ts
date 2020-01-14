@@ -45,7 +45,7 @@ const unsubscribeBlock: KnownBlock = {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: 'Unsibscribe',
+      text: 'Unsubscribe',
     },
     action_id: unsubscribeActionId,
   },
@@ -55,7 +55,7 @@ const teamRegistrationBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: '*Register Your Team*\nHacking with us this weekend? Make sure you register your team so we know to reach out before judging starts!',
+    text: '*Register Your Team*\nHacking with us this weekend? Make sure to register your team so we know to reach out before judging starts!',
   },
   accessory: {
     type: 'button',
@@ -73,7 +73,7 @@ const comingSoonBlock: KnownBlock = {
     type: 'mrkdwn',
     text: `\`404 - Useful Content Not Found\`
 
-But seriously, we don't have anything else to show you at the moment. Message me again later!`,
+But seriously, I don't have anything else to show you at the moment. Message me again later!`,
   },
 };
 
