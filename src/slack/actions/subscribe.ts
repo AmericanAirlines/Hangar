@@ -17,6 +17,7 @@ function register(bolt: App): void {
 
     if (dashboardContext.isSubscribed) {
       // User is alredy subscribed
+      // The original block will soon reflect the current state, so do nothing
     } else {
       // Create new subscribed user
       // TODO: Replace with Upsert
@@ -34,7 +35,7 @@ function register(bolt: App): void {
         blocks: dashboardBlocks(dashboardContext),
       });
     } catch (err) {
-      logger.error('Unable to update post in Slack', err);
+      logger.error('Unable to update original message in Slack', err);
     }
 
     say("You've subscribed! Keep an eye out from direct messages sent from this bot.");

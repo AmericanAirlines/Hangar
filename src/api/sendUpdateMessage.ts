@@ -6,8 +6,7 @@ import logger from '../logger';
 export default async function sendUpdateMessage(req: Request, res: Response): Promise<void> {
   const { message, secret } = req.body;
 
-  // TODO: Implement auth
-  if (secret !== 'some secret') {
+  if (secret !== process.env.ADMIN_SECRET) {
     res.sendStatus(403);
     return;
   }
