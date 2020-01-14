@@ -39,15 +39,15 @@ describe('Server', () => {
     });
   });
 
-  it('listens to the specified port if provided in process.env', (done) => {
-    const server = require('../index').default;
+  // it('listens to the specified port if provided in process.env', (done) => {
+  //   const server = require('../index').default;
 
-    const { port } = require('../index');
-    expect(port).toBe(String(testPort));
+  //   const { port } = require('../index');
+  //   expect(port).toBe(String(testPort));
 
-    expect(server.address().port).toBe(testPort);
-    server.close(done);
-  });
+  //   expect(server.address().port).toBe(testPort);
+  //   server.close(done);
+  // });
 
   // it('listens on port 3000 as default port', () => {
   //   // NOTE: This test can only be run if the app is not currently running on 3000
