@@ -7,10 +7,10 @@ interface DashboardContext {
 
 export async function getDashboardContext(userId: string): Promise<DashboardContext> {
   const teamRegistrationToggle = (await Config.findOne({ key: 'teamRegistrationActive' })) || { key: 'teamRegistrationActive', value: 'false' };
-  const subscriber = await Subscriber.findOne({ slackId: userId, isActive: true });
+  const subscriber = await Subscriber.count({ slackId: userId, isActive: true });
 
   return {
     [teamRegistrationToggle.key]: teamRegistrationToggle.value === 'true',
-    isSubscribed: Boolean(subscriber),
+    isSubscribed: subscriber >= 0,
   };
 }
