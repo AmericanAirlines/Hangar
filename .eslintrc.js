@@ -21,6 +21,7 @@ module.exports = {
     'import/prefer-default-export': ['off'],
     'object-curly-newline': ['off'],
     '@typescript-eslint/no-use-before-define': ['off'],
+    'no-await-in-loop': ['off'],
   },
   settings: {
     'import/resolver': {

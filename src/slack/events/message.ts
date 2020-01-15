@@ -1,23 +1,18 @@
 import { App } from '@slack/bolt';
 import dashboardBlocks from '../blocks/dashboardBlocks';
-import openSourceBlock from '../blocks/openSourceFooter';
-import { Config } from '../../entities/config';
 import logger from '../../logger';
+import { getDashboardContext } from '../utilities/getDashboardContext';
 
 function register(bolt: App): void {
   bolt.message(async ({ say, message }) => {
-    // TODO: get context (toggles), use to generate specific dashboard blocks
-    const teamRegistrationActiveKey = 'teamRegistrationActive';
-    const teamRegistrationActive = await Config.findToggleForKey(teamRegistrationActiveKey);
-    const context = {
-      [teamRegistrationActiveKey]: teamRegistrationActive,
-    };
+    const dashboardContext = await getDashboardContext(message.user);
+
     try {
       // Only respond if the message doesn't have a subtype (i.e., original user message event, deletion/edits are ignored)
       if (!message.subtype) {
         say({
           text: '',
-          blocks: [...dashboardBlocks(context), openSourceBlock],
+          blocks: dashboardBlocks(dashboardContext),
         });
       }
     } catch (err) {

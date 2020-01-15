@@ -16,6 +16,11 @@
       "description": "Your Slack Bot's token",
       "value": "xoxb- ...",
       "required": true
+    },
+    "ADMIN_SECRET": {
+      "description": "A secret you use for admin tasks",
+      "value": "",
+      "required": true
     }
   }
 }
