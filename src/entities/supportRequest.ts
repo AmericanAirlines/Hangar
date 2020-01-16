@@ -20,10 +20,10 @@ export enum SupportRequestErrors {
 
 @Entity()
 export class SupportRequest extends BaseEntity {
-  constructor(teamId: number, type: SupportRequestType) {
+  constructor(slackIdId: string, type: SupportRequestType) {
     super();
 
-    this.team = teamId;
+    this.slackId = slackIdId;
     this.type = type;
   }
 
@@ -40,7 +40,7 @@ export class SupportRequest extends BaseEntity {
   movedToInProgressAt: Date;
 
   @Column({ nullable: false })
-  team: number;
+  slackId: string;
 
   @Column({ nullable: false, default: SupportRequestStatus.Pending, type: 'simple-enum' })
   status: SupportRequestStatus;
@@ -53,7 +53,7 @@ export class SupportRequest extends BaseEntity {
     const abandonedRequests: SupportRequest[] = [];
 
     const existingActiveRequests = await SupportRequest.find({
-      where: [{ team: this.team, status: SupportRequestStatus.Pending }, { team: this.team, status: SupportRequestStatus.InProgress }],
+      where: [{ slackId: this.slackId, status: SupportRequestStatus.Pending }, { slackId: this.slackId, status: SupportRequestStatus.InProgress }],
     });
 
     const minutesUntilStale = 15;
@@ -67,7 +67,7 @@ export class SupportRequest extends BaseEntity {
     }
 
     if (existingActiveRequests.length && existingActiveRequests.length !== abandonedRequests.length) {
-      const error = new Error('Active support request exists for team');
+      const error = new Error('Active support request exists for slackId');
       error.name = SupportRequestErrors.ExistingActiveRequest;
       throw error;
     }
