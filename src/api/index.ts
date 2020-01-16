@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import { adminMiddleware } from './adminMiddleware';
 import { supportRequestRoutes } from './supportRequest';
 import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';

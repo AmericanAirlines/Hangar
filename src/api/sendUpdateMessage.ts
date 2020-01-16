@@ -1,5 +1,4 @@
 import express from 'express';
-import { adminMiddleware } from './adminMiddleware';
 import { Subscriber } from '../entities/subscriber';
 import messageUsers from '../slack/utilities/messageUsers';
 import logger from '../logger';
