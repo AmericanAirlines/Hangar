@@ -5,7 +5,6 @@ import logger from '../logger';
 import messageUsers from '../slack/utilities/messageUsers';
 
 export const supportRequestRoutes = express.Router();
-supportRequestRoutes.use(adminMiddleware);
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
   let nextRequest;

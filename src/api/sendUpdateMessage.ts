@@ -5,7 +5,6 @@ import messageUsers from '../slack/utilities/messageUsers';
 import logger from '../logger';
 
 export const sendUpdateMessage = express.Router();
-sendUpdateMessage.use(adminMiddleware);
 
 sendUpdateMessage.post('/', async (req, res) => {
   const { message } = req.body;

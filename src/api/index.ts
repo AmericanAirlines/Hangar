@@ -76,7 +76,7 @@ api.post('/skip', async (req, res) => {
   res.send(await getJudgeTeams(judge));
 });
 
-api.use('/sendUpdateMessage', sendUpdateMessage);
-api.use('/supportRequest', supportRequestRoutes);
+api.use('/sendUpdateMessage', adminMiddleware, sendUpdateMessage);
+api.use('/supportRequest', adminMiddleware, supportRequestRoutes);
 
 export const apiApp = api;

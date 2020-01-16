@@ -53,7 +53,7 @@ export class SupportRequest extends BaseEntity {
   type: SupportRequestType;
 
   @BeforeInsert()
-  async checkForCurrentRequest(): Promise<void> {
+  async validateNoActiveRequests(): Promise<void> {
     const abandonedRequests: SupportRequest[] = [];
 
     const existingActiveRequests = await SupportRequest.find({
