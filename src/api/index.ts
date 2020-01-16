@@ -1,8 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
+import { supportRequestRoutes } from './supportRequest';
 import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';
-import sendUpdateMessage from './sendUpdateMessage';
+import { sendUpdateMessage } from './sendUpdateMessage';
 
 const api = express();
 
@@ -75,6 +76,7 @@ api.post('/skip', async (req, res) => {
   res.send(await getJudgeTeams(judge));
 });
 
-api.post('/sendUpdateMessage', sendUpdateMessage);
+api.use('/sendUpdateMessage', sendUpdateMessage);
+api.use('/supportRequest', supportRequestRoutes);
 
 export const apiApp = api;

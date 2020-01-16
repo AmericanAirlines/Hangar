@@ -46,10 +46,10 @@ export class SupportRequest extends BaseEntity {
   @Column({ nullable: false })
   name: string;
 
-  @Column({ nullable: false, default: SupportRequestStatus.Pending, type: 'simple-enum' })
+  @Column({ nullable: false, default: SupportRequestStatus.Pending, type: 'simple-enum', enum: SupportRequestStatus })
   status: SupportRequestStatus;
 
-  @Column({ nullable: false, type: 'simple-enum' })
+  @Column({ nullable: false, type: 'simple-enum', enum: SupportRequestType })
   type: SupportRequestType;
 
   @BeforeInsert()
@@ -64,8 +64,8 @@ export class SupportRequest extends BaseEntity {
 
     for (let i = 0; i < existingActiveRequests.length; i += 1) {
       const { movedToInProgressAt, status } = existingActiveRequests[i];
-
-      if (status === SupportRequestStatus.InProgress && DateTime.fromJSDate(movedToInProgressAt).diffNow('minutes').minutes >= minutesUntilStale) {
+      const minutesInProgress = Math.abs(DateTime.fromJSDate(movedToInProgressAt || new Date()).diffNow('minutes').minutes);
+      if (status === SupportRequestStatus.InProgress && minutesInProgress >= minutesUntilStale) {
         abandonedRequests.push(existingActiveRequests[i]);
       }
     }
@@ -93,9 +93,7 @@ export class SupportRequest extends BaseEntity {
 
     do {
       const nextRequest = await SupportRequest.createQueryBuilder('supportRequests')
-        .orderBy({
-          createdAt: 'ASC',
-        })
+        .orderBy('"supportRequests"."createdAt"', 'ASC')
         .where({
           status: SupportRequestStatus.Pending,
         })

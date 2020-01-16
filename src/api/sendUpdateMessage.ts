@@ -1,15 +1,14 @@
-import { Request, Response } from 'express';
+import express from 'express';
+import { adminMiddleware } from './adminMiddleware';
 import { Subscriber } from '../entities/subscriber';
 import messageUsers from '../slack/utilities/messageUsers';
 import logger from '../logger';
 
-export default async function sendUpdateMessage(req: Request, res: Response): Promise<void> {
-  const { message, secret } = req.body;
+export const sendUpdateMessage = express.Router();
+sendUpdateMessage.use(adminMiddleware);
 
-  if (secret !== process.env.ADMIN_SECRET) {
-    res.sendStatus(403);
-    return;
-  }
+sendUpdateMessage.post('/', async (req, res) => {
+  const { message } = req.body;
 
   if (!message || !message.trim()) {
     res.status(400).send("Property 'message' must contain content");
@@ -26,4 +25,4 @@ export default async function sendUpdateMessage(req: Request, res: Response): Pr
     res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
     logger.error(err);
   }
-}
+});
