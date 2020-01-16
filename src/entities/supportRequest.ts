@@ -72,14 +72,16 @@ export class SupportRequest extends BaseEntity {
       throw error;
     }
 
-    const promises = [];
     for (let i = 0; i < abandonedRequests.length; i += 1) {
-      promises.push((abandonedRequests[i].status = SupportRequestStatus.Abandoned));
+      try {
+        abandonedRequests[i].status = SupportRequestStatus.Abandoned;
+        await abandonedRequests[i].save();
+      } catch (err) {
+        // Ignore coverage for this line
+        /* istanbul ignore next */
+        logger.error('Something went wrong updating stale requests', err);
+      }
     }
-
-    Promise.all(promises).catch((err) => {
-      logger.error('Something went wrong updating stale requests', err);
-    });
   }
 
   static async getNextSupportRequest(): Promise<SupportRequest> {
