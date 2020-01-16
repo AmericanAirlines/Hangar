@@ -20,10 +20,11 @@ export enum SupportRequestErrors {
 
 @Entity()
 export class SupportRequest extends BaseEntity {
-  constructor(slackIdId: string, type: SupportRequestType) {
+  constructor(slackIdId: string, name: string, type: SupportRequestType) {
     super();
 
     this.slackId = slackIdId;
+    this.name = name;
     this.type = type;
   }
 
@@ -41,6 +42,9 @@ export class SupportRequest extends BaseEntity {
 
   @Column({ nullable: false })
   slackId: string;
+
+  @Column({ nullable: false })
+  name: string;
 
   @Column({ nullable: false, default: SupportRequestStatus.Pending, type: 'simple-enum' })
   status: SupportRequestStatus;

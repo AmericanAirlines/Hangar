@@ -19,7 +19,7 @@ describe('support request', () => {
   it('a user can request support', async () => {
     const slackId = slackIds[0];
 
-    const supportRequest = new SupportRequest(slackId, SupportRequestType.IdeaPitch);
+    const supportRequest = new SupportRequest(slackId, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest.save();
     expect(supportRequest.id).toBeDefined();
   });
@@ -27,7 +27,7 @@ describe('support request', () => {
   it('the status of a new support request item will default to Pending', async () => {
     const slackId = slackIds[0];
 
-    const supportRequest = new SupportRequest(slackId, SupportRequestType.IdeaPitch);
+    const supportRequest = new SupportRequest(slackId, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest.save();
     expect(supportRequest.status).toBe(SupportRequestStatus.Pending);
   });
@@ -35,11 +35,11 @@ describe('support request', () => {
   it('requesting support while already in the queue will throw an error', async () => {
     const slackId = slackIds[0];
 
-    const supportRequest1 = new SupportRequest(slackId, SupportRequestType.IdeaPitch);
+    const supportRequest1 = new SupportRequest(slackId, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest1.save();
     expect(supportRequest1.status).toBe(SupportRequestStatus.Pending);
 
-    const supportRequest2 = new SupportRequest(slackId, SupportRequestType.IdeaPitch);
+    const supportRequest2 = new SupportRequest(slackId, 'Someone', SupportRequestType.IdeaPitch);
     try {
       await supportRequest2.save();
       throw new Error('Expected error');
@@ -62,7 +62,7 @@ describe('support request', () => {
   it('a user can rejoin the queue if their previous request is stale', async () => {
     const slackId = slackIds[0];
 
-    const supportRequest1 = new SupportRequest(slackId, SupportRequestType.IdeaPitch);
+    const supportRequest1 = new SupportRequest(slackId, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest1.save();
     supportRequest1.movedToInProgressAt = DateTime.local()
       .plus({ minutes: 16 })
@@ -70,7 +70,7 @@ describe('support request', () => {
     supportRequest1.status = SupportRequestStatus.InProgress;
     await supportRequest1.save();
 
-    const supportRequest2 = new SupportRequest(slackId, SupportRequestType.IdeaPitch);
+    const supportRequest2 = new SupportRequest(slackId, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest2.save();
     expect(supportRequest2.id).toBeDefined();
   });
@@ -78,11 +78,11 @@ describe('support request', () => {
   it('a user can request support after previously haven gotten support', async () => {
     const slackId = slackIds[0];
 
-    const supportRequest1 = new SupportRequest(slackId, SupportRequestType.IdeaPitch);
+    const supportRequest1 = new SupportRequest(slackId, 'Someone', SupportRequestType.IdeaPitch);
     supportRequest1.status = SupportRequestStatus.Complete;
     await supportRequest1.save();
 
-    const supportRequest2 = new SupportRequest(slackId, SupportRequestType.IdeaPitch);
+    const supportRequest2 = new SupportRequest(slackId, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest2.save();
     expect(supportRequest2.id).toBeDefined();
   });
@@ -90,13 +90,13 @@ describe('support request', () => {
   it('requests for each type will be served FIFO', async () => {
     const slackId1 = slackIds[0];
 
-    const supportRequest1 = new SupportRequest(slackId1, SupportRequestType.IdeaPitch);
+    const supportRequest1 = new SupportRequest(slackId1, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest1.save();
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const slackId2 = slackIds[1];
-    const supportRequest2 = new SupportRequest(slackId2, SupportRequestType.IdeaPitch);
+    const supportRequest2 = new SupportRequest(slackId2, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest2.save();
 
     const nextRequest = await SupportRequest.getNextSupportRequest();
