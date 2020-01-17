@@ -21,6 +21,11 @@
       "description": "A secret you use for admin tasks",
       "value": "",
       "required": true
+    },
+    "CHALLENGE_URL": {
+      "description": "Provice a link to your challenge details if you have one, we encourage you to include judging criteria and prize info",
+      "value": "",
+      "required": false
     }
   }
 }
