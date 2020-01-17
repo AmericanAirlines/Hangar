@@ -1,5 +1,5 @@
 import { KnownBlock } from '@slack/types';
-import { registerTeamActionId, subscribeActionId, unsubscribeActionId } from '../constants';
+import { registerTeamActionId, subscribeActionId, unsubscribeActionId, ideaPitchRequestActionId, technicalRequestActionId } from '../constants';
 import openSourceBlock from './openSourceFooter';
 
 // Ignore snake_case types from @slack/bolt
@@ -51,6 +51,38 @@ const unsubscribeBlock: KnownBlock = {
   },
 };
 
+const ideaPitchRequestBlock: KnownBlock = {
+  type: 'section',
+  text: {
+    type: 'mrkdwn',
+    text: "*Need idea help?*\nCome pitch your idea to us and get feedback. No idea what to build? Let's chat!",
+  },
+  accessory: {
+    type: 'button',
+    text: {
+      type: 'plain_text',
+      text: 'Join Idea Pitch Queue',
+    },
+    action_id: ideaPitchRequestActionId,
+  },
+};
+
+const technicalRequestBlock: KnownBlock = {
+  type: 'section',
+  text: {
+    type: 'mrkdwn',
+    text: '*Need technical help?*\nHaving trouble with your app? Our team is here to help!',
+  },
+  accessory: {
+    type: 'button',
+    text: {
+      type: 'plain_text',
+      text: 'Join Tech Support Queue',
+    },
+    action_id: technicalRequestActionId,
+  },
+};
+
 const teamRegistrationBlock: KnownBlock = {
   type: 'section',
   text: {
@@ -83,6 +115,9 @@ function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
   const defaultBlocksLengh = blocks.length;
 
   blocks.push(context.isSubscribed ? unsubscribeBlock : subscribeBlock);
+
+  blocks.push(ideaPitchRequestBlock);
+  blocks.push(technicalRequestBlock);
 
   if (context.teamRegistrationActive) {
     blocks.push(teamRegistrationBlock);

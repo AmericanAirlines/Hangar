@@ -5,6 +5,7 @@ import { Team } from '../entities/team';
 import { Judge } from '../entities/judge';
 import { JudgingVote } from '../entities/judgingVote';
 import logger from '../logger';
+import { createJudgeData, createTeamData } from './utilities';
 
 /* eslint-disable no-await-in-loop, no-continue */
 
@@ -339,21 +340,4 @@ async function visitTeamsAndJudge(judges: Judge[], teams: Team[], percentVisitat
     await judge.vote(currTeamChosen);
   }
   return orderedTeams;
-}
-
-async function createTeamData(numTeams: number): Promise<Team[]> {
-  const teams: Team[] = [];
-  for (let i = 0; i < numTeams; i += 1) {
-    const team = await new Team(`Team ${i}`, i, `Project for Team ${i}`, [String(i)]).save();
-    teams.push(team);
-  }
-  return teams;
-}
-
-async function createJudgeData(numJudges: number): Promise<Judge[]> {
-  const judges: Judge[] = [];
-  for (let i = 0; i < numJudges; i += 1) {
-    judges.push(await new Judge().save());
-  }
-  return judges;
 }
