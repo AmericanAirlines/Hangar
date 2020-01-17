@@ -1,6 +1,15 @@
 import { KnownBlock } from '@slack/types';
-import { registerTeamActionId, subscribeActionId, unsubscribeActionId, ideaPitchRequestActionId, technicalRequestActionId } from '../constants';
+import {
+  registerTeamActionId,
+  subscribeActionId,
+  unsubscribeActionId,
+  ideaPitchRequestActionId,
+  technicalRequestActionId,
+  ignoreActionId,
+} from '../constants';
 import openSourceBlock from './openSourceFooter';
+
+const challengeUrl = process.env.CHALLENGE_URL;
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -10,12 +19,29 @@ const headerBlock: KnownBlock = {
   text: {
     type: 'mrkdwn',
     text:
-      "Hey there :wave: I'm a bot and I hope I can help you have an amazing experience this weekend! Here are some of the things I can help with:",
+      "Hey there :wave: I'm a bot designed to provide you with resources for the hackathon! You can message me at any time to see the options below.",
   },
 };
 
 const dividerBlock: KnownBlock = {
   type: 'divider',
+};
+
+const challengeBlock: KnownBlock = {
+  type: 'section',
+  text: {
+    type: 'mrkdwn',
+    text: '*Sponsor Challenge*\nWant to read up on our challenge and see what our prizes are?',
+  },
+  accessory: {
+    type: 'button',
+    text: {
+      type: 'plain_text',
+      text: 'Challenge Info',
+    },
+    url: challengeUrl,
+    action_id: ignoreActionId,
+  },
 };
 
 const subscribeBlock: KnownBlock = {
@@ -111,8 +137,11 @@ But seriously, I don't have anything else to show you at the moment. Message me 
 
 function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
   const blocks: KnownBlock[] = [headerBlock, dividerBlock];
-
   const defaultBlocksLengh = blocks.length;
+
+  if (challengeUrl) {
+    blocks.push(challengeBlock);
+  }
 
   blocks.push(context.isSubscribed ? unsubscribeBlock : subscribeBlock);
 
