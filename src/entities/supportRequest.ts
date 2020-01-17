@@ -18,6 +18,18 @@ export enum SupportRequestErrors {
   ExistingActiveRequest = 'ExistingActiveRequest',
 }
 
+const genHash = (): string => {
+  const prefix = Math.random()
+    .toString(36)
+    .substring(2, 15);
+
+  const suffix = Math.random()
+    .toString(36)
+    .substring(2, 15);
+
+  return prefix + suffix;
+};
+
 @Entity()
 export class SupportRequest extends BaseEntity {
   constructor(slackIdId: string, name: string, type: SupportRequestType) {
@@ -26,6 +38,7 @@ export class SupportRequest extends BaseEntity {
     this.slackId = slackIdId;
     this.name = name;
     this.type = type;
+    this.syncHash = genHash();
   }
 
   @PrimaryGeneratedColumn()
@@ -51,6 +64,12 @@ export class SupportRequest extends BaseEntity {
 
   @Column({ nullable: false, type: 'simple-enum', enum: SupportRequestType })
   type: SupportRequestType;
+
+  /**
+   * This is used for running concurrent operations
+   */
+  @Column()
+  syncHash: string;
 
   @BeforeInsert()
   async validateNoActiveRequests(): Promise<void> {
@@ -104,7 +123,8 @@ export class SupportRequest extends BaseEntity {
       }
 
       try {
-        await SupportRequest.createQueryBuilder('supportRequests')
+        const newHash = genHash();
+        const result = await SupportRequest.createQueryBuilder('supportRequests')
           .update()
           .where({
             id: nextRequest.id,
@@ -113,14 +133,21 @@ export class SupportRequest extends BaseEntity {
           .set({
             status: SupportRequestStatus.InProgress,
             movedToInProgressAt: new Date(),
+            syncHash: newHash,
           })
           .execute();
 
         await nextRequest.reload();
-        return nextRequest;
+
+        if (result.affected > 0 || nextRequest.syncHash === newHash) {
+          return nextRequest;
+        }
       } finally {
         retries -= 1;
       }
     } while (retries >= 0);
+
+    /* istanbul ignore next */
+    throw new Error('Unable to obtain a lock on a record');
   }
 }

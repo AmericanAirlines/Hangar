@@ -108,4 +108,17 @@ describe('support request', () => {
     const nextRequest = await SupportRequest.getNextSupportRequest();
     expect(nextRequest).toBeNull();
   });
+
+  it('can handle several simultaneous requests and get unique values', async () => {
+    for (let i = 0; i < slackIds.length; i += 1) {
+      await new SupportRequest(slackIds[i], slackIds[i], SupportRequestType.IdeaPitch).save();
+    }
+
+    const requestPromises = [];
+    for (let i = 0; i < slackIds.length; i += 1) {
+      requestPromises.push(SupportRequest.getNextSupportRequest());
+    }
+
+    expect(Promise.all(requestPromises)).resolves.toHaveLength(slackIds.length);
+  });
 });
