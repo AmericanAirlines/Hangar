@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, BeforeInsert, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import logger from '../logger';
+import { genHash } from '../utilities/genHash';
 
 export enum SupportRequestStatus {
   Pending = 'Pending',
@@ -17,18 +18,6 @@ export enum SupportRequestType {
 export enum SupportRequestErrors {
   ExistingActiveRequest = 'ExistingActiveRequest',
 }
-
-const genHash = (): string => {
-  const prefix = Math.random()
-    .toString(36)
-    .substring(2, 15);
-
-  const suffix = Math.random()
-    .toString(36)
-    .substring(2, 15);
-
-  return prefix + suffix;
-};
 
 @Entity()
 export class SupportRequest extends BaseEntity {

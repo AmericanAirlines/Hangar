@@ -1,16 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateResult } from 'typeorm';
-
-const genHash = (): string => {
-  const prefix = Math.random()
-    .toString(36)
-    .substring(2, 15);
-
-  const suffix = Math.random()
-    .toString(36)
-    .substring(2, 15);
-
-  return prefix + suffix;
-};
+import { genHash } from '../utilities/genHash';
 
 // TODO: Enforce only one team registered per person
 @Entity()
