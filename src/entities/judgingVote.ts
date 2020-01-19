@@ -44,7 +44,7 @@ export class JudgingVote extends BaseEntity {
     const initialScores: { [id: string]: TeamScore }[] = [];
 
     // Use a designated percent of the votes for calibration
-    const avgNumVotesPerTeam = allVotes.length / numTeams;
+    const avgNumVotesPerTeam = numTeams ? allVotes.length / numTeams : 0;
     const percentOfVotesToUseForCalibration = 0.2;
     const percentBasedCalibrationVotes = Math.round(percentOfVotesToUseForCalibration * avgNumVotesPerTeam);
     // Use percentOfVotesToUseForCalibration percent of the votes OR 2, whichever is bigger
