@@ -3,15 +3,29 @@ import { registerTeamActionId, registerTeamViewConstants } from '../constants';
 import { registerTeamView, registeredTeamSummary } from '../blocks/registerTeam';
 import logger from '../../logger';
 import { Team } from '../../entities/team';
-import { ViewSubmitState, DmOpenResult } from '../types';
+import { ViewSubmitState, DmOpenResult, ViewSubmitInputFieldState } from '../types';
 import { Config } from '../../entities/config';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */
 
-function retrieveViewValuesForField(view: ViewOutput, actionId: string, type: 'multiUsersSelect' | 'plainTextInput'): string | string[] {
+function retrieveViewValuesForField(
+  view: ViewOutput,
+  actionId: string,
+  type: 'multiUsersSelect' | 'plainTextInput',
+  optional = false,
+): string | string[] {
   const { values } = view.state as ViewSubmitState;
-  const blockData = values[actionId][actionId];
+  let blockData: ViewSubmitInputFieldState;
+  try {
+    blockData = values[actionId][actionId];
+  } catch (err) {
+    if (optional) {
+      return null;
+    }
+    logger.error('Failed to parse field from view submission:', err);
+  }
+
   switch (type) {
     case 'multiUsersSelect':
       return blockData.selected_users;
@@ -71,7 +85,8 @@ function register(bolt: App): void {
     // Before doing additional work, let's tell Slack know we can take it from here (we have to respond in < 3 seconds)
     ack();
 
-    const teamMembers = (retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect') as string[]) || [];
+    const optional = true;
+    const teamMembers = (retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect', optional) as string[]) || [];
     const allTeamMembers = Array.from(new Set([registeringUser, ...teamMembers]));
     const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
     const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
