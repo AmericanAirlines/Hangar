@@ -2,6 +2,8 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import shuffle from 'shuffle-array';
 import { Team } from './team';
 
+export const insufficientVoteCountError = 'InsufficientVoteCount';
+
 interface TeamScore {
   id: number;
   score: number;
@@ -42,15 +44,17 @@ export class JudgingVote extends BaseEntity {
     const initialScores: { [id: string]: TeamScore }[] = [];
 
     // Use a designated percent of the votes for calibration
-    const avgNumVotesPerTeam = allVotes.length / numTeams;
+    const avgNumVotesPerTeam = numTeams ? allVotes.length / numTeams : 0;
     const percentOfVotesToUseForCalibration = 0.2;
     const percentBasedCalibrationVotes = Math.round(percentOfVotesToUseForCalibration * avgNumVotesPerTeam);
     // Use percentOfVotesToUseForCalibration percent of the votes OR 2, whichever is bigger
     const votesNeededForCalibration = Math.max(percentBasedCalibrationVotes, 2);
 
     // If the number of calibration votes is >= 50% of the votes for the team; throw error
-    if (votesNeededForCalibration / avgNumVotesPerTeam >= 0.75) {
-      throw new Error('Insufficient vote count for judging');
+    if (avgNumVotesPerTeam === 0 || votesNeededForCalibration / avgNumVotesPerTeam >= 0.75) {
+      const error = new Error('Insufficient vote count for judging');
+      error.name = insufficientVoteCountError;
+      throw error;
     }
 
     // Pass over the data in random order to obtain an unbiased baseline

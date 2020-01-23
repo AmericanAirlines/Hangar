@@ -1,7 +1,6 @@
 /* globals localStorage, fetch, window */
 
 import React from 'react';
-import Confetti from 'react-confetti';
 
 interface Team {
   id: number;
@@ -146,7 +145,6 @@ const judge = (): JSX.Element => {
   if (doneJudging) {
     return (
       <>
-        <Confetti width={window.innerWidth} height={window.innerHeight} />
         <h1 style={{ marginTop: 50 }} className="text-center">
           Congratulations!
         </h1>

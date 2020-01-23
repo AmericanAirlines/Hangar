@@ -3,7 +3,7 @@ import shuffle from 'shuffle-array';
 import { createDbConnection, closedbConnection } from './testdb';
 import { Team } from '../entities/team';
 import { Judge } from '../entities/judge';
-import { JudgingVote } from '../entities/judgingVote';
+import { JudgingVote, insufficientVoteCountError } from '../entities/judgingVote';
 import logger from '../logger';
 import { createJudgeData, createTeamData } from './utilities';
 
@@ -298,6 +298,15 @@ describe('score calculation', () => {
       expect(score).toBeLessThanOrEqual(100);
       expect(score).toBeLessThanOrEqual(previousScore);
       previousScore = score;
+    }
+  });
+
+  it('tabulation will throw an error if no votes exist', async () => {
+    try {
+      await JudgingVote.tabulate();
+      throw new Error('Expected method to throw');
+    } catch (err) {
+      expect(err.name).toBe(insufficientVoteCountError);
     }
   });
 });
