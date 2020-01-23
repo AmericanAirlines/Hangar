@@ -86,7 +86,9 @@ function register(bolt: App): void {
     ack();
 
     const optional = true;
-    const teamMembers = (retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect', optional) as string[]) || [];
+    /* eslint-disable-next-line operator-linebreak */
+    const teamMembers =
+      (retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamMembers, 'multiUsersSelect', optional) as string[]) || [];
     const allTeamMembers = Array.from(new Set([registeringUser, ...teamMembers]));
     const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
     const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
