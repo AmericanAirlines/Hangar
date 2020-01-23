@@ -1,6 +1,6 @@
 import 'jest';
-import { Config } from '../entities/config';
-import { createDbConnection, closedbConnection } from './testdb';
+import { Config } from '../../entities/config';
+import { createDbConnection, closedbConnection } from '../testdb';
 
 /* eslint-disable no-await-in-loop */
 

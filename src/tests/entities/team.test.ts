@@ -1,7 +1,7 @@
 import 'jest';
 import { UpdateResult } from 'typeorm';
-import { Team } from '../entities/team';
-import { createDbConnection, closedbConnection } from './testdb';
+import { Team } from '../../entities/team';
+import { createDbConnection, closedbConnection } from '../testdb';
 
 /* eslint-disable no-await-in-loop */
 

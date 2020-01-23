@@ -1,7 +1,7 @@
 import 'jest';
 import { DateTime } from 'luxon';
-import { SupportRequest, SupportRequestStatus, SupportRequestType, SupportRequestErrors } from '../entities/supportRequest';
-import { createDbConnection, closedbConnection } from './testdb';
+import { SupportRequest, SupportRequestStatus, SupportRequestType, SupportRequestErrors } from '../../entities/supportRequest';
+import { createDbConnection, closedbConnection } from '../testdb';
 
 /* eslint-disable no-await-in-loop */
 

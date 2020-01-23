@@ -9,7 +9,7 @@ interface TeamScore {
   score: number;
 }
 
-interface TeamResult extends TeamScore {
+export interface TeamResult extends TeamScore {
   name: string;
 }
 
