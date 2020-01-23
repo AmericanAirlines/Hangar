@@ -12,7 +12,7 @@ module.exports = {
   testMatch: ['**/*.test.(ts|js)'],
   testEnvironment: 'node',
   preset: 'ts-jest',
-  collectCoverageFrom: ['./src/**/*.ts', '!./src/migration/**', '!./src/tests/**', '!./src/index.ts', '!./src/slack'],
+  collectCoverageFrom: ['./src/**/*.ts', '!./src/migration/**', '!./src/tests/**', '!./src/index.ts', '!./src/slack/**'],
   coverageDirectory: './coverage',
   coverageThreshold: {
     global: {
@@ -26,12 +26,6 @@ module.exports = {
       branches: 100,
       functions: 100,
       lines: 100,
-    },
-    './src/slack/': {
-      statements: 30,
-      branches: 0,
-      functions: 0,
-      lines: 30,
     },
   },
 };
