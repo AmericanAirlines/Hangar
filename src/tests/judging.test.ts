@@ -281,6 +281,25 @@ describe('score calculation', () => {
     expect(overallAverageAccuracy).toBeGreaterThanOrEqual(overallAverageAccuracyThreshold);
     done();
   });
+
+  it('judging scores should be between 0 and 100', async () => {
+    const numTeams = 10;
+    const numJudges = 10;
+    const teams = await createTeamData(numTeams);
+    const judges = await createJudgeData(numJudges);
+
+    await visitTeamsAndJudge(judges, teams);
+
+    const scores = await JudgingVote.tabulate();
+    let previousScore = Number.POSITIVE_INFINITY;
+    for (let i = 0; i < scores.length; i += 1) {
+      const { score } = scores[i];
+      expect(score).toBeGreaterThanOrEqual(0);
+      expect(score).toBeLessThanOrEqual(100);
+      expect(score).toBeLessThanOrEqual(previousScore);
+      previousScore = score;
+    }
+  });
 });
 
 /**

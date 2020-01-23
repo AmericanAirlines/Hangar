@@ -61,6 +61,17 @@ export class JudgingVote extends BaseEntity {
     }
 
     // Average scores from all passes
+    const normalizedScores: { [id: number]: number } = {};
+    Object.values(initialScores).forEach((scores) => {
+      Object.values(scores).forEach((teamScore) => {
+        normalizedScores[teamScore.id] = (normalizedScores[teamScore.id] || 0) + teamScore.score;
+      });
+    });
+
+    for (let i = 0; i < Object.keys(normalizedScores).length; i += 1) {
+      normalizedScores[i] /= randomJudgingIterations;
+    }
+
     const normalizedPosition: { [id: number]: number } = {};
     Object.values(initialScores).forEach((scores) => {
       // Convert object of team scores into a sortable array
@@ -84,12 +95,12 @@ export class JudgingVote extends BaseEntity {
 
     const teamResults: TeamResult[] = [];
 
-    orderedTeams.forEach((teamScore, position) => {
-      const matchingTeam = teams.find((team) => team.id === teamScore.id);
+    orderedTeams.forEach((scoredTeam) => {
+      const matchingTeam = teams.find((team) => team.id === scoredTeam.id);
       teamResults.push({
         id: matchingTeam.id,
         name: matchingTeam.name,
-        score: position,
+        score: normalizedScores[scoredTeam.id],
       });
     });
 
@@ -174,10 +185,6 @@ export class JudgingVote extends BaseEntity {
         const currentTeamScore = scores[currentTeamId];
         const previousTeamScore = scores[previousTeamId];
 
-        // Update min and max score
-        minScore = Math.min(minScore, currentTeamScore.score, previousTeamScore.score);
-        maxScore = Math.max(maxScore, currentTeamScore.score, previousTeamScore.score);
-
         // ELO SCORING - both teams have been calibrated and have an ELO score
         // In order to determine differential between scores, "shift" minScore to 0, If...
         //   Positive min: shift is negative
@@ -203,8 +210,23 @@ export class JudgingVote extends BaseEntity {
         // Update scores for both teams
         scores[currentTeamId] = currentTeamScore;
         scores[previousTeamId] = previousTeamScore;
+
+        // Update min and max score
+        minScore = Math.min(minScore, currentTeamScore.score, previousTeamScore.score);
+        maxScore = Math.max(maxScore, currentTeamScore.score, previousTeamScore.score);
       }
     }
+
+    // Normalized score from 0 to 100
+    for (let i = 0; i < Object.keys(scores).length; i += 1) {
+      const teamId = Object.keys(scores)[i];
+      const { score } = scores[teamId];
+      // Shift min score to zero, shift max score by an equal amount, get the normalized score
+      //   as a percent of the max
+      const normalizedScore = ((score - minScore) / (maxScore - minScore)) * 100;
+      scores[teamId].score = normalizedScore;
+    }
+
     return scores;
   }
 }
