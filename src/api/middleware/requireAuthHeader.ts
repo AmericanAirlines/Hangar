@@ -1,10 +1,9 @@
-import express from 'express';
-import logger from '../logger';
+import { Handler } from 'express';
+import logger from '../../logger';
 
 const adminSecret = process.env.ADMIN_SECRET;
-export const adminMiddleware = express.Router();
 
-adminMiddleware.use((req, res, next) => {
+export const requireAuthHeader: Handler = (req, res, next): void => {
   if (req.headers.authorization !== adminSecret) {
     res.sendStatus(401);
     logger.error(
@@ -16,4 +15,4 @@ adminMiddleware.use((req, res, next) => {
   }
 
   next();
-});
+};

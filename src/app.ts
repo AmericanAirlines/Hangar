@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import next from 'next';
 import { createConnection, getConnectionOptions, ConnectionOptions } from 'typeorm';
 import path from 'path';
@@ -8,12 +9,16 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 import { slackApp } from './slack';
 import { apiApp } from './api';
 import logger from './logger';
+import { requireAuth } from './api/middleware/requireAuth';
 
 const app = express();
 const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
 const nextHandler = nextApp.getRequestHandler();
 
 let appLoading = true;
+
+app.use(express.json());
+app.use(cookieParser(process.env.ADMIN_SECRET));
 
 app.get(
   '/',
@@ -64,6 +69,7 @@ const initSlack = async (): Promise<void> => {
 const initNext = async (): Promise<void> => {
   if (process.env.NODE_ENV !== 'test') {
     await nextApp.prepare();
+    app.get(['/'], requireAuth, (req, res) => nextHandler(req, res));
     app.get('*', (req, res) => nextHandler(req, res));
   }
 };
