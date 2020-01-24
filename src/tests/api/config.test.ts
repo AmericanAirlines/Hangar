@@ -26,7 +26,7 @@ describe('api/judging', () => {
 
     const { app } = require('../../app');
     supertest(app)
-      .get('/api/config/')
+      .get('/api/config')
       .query({ configKey: 'someKey' })
       .set({
         Authorization: "YOU DIDN'T SAY THE MAGIC WORD!",
@@ -37,16 +37,16 @@ describe('api/judging', () => {
   it('retrieving an unknown config item will result in a null response', async () => {
     const { app } = require('../../app');
     const result = await supertest(app)
-      .get('/api/config/')
+      .get('/api/config')
       .query({ configKey: 'someKey' })
       .set({
         Authorization: adminSecret,
       })
-      .expect(401);
-    expect(result.body).toBeNull();
+      .expect(200);
+    expect(result.body).toEqual({});
   });
 
-  it('retrieving an known config item will return the config item', async () => {
+  it('retrieving a known config item will return the config item', async () => {
     const { app } = require('../../app');
     const configKey = 'something';
     const configValue = 'somehow';
@@ -55,12 +55,12 @@ describe('api/judging', () => {
     await item.save();
 
     const result = await supertest(app)
-      .post('/api/config/')
+      .get('/api/config')
+      .query({ configKey })
       .set({
         Authorization: adminSecret,
       })
-      .send({ configKey, configValue })
-      .expect(401);
+      .expect(200);
     expect(result.body).toEqual(item);
   });
 
@@ -70,12 +70,13 @@ describe('api/judging', () => {
     const configValue = 'somehow';
 
     const result = await supertest(app)
-      .post('/api/config/')
+      .post('/api/config')
       .set({
         Authorization: adminSecret,
       })
       .send({ configKey, configValue })
-      .expect(401);
+      .expect(200);
+
     expect(result.body.key).toEqual(configKey);
     expect(result.body.value).toEqual(configValue);
   });
@@ -84,18 +85,20 @@ describe('api/judging', () => {
     const { app } = require('../../app');
     const configKey = 'something';
     const configValue = 'somehow';
+    const newConfigValue = 'somewhere';
 
     const item = new Config(configKey, configValue);
     await item.save();
 
     const result = await supertest(app)
-      .post('/api/config/')
+      .post('/api/config')
       .set({
         Authorization: adminSecret,
       })
-      .send({ configKey, configValue })
-      .expect(401);
+      .send({ configKey, configValue: newConfigValue })
+      .expect(200);
 
-    expect(result).toEqual(item);
+    expect(result.body.key).toEqual(configKey);
+    expect(result.body.value).toEqual(newConfigValue);
   });
 });
