@@ -22,6 +22,6 @@ export async function createDbConnection(): Promise<void> {
   // } as PostgresConnectionOptions);
 }
 
-export async function closedbConnection(): Promise<void> {
+export async function closeDbConnection(): Promise<void> {
   await getConnection().close();
 }

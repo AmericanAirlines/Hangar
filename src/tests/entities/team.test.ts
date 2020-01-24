@@ -1,7 +1,7 @@
 import 'jest';
 import { UpdateResult } from 'typeorm';
 import { Team } from '../../entities/team';
-import { createDbConnection, closedbConnection } from '../testdb';
+import { createDbConnection, closeDbConnection } from '../testdb';
 
 /* eslint-disable no-await-in-loop */
 
@@ -15,7 +15,7 @@ describe('judging', () => {
   });
 
   afterEach(async () => {
-    await closedbConnection();
+    await closeDbConnection();
   });
 
   it('decrement reduces activeJudgeCount by 1', async () => {

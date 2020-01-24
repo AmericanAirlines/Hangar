@@ -1,5 +1,5 @@
 import 'jest';
-import { createDbConnection, closedbConnection } from '../testdb';
+import { createDbConnection, closeDbConnection } from '../testdb';
 import { Team } from '../../entities/team';
 import { Judge } from '../../entities/judge';
 import { JudgingVote, insufficientVoteCountError } from '../../entities/judgingVote';
@@ -17,7 +17,7 @@ describe('judging logistics', () => {
   });
 
   afterEach(async () => {
-    await closedbConnection();
+    await closeDbConnection();
   });
 
   it('the in-memory database works', async () => {
@@ -154,7 +154,7 @@ describe('score calculation', () => {
   });
 
   afterEach(async () => {
-    await closedbConnection();
+    await closeDbConnection();
   });
 
   it('if minimal data is provided, tabulation will throw an error', async () => {
@@ -210,7 +210,7 @@ describe('score calculation', () => {
     let accuracySum = 0;
     const errors: string[] = [];
 
-    await closedbConnection();
+    await closeDbConnection();
     for (let k = 0; k < visitationSet.length; k += 1) {
       const visitation = visitationSet[k];
       for (let i = 0; i < numTeamsSet.length; i += 1) {
@@ -259,7 +259,7 @@ describe('score calculation', () => {
             logger.info(outputString);
           }
 
-          await closedbConnection();
+          await closeDbConnection();
         }
       }
     }

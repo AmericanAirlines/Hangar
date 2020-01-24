@@ -4,7 +4,7 @@ import { Team } from '../../entities/team';
 import { Judge } from '../../entities/judge';
 import { ExpandedTeamResult, bonusPointsForIdeaPitch } from '../../api/judging';
 import { createJudgeData, createTeamData, visitTeamsAndJudge } from '../utilities';
-import { createDbConnection, closedbConnection } from '../testdb';
+import { createDbConnection, closeDbConnection } from '../testdb';
 import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
 import { JudgingVote } from '../../entities/judgingVote';
 
@@ -24,7 +24,7 @@ describe('api/judging', () => {
   });
 
   afterAll(async () => {
-    await closedbConnection();
+    await closeDbConnection();
   });
 
   beforeEach(() => {
