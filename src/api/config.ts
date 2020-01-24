@@ -16,7 +16,9 @@ config.get('/', async (req, res) => {
     const configItem = await Config.findOne({ key: configKey });
     res.send(configItem);
   } catch (err) {
+    /* istanbul ignore next */
     res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
+    /* istanbul ignore next */
     logger.error(err);
   }
 });
@@ -36,10 +38,13 @@ config.post('/', async (req, res) => {
     } else {
       configItem.value = configValue;
     }
+
     await configItem.save();
     res.send(configItem);
   } catch (err) {
+    /* istanbul ignore next */
     res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
+    /* istanbul ignore next */
     logger.error(err);
   }
 });

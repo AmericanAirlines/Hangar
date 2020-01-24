@@ -34,6 +34,16 @@ describe('api/judging', () => {
       .expect(401, done);
   });
 
+  it('omitting required query params will result in an error', (done) => {
+    const { app } = require('../../app');
+    supertest(app)
+      .get('/api/config')
+      .set({
+        Authorization: adminSecret,
+      })
+      .expect(400, done);
+  });
+
   it('retrieving an unknown config item will result in a null response', async () => {
     const { app } = require('../../app');
     const result = await supertest(app)
@@ -100,5 +110,15 @@ describe('api/judging', () => {
 
     expect(result.body.key).toEqual(configKey);
     expect(result.body.value).toEqual(newConfigValue);
+  });
+
+  it('creating a new config item without required body items will fail', (done) => {
+    const { app } = require('../../app');
+    supertest(app)
+      .post('/api/config')
+      .set({
+        Authorization: adminSecret,
+      })
+      .expect(400, done);
   });
 });
