@@ -3,7 +3,7 @@ import { ideaPitchRequestActionId, technicalRequestActionId } from '../constants
 import { getDashboardContext } from '../utilities/getDashboardContext';
 import dashboardBlocks from '../blocks/dashboardBlocks';
 import logger from '../../logger';
-import { slackAPI } from '..';
+import { getWebClient } from '..';
 import { Config } from '../../entities/config';
 import { SupportRequest, SupportRequestType, SupportRequestErrors } from '../../entities/supportRequest';
 
@@ -47,7 +47,7 @@ function register(bolt: App): void {
     }
 
     try {
-      await slackAPI.chat.update({
+      await getWebClient().chat.update({
         ts: body.message.ts,
         channel: body.channel.id,
         text: '',

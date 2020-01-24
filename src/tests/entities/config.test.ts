@@ -1,6 +1,6 @@
 import 'jest';
-import { Config } from '../entities/config';
-import { createDbConnection, closedbConnection } from './testdb';
+import { Config } from '../../entities/config';
+import { createDbConnection, closeDbConnection } from '../testdb';
 
 /* eslint-disable no-await-in-loop */
 
@@ -10,7 +10,7 @@ describe('config', () => {
   });
 
   afterEach(async () => {
-    await closedbConnection();
+    await closeDbConnection();
   });
 
   it('config items can be saved and retrieved', async () => {
