@@ -1,12 +1,13 @@
 import 'dotenv/config';
 import express from 'express';
-import { adminMiddleware } from './adminMiddleware';
+import { requireAuth } from './middleware/requireAuth';
 import { supportRequestRoutes } from './supportRequest';
 import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';
 import { sendUpdateMessage } from './sendUpdateMessage';
 import { judging } from './judging';
 import { config } from './config';
+import { admin } from './admin';
 
 const api = express();
 
@@ -79,9 +80,10 @@ api.post('/skip', async (req, res) => {
   res.send(await getJudgeTeams(judge));
 });
 
-api.use('/sendUpdateMessage', adminMiddleware, sendUpdateMessage);
-api.use('/supportRequest', adminMiddleware, supportRequestRoutes);
-api.use('/judging', adminMiddleware, judging);
-api.use('/config', adminMiddleware, config);
+api.use('/sendUpdateMessage', requireAuth(), sendUpdateMessage);
+api.use('/supportRequest', requireAuth(), supportRequestRoutes);
+api.use('/judging', requireAuth(), judging);
+api.use('/config', requireAuth(), config);
+api.use('/admin', admin);
 
 export const apiApp = api;
