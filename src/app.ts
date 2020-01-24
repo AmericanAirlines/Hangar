@@ -9,7 +9,7 @@ import { slackApp } from './slack';
 import { apiApp } from './api';
 import logger from './logger';
 
-const app = express();
+export const app = express();
 const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
 const nextHandler = nextApp.getRequestHandler();
 
@@ -19,9 +19,7 @@ app.get('/', (_req, res) => {
 
 app.use('/api', apiApp);
 
-export default app;
-
-const init = async (): Promise<void> => {
+export async function init(): Promise<void> {
   if (process.env.NODE_ENV !== 'test') {
     // Pull connection options from ormconfig.json
     const options: ConnectionOptions = await getConnectionOptions();
@@ -50,6 +48,4 @@ const init = async (): Promise<void> => {
     await nextApp.prepare();
     app.get('*', (req, res) => nextHandler(req, res));
   }
-};
-
-init();
+}
