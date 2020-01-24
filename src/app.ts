@@ -18,7 +18,7 @@ const nextHandler = nextApp.getRequestHandler();
 let appLoading = true;
 
 app.use(express.json());
-app.use(cookieParser(process.env.ADMIN_SECRET));
+app.use(cookieParser(process.env.ADMIN_SECRET)); // lgtm [js/missing-token-validation]
 
 app.get(
   '/',
