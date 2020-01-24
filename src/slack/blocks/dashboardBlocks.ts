@@ -81,7 +81,8 @@ const ideaPitchRequestBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: "*Need idea help?*\nCome pitch your idea to us and get feedback. No idea what to build? Let's chat!",
+    text:
+      "*Need idea help?*\nCome pitch your idea to us and get feedback, you might even get some bonus points towards your final score! No idea what to build? Let's chat!",
   },
   accessory: {
     type: 'button',
