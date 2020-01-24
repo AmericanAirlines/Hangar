@@ -65,18 +65,32 @@ export class JudgingVote extends BaseEntity {
     }
 
     // Average scores from all passes
-    const normalizedScores: { [id: number]: number } = {};
+    const normalizedScores: { [id: string]: number[] } = {};
     Object.values(initialScores).forEach((scores) => {
       Object.values(scores).forEach((teamScore) => {
-        normalizedScores[teamScore.id] = (normalizedScores[teamScore.id] || 0) + teamScore.score;
+        normalizedScores[teamScore.id] = normalizedScores[teamScore.id] ? [...normalizedScores[teamScore.id], teamScore.score] : [teamScore.score];
       });
     });
 
+    const trimmedMeanScores: { [id: string]: number } = {};
+    const percentOfOutliersToRemove = 0.2;
+    const outliersToRemoveFromEachSide = Math.max(Math.floor(percentOfOutliersToRemove * randomJudgingIterations) / 2, 1);
     for (let i = 0; i < Object.keys(normalizedScores).length; i += 1) {
-      normalizedScores[i] /= randomJudgingIterations;
+      const teamId = Object.keys(normalizedScores)[i];
+      const sortedScores = normalizedScores[teamId].sort();
+      // Remove outlier(s) from front
+      sortedScores.splice(0, outliersToRemoveFromEachSide);
+      // Remove outlier(s) from end
+      sortedScores.splice(sortedScores.length - outliersToRemoveFromEachSide, outliersToRemoveFromEachSide);
+
+      let sum = 0;
+      sortedScores.forEach((score) => {
+        sum += score;
+      });
+      trimmedMeanScores[teamId] = sum / sortedScores.length;
     }
 
-    const normalizedPosition: { [id: number]: number } = {};
+    const normalizedPosition: { [id: string]: number } = {};
     Object.values(initialScores).forEach((scores) => {
       // Convert object of team scores into a sortable array
       // Sort by pushing highest scored teams to the front of the array
@@ -104,7 +118,7 @@ export class JudgingVote extends BaseEntity {
       teamResults.push({
         id: matchingTeam.id,
         name: matchingTeam.name,
-        score: normalizedScores[scoredTeam.id],
+        score: trimmedMeanScores[scoredTeam.id],
       });
     });
 
@@ -128,6 +142,10 @@ export class JudgingVote extends BaseEntity {
     const remainingVotes = [...votes];
 
     // Iterate over all votes
+    const watScores: {
+      [id: string]: TeamScore;
+    }[] = [];
+    const events: string[] = [];
     for (let i = 0; i < votes.length; i += 1) {
       if (!calibrationComplete) {
         // Not all teams have been calibrated
@@ -164,9 +182,13 @@ export class JudgingVote extends BaseEntity {
         teamScore.score += currentTeamScoreImpact;
         otherTeamScore.score += -currentTeamScoreImpact;
 
+        events.push(`${teamScore.id}: ${currentTeamScoreImpact}, ${otherTeamScore.id}: ${-currentTeamScoreImpact}`);
+
         // Update scores for both teams
         scores[team.id] = teamScore;
         scores[otherTeam.id] = otherTeamScore;
+
+        watScores.push(scores);
 
         // Check to see if all teams have been calibrated
         const allTeamsAreInCalibration = Object.keys(calibrationCount).length === teams.length;
@@ -198,8 +220,9 @@ export class JudgingVote extends BaseEntity {
         const normalizedMaxScore = maxScore + normalizationShift;
 
         // Calculate team percentiles using the normalizationShift and normalizedMaxScore
-        const currentTeamPercentile = (currentTeamScore.score + normalizationShift) / normalizedMaxScore;
-        const previousTeamPercentile = (previousTeamScore.score + normalizationShift) / normalizedMaxScore;
+        // If min and max are equal, normalized max will be 0; replace percentile with 0 to allow for max impact
+        const currentTeamPercentile = (currentTeamScore.score + normalizationShift) / normalizedMaxScore || 0;
+        const previousTeamPercentile = (previousTeamScore.score + normalizationShift) / normalizedMaxScore || 0;
 
         // Determine whether the scoreImpact should be positive or negative
         // Current Team Advantage: potential positive decreases, potential negative increases
@@ -216,8 +239,9 @@ export class JudgingVote extends BaseEntity {
         scores[previousTeamId] = previousTeamScore;
 
         // Update min and max score
-        minScore = Math.min(minScore, currentTeamScore.score, previousTeamScore.score);
-        maxScore = Math.max(maxScore, currentTeamScore.score, previousTeamScore.score);
+        const rawScores = Object.values(scores).map((score) => score.score);
+        maxScore = Math.max(...rawScores);
+        minScore = Math.min(...rawScores);
       }
     }
 
