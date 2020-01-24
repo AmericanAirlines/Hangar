@@ -90,26 +90,7 @@ export class JudgingVote extends BaseEntity {
       trimmedMeanScores[teamId] = sum / sortedScores.length;
     }
 
-    const normalizedPosition: { [id: string]: number } = {};
-    Object.values(initialScores).forEach((scores) => {
-      // Convert object of team scores into a sortable array
-      // Sort by pushing highest scored teams to the front of the array
-      const teamScores = Object.values(scores).sort((a, b) => (a.score > b.score ? -1 : 1));
-
-      // Record each team's position
-      // This is necessary to avoid normalization
-      // (i.e., the max/min scores from each pass aren't the same, so we can't avg those)
-      teamScores.forEach((teamScore, position) => {
-        normalizedPosition[teamScore.id] = (normalizedPosition[teamScore.id] || 0) + position;
-      });
-    });
-
-    // Calculate averge position based on outcome of each randomized pass
-    const avgPositions: number[] = Object.keys(normalizedPosition)
-      .map((key) => Number(key))
-      .sort((a, b) => (normalizedPosition[a] > normalizedPosition[b] ? 1 : -1));
-
-    const orderedTeams = teams.sort((a: Team, b: Team) => (avgPositions.indexOf(a.id) < avgPositions.indexOf(b.id) ? -1 : 1));
+    const orderedTeams = teams.sort((a: Team, b: Team) => (trimmedMeanScores[a.id] > trimmedMeanScores[b.id] ? -1 : 1));
 
     const teamResults: TeamResult[] = [];
 
