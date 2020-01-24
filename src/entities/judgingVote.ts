@@ -123,10 +123,6 @@ export class JudgingVote extends BaseEntity {
     const remainingVotes = [...votes];
 
     // Iterate over all votes
-    const watScores: {
-      [id: string]: TeamScore;
-    }[] = [];
-    const events: string[] = [];
     for (let i = 0; i < votes.length; i += 1) {
       if (!calibrationComplete) {
         // Not all teams have been calibrated
@@ -163,13 +159,9 @@ export class JudgingVote extends BaseEntity {
         teamScore.score += currentTeamScoreImpact;
         otherTeamScore.score += -currentTeamScoreImpact;
 
-        events.push(`${teamScore.id}: ${currentTeamScoreImpact}, ${otherTeamScore.id}: ${-currentTeamScoreImpact}`);
-
         // Update scores for both teams
         scores[team.id] = teamScore;
         scores[otherTeam.id] = otherTeamScore;
-
-        watScores.push(scores);
 
         // Check to see if all teams have been calibrated
         const allTeamsAreInCalibration = Object.keys(calibrationCount).length === teams.length;
