@@ -9,7 +9,7 @@ interface TeamScore {
   score: number;
 }
 
-interface TeamResult extends TeamScore {
+export interface TeamResult extends TeamScore {
   name: string;
 }
 
@@ -65,35 +65,41 @@ export class JudgingVote extends BaseEntity {
     }
 
     // Average scores from all passes
-    const normalizedPosition: { [id: number]: number } = {};
+    const normalizedScores: { [id: string]: number[] } = {};
     Object.values(initialScores).forEach((scores) => {
-      // Convert object of team scores into a sortable array
-      // Sort by pushing highest scored teams to the front of the array
-      const teamScores = Object.values(scores).sort((a, b) => (a.score > b.score ? -1 : 1));
-
-      // Record each team's position
-      // This is necessary to avoid normalization
-      // (i.e., the max/min scores from each pass aren't the same, so we can't avg those)
-      teamScores.forEach((teamScore, position) => {
-        normalizedPosition[teamScore.id] = (normalizedPosition[teamScore.id] || 0) + position;
+      Object.values(scores).forEach((teamScore) => {
+        normalizedScores[teamScore.id] = normalizedScores[teamScore.id] ? [...normalizedScores[teamScore.id], teamScore.score] : [teamScore.score];
       });
     });
 
-    // Calculate averge position based on outcome of each randomized pass
-    const avgPositions: number[] = Object.keys(normalizedPosition)
-      .map((key) => Number(key))
-      .sort((a, b) => (normalizedPosition[a] > normalizedPosition[b] ? 1 : -1));
+    const trimmedMeanScores: { [id: string]: number } = {};
+    const percentOfOutliersToRemove = 0.2;
+    const outliersToRemoveFromEachSide = Math.max(Math.floor(percentOfOutliersToRemove * randomJudgingIterations) / 2, 1);
+    for (let i = 0; i < Object.keys(normalizedScores).length; i += 1) {
+      const teamId = Object.keys(normalizedScores)[i];
+      const sortedScores = normalizedScores[teamId].sort();
+      // Remove outlier(s) from front
+      sortedScores.splice(0, outliersToRemoveFromEachSide);
+      // Remove outlier(s) from end
+      sortedScores.splice(sortedScores.length - outliersToRemoveFromEachSide, outliersToRemoveFromEachSide);
 
-    const orderedTeams = teams.sort((a: Team, b: Team) => (avgPositions.indexOf(a.id) < avgPositions.indexOf(b.id) ? -1 : 1));
+      let sum = 0;
+      sortedScores.forEach((score) => {
+        sum += score;
+      });
+      trimmedMeanScores[teamId] = sum / sortedScores.length;
+    }
+
+    const orderedTeams = teams.sort((a: Team, b: Team) => (trimmedMeanScores[a.id] > trimmedMeanScores[b.id] ? -1 : 1));
 
     const teamResults: TeamResult[] = [];
 
-    orderedTeams.forEach((teamScore, position) => {
-      const matchingTeam = teams.find((team) => team.id === teamScore.id);
+    orderedTeams.forEach((scoredTeam) => {
+      const matchingTeam = teams.find((team) => team.id === scoredTeam.id);
       teamResults.push({
         id: matchingTeam.id,
         name: matchingTeam.name,
-        score: position,
+        score: trimmedMeanScores[scoredTeam.id],
       });
     });
 
@@ -178,10 +184,6 @@ export class JudgingVote extends BaseEntity {
         const currentTeamScore = scores[currentTeamId];
         const previousTeamScore = scores[previousTeamId];
 
-        // Update min and max score
-        minScore = Math.min(minScore, currentTeamScore.score, previousTeamScore.score);
-        maxScore = Math.max(maxScore, currentTeamScore.score, previousTeamScore.score);
-
         // ELO SCORING - both teams have been calibrated and have an ELO score
         // In order to determine differential between scores, "shift" minScore to 0, If...
         //   Positive min: shift is negative
@@ -191,8 +193,9 @@ export class JudgingVote extends BaseEntity {
         const normalizedMaxScore = maxScore + normalizationShift;
 
         // Calculate team percentiles using the normalizationShift and normalizedMaxScore
-        const currentTeamPercentile = (currentTeamScore.score + normalizationShift) / normalizedMaxScore;
-        const previousTeamPercentile = (previousTeamScore.score + normalizationShift) / normalizedMaxScore;
+        // If min and max are equal, normalized max will be 0; replace percentile with 0 to allow for max impact
+        const currentTeamPercentile = (currentTeamScore.score + normalizationShift) / normalizedMaxScore || 0;
+        const previousTeamPercentile = (previousTeamScore.score + normalizationShift) / normalizedMaxScore || 0;
 
         // Determine whether the scoreImpact should be positive or negative
         // Current Team Advantage: potential positive decreases, potential negative increases
@@ -207,8 +210,24 @@ export class JudgingVote extends BaseEntity {
         // Update scores for both teams
         scores[currentTeamId] = currentTeamScore;
         scores[previousTeamId] = previousTeamScore;
+
+        // Update min and max score
+        const rawScores = Object.values(scores).map((score) => score.score);
+        maxScore = Math.max(...rawScores);
+        minScore = Math.min(...rawScores);
       }
     }
+
+    // Normalized score from 0 to 100
+    for (let i = 0; i < Object.keys(scores).length; i += 1) {
+      const teamId = Object.keys(scores)[i];
+      const { score } = scores[teamId];
+      // Shift min score to zero, shift max score by an equal amount, get the normalized score
+      //   as a percent of the max
+      const normalizedScore = ((score - minScore) / (maxScore - minScore)) * 100;
+      scores[teamId].score = normalizedScore;
+    }
+
     return scores;
   }
 }
