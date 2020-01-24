@@ -11,7 +11,7 @@ import { apiApp } from './api';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
 
-const app = express();
+export const app = express();
 const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
 const nextHandler = nextApp.getRequestHandler();
 
@@ -35,8 +35,6 @@ app.get(
 );
 
 app.use('/api', apiApp);
-
-export default app;
 
 const initDatabase = async (): Promise<void> => {
   if (process.env.NODE_ENV !== 'test') {
@@ -74,10 +72,8 @@ const initNext = async (): Promise<void> => {
   }
 };
 
-const init = async (): Promise<void> => {
+export const init = async (): Promise<void> => {
   await Promise.all([initDatabase(), initSlack(), initNext()]);
 
   appLoading = false;
 };
-
-init();

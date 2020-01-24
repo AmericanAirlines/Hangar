@@ -10,7 +10,7 @@ describe('app', () => {
   });
 
   it('responds successfully to GET /', (done) => {
-    const app = require('../app').default;
+    const { app } = require('../app');
     supertest(app)
       .get('/')
       .expect(200, done);
@@ -19,14 +19,14 @@ describe('app', () => {
   it("fails to start when Slack tokens are not provided and env isn't test", () => {
     delete process.env.SLACK_BOT_TOKEN;
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
-    expect(require('../app').default).toThrow();
+    expect(require('../app').app).toThrow();
     // Reset the env variable to 'test'
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
   });
 
   it('will start correctly in the test environement without a Slack token', () => {
     delete process.env.SLACK_BOT_TOKEN;
-    const app = require('../app').default;
+    const { app } = require('../app');
     expect(app).toBeDefined();
   });
 });

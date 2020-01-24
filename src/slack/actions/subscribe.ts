@@ -4,7 +4,7 @@ import { Subscriber } from '../../entities/subscriber';
 import { getDashboardContext } from '../utilities/getDashboardContext';
 import dashboardBlocks from '../blocks/dashboardBlocks';
 import logger from '../../logger';
-import { slackAPI } from '..';
+import { getWebClient } from '..';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -28,7 +28,7 @@ function register(bolt: App): void {
     }
 
     try {
-      await slackAPI.chat.update({
+      await getWebClient().chat.update({
         ts: body.message.ts,
         channel: body.channel.id,
         text: '',

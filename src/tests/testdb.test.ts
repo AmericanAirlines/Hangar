@@ -1,6 +1,6 @@
 import 'jest';
 import { Config } from '../entities/config';
-import { createDbConnection, closedbConnection } from './testdb';
+import { createDbConnection, closeDbConnection } from './testdb';
 
 /* eslint-disable no-await-in-loop */
 
@@ -10,7 +10,7 @@ describe('judging', () => {
   });
 
   afterEach(async () => {
-    await closedbConnection();
+    await closeDbConnection();
   });
 
   // Test in-memory db by using config as an example

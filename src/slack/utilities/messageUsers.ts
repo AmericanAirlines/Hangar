@@ -1,4 +1,4 @@
-import { slackAPI } from '..';
+import { getWebClient } from '..';
 import logger from '../../logger';
 
 import { DmOpenResult } from '../types';
@@ -8,11 +8,11 @@ export default async function messageUsers(users: string[], message: string): Pr
   for (let i = 0; i < users.length; i += 1) {
     const user = users[i];
     try {
-      const dm = (await slackAPI.conversations.open({
+      const dm = (await getWebClient().conversations.open({
         users: users[i],
       })) as DmOpenResult;
 
-      await slackAPI.chat.postMessage({
+      await getWebClient().chat.postMessage({
         channel: dm.channel.id,
         text: message,
       });
