@@ -6,6 +6,7 @@ import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';
 import { sendUpdateMessage } from './sendUpdateMessage';
 import { judging } from './judging';
+import { config } from './config';
 import { admin } from './admin';
 
 const api = express();
@@ -82,6 +83,7 @@ api.post('/skip', async (req, res) => {
 api.use('/sendUpdateMessage', requireAuth(), sendUpdateMessage);
 api.use('/supportRequest', requireAuth(), supportRequestRoutes);
 api.use('/judging', requireAuth(), judging);
+api.use('/config', requireAuth(), config);
 api.use('/admin', admin);
 
 export const apiApp = api;
