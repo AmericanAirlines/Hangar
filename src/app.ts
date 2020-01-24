@@ -13,15 +13,27 @@ const app = express();
 const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
 const nextHandler = nextApp.getRequestHandler();
 
-app.get('/', (_req, res) => {
-  res.send('👋');
-});
+let appLoading = true;
+
+app.get(
+  '/',
+  (_req, _res, nextFn) => {
+    if (appLoading) {
+      nextFn();
+    } else {
+      nextFn('route');
+    }
+  },
+  (_req, res) => {
+    res.send('👋 Loading');
+  },
+);
 
 app.use('/api', apiApp);
 
 export default app;
 
-const init = async (): Promise<void> => {
+const initDatabase = async (): Promise<void> => {
   if (process.env.NODE_ENV !== 'test') {
     // Pull connection options from ormconfig.json
     const options: ConnectionOptions = await getConnectionOptions();
@@ -34,7 +46,9 @@ const init = async (): Promise<void> => {
       migrationsRun: true,
     } as PostgresConnectionOptions);
   }
+};
 
+const initSlack = async (): Promise<void> => {
   try {
     await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test();
     app.use(slackApp());
@@ -45,11 +59,19 @@ const init = async (): Promise<void> => {
       process.exit(1);
     }
   }
+};
 
+const initNext = async (): Promise<void> => {
   if (process.env.NODE_ENV !== 'test') {
     await nextApp.prepare();
     app.get('*', (req, res) => nextHandler(req, res));
   }
+};
+
+const init = async (): Promise<void> => {
+  await Promise.all([initDatabase(), initSlack(), initNext()]);
+
+  appLoading = false;
 };
 
 init();
