@@ -6,6 +6,7 @@ import logger from '../../logger';
 import { getWebClient } from '..';
 import { Config } from '../../entities/config';
 import { SupportRequest, SupportRequestType, SupportRequestErrors } from '../../entities/supportRequest';
+import postAdminNotification from '../utilities/postAdminNotification';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -33,6 +34,12 @@ function register(bolt: App): void {
         await requestItem.save();
         say(
           ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
+        );
+
+        await postAdminNotification(
+          `<@${body.user.id}> registered in the ${
+            ideaPitchRequestActionId ? SupportRequestType.IdeaPitch : SupportRequestType.TechnicalSupport
+          } queue!`,
         );
       } catch (err) {
         if (err.name === SupportRequestErrors.ExistingActiveRequest) {
