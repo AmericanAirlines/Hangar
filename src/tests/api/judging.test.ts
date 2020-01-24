@@ -46,19 +46,6 @@ describe('api/judging', () => {
       .expect(401, done);
   });
 
-  it('responds with expanded judging results', async () => {
-    const { app } = require('../../app');
-    const response = await supertest(app)
-      .get('/api/judging/results/')
-      .set({
-        Authorization: adminSecret,
-      })
-      .expect(200);
-
-    const results: ExpandedTeamResult[] = response.body;
-    expect(results).toBeDefined();
-  });
-
   it('teams will not have bonus points without idea pitches', async () => {
     const requester = teams[0].members[0];
     const request = new SupportRequest(requester, 'Someone', SupportRequestType.TechnicalSupport);
