@@ -27,51 +27,31 @@ describe('api/judging', () => {
     const { app } = require('../../app');
     supertest(app)
       .get('/api/config')
-      .query({ configKey: 'someKey' })
       .set({
         Authorization: "YOU DIDN'T SAY THE MAGIC WORD!",
       })
       .expect(401, done);
   });
 
-  it('omitting required query params will result in an error', (done) => {
-    const { app } = require('../../app');
-    supertest(app)
-      .get('/api/config')
-      .set({
-        Authorization: adminSecret,
-      })
-      .expect(400, done);
-  });
-
-  it('retrieving an unknown config item will result in a null response', async () => {
-    const { app } = require('../../app');
-    const result = await supertest(app)
-      .get('/api/config')
-      .query({ configKey: 'someKey' })
-      .set({
-        Authorization: adminSecret,
-      })
-      .expect(200);
-    expect(result.body).toEqual({});
-  });
-
-  it('retrieving a known config item will return the config item', async () => {
-    const { app } = require('../../app');
+  it('a GET will return all toggles', async () => {
     const configKey = 'something';
     const configValue = 'somehow';
 
     const item = new Config(configKey, configValue);
     await item.save();
 
+    const { app } = require('../../app');
     const result = await supertest(app)
       .get('/api/config')
-      .query({ configKey })
       .set({
         Authorization: adminSecret,
       })
       .expect(200);
-    expect(result.body).toEqual(item);
+
+    expect(result.body.length).toBe(1);
+    const config = result.body[0];
+    expect(config.key).toEqual(configKey);
+    expect(config.value).toEqual(configValue);
   });
 
   it('creating a new config item will succeed', async () => {

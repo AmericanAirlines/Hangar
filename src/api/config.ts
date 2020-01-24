@@ -5,16 +5,8 @@ import logger from '../logger';
 export const config = express.Router();
 
 config.get('/', async (req, res) => {
-  const { configKey } = req.query;
-
-  if (!configKey || !configKey.trim()) {
-    res.status(400).send("Property 'configKey' must contain content");
-    return;
-  }
-
   try {
-    const configItem = await Config.findOne({ key: configKey });
-    res.send(configItem);
+    res.send(await Config.find());
   } catch (err) {
     /* istanbul ignore next */
     res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
