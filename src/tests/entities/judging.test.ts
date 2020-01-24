@@ -295,7 +295,6 @@ describe('score calculation', () => {
       const { score } = scores[i];
       expect(score).toBeGreaterThanOrEqual(0);
       expect(score).toBeLessThanOrEqual(100);
-      // TODO: Use Standard Deviation or a Trimmed Mean to get better values
       expect(score).toBeLessThanOrEqual(previousScore);
       previousScore = score;
     }
