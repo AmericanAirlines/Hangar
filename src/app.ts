@@ -69,7 +69,7 @@ const initSlack = async (): Promise<void> => {
 const initNext = async (): Promise<void> => {
   if (process.env.NODE_ENV !== 'test') {
     await nextApp.prepare();
-    app.get(['/'], requireAuth, (req, res) => nextHandler(req, res));
+    app.get(['/'], requireAuth(true), (req, res) => nextHandler(req, res));
     app.get('*', (req, res) => nextHandler(req, res));
   }
 };

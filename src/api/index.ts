@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import { requireAuthHeader } from './middleware/requireAuthHeader';
+import { requireAuth } from './middleware/requireAuth';
 import { supportRequestRoutes } from './supportRequest';
 import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';
@@ -79,9 +79,9 @@ api.post('/skip', async (req, res) => {
   res.send(await getJudgeTeams(judge));
 });
 
-api.use('/sendUpdateMessage', requireAuthHeader, sendUpdateMessage);
-api.use('/supportRequest', requireAuthHeader, supportRequestRoutes);
-api.use('/judging', requireAuthHeader, judging);
+api.use('/sendUpdateMessage', requireAuth(), sendUpdateMessage);
+api.use('/supportRequest', requireAuth(), supportRequestRoutes);
+api.use('/judging', requireAuth(), judging);
 api.use('/admin', admin);
 
 export const apiApp = api;
