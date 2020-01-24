@@ -41,7 +41,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "run-s build lint:staged test"
+      "pre-commit": "run-s build:ts lint:staged test"
     }
   },
   "lint-staged": {
