@@ -18,6 +18,7 @@ Once your Hangar app is up and running, use it's URL for the following steps:
 - Using the sidebar, navigate to "_OAuth & Permissions_" and enable them
   - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
     - `im:history`
+    - `users:read`
 - Using the sidebar, navigate to "_Interactive Components_" and enable them
   - For the `Request URL` field, use your Hangar app's URL and then append `/slack/events`
 - Using the sidebar, navigate to "_Event Subscriptions_" and enable them
