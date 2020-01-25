@@ -63,20 +63,4 @@ describe('api/judging', () => {
 
     expect(result.body.length).toEqual(1);
   });
-
-  // it('getting all will return an empty array when no in-progress exist', async () => {
-  //   const suppportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
-  //   suppportRequest.status = SupportRequestStatus.InProgress;
-  //   await suppportRequest.save();
-
-  //   const { app } = require('../../app');
-  //   const result = await supertest(app)
-  //     .get('/api/supportRequest/getInProgress')
-  //     .set({
-  //       Authorization: adminSecret,
-  //     })
-  //     .expect(200);
-
-  //   expect(result.body.length).toEqual(1);
-  // });
 });
