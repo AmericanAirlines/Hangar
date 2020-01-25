@@ -5,10 +5,27 @@ import messageUsers from '../slack/utilities/messageUsers';
 
 export const supportRequestRoutes = express.Router();
 
+supportRequestRoutes.use(express.json());
+
 export interface NextSupportRequestResponse {
   supportRequest: SupportRequest;
   userNotified: boolean;
 }
+
+supportRequestRoutes.get('/getCount', async (req, res) => {
+  const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
+  const technicalCount = await SupportRequest.count({ type: SupportRequestType.TechnicalSupport, status: SupportRequestStatus.Pending });
+
+  res.json({
+    ideaCount,
+    technicalCount,
+  });
+});
+
+supportRequestRoutes.get('/getInProgress', async (req, res) => {
+  const openRequests = await SupportRequest.find({ status: SupportRequestStatus.InProgress });
+  res.send(openRequests);
+});
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
   let nextRequest;
