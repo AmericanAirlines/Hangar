@@ -14,6 +14,7 @@ const AdminPage: NextComponentType = () => {
   const [error, setError] = React.useState(false);
   const [counts, setCounts] = React.useState({ ideaCount: 0, technicalCount: 0 });
   const [requests, setRequests] = React.useState<Request[]>([]);
+  const [lastPop, setLastPop] = React.useState<null | { userNotified: boolean; supportRequest: Request }>(null);
 
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
@@ -66,14 +67,15 @@ const AdminPage: NextComponentType = () => {
     }
 
     try {
+      setLastPop(await res.json());
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
     }
   };
 
-  const closeRequest = (supportRequestId: number) => async (): Promise<void> => {
-    const res = await fetch('/api/supportRequest/closeRequest', {
+  const abandonRequest = (supportRequestId: number) => async (): Promise<void> => {
+    await fetch('/api/supportRequest/abandonRequest', {
       method: 'POST',
       body: JSON.stringify({ supportRequestId }),
       headers: {
@@ -81,10 +83,21 @@ const AdminPage: NextComponentType = () => {
       },
     });
 
-    if (!res.ok) {
+    try {
+      setLastUpdateEpoch(Date.now());
+    } catch (err) {
       setError(true);
-      return;
     }
+  };
+
+  const closeRequest = (supportRequestId: number) => async (): Promise<void> => {
+    await fetch('/api/supportRequest/closeRequest', {
+      method: 'POST',
+      body: JSON.stringify({ supportRequestId }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     try {
       setLastUpdateEpoch(Date.now());
@@ -98,7 +111,7 @@ const AdminPage: NextComponentType = () => {
   if (error) return <h4>Error loading, check the console</h4>;
 
   return (
-    <div className="container mt-4">
+    <div className="container-fluid mt-4">
       <div className="row mb-4">
         <div className="col">
           <h1>Hello, Admin 👋</h1>
@@ -112,6 +125,13 @@ const AdminPage: NextComponentType = () => {
               <button className="btn btn-dark w-100 mt-4" onClick={popQueue}>
                 Get Next in Queue ({counts.ideaCount + counts.technicalCount})
               </button>
+              {lastPop && (
+                <div className="alert alert-info mt-3">
+                  {lastPop.userNotified
+                    ? `${lastPop.supportRequest.name} has been notified to come over`
+                    : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you&apos;re ready for them`}
+                </div>
+              )}
               {requests.length === 0 ? (
                 <div className="alert alert-info mt-3">None in progress, press button to get the next one ☝️</div>
               ) : (
@@ -122,6 +142,7 @@ const AdminPage: NextComponentType = () => {
                       <th scope="col">In Progress Age</th>
                       <th scope="col">Type</th>
                       <th scope="col"></th>
+                      <th scope="col"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -131,8 +152,13 @@ const AdminPage: NextComponentType = () => {
                         <td>{DateTime.fromISO(request.movedToInProgressAt).toRelative()}</td>
                         <td>{request.type}</td>
                         <td>
-                          <button className="btn btn-danger" onClick={closeRequest(request.id)}>
-                            Close
+                          <button className="btn btn-warning" onClick={abandonRequest(request.id)}>
+                            No Show
+                          </button>
+                        </td>
+                        <td>
+                          <button className="btn btn-success" onClick={closeRequest(request.id)}>
+                            Complete
                           </button>
                         </td>
                       </tr>
