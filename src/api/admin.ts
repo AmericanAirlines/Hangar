@@ -2,6 +2,8 @@ import express from 'express';
 
 export const admin = express.Router();
 
+admin.use(express.json());
+
 admin.post('/login', (req, res): void => {
   if (req.body.secret !== process.env.ADMIN_SECRET) {
     res.status(401).send('Incorrect secret');
