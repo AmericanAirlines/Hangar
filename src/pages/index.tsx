@@ -71,7 +71,7 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   }, [lastUpdateEpoch]);
 
-  const popQueue = async (): Promise<void> => {
+  const getNext = async (): Promise<void> => {
     const res = await fetch('/api/supportRequest/getNext', {
       method: 'POST',
     });
@@ -158,7 +158,7 @@ const AdminPage: NextComponentType = () => {
           <div className="card">
             <div className="card-body">
               <h2 className="font-weight-normal">Support Queue</h2>
-              <button className="btn btn-dark w-100 mt-4" onClick={popQueue}>
+              <button className="btn btn-dark w-100 mt-4" onClick={getNext} disabled={counts.ideaCount + counts.technicalCount === 0}>
                 Get Next in Queue ({counts.ideaCount + counts.technicalCount})
               </button>
               {lastPop && (
