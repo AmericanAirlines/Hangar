@@ -37,7 +37,7 @@ function register(bolt: App): void {
         );
 
         await postAdminNotification(
-          `<@${body.user.id}> registered in the ${actionId === ideaPitchRequestActionId ? 'Idea Pitch' : 'Tech Support'} queue!`,
+          `<@${body.user.id}> has been added to the ${actionId === ideaPitchRequestActionId ? 'Idea Pitch' : 'Tech Support'} queue!`,
         );
       } catch (err) {
         if (err.name === SupportRequestErrors.ExistingActiveRequest) {
