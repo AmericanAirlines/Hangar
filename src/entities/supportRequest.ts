@@ -65,7 +65,10 @@ export class SupportRequest extends BaseEntity {
     const abandonedRequests: SupportRequest[] = [];
 
     const existingActiveRequests = await SupportRequest.find({
-      where: [{ slackId: this.slackId, status: SupportRequestStatus.Pending }, { slackId: this.slackId, status: SupportRequestStatus.InProgress }],
+      where: [
+        { slackId: this.slackId, status: SupportRequestStatus.Pending },
+        { slackId: this.slackId, status: SupportRequestStatus.InProgress },
+      ],
     });
 
     const minutesUntilStale = 15;

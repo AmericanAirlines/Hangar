@@ -5,10 +5,27 @@ import messageUsers from '../slack/utilities/messageUsers';
 
 export const supportRequestRoutes = express.Router();
 
+supportRequestRoutes.use(express.json());
+
 export interface NextSupportRequestResponse {
   supportRequest: SupportRequest;
   userNotified: boolean;
 }
+
+supportRequestRoutes.get('/getCount', async (req, res) => {
+  const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
+  const technicalCount = await SupportRequest.count({ type: SupportRequestType.TechnicalSupport, status: SupportRequestStatus.Pending });
+
+  res.json({
+    ideaCount,
+    technicalCount,
+  });
+});
+
+supportRequestRoutes.get('/getInProgress', async (req, res) => {
+  const openRequests = await SupportRequest.find({ status: SupportRequestStatus.InProgress });
+  res.send(openRequests);
+});
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
   let nextRequest;
@@ -51,7 +68,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
   }
 
   try {
-    const result = await SupportRequest.createQueryBuilder('supportRequest')
+    await SupportRequest.createQueryBuilder('supportRequest')
       .update()
       .set({
         status: SupportRequestStatus.Complete,
@@ -61,11 +78,33 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       })
       .execute();
 
-    if (result.affected > 0) {
-      res.sendStatus(200);
-    } else {
-      res.status(404).send('Support Request not found');
-    }
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(500).send('Unable to close request');
+    logger.error(err);
+  }
+});
+
+supportRequestRoutes.post('/abandonRequest', async (req, res) => {
+  const { supportRequestId } = req.body;
+
+  if (!supportRequestId) {
+    res.status(400).send("Property 'supportRequestId' is required");
+    return;
+  }
+
+  try {
+    await SupportRequest.createQueryBuilder('supportRequest')
+      .update()
+      .set({
+        status: SupportRequestStatus.Abandoned,
+      })
+      .where({
+        id: supportRequestId,
+      })
+      .execute();
+
+    res.sendStatus(200);
   } catch (err) {
     res.status(500).send('Unable to close request');
     logger.error(err);

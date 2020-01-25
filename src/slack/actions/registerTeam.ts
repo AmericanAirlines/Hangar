@@ -5,6 +5,7 @@ import logger from '../../logger';
 import { Team } from '../../entities/team';
 import { ViewSubmitState, DmOpenResult, ViewSubmitInputFieldState } from '../types';
 import { Config } from '../../entities/config';
+import postAdminNotification from '../utilities/postAdminNotification';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */
@@ -131,6 +132,11 @@ Team Members: ${formattedTeamMembers.join(', ')}
         text: '',
         blocks: registeredTeamSummary(registeringUser, allTeamMembers, teamName, tableNumber, projectDescription),
       });
+
+      const formattedTeamMembers = teamMembers.map((member) => `<@${member}>`).join(', ');
+      await postAdminNotification(
+        `<@${registeringUser}> registered their team for judging:\nTeam Members: ${formattedTeamMembers}\nTable Number: ${tableNumber}`,
+      );
     } catch (err) {
       // TODO: Determine a more appropriate error to share with the user
       logger.error('Error registering team: ', err);

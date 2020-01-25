@@ -26,6 +26,11 @@
       "description": "Provide a link to your challenge details if you have one, we encourage you to include judging criteria and prize info",
       "value": "",
       "required": false
+    },
+    "SLACK_NOTIFICATIONS_WEBHOOK_URL": {
+      "description": "Provide a webhook URL for admin notifications",
+      "value": "",
+      "required": false
     }
   }
 }

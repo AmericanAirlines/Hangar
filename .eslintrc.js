@@ -22,6 +22,7 @@ module.exports = {
     'object-curly-newline': ['off'],
     '@typescript-eslint/no-use-before-define': ['off'],
     'no-await-in-loop': ['off'],
+    'operator-linebreak': ['off'],
   },
   settings: {
     'import/resolver': {
