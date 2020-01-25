@@ -18,6 +18,7 @@ Once your Hangar app is up and running, use it's URL for the following steps:
 - Using the sidebar, navigate to "_OAuth & Permissions_" and enable them
   - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
     - `im:history`
+    - `im:write`
     - `users:read`
     - `chat:write`
 - Using the sidebar, navigate to "_Interactive Components_" and enable them
