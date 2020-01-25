@@ -4,8 +4,14 @@ To get your app up and running, you'll need to follow two sets of instructions: 
 ## Initial Setup
 Before you deploy your Hangar, follow these steps to generate secrets needed for deployment:
 - Create an app on the [Slack API Site](https://api.slack.com/apps)
-- Using the sidebar, navigate to the "_Bot Users_" and enable your bot
-  - We reccommend using your company name as the app name (e.g., `American Airlines`/`@americanairlines` for the display name and username respectively)
+- Using the sidebar, navigate to "_OAuth & Permissions_" and enable them
+  - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
+    - `im:history`
+    - `im:write`
+    - `users:read`
+    - `chat:write`
+- Using the sidebar, navigate to the "_App Home_" and enable your bot
+  - Scroll to "_How Your App Displays_" and click "_Edit_" next to "_App Display Name_" (we reccommend using your company name as the app name, e.g., `American Airlines`/`@americanairlines` for the display name and username respectively)
   - We also recommend enabling "Always Show My Bot as Online"
 - Using the sidebar, navigate to the "_Basic Information_", scroll down, and copy the `Signing Secret` value and write it down somewhere safe
 - Using the sidebar, navigate to the "_Install App_" and click "Reinstall App"
@@ -15,12 +21,6 @@ At this point, you can deploy and start your Hangar app by clicking on the `Depl
 
 ## After Deploying Hangar
 Once your Hangar app is up and running, use it's URL for the following steps:
-- Using the sidebar, navigate to "_OAuth & Permissions_" and enable them
-  - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
-    - `im:history`
-    - `im:write`
-    - `users:read`
-    - `chat:write`
 - Using the sidebar, navigate to "_Interactive Components_" and enable them
   - For the `Request URL` field, use your Hangar app's URL and then append `/slack/events`
 - Using the sidebar, navigate to "_Event Subscriptions_" and enable them
