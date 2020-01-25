@@ -21,8 +21,7 @@ module.exports = {
     'import/prefer-default-export': ['off'],
     'object-curly-newline': ['off'],
     '@typescript-eslint/no-use-before-define': ['off'],
-    'no-await-in-loop': ['off'],
-    'operator-linebreak': ['off'],
+    'no-await-in-loop': ['off']
   },
   settings: {
     'import/resolver': {
@@ -42,5 +41,11 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
       },
     },
+    {
+      files: ['src/**/*.tsx'],
+      rules: {
+        'operator-linebreak': 'off'
+      }
+    }
   ],
 };
