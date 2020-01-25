@@ -73,9 +73,7 @@ const initNext = async (): Promise<void> => {
 };
 
 export const init = async (): Promise<void> => {
-  // await Promise.all([initDatabase(), initSlack(), initNext()]);
-  await initDatabase();
-  await initSlack();
+  await Promise.all([initDatabase(), initSlack()]);
   await initNext();
 
   appLoading = false;
