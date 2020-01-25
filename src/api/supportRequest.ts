@@ -78,7 +78,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       })
       .execute();
 
-    res.send(200);
+    res.sendStatus(200);
   } catch (err) {
     res.status(500).send('Unable to close request');
     logger.error(err);
@@ -104,7 +104,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
       })
       .execute();
 
-    res.send(200);
+    res.sendStatus(200);
   } catch (err) {
     res.status(500).send('Unable to close request');
     logger.error(err);
