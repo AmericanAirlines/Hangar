@@ -10,6 +10,11 @@ export interface NextSupportRequestResponse {
   userNotified: boolean;
 }
 
+supportRequestRoutes.get('/getInProgress', async (req, res) => {
+  const openRequests = await SupportRequest.find({ status: SupportRequestStatus.InProgress });
+  res.send(openRequests);
+});
+
 supportRequestRoutes.post('/getNext', async (req, res) => {
   let nextRequest;
   try {
