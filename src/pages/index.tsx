@@ -1,12 +1,15 @@
-/* global fetch */
+/* global fetch, window */
 import React from 'react';
 import { NextComponentType } from 'next';
 import { DateTime } from 'luxon';
+import { useFormik } from 'formik';
 import { SupportRequest } from '../entities/supportRequest';
 
 interface Request extends Omit<SupportRequest, 'movedToInProgressAt'> {
   movedToInProgressAt: string;
 }
+
+const ADMIN_NAME_KEY = 'adminName';
 
 const AdminPage: NextComponentType = () => {
   const [lastUpdateEpoch, setLastUpdateEpoch] = React.useState(Date.now());
@@ -15,6 +18,18 @@ const AdminPage: NextComponentType = () => {
   const [counts, setCounts] = React.useState({ ideaCount: 0, technicalCount: 0 });
   const [requests, setRequests] = React.useState<Request[]>([]);
   const [lastPop, setLastPop] = React.useState<null | { userNotified: boolean; supportRequest: Request }>(null);
+  const formik = useFormik({
+    initialValues: {
+      adminName: '',
+    },
+    onSubmit({ adminName }) {
+      window.localStorage.setItem(ADMIN_NAME_KEY, adminName);
+    },
+  });
+
+  React.useEffect(() => {
+    formik.setFieldValue('adminName', window.localStorage.getItem(ADMIN_NAME_KEY));
+  }, []);
 
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
@@ -113,8 +128,29 @@ const AdminPage: NextComponentType = () => {
   return (
     <div className="container-fluid mt-4">
       <div className="row mb-4">
-        <div className="col">
+        <div className="col-12 col-md-6">
           <h1>Hello, Admin 👋</h1>
+        </div>
+        <div className="col-12 col-md-6">
+          <form className="form-inline float-md-right" onSubmit={formik.handleSubmit}>
+            <div className="form-group ml-sm-3 mr-3 mb-2">
+              <label htmlFor="adminName" className="mr-3">
+                Your Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="adminName"
+                placeholder="Your name"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.adminName}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary mb-2">
+              Save
+            </button>
+          </form>
         </div>
       </div>
       <div className="row">
@@ -129,7 +165,7 @@ const AdminPage: NextComponentType = () => {
                 <div className="alert alert-info mt-3">
                   {lastPop.userNotified
                     ? `${lastPop.supportRequest.name} has been notified to come over`
-                    : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you&apos;re ready for them`}
+                    : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`}
                 </div>
               )}
               {requests.length === 0 ? (
