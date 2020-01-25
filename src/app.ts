@@ -17,7 +17,7 @@ const nextHandler = nextApp.getRequestHandler();
 
 let appLoading = true;
 
-app.use(express.json());
+// DO NOT PUT THIS LINE IN THIS FILE `express.json()`
 app.use(cookieParser(process.env.ADMIN_SECRET)); // lgtm [js/missing-token-validation]
 
 app.get(
@@ -73,7 +73,8 @@ const initNext = async (): Promise<void> => {
 };
 
 export const init = async (): Promise<void> => {
-  await Promise.all([initDatabase(), initSlack(), initNext()]);
+  await Promise.all([initDatabase(), initSlack()]);
+  await initNext();
 
   appLoading = false;
 };
