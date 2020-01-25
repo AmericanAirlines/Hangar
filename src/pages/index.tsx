@@ -74,6 +74,10 @@ const AdminPage: NextComponentType = () => {
   const getNext = async (): Promise<void> => {
     const res = await fetch('/api/supportRequest/getNext', {
       method: 'POST',
+      body: JSON.stringify({ adminName: window.localStorage.getItem(ADMIN_NAME_KEY) }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     if (!res.ok) {
