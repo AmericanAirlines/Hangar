@@ -41,11 +41,11 @@ judging.get('/results', async (req, res) => {
       });
     });
 
-    res.send(expandedResults);
+    res.send(expandedResults.sort((a, b) => b.finalScore - a.finalScore));
   } catch (err) {
     /* istanbul ignore next */
     if (err.name === insufficientVoteCountError) {
-      res.status(200).send({ error: 'Insufficient vote count to calculate results' });
+      res.status(200).send([]);
       return;
     }
 

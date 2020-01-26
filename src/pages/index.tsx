@@ -11,6 +11,15 @@ interface Request {
   movedToInProgressAt: string;
 }
 
+interface Result {
+  name: string;
+  numberOfIdeaPitches: number;
+  numberOfTechSupportSessions: number;
+  score: number;
+  bonusPointsAwarded: number;
+  finalScore: number;
+}
+
 const ADMIN_NAME_KEY = 'adminName';
 
 const AdminPage: NextComponentType = () => {
@@ -20,6 +29,7 @@ const AdminPage: NextComponentType = () => {
   const [counts, setCounts] = React.useState({ ideaCount: 0, technicalCount: 0 });
   const [requests, setRequests] = React.useState<Request[]>([]);
   const [lastPop, setLastPop] = React.useState<null | { userNotified: boolean; supportRequest: Request }>(null);
+  const [results, setResults] = React.useState<Result[]>([]);
   const formik = useFormik({
     initialValues: {
       adminName: '',
@@ -78,6 +88,23 @@ const AdminPage: NextComponentType = () => {
       })(),
     );
 
+    promises.push(
+      (async (): Promise<void> => {
+        const res = await fetch('/api/judging/results');
+
+        if (!res.ok) {
+          setError(true);
+          return;
+        }
+
+        try {
+          setResults(await res.json());
+        } catch (err) {
+          setError(true);
+        }
+      })(),
+    );
+
     Promise.all(promises).then(() => setLoading(false));
   }, [lastUpdateEpoch]);
 
@@ -109,7 +136,7 @@ const AdminPage: NextComponentType = () => {
   };
 
   const abandonRequest = (supportRequestId: number, movedToInProgressAt: string) => async (): Promise<void> => {
-    let relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
+    const relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
     await fetch('/api/supportRequest/abandonRequest', {
       method: 'POST',
       body: JSON.stringify({ supportRequestId, relativeTimeElapsedString }),
@@ -215,6 +242,27 @@ const AdminPage: NextComponentType = () => {
           <div className="card">
             <div className="card-body">
               <h2 className="font-weight-normal">Judge Results</h2>
+              {results.length === 0 && <div className="alert alert-info mt-3">Not enough votes to calculate results 🤔</div>}
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Team Score</th>
+                    <th>Bonus Points</th>
+                    <th>Final Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.map((result) => (
+                    <tr key={result.name}>
+                      <td>{result.name}</td>
+                      <td>{result.score.toFixed(1)}</td>
+                      <td>{result.bonusPointsAwarded.toFixed(0)}</td>
+                      <td>{result.finalScore.toFixed(1)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
