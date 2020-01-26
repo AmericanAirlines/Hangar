@@ -256,9 +256,9 @@ const AdminPage: NextComponentType = () => {
                   {results.map((result) => (
                     <tr key={result.name}>
                       <td>{result.name}</td>
-                      <td>{result.score}</td>
-                      <td>{result.bonusPointsAwarded}</td>
-                      <td>{result.finalScore}</td>
+                      <td>{result.score.toFixed(1)}</td>
+                      <td>{result.bonusPointsAwarded.toFixed(0)}</td>
+                      <td>{result.finalScore.toFixed(1)}</td>
                     </tr>
                   ))}
                 </tbody>
