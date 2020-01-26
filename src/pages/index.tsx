@@ -109,7 +109,7 @@ const AdminPage: NextComponentType = () => {
   };
 
   const abandonRequest = (supportRequestId: number, movedToInProgressAt: string) => async (): Promise<void> => {
-    let timeElapsed = DateTime.fromISO(movedToInProgressAt).toRelative();
+    let relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
     await fetch('/api/supportRequest/abandonRequest', {
       method: 'POST',
       body: JSON.stringify({ supportRequestId, relativeTimeElapsedString }),
