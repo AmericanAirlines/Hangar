@@ -110,7 +110,7 @@ describe('api/judging', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
-      .send({ relativeTimeElapsedString: "some time ago" })
+      .send({ relativeTimeElapsedString: 'some time ago' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
@@ -143,7 +143,7 @@ describe('api/judging', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
-      .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: "some time ago" })
+      .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: 'some time ago' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
