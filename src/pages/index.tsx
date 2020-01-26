@@ -15,6 +15,7 @@ interface Result {
   name: string;
   numberOfIdeaPitches: number;
   numberOfTechSupportSessions: number;
+  score: number;
   bonusPointsAwarded: number;
   finalScore: number;
 }
@@ -135,7 +136,7 @@ const AdminPage: NextComponentType = () => {
   };
 
   const abandonRequest = (supportRequestId: number, movedToInProgressAt: string) => async (): Promise<void> => {
-    let relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
+    const relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
     await fetch('/api/supportRequest/abandonRequest', {
       method: 'POST',
       body: JSON.stringify({ supportRequestId, relativeTimeElapsedString }),
@@ -242,6 +243,26 @@ const AdminPage: NextComponentType = () => {
             <div className="card-body">
               <h2 className="font-weight-normal">Judge Results</h2>
               {results.length === 0 && <div className="alert alert-info mt-3">Not enough votes to calculate results 🤔</div>}
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Team Score</th>
+                    <th>Bonus Points</th>
+                    <th>Final Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {results.map((result) => (
+                    <tr key={result.name}>
+                      <td>{result.name}</td>
+                      <td>{result.score}</td>
+                      <td>{result.bonusPointsAwarded}</td>
+                      <td>{result.finalScore}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

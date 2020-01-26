@@ -41,7 +41,7 @@ judging.get('/results', async (req, res) => {
       });
     });
 
-    res.send(expandedResults);
+    res.send(expandedResults.sort((a, b) => b.finalScore - a.finalScore));
   } catch (err) {
     /* istanbul ignore next */
     if (err.name === insufficientVoteCountError) {
