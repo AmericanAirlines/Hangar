@@ -1,4 +1,4 @@
-/* globals localStorage, fetch, window */
+/* globals localStorage, fetch */
 
 import React from 'react';
 
@@ -10,6 +10,7 @@ interface Team {
 }
 
 const judge = (): JSX.Element => {
+  const [startJudging, setStartJudging] = React.useState(false);
   const [error, setError] = React.useState<string | null>();
   const [loading, setLoading] = React.useState(true);
   const [judgeId, setJudgeId] = React.useState<string | null>('');
@@ -20,6 +21,8 @@ const judge = (): JSX.Element => {
   const doneJudging = !currentTeam && !previousTeam;
 
   React.useEffect(() => {
+    if (!startJudging) return;
+
     let id = localStorage.getItem('judgeId');
 
     if (!id) {
@@ -37,9 +40,11 @@ const judge = (): JSX.Element => {
     } else {
       setJudgeId(id);
     }
-  }, []);
+  }, [startJudging]);
 
   React.useEffect(() => {
+    if (!startJudging) return;
+
     localStorage.setItem('judgeId', judgeId);
 
     if (judgeId) {
@@ -137,6 +142,18 @@ const judge = (): JSX.Element => {
     }
     setLoading(false);
   };
+
+  if (!startJudging) {
+    return (
+      <div className="text-center mt-5">
+        <img className="mb-4" src="/logo.png" />
+        <h4 className="text-center">Make sure to open this in a browser (not through an app)</h4>
+        <button className="btn btn-primary" onClick={(): void => setStartJudging(true)}>
+          Start Judging
+        </button>
+      </div>
+    );
+  }
 
   if (loading) {
     return <h1>Loading</h1>;
