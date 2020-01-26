@@ -45,7 +45,7 @@ judging.get('/results', async (req, res) => {
   } catch (err) {
     /* istanbul ignore next */
     if (err.name === insufficientVoteCountError) {
-      res.status(200).send({ error: 'Insufficient vote count to calculate results' });
+      res.status(200).send([]);
       return;
     }
 

@@ -127,6 +127,6 @@ describe('api/judging', () => {
       })
       .expect(200);
 
-    expect(response.body.error).toBeDefined();
+    expect(response.body).toHaveLength(0);
   });
 });
