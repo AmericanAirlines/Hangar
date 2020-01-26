@@ -38,6 +38,7 @@ const LoginPage: React.FC = () => {
                 type="password"
                 placeholder="Shhh..."
                 className={`form-control ${formik.errors.secret ? 'is-invalid' : ''}`}
+                value={formik.values.secret}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
