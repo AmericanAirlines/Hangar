@@ -74,10 +74,11 @@ const AdminPage: NextComponentType = () => {
     }
   };
 
-  const abandonRequest = (supportRequestId: number) => async (): Promise<void> => {
+  const abandonRequest = (supportRequestId: number, movedToInProgressAt: string) => async (): Promise<void> => {
+    let timeElapsed = DateTime.fromISO(movedToInProgressAt).toRelative();
     await fetch('/api/supportRequest/abandonRequest', {
       method: 'POST',
-      body: JSON.stringify({ supportRequestId }),
+      body: JSON.stringify({ supportRequestId, timeElapsed }),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -140,7 +141,7 @@ const AdminPage: NextComponentType = () => {
 										<div className="card-body">
 											<h5 className="card-title">{request.name} <small className="text-muted">{DateTime.fromISO(request.movedToInProgressAt).toRelative()}</small></h5>
 											<p className="card-text">{request.type}</p>
-											<button className="btn btn-warning mr-2" onClick={abandonRequest(request.id)}>
+											<button className="btn btn-warning mr-2" onClick={abandonRequest(request.id, request.movedToInProgressAt)}>
 												No Show
 											</button>
 											<button className="btn btn-success" onClick={closeRequest(request.id)}>

@@ -1,7 +1,9 @@
 import 'jest';
+jest.mock('../../slack/utilities/messageUsers');
 import supertest from 'supertest';
 import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
 import { createDbConnection, closeDbConnection } from '../testdb';
+import '../../slack/utilities/messageUsers';
 
 const adminSecret = 'Secrets are secretive';
 
@@ -119,10 +121,11 @@ describe('api/judging', () => {
     supportRequest.status = SupportRequestStatus.InProgress;
     await supportRequest.save();
 
+    jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
-      .send({ supportRequestId: supportRequest.id })
+      .send({ supportRequestId: supportRequest.id, timeElapsed: '' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
