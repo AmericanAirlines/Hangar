@@ -24,7 +24,7 @@ api.post('/judge', async (_req, res) => {
 });
 
 const getJudgeTeams = async (judge: Judge): Promise<{ currentTeam: Team; previousTeam: Team }> => {
-  const previousTeamId = judge.visitedTeams[judge.visitedTeams.length - 1];
+  const previousTeamId = judge.previousTeam;
 
   let currentTeam;
   if (judge.currentTeam) {
@@ -69,7 +69,7 @@ api.post('/vote', async (req, res) => {
 
 api.post('/skip', async (req, res) => {
   if (!req.body.id) {
-    res.sendStatus(500).send('No id');
+    res.sendStatus(400).send('No id');
     return;
   }
 
