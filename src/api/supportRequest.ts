@@ -23,11 +23,21 @@ supportRequestRoutes.get('/getCount', async (req, res) => {
 });
 
 supportRequestRoutes.get('/getInProgress', async (req, res) => {
-  const openRequests = await SupportRequest.find({ status: SupportRequestStatus.InProgress });
+  const openRequests = await SupportRequest.find({
+    where: { status: SupportRequestStatus.InProgress },
+    order: { movedToInProgressAt: 'DESC' },
+  });
   res.send(openRequests);
 });
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
+  const { adminName } = req.body;
+
+  if (!adminName || !adminName.trim()) {
+    res.status(400).send("Property 'adminName' is required");
+    return;
+  }
+
   let nextRequest;
   try {
     nextRequest = await SupportRequest.getNextSupportRequest();
@@ -42,9 +52,9 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
     if (nextRequest) {
       await messageUsers(
         [nextRequest.slackId],
-        `:tada: We're ready to ${
+        `:tada: ${adminName} is ready to ${
           nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.`,
+        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${adminName}*!`,
       );
       userNotified = true;
     }

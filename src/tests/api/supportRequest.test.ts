@@ -1,9 +1,10 @@
 import 'jest';
-jest.mock('../../slack/utilities/messageUsers');
 import supertest from 'supertest';
 import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
 import { createDbConnection, closeDbConnection } from '../testdb';
 import '../../slack/utilities/messageUsers';
+
+jest.mock('../../slack/utilities/messageUsers');
 
 const adminSecret = 'Secrets are secretive';
 
