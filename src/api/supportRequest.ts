@@ -103,7 +103,6 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
     return;
   }
 
-  let supportRequest;
   try {
     await SupportRequest.createQueryBuilder('supportRequest')
       .update()
@@ -115,7 +114,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
       })
       .execute();
 
-    supportRequest = await SupportRequest.findOne(supportRequestId);
+    const supportRequest = await SupportRequest.findOne(supportRequestId);
     await messageUsers(
       [supportRequest.slackId],
       `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`,
