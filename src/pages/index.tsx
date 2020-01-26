@@ -175,36 +175,20 @@ const AdminPage: NextComponentType = () => {
               {requests.length === 0 ? (
                 <div className="alert alert-info mt-3">None in progress, press button to get the next one ☝️</div>
               ) : (
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">In Progress Age</th>
-                      <th scope="col">Type</th>
-                      <th scope="col"></th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {requests.map((request) => (
-                      <tr key={request.id}>
-                        <td>{request.name}</td>
-                        <td>{DateTime.fromISO(request.movedToInProgressAt).toRelative()}</td>
-                        <td>{request.type}</td>
-                        <td>
-                          <button className="btn btn-warning" onClick={abandonRequest(request.id)}>
-                            No Show
-                          </button>
-                        </td>
-                        <td>
-                          <button className="btn btn-success" onClick={closeRequest(request.id)}>
-                            Complete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+								requests.map((request) => (
+									<div key={request.id} className="card bg-light shadow mt-2">
+										<div className="card-body">
+											<h5 className="card-title">{request.name} <small className="text-muted">{DateTime.fromISO(request.movedToInProgressAt).toRelative()}</small></h5>
+											<p className="card-text">{request.type}</p>
+											<button className="btn btn-warning mr-2" onClick={abandonRequest(request.id)}>
+												No Show
+											</button>
+											<button className="btn btn-success" onClick={closeRequest(request.id)}>
+												Complete
+											</button>
+										</div>
+									</div>
+								))
               )}
             </div>
           </div>
