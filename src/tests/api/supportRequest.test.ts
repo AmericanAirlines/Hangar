@@ -110,6 +110,23 @@ describe('api/judging', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
+      .send({ relativeTimeElapsedString: "some time ago" })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+  });
+
+  it('calling abandonRequest without relativeTimeElapsedString will be a 400', async () => {
+    const suppportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    suppportRequest.status = SupportRequestStatus.InProgress;
+    await suppportRequest.save();
+
+    const { app } = require('../../app');
+    await supertest(app)
+      .post('/api/supportRequest/abandonRequest')
+      .send({ supportRequestId: 1 })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
@@ -126,7 +143,7 @@ describe('api/judging', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
-      .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: '' })
+      .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: "some time ago" })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',

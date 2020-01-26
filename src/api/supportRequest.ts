@@ -118,7 +118,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
     supportRequest = await SupportRequest.findOne(supportRequestId);
     await messageUsers(
       [supportRequest.slackId],
-      `:exclamation: We messaged you about your support request ${timeElapsed}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`,
+      `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`,
     );
 
     res.sendStatus(200);
