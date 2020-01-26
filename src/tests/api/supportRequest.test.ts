@@ -126,7 +126,7 @@ describe('api/judging', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
-      .send({ supportRequestId: supportRequest.id, timeElapsed: '' })
+      .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: '' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',

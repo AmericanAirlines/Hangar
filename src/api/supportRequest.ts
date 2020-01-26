@@ -96,9 +96,9 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
 });
 
 supportRequestRoutes.post('/abandonRequest', async (req, res) => {
-  const { supportRequestId, timeElapsed } = req.body;
+  const { supportRequestId, relativeTimeElapsedString } = req.body;
 
-  if (!supportRequestId) {
+  if (!supportRequestId || !relativeTimeElapsedString) {
     res.status(400).send("Property 'supportRequestId' is required");
     return;
   }
@@ -118,7 +118,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
     supportRequest = await SupportRequest.findOne(supportRequestId);
     await messageUsers(
       [supportRequest.slackId],
-      `:exclamation: We accepted your support request ${timeElapsed}, but we didn't hear from you at our booth, so we closed your request. If you'd still like to meet with our team, please rejoin the queue!`,
+      `:exclamation: We messaged you about your support request ${timeElapsed}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`,
     );
 
     res.sendStatus(200);
