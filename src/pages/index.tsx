@@ -175,20 +175,22 @@ const AdminPage: NextComponentType = () => {
               {requests.length === 0 ? (
                 <div className="alert alert-info mt-3">None in progress, press button to get the next one ☝️</div>
               ) : (
-								requests.map((request) => (
-									<div key={request.id} className="card bg-light shadow mt-2">
-										<div className="card-body">
-											<h5 className="card-title">{request.name} <small className="text-muted">{DateTime.fromISO(request.movedToInProgressAt).toRelative()}</small></h5>
-											<p className="card-text">{request.type}</p>
-											<button className="btn btn-warning mr-2" onClick={abandonRequest(request.id)}>
-												No Show
-											</button>
-											<button className="btn btn-success" onClick={closeRequest(request.id)}>
-												Complete
-											</button>
-										</div>
-									</div>
-								))
+                requests.map((request) => (
+                  <div key={request.id} className="card bg-light shadow mt-2">
+                    <div className="card-body">
+                      <h5 className="card-title">
+                        {request.name} <small className="text-muted">{DateTime.fromISO(request.movedToInProgressAt).toRelative()}</small>
+                      </h5>
+                      <p className="card-text">{request.type}</p>
+                      <button className="btn btn-warning mr-2" onClick={abandonRequest(request.id)}>
+                        No Show
+                      </button>
+                      <button className="btn btn-success" onClick={closeRequest(request.id)}>
+                        Complete
+                      </button>
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>
