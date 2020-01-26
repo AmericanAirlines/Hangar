@@ -198,7 +198,7 @@ const AdminPage: NextComponentType = () => {
                         {request.name} <small className="text-muted">{DateTime.fromISO(request.movedToInProgressAt).toRelative()}</small>
                       </h5>
                       <p className="card-text">{request.type === 'TechnicalSupport' ? 'Technical Support' : 'Idea Pitch'}</p>
-                       <button className="btn btn-warning mr-2" onClick={abandonRequest(request.id, request.movedToInProgressAt)}>
+                      <button className="btn btn-warning mr-2" onClick={abandonRequest(request.id, request.movedToInProgressAt)}>
                         No Show
                       </button>
                       <button className="btn btn-success" onClick={closeRequest(request.id)}>
