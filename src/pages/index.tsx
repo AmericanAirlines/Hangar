@@ -25,12 +25,20 @@ const AdminPage: NextComponentType = () => {
       adminName: '',
     },
     onSubmit({ adminName }) {
-      window.localStorage.setItem(ADMIN_NAME_KEY, adminName);
+      window.localStorage.setItem(ADMIN_NAME_KEY, adminName.trim());
     },
   });
 
   React.useEffect(() => {
     formik.setFieldValue('adminName', window.localStorage.getItem(ADMIN_NAME_KEY));
+
+    const timer = setInterval(() => {
+      setLastUpdateEpoch(Date.now());
+    }, 30000);
+
+    return (): void => {
+      clearInterval(timer);
+    };
   }, []);
 
   React.useEffect(() => {
