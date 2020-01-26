@@ -2,6 +2,9 @@ import 'jest';
 import supertest from 'supertest';
 import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
 import { createDbConnection, closeDbConnection } from '../testdb';
+import '../../slack/utilities/messageUsers';
+
+jest.mock('../../slack/utilities/messageUsers');
 
 const adminSecret = 'Secrets are secretive';
 
@@ -107,6 +110,23 @@ describe('api/judging', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
+      .send({ relativeTimeElapsedString: 'some time ago' })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+  });
+
+  it('calling abandonRequest without relativeTimeElapsedString will be a 400', async () => {
+    const suppportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    suppportRequest.status = SupportRequestStatus.InProgress;
+    await suppportRequest.save();
+
+    const { app } = require('../../app');
+    await supertest(app)
+      .post('/api/supportRequest/abandonRequest')
+      .send({ supportRequestId: 1 })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
@@ -119,10 +139,11 @@ describe('api/judging', () => {
     supportRequest.status = SupportRequestStatus.InProgress;
     await supportRequest.save();
 
+    jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
-      .send({ supportRequestId: supportRequest.id })
+      .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: 'some time ago' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
