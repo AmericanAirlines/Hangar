@@ -1,11 +1,13 @@
-/* global fetch, window */
+/* global fetch, window, alert */
 import React from 'react';
 import { NextComponentType } from 'next';
 import { DateTime } from 'luxon';
 import { useFormik } from 'formik';
-import { SupportRequest } from '../entities/supportRequest';
 
-interface Request extends Omit<SupportRequest, 'movedToInProgressAt'> {
+interface Request {
+  id: number;
+  name: string;
+  type: string;
   movedToInProgressAt: string;
 }
 
@@ -72,6 +74,11 @@ const AdminPage: NextComponentType = () => {
   }, [lastUpdateEpoch]);
 
   const getNext = async (): Promise<void> => {
+    if (!window.localStorage.getItem(ADMIN_NAME_KEY)) {
+      alert('Please set your name first'); // eslint-disable-line no-alert
+      return;
+    }
+
     const res = await fetch('/api/supportRequest/getNext', {
       method: 'POST',
       body: JSON.stringify({ adminName: window.localStorage.getItem(ADMIN_NAME_KEY) }),
@@ -130,7 +137,7 @@ const AdminPage: NextComponentType = () => {
   if (error) return <h4>Error loading, check the console</h4>;
 
   return (
-    <div className="container-fluid mt-4">
+    <div className="container mt-4">
       <div className="row mb-4">
         <div className="col-12 col-md-6">
           <h1>Hello, Admin 👋</h1>
@@ -181,8 +188,8 @@ const AdminPage: NextComponentType = () => {
                       <h5 className="card-title">
                         {request.name} <small className="text-muted">{DateTime.fromISO(request.movedToInProgressAt).toRelative()}</small>
                       </h5>
-                      <p className="card-text">{request.type}</p>
-                      <button className="btn btn-warning mr-2" onClick={abandonRequest(request.id)}>
+                      <p className="card-text">{request.type === 'TechnicalSupport' ? 'Technical Support' : 'Idea Pitch'}</p>
+                      <button className="btn btn-danger mr-2" onClick={abandonRequest(request.id)}>
                         No Show
                       </button>
                       <button className="btn btn-success" onClick={closeRequest(request.id)}>

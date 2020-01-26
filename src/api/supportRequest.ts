@@ -23,7 +23,10 @@ supportRequestRoutes.get('/getCount', async (req, res) => {
 });
 
 supportRequestRoutes.get('/getInProgress', async (req, res) => {
-  const openRequests = await SupportRequest.find({ status: SupportRequestStatus.InProgress });
+  const openRequests = await SupportRequest.find({
+    where: { status: SupportRequestStatus.InProgress },
+    order: { movedToInProgressAt: 'DESC' },
+  });
   res.send(openRequests);
 });
 
