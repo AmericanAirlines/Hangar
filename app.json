@@ -22,6 +22,11 @@
       "value": "",
       "required": true
     },
+    "JUDGE_SECRET": {
+      "description": "A secret you use for judging",
+      "value": "",
+      "required": true
+    },
     "CHALLENGE_URL": {
       "description": "Provide a link to your challenge details if you have one, we encourage you to include judging criteria and prize info",
       "value": "",
