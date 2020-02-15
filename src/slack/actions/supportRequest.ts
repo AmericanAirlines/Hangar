@@ -16,7 +16,6 @@ function register(bolt: App): void {
     ack();
     const actionId = action.action_id;
     const slackId = body.user.id;
-    const slackName = body.user.name;
 
     const dashboardContext = await getDashboardContext(body.user.id);
 
@@ -25,6 +24,14 @@ function register(bolt: App): void {
     if (!supportRequestQueueActive) {
       say(":see_no_evil: Our team isn't available to help at the moment, check back with us soon!");
     } else {
+      let slackName = 'Unknown (Check logs)';
+      try {
+        const result = await getWebClient().users.info({ user: slackId });
+        slackName = (result?.user as { [key: string]: string })?.real_name as string;
+      } catch (err) {
+        logger.error('Something went wrong retrieving Slack user details', err);
+      }
+
       try {
         const requestItem = new SupportRequest(
           slackId,
