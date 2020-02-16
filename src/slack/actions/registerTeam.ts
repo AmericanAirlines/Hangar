@@ -51,7 +51,7 @@ function register(bolt: App): void {
         await bolt.client.chat.postMessage({
           token: context.botToken,
           channel: dm.channel.id,
-          text: ":warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.",
+          text: ':warning: Team registration is not open yet. Check back later once table numbers have been assigned!',
         });
         return;
       }
