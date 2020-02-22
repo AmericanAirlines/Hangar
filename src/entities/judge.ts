@@ -9,6 +9,7 @@ export class Judge extends BaseEntity {
 
     this.visitedTeams = [];
     this.currentTeam = null;
+    this.away = false;
   }
 
   @PrimaryGeneratedColumn()
@@ -23,6 +24,9 @@ export class Judge extends BaseEntity {
   @Column({ nullable: true })
   previousTeam?: number;
 
+  @Column()
+  away: boolean;
+
   async getNextTeam(): Promise<Team> {
     const newTeam = await Team.getNextAvailableTeamExcludingTeams(this.visitedTeams);
     this.currentTeam = newTeam ? newTeam.id : null;
@@ -32,6 +36,19 @@ export class Judge extends BaseEntity {
 
   async continue(): Promise<void> {
     await this.recordCurrentTeamAndSave();
+  }
+
+  async stepAway(): Promise<boolean> {
+    const team = await Team.findOne({ id: this.currentTeam });
+
+    if (team?.activeJudgeCount > 0) {
+      this.away = true;
+      await team.decrementActiveJudgeCount();
+      await this.save();
+      return true;
+    }
+
+    return false;
   }
 
   async skip(): Promise<void> {
