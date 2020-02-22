@@ -9,6 +9,12 @@ interface Team {
   projectDescription: string;
 }
 
+interface JudgeTeam {
+  away: boolean;
+  currentTeam: Team;
+  previousTeam: Team;
+}
+
 const judge = (): JSX.Element => {
   const [startJudging, setStartJudging] = React.useState(false);
   const [error, setError] = React.useState<string | null>();
@@ -16,6 +22,7 @@ const judge = (): JSX.Element => {
   const [judgeId, setJudgeId] = React.useState<string | null>('');
   const [currentTeam, setCurrentTeam] = React.useState<Team | null>(null);
   const [previousTeam, setPreviousTeam] = React.useState<Team | null>(null);
+  const [away, setAway] = React.useState(false);
 
   const firstTeam = !!currentTeam && !previousTeam;
   const doneJudging = !currentTeam && !previousTeam;
@@ -59,19 +66,9 @@ const judge = (): JSX.Element => {
           return;
         }
 
-        const { currentTeam: cTeam, previousTeam: pTeam } = await res.json();
+        const judgeTeam: JudgeTeam = await res.json();
 
-        if (cTeam) {
-          setCurrentTeam(cTeam);
-          if (pTeam) {
-            setPreviousTeam(pTeam);
-          } else {
-            setPreviousTeam(null);
-          }
-        } else {
-          setCurrentTeam(null);
-          setPreviousTeam(null);
-        }
+        handleJudgeTeam(judgeTeam);
         setLoading(false);
       })();
     }
@@ -94,19 +91,9 @@ const judge = (): JSX.Element => {
       return;
     }
 
-    const { currentTeam: cTeam, previousTeam: pTeam } = await res.json();
+    const judgeTeam: JudgeTeam = await res.json();
 
-    if (cTeam) {
-      setCurrentTeam(cTeam);
-      if (pTeam) {
-        setPreviousTeam(pTeam);
-      } else {
-        setPreviousTeam(null);
-      }
-    } else {
-      setCurrentTeam(null);
-      setPreviousTeam(null);
-    }
+    handleJudgeTeam(judgeTeam);
     setLoading(false);
   };
 
@@ -127,12 +114,62 @@ const judge = (): JSX.Element => {
       return;
     }
 
-    const { currentTeam: cTeam, previousTeam: pTeam } = await res.json();
+    const judgeTeam: JudgeTeam = await res.json();
 
-    if (cTeam) {
-      setCurrentTeam(cTeam);
-      if (pTeam) {
-        setPreviousTeam(pTeam);
+    handleJudgeTeam(judgeTeam);
+    setLoading(false);
+  };
+
+  const takeBreak = () => async (): Promise<void> => {
+    setLoading(true);
+
+    const res = await fetch('/api/break', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: judgeId }),
+    });
+
+    if (!res.ok) {
+      setError('Problem taking break');
+      setLoading(false);
+      return;
+    }
+
+    const { success } = await res.json();
+    setAway(success);
+    setLoading(false);
+  }
+
+  const resumeJudging = () => async (): Promise<void> => {
+    setLoading(true);
+
+    const res = await fetch('/api/resume', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: judgeId }),
+    });
+
+    if (!res.ok) {
+      setError('Problem resuming');
+      setLoading(false);
+      return;
+    }
+
+    const judgeTeam: JudgeTeam = await res.json();
+
+    handleJudgeTeam(judgeTeam);
+    setLoading(false);
+  }
+
+  const handleJudgeTeam = (judgeTeam: JudgeTeam): void => {
+    if (judgeTeam.currentTeam) {
+      setCurrentTeam(judgeTeam.currentTeam);
+      if (judgeTeam.previousTeam) {
+        setPreviousTeam(judgeTeam.previousTeam);
       } else {
         setPreviousTeam(null);
       }
@@ -140,8 +177,8 @@ const judge = (): JSX.Element => {
       setCurrentTeam(null);
       setPreviousTeam(null);
     }
-    setLoading(false);
-  };
+    setAway(judgeTeam.away);
+  }
 
   if (!startJudging) {
     return (
@@ -168,6 +205,21 @@ const judge = (): JSX.Element => {
         <h4 className="text-center">You are a supreme judger</h4>
         <h5 className="text-center">You&apos;re done with judging</h5>
         <h6 className="text-center">Thanks</h6>
+      </>
+    );
+  }
+
+  if (away) {
+    return (
+      <>
+        <h1>Taking a break!</h1>
+        <div className="btn-toolbar justify-content-around" role="toolbar">
+          <div className="btn-group" role="group">
+            <button type="button" className="btn btn-primary" onClick={resumeJudging()}>
+              Resume Judging
+            </button>
+          </div>
+        </div>
       </>
     );
   }
@@ -205,16 +257,25 @@ const judge = (): JSX.Element => {
       {!firstTeam && (
         <>
           <h3>Which team was better?</h3>
-          <div className="btn-group" role="group">
-            <button type="button" className="btn btn-primary" onClick={voteHandler(false)}>
-              Previous Team
-            </button>
-            <button type="button" className="btn btn-default" onClick={skipHandler()}>
-              Skip Team
-            </button>
-            <button type="button" className="btn btn-primary" onClick={voteHandler(true)}>
-              Current Team
-            </button>
+          <div className="btn-toolbar mb-3 justify-content-around" role="toolbar">
+            <div className="btn-group" role="group">
+              <button type="button" className="btn btn-primary" onClick={voteHandler(false)}>
+                Previous Team
+              </button>
+              <button type="button" className="btn btn-default" onClick={skipHandler()}>
+                Skip Team
+              </button>
+              <button type="button" className="btn btn-primary" onClick={voteHandler(true)}>
+                Current Team
+              </button>
+            </div>
+          </div>
+          <div className="btn-toolbar mb-3 justify-content-around" role="toolbar">
+            <div className="btn-group" role="group">
+              <button type="button" className="btn btn-primary" onClick={takeBreak()}>
+                Take a break
+              </button>
+            </div>
           </div>
         </>
       )}
