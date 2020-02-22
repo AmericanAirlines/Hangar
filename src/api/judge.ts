@@ -3,6 +3,7 @@ import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';
 
 interface JudgeTeams {
+  away: boolean;
   currentTeam: Team;
   previousTeam: Team;
 }
@@ -25,6 +26,7 @@ const getJudgeTeams = async (judge: Judge): Promise<JudgeTeams> => {
   }
 
   return {
+    away: judge.away,
     currentTeam,
     previousTeam,
   };

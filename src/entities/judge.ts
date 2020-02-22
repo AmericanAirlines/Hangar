@@ -58,7 +58,7 @@ export class Judge extends BaseEntity {
     }
 
     const team = await Team.findOne({ id: this.currentTeam });
-    this.away = true;
+    this.away = false;
 
     if (team) {
       await team.incrementActiveJudgeCount();

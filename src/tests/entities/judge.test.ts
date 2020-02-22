@@ -89,6 +89,12 @@ describe('judge entity', () => {
       await judge.save();
     });
 
+    it('sets the judge as present', async () => {
+      await judge.resumeJudging();
+
+      expect(judge.away).toBe(false);
+    });
+
     it('increases the active judge count by one', async () => {
       await judge.resumeJudging();
 
