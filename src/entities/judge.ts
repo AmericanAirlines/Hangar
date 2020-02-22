@@ -38,9 +38,9 @@ export class Judge extends BaseEntity {
     await this.recordCurrentTeamAndSave();
   }
 
-  async stepAway(): Promise<Judge> {
+  async stepAway(): Promise<void> {
     if (this.away) {
-      return this;
+      return;
     }
 
     const team = await Team.findOne({ id: this.currentTeam });
@@ -50,8 +50,21 @@ export class Judge extends BaseEntity {
       await team.decrementActiveJudgeCount();
       await this.save();
     }
+  }
 
-    return this;
+  async resumeJudging(): Promise<void> {
+    if (!this.away) {
+      return;
+    }
+
+    const team = await Team.findOne({ id: this.currentTeam });
+    this.away = true;
+
+    if (team) {
+      await team.incrementActiveJudgeCount();
+    }
+
+    await this.save();
   }
 
   async skip(): Promise<void> {

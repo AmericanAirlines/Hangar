@@ -17,17 +17,13 @@ describe('judge entity', () => {
     let team: Team;
 
     beforeEach(async () => {
-      judge = await new Judge();
       team = await new Team('Some Team', 123, 'A new app', ['123']);
-
-      await judge.save();
-      await team.save();
-
-      judge.currentTeam = team.id;
       team.activeJudgeCount = 1;
-
-      await judge.save();
       await team.save();
+      
+      judge = await new Judge();
+      judge.currentTeam = team.id;
+      await judge.save();
     });
 
     it('should set the judge to away', async () => {
@@ -75,6 +71,38 @@ describe('judge entity', () => {
         await team.reload();
         expect(team.activeJudgeCount).toBe(0);
       });
+    });
+  });
+
+  describe('resumeJudging()', () => {
+    let judge: Judge;
+    let team: Team;
+
+    beforeEach(async () => {
+      team = await new Team('Some Team', 123, 'A new app', ['123']);
+      team.activeJudgeCount = 1;
+      await team.save();
+      
+      judge = await new Judge();
+      judge.currentTeam = team.id;
+      judge.away = true;
+      await judge.save();
+    });
+
+    it('increases the active judge count by one', async () => {
+      await judge.resumeJudging();
+
+      await team.reload();
+      expect(team.activeJudgeCount).toBe(2);
+    });
+
+    it('does not increase the active judge count when not away', async () => {
+      judge.away = false;
+      await judge.save();
+      await judge.resumeJudging();
+
+      await team.reload();
+      expect(team.activeJudgeCount).toBe(1);
     });
   });
 });
