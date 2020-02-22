@@ -46,10 +46,11 @@ export class Judge extends BaseEntity {
     const team = await Team.findOne({ id: this.currentTeam });
 
     if (team?.activeJudgeCount > 0) {
-      this.away = true;
       await team.decrementActiveJudgeCount();
-      await this.save();
     }
+
+    this.away = true;
+    await this.save();
   }
 
   async resumeJudging(): Promise<void> {

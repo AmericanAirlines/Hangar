@@ -40,6 +40,19 @@ describe('judge entity', () => {
       expect(team.activeJudgeCount).toBe(0);
     });
 
+    describe('when no current team is assigned', () => {
+      beforeEach(async () => {
+        judge.currentTeam = null;
+        await judge.save();
+      });
+
+      it('should still set the judge to away', async () => {
+        await judge.stepAway();
+
+        expect(judge.away).toBe(true);
+      });
+    });
+
     describe('when judge is already away', () => {
       beforeEach(async () => {
         judge.away = true;
@@ -59,10 +72,10 @@ describe('judge entity', () => {
         await team.save();
       });
 
-      it('should not set the judge to away', async () => {
+      it('should still set the judge to away', async () => {
         await judge.stepAway();
 
-        expect(judge.away).toBe(false);
+        expect(judge.away).toBe(true);
       });
 
       it('should not reduce the active judge count of team', async () => {
@@ -100,6 +113,14 @@ describe('judge entity', () => {
 
       await team.reload();
       expect(team.activeJudgeCount).toBe(2);
+    });
+
+    it('sets as present even with no current team', async () => {
+      judge.currentTeam = null;
+      await judge.save();
+      await judge.resumeJudging();
+
+      expect(judge.away).toBe(false);
     });
 
     it('does not increase the active judge count when not away', async () => {
