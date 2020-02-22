@@ -20,14 +20,14 @@ describe('judge entity', () => {
       judge = await new Judge();
       team = await new Team('Some Team', 123, 'A new app', ['123']);
 
-      judge = await judge.save();
-      team = await team.save();
+      await judge.save();
+      await team.save();
 
       judge.currentTeam = team.id;
       team.activeJudgeCount = 1;
 
-      judge = await judge.save();
-      team = await team.save();
+      await judge.save();
+      await team.save();
     });
 
     it('should set the judge to away', async () => {
@@ -42,6 +42,19 @@ describe('judge entity', () => {
       await team.reload();
 
       expect(team.activeJudgeCount).toBe(0);
+    });
+
+    describe('when judge is already away', () => {
+      beforeEach(async () => {
+        judge.away = true;
+        await judge.save();
+      });
+
+      it('will not reduce the active judge count of team', async () => {
+        await judge.stepAway();
+        await team.reload();
+        expect(team.activeJudgeCount).toBe(1);
+      });
     });
 
     describe('when active judge count of team has less than 1', () => {
