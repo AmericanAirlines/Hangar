@@ -71,4 +71,12 @@ describe('judging', () => {
     expect(newTeam).toBeUndefined();
     expect(mockMethod.mock.calls.length).toBe(5);
   });
+
+  describe('incrementActiveJudgeCount()', () => {
+    it('increases the active judge count by 1', async () => {
+      const oldCount = team.activeJudgeCount;
+      team = await team.incrementActiveJudgeCount();
+      expect(team.activeJudgeCount).toBe(oldCount + 1);
+    });
+  });
 });

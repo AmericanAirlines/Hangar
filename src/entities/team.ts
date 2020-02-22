@@ -108,6 +108,11 @@ export class Team extends BaseEntity {
       .execute();
   }
 
+  async incrementActiveJudgeCount(): Promise<Team> {
+    this.activeJudgeCount = this.activeJudgeCount + 1;
+    return this.save();
+  }
+
   async incrementJudgeVisits(): Promise<void> {
     await Team.createQueryBuilder('team')
       .update()
