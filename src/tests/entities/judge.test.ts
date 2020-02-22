@@ -20,14 +20,14 @@ describe('judge entity', () => {
       team = await new Team('Some Team', 123, 'A new app', ['123']);
       team.activeJudgeCount = 1;
       await team.save();
-      
+
       judge = await new Judge();
       judge.currentTeam = team.id;
       await judge.save();
     });
 
     it('should set the judge to away', async () => {
-      judge = await judge.stepAway();
+      await judge.stepAway();
 
       expect(judge.away).toBe(true);
     });
@@ -60,7 +60,7 @@ describe('judge entity', () => {
       });
 
       it('should not set the judge to away', async () => {
-        judge = await judge.stepAway();
+        await judge.stepAway();
 
         expect(judge.away).toBe(false);
       });
@@ -82,7 +82,7 @@ describe('judge entity', () => {
       team = await new Team('Some Team', 123, 'A new app', ['123']);
       team.activeJudgeCount = 1;
       await team.save();
-      
+
       judge = await new Judge();
       judge.currentTeam = team.id;
       judge.away = true;
