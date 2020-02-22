@@ -14,10 +14,11 @@ describe('judge entity', () => {
 
   describe('stepAway()', () => {
     let judge: Judge;
+    let team: Team;
 
     beforeEach(async () => {
       judge = await new Judge();
-      let team = await new Team('Some Team', 123, 'A new app', ['123']);
+      team = await new Team('Some Team', 123, 'A new app', ['123']);
 
       judge = await judge.save();
       team = await team.save();
@@ -44,14 +45,13 @@ describe('judge entity', () => {
     it('should reduce the active judge count for the team', async () => {
       await judge.stepAway();
 
-      const team = await Team.findOne({ id: judge.currentTeam });
+      await team.reload();
 
       expect(team.activeJudgeCount).toBe(0);
     });
 
     describe('when active judge count of team has less than 1', () => {
       beforeEach(async () => {
-        const team = await Team.findOne({ id: judge.currentTeam });
         team.activeJudgeCount = 0;
         await team.save();
       });
@@ -71,7 +71,7 @@ describe('judge entity', () => {
       it('should not reduce the active judge count of team', async () => {
         await judge.stepAway();
 
-        const team = await Team.findOne({ id: judge.currentTeam });
+        await team.reload();
         expect(team.activeJudgeCount).toBe(0);
       });
     });
