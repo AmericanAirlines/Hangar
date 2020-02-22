@@ -30,14 +30,8 @@ describe('judge entity', () => {
       team = await team.save();
     });
 
-    it('return true', async () => {
-      const successfulStepAway = await judge.stepAway();
-
-      expect(successfulStepAway).toBe(true);
-    });
-
     it('should set the judge to away', async () => {
-      await judge.stepAway();
+      judge = await judge.stepAway();
 
       expect(judge.away).toBe(true);
     });
@@ -56,14 +50,8 @@ describe('judge entity', () => {
         await team.save();
       });
 
-      it('return false', async () => {
-        const unsuccessfulStepAway = await judge.stepAway();
-
-        expect(unsuccessfulStepAway).toBe(false);
-      });
-
       it('should not set the judge to away', async () => {
-        await judge.stepAway();
+        judge = await judge.stepAway();
 
         expect(judge.away).toBe(false);
       });

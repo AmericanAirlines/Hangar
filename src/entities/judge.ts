@@ -38,17 +38,16 @@ export class Judge extends BaseEntity {
     await this.recordCurrentTeamAndSave();
   }
 
-  async stepAway(): Promise<boolean> {
+  async stepAway(): Promise<Judge> {
     const team = await Team.findOne({ id: this.currentTeam });
 
     if (team?.activeJudgeCount > 0) {
       this.away = true;
       await team.decrementActiveJudgeCount();
       await this.save();
-      return true;
     }
 
-    return false;
+    return this;
   }
 
   async skip(): Promise<void> {
