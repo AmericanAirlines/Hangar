@@ -90,7 +90,7 @@
     "@types/jest": "^24.0.20",
     "@types/luxon": "^1.21.0",
     "@types/node": "^11.15.0",
-    "@types/react": "^16.9.11",
+    "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.3",
     "@types/shuffle-array": "0.0.28",
     "@types/sqlite3": "^3.1.5",
