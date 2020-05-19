@@ -149,9 +149,7 @@ function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
   blocks.push(ideaPitchRequestBlock);
   blocks.push(technicalRequestBlock);
 
-  if (context.teamRegistrationActive) {
-    blocks.push(teamRegistrationBlock);
-  }
+  blocks.push(teamRegistrationBlock);
 
   if (blocks.length === defaultBlocksLengh) {
     blocks.push(comingSoonBlock);

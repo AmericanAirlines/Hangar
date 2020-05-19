@@ -53,3 +53,6 @@ As soon as you're ready for a code review, create a [pull request](https://help.
 
 #### Attribution
 If your contribution uses code from another source, make sure you properly attribute it. Cite the source of your code where the code is used and include attribution in `ThirdPartyNotices.md`. Both of these must be present in your PR before we'll merge.
+
+## Contributor License Agreement
+By contributing to Hangar, you agree to the terms of American’s [Contributor License Agreement](https://github.com/AmericanAirlines/Contributor-License-Agreement/blob/master/CLA.md).
