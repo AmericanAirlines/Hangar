@@ -1,5 +1,5 @@
 ![](../../workflows/Build/badge.svg)
-[![codecov](https://codecov.io/gh/AmericanAirlines/Hangar/branch/master/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Hangar)
+[![codecov](https://codecov.io/gh/AmericanAirlines/Hangar/branch/main/graph/badge.svg)](https://codecov.io/gh/AmericanAirlines/Hangar)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/AmericanAirlines/Hangar.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Hangar/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Hangar.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Hangar/context:javascript)
 
@@ -25,7 +25,7 @@ Before you can use Hangar, you'll need to create a Slack app. Follow our [instru
 ## Deploying Hangar to Heroku
 Once your Slack app is up and running, click the button below and complete the form using your Slack secrets.
 
-[![Deploy to Heroky](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/AmericanAirlines/Hangar/tree/master)
+[![Deploy to Heroky](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/AmericanAirlines/Hangar/tree/main)
 
 ## Completing Your Configuration
 Once your app is running, copy your app's URL and complete the [final configuration of your Slack app](./src/slack/README.md#after-deploying-hangar).
@@ -33,7 +33,7 @@ Once your app is running, copy your app's URL and complete the [final configurat
 ## Customizing Hangar
 If you'd like to customize the app, fork this repo. If you have an idea for something and you'd like to contribute back to this project, [create a new Feature request](../../../issues/new?template=feature_request.md). If we like your suggestion, we'll ask you to open a Pull Request. For more details, check out our [Contributing Guidelines](./.github/CONTRIBUTING.md).
 
-When you're ready to deploy your app, simply change the URL for the `Deploy to Heroku` button then merge it into your `master` branch. Once your repo is updated, just use that button you'll be good to go!
+When you're ready to deploy your app, simply change the URL for the `Deploy to Heroku` button then merge it into your `main` branch. Once your repo is updated, just use that button you'll be good to go!
 
 <!-- After the front end display for help queue is created, describe overriding the template here -->
 

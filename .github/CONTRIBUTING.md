@@ -26,13 +26,13 @@ Need a little help to get started? We've marked some tasks with the `help wante
 More info can be found in [Forking and Pull Requests](#forking-and-pull-requests) below.
 
 ### Forking and Pull Requests
-When you're ready to start writing code, make sure you [fork](https://help.github.com/articles/fork-a-repo/) this repo and use that fork to make your changes. It's also helpful to turn on [branch protection](https://help.github.com/en/articles/configuring-protected-branches) for your repo's `master` branch and make sure to enforce the protection for admins as well.
+When you're ready to start writing code, make sure you [fork](https://help.github.com/articles/fork-a-repo/) this repo and use that fork to make your changes. It's also helpful to turn on [branch protection](https://help.github.com/en/articles/configuring-protected-branches) for your repo's `main` branch and make sure to enforce the protection for admins as well.
 
 #### Tracking Upstream
-To track and sync the main (upstream) repo, run this command to create a remote: `git remote add upstream git@github.com:AmericanAirlines/Hangar.git`. Whenever you need to sync your current branch with the `upstream master` branch, run `git pull upstream master`.
+To track and sync the main (upstream) repo, run this command to create a remote: `git remote add upstream git@github.com:AmericanAirlines/Hangar.git`. Whenever you need to sync your current branch with the `upstream main` branch, run `git pull upstream main`.
 
 #### Branching
-When you start development, sync your local `master` with upstream using the command above, then create a new branch with `git checkout -b yourNewBranchName` and begin making your changes.
+When you start development, sync your local `main` with upstream using the command above, then create a new branch with `git checkout -b yourNewBranchName` and begin making your changes.
 
 #### Committing
 When you are ready to commit code, please do so on a feature/bugfix branch and commit only the files that are relevant to your change (e.g., **do not use** `git add .` or `git commit -a`). After the first time you run `npm i` to install dependencies, a git `pre-commit` will be setup which will perform several actions when you run `git commit`:
@@ -46,7 +46,7 @@ Finally, if you need to install a new dependency, please use `git add --patch pa
 
 #### Creating a Pull Request
 As soon as you're ready for a code review, create a [pull request](https://help.github.com/articles/about-pull-requests/) and follow the steps below:
-1. Use the `Hangar:master` branch as your PR's base branch and select your branch as the `compare` branch
+1. Use the `Hangar:main` branch as your PR's base branch and select your branch as the `compare` branch
 1. Make sure your PR branch is as up-to-date as possible (we'll handle merge conflicts if one arises)
 1. Fill out all fields suggested by the template, including links to issue(s) your PR addresses.  This will help prevent duplication of efforts. For information on how to reference issues to close them, read up on [closing issues using keywords here](https://help.github.com/articles/closing-issues-using-keywords/).
 1. If it's your first contribution, make sure your PR includes a modification to `AUTHORS.md` to include your first and last name as well as your email address *or* your GitHub handle
@@ -55,4 +55,4 @@ As soon as you're ready for a code review, create a [pull request](https://help.
 If your contribution uses code from another source, make sure you properly attribute it. Cite the source of your code where the code is used and include attribution in `ThirdPartyNotices.md`. Both of these must be present in your PR before we'll merge.
 
 ## Contributor License Agreement
-By contributing to Hangar, you agree to the terms of American’s [Contributor License Agreement](https://github.com/AmericanAirlines/Contributor-License-Agreement/blob/master/CLA.md).
+By contributing to Hangar, you agree to the terms of American’s [Contributor License Agreement](https://github.com/AmericanAirlines/Contributor-License-Agreement/blob/main/CLA.md).
