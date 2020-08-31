@@ -40,6 +40,8 @@ After the app starts, it will be accessible on `localhost:3000` (unless the port
 ## Handling App Events Locally
 In order to make your app accessible to platforms like Slack, you'll need to use an app like [`ngrok`](https://github.com/bubenshchykov/ngrok) to obtain a URL which can be used within your Slack app configuration. After running `npm i` to install dependencies, simply `npm run tunnel` to create the tunnel, then use the following URL output to route web traffic to your app.
 
+![](./assets/Ngrok-Result.png)
+
 ## Creating a Slack App
 Before you can use Hangar, you'll need to create a Slack app. Follow our [instructions for creating an app](./src/slack/README.md#initial-setup). Once you're done with the first section, continue below.
 
