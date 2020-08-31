@@ -40,24 +40,19 @@ After the app starts, it will be accessible on `localhost:3000` (unless the port
 ## Handling App Events Locally
 In order to make your app accessible to platforms like Slack, you'll need to use an app like [`ngrok`](https://github.com/bubenshchykov/ngrok) to obtain a URL which can be used within your Slack app configuration. For example, you can run `ngrok http 3000` to obtain a URL which can be used to recieve Slack events.
 
-## Database Changes
-If database schema is changed, the migrations must be changed accordingly. After starting the app (or using `npm run typeorm migration:run`), make changes to files in the `src/entities` directory as needed and then run `npm run typeorm migration:generate -- -n MigrationName` where `MigrationName` is the name of the migration (without the timestamp).
-
-## Migrations
-Do not update or remove an existing migration, as this can cause unexpected issues with local and production data. All database schema changes must be made in a new migration.
-
----
-
 ## Creating a Slack App
 Before you can use Hangar, you'll need to create a Slack app. Follow our [instructions for creating an app](./src/slack/README.md#initial-setup). Once you're done with the first section, continue below.
 
-## Deploying Hangar to Heroku
-Once your Slack app is up and running, click the button below and complete the form using your Slack secrets.
-
-[![Deploy to Heroky](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/AmericanAirlines/Hangar/tree/main)
-
 ## Completing Your Configuration
 Once your app is running, copy your app's URL and complete the [final configuration of your Slack app](./src/slack/README.md#after-deploying-hangar).
+
+## Advanced
+
+### Database Changes
+If database schema is changed, the migrations must be changed accordingly. After starting the app (or using `npm run typeorm migration:run`), make changes to files in the `src/entities` directory as needed and then run `npm run typeorm migration:generate -- -n MigrationName` where `MigrationName` is the name of the migration (without the timestamp).
+
+### Migrations
+Do not update or remove an existing migration, as this can cause unexpected issues with local and production data. All database schema changes must be made in a new migration.
 
 ---
 
