@@ -1,7 +1,7 @@
 ## Pre-Requisites
 - [ ] Yes, I updated [Authors.md](../blob/main/Authors.md) **OR** this is not my first contribution
 - [ ] Yes, I included and/or modified tests to cover relevent code **OR** my change is non-technical
-- [ ] Yes, I wrote this code entirely myself **OR** I properly attributed these changes in [Third Party Notices](../THIRD-PARTY-NOTICES.txt)
+- [ ] Yes, I wrote this code entirely myself **OR** I properly attributed these changes in [Third Party Notices](../blob/main/THIRD-PARTY-NOTICES.txt)
 
 ## Description of Changes
 <!-- Enter a description of what this PR adds/changes -->
