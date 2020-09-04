@@ -53,3 +53,5 @@ Do not update or remove an existing migration, as this can cause unexpected issu
 
 # Contributing
 Interested in contributing to the project? Check out our [Contributing Guidelines](./.github/CONTRIBUTING.md).
+
+Just a test
