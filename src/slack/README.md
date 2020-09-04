@@ -8,6 +8,7 @@ Before you deploy your Hangar, follow these steps to generate secrets needed for
   - Under '_Scopes_' --> '_Bot Token Scopes_' click `Add an OAuth Scope` and add the following scope:
     - `im:history`
     - `im:write`
+    - `mpim:write`
     - `users:read`
     - `chat:write`
 - Using the sidebar, navigate to the "_App Home_" and enable your bot
