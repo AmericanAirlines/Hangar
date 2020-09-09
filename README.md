@@ -30,7 +30,6 @@ This app is still in the early stages of development and only some functionality
 ---
 
 # Local Development
-
 ## Postgres
 Hangar uses Postgres 11, so you'll need to set it up on your machine. If you don't have Postgres installed already, see the [installation](#installation) section below. 
 
