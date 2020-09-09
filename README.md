@@ -38,7 +38,7 @@ Create a database (we suggest `hangar`, if you chose something else or are runni
 When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var will be used (and is automatically set in Heroku when an associated service is connected to your app).
 
 ### Installation
-During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)]), you will be prompted to create a password - make sure to use something you'll remember.
+During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)), you will be prompted to set a password - make sure to use something you'll remember.
 
 ## Starting the App
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
