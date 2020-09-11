@@ -22,7 +22,7 @@ At this point, you can deploy and start your Hangar app by clicking on the `Depl
 
 ## After Deploying Hangar
 Once your Hangar app is up and running, use it's URL for the following steps:
-- Using the sidebar, navigate to "_Interactive Components_" and enable them
+- Using the sidebar, navigate to "_Interactivity & Shortcuts_" and enable them
   - For the `Request URL` field, use your Hangar app's URL and then append `/slack/events`
 - Using the sidebar, navigate to "_Event Subscriptions_" and enable them
   - For the `Request URL` field, use your Hangar app's URL and then append `/slack/events`
