@@ -42,7 +42,7 @@ During the installation process (if you follow the steps on [postgresql.org](htt
 
 ## Starting the App
 
-If NODE is not already installed, to use the Hangar you first need to download it from [here](https://nodejs.org/en/) Be sure to use the version v12.18.3 LTS. Hangar now only supports v12.x. 
+Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 12.x. If you decide to use another version of Node such as 13.x or 14.x, you may experience unexpected issues.
 
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
 
