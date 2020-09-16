@@ -30,6 +30,10 @@ This app is still in the early stages of development and only some functionality
 ---
 
 # Local Development
+
+##  Node
+Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 12.x. If you decide to use another version of Node such as 13.x or 14.x, you may experience unexpected issues.
+
 ## Postgres
 Hangar uses Postgres 11, so you'll need to set it up on your machine. If you don't have Postgres installed already, see the [installation](#installation) section below. 
 
