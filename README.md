@@ -31,14 +31,21 @@ This app is still in the early stages of development and only some functionality
 
 # Local Development
 ## Postgres
-Hangar uses Postgres 11, so you'll need to set it up on your machine. If you don't have Postgres installed already, see the [installation](#installation) section below. 
+Hangar uses Postgres 11, so you'll need to set it up on your machine. If you don't have Postgres installed already, see the [Installation and Use](#installation-and-use) section below. 
 
 Create a database (we suggest `hangar`, if you chose something else or are running your server on a different port, make sure to create a `DATABASE_URL` value in `.env` with your override URL) in the PostgreSQL 11 server (do not make a new server), and then run the app. If your Postgres server is protected by a password, you'll need to add `PGUSER` and `PGPASSWORD` to your `.env` file where `PGUSER` will be `postgres` and `PGPASSWORD` will be the Postgres server password entered during installation.
 
 When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var will be used (and is automatically set in Heroku when an associated service is connected to your app).
 
-### Installation
+### Installation and Use
+#### macOS
+We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
+
+#### Windows/macOS/Linux
 During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)), you will be prompted to set a password - make sure to use something you'll remember.
+
+#### Viewing/Editing the DB
+If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
 
 ## Starting the App
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
