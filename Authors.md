@@ -7,3 +7,4 @@
 - Charlie Albright (charlie.albright@aa.com)
 - Smit Shah (shah.smit@hotmail.com)
 - Austin Slobodnik (austinslobodnik@gmail.com)
+- Osman Findik (osmanfindik1@windowslive.com)
