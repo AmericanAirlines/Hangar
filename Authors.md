@@ -8,3 +8,4 @@
 - Smit Shah (shah.smit@hotmail.com)
 - Austin Slobodnik (austinslobodnik@gmail.com)
 - Osman Findik (osmanfindik1@windowslive.com)
+- Joseph Nalepka (josephwnalepka@gmail.com)
