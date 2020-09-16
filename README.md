@@ -30,7 +30,30 @@ This app is still in the early stages of development and only some functionality
 ---
 
 # Local Development
+<<<<<<< HEAD
 Hangar uses Postgres 11, so you'll need to set it up on your machine. During the installation process, you will be prompted to create a password. You need to create PGUSER and PGPASSWORD in your `.env` file where PGUSER will be `postgres` and PGPASSWORD will be the password you enter upon installation. Create a database (we suggest `hangar`, if you chose something else or are running your server on a different port, make sure to create a `DATABASE_URL` value in `.env` with your override URL) in the PostgreSQL 11 server, ensure it is not a seperate server, and then run the app. When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var will be used (and is automatically set in Heroku when an associated service is connected to your app). 
+=======
+
+## Node
+Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 12.x. If you decide to use another version of Node such as 13.x or 14.x, you may experience unexpected issues.
+
+## Postgres
+Hangar uses Postgres 11, so you'll need to set it up on your machine. If you don't have Postgres installed already, see the [Installation and Use](#installation-and-use) section below. 
+
+Create a database (we suggest `hangar`, if you chose something else or are running your server on a different port, make sure to create a `DATABASE_URL` value in `.env` with your override URL) in the PostgreSQL 11 server (do not make a new server), and then run the app. If your Postgres server is protected by a password, you'll need to add `PGUSER` and `PGPASSWORD` to your `.env` file where `PGUSER` will be `postgres` and `PGPASSWORD` will be the Postgres server password entered during installation.
+
+When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var will be used (and is automatically set in Heroku when an associated service is connected to your app).
+
+### Installation and Use
+#### macOS
+We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
+
+#### Windows/macOS/Linux
+During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)), you will be prompted to set a password - make sure to use something you'll remember.
+
+#### Viewing/Editing the DB
+If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
+>>>>>>> 4a6ac4c3093279a84a33747efe3535c2bc9be127
 
 ## Starting the App
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
