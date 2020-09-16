@@ -210,9 +210,12 @@ const AdminPage: NextComponentType = () => {
               </button>
               {lastPop && (
                 <div className="alert alert-info mt-3">
-                  {lastPop.userNotified
-                    ? `${lastPop.supportRequest.name} has been notified to come over`
-                    : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`}
+                  {
+                  !(lastPop.supportRequest === null) ?  
+                    (lastPop.userNotified
+                      ? `${lastPop.supportRequest.name} has been notified to come over`
+                      : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`)
+                    : 'It appears you are trying to access a support request that does not exist!'}
                 </div>
               )}
               {requests.length === 0 ? (
