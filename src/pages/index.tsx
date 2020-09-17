@@ -211,7 +211,7 @@ const AdminPage: NextComponentType = () => {
               {lastPop && (
                 <div className="alert alert-info mt-3">
                   {
-                  !(lastPop.supportRequest === null) ?  
+                  (lastPop.supportRequest !== null) ?  
                     (lastPop.userNotified
                       ? `${lastPop.supportRequest.name} has been notified to come over`
                       : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`)
