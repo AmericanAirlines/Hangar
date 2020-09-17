@@ -96,7 +96,6 @@ This project uses GitHub Secrets which ensure that certain environment variables
 
 The secret in regards to CodeCov should be named `CODECOV_TOKEN`, and the value of this token will be the `Upload Token` generated when linking CodeCov to your Hangar repo. Secret values can also be updated in the secrets tab.
 
-When using the CodeCov bash uploader with the `-t` option, refer to the token name as `CODECOV_TOKEN`. The token is also referenced in the github workflow as `secrets.CODECOV_TOKEN`.
 
 ---
 
