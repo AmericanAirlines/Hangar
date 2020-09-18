@@ -19,6 +19,17 @@ function register(bolt: App): void {
       logger.error('Something went wrong messaging the user...', err);
     }
   });
+
+  bolt.event('app_mention', ({ event, say }) => {
+    console.log(event);
+    const { text, user } = event;
+    say(`
+
+Hello, <@${user}>! 
+Welcome to Hangar developed by American Airlines.
+This app is a great way to show your skills.
+To use the bot you can just simply send a message to the bot it will respond with a Dashboard that has all the functionality that you will need. :tada:`);
+  });
 }
 
 export default register;
