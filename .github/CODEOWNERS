@@ -1,7 +1,4 @@
-# To lookup more information on an owner, visit:
-# https://ghe.aa.com/{USERNAME}
-# ... where "{USERNAME}" is the user's GitHub username.
+# To lookup more information on an owner, visit: https://github.com/orgs/AmericanAirlines/teams/hangar-maintainers
 
 # Project owners
-# John Kahn, Spencer Kaiser, Melinda Malmgren
-* @johnkahn @spencerkaiser @MelindaMalmgren
+* @AmericanAirlines/hangar-maintainers

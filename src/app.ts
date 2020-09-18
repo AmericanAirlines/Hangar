@@ -12,8 +12,6 @@ import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
 
 export const app = express();
-const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
-const nextHandler = nextApp.getRequestHandler();
 
 let appLoading = true;
 
@@ -65,16 +63,19 @@ const initSlack = async (): Promise<void> => {
 };
 
 const initNext = async (): Promise<void> => {
-  if (process.env.NODE_ENV !== 'test') {
-    await nextApp.prepare();
-    app.get(['/'], requireAuth(true), (req, res) => nextHandler(req, res));
-    app.get('*', (req, res) => nextHandler(req, res));
-  }
+  const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
+  const nextHandler = nextApp.getRequestHandler();
+  await nextApp.prepare();
+  app.get(['/'], requireAuth(true), (req, res) => nextHandler(req, res));
+  app.get('*', (req, res) => nextHandler(req, res));
 };
 
 export const init = async (): Promise<void> => {
   await Promise.all([initDatabase(), initSlack()]);
-  await initNext();
+
+  if (process.env.NODE_ENV !== 'test') {
+    await initNext();
+  }
 
   appLoading = false;
 };
