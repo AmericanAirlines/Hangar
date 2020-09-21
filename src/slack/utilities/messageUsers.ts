@@ -1,6 +1,6 @@
 import { app } from '..';
 import logger from '../../logger';
-import getRequiredEnvVar from '../../utils/getRequiredEnvVar';
+import getRequiredEnvVar from '../../utilities/getRequiredEnvVar';
 import { DmOpenResult } from '../types';
 
 const token = getRequiredEnvVar('SLACK_BOT_TOKEN');

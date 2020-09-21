@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 import 'jest';
-import getRequiredEnvVar from '../../utils/getRequiredEnvVar';
+import getRequiredEnvVar from '../../utilities/getRequiredEnvVar';
 import logger from '../../logger';
 
 const processExitSpy = jest.spyOn(process, 'exit');

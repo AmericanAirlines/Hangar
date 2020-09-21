@@ -1,6 +1,6 @@
 import { App, AuthorizeResult, ExpressReceiver, LogLevel } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
-import getRequiredEnvVar from '../utils/getRequiredEnvVar';
+import getRequiredEnvVar from '../utilities/getRequiredEnvVar';
 import actions from './actions';
 import events from './events';
 import views from './views';

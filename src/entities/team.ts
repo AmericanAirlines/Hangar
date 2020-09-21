@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateResult } from 'typeorm';
-import { genHash } from '../utils/genHash';
+import { genHash } from '../utilities/genHash';
 
 // TODO: Enforce only one team registered per person
 @Entity()
