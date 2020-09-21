@@ -91,6 +91,13 @@ This project uses GitHub Actions for Continuous Integration and leverages Heroku
 
 If you fork this project, deploy your app using the `Deploy to Heroku` button above, then navigate to the `Deploy` tab of your app in Heroku and configure Continuous Deployment as relevant for your app.
 
+## Github Secrets
+This project uses GitHub Secrets which ensure that certain environment variables are encrypted and securely stored for use in GitHub Actions. In order to create a secret, go to the settings tab in your GitHub Repository, and click on the secrets tab. Here you can set a secret by clicking `New Secret` and adding the secret name in addition to its value. Within workflows, the values can be utilizes with the following syntax: `${{ secrets.YOUR_SECRET }}`.
+
+### CodeCov
+The secret in used for CodeCov should be named `CODECOV_TOKEN`, and the value of this token will be the `Upload Token` generated when linking CodeCov to your Hangar repo. Secret values can also be updated in the secrets tab.
+
+If you need help setting up CodeCov, instructions to do so can be found at [the CodeCov website](https://docs.codecov.io/docs/quick-start).
 ---
 
 # Contributing
