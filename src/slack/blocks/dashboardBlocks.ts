@@ -1,12 +1,5 @@
 import { KnownBlock } from '@slack/types';
-import {
-  registerTeamActionId,
-  subscribeActionId,
-  unsubscribeActionId,
-  ideaPitchRequestActionId,
-  technicalRequestActionId,
-  ignoreActionId,
-} from '../constants';
+import { actionIds } from '../constants';
 import openSourceBlock from './openSourceFooter';
 
 const challengeUrl = process.env.CHALLENGE_URL;
@@ -40,7 +33,7 @@ const challengeBlock: KnownBlock = {
       text: 'Challenge Info',
     },
     url: challengeUrl,
-    action_id: ignoreActionId,
+    action_id: actionIds.ignore,
   },
 };
 
@@ -57,7 +50,7 @@ const subscribeBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Subscribe',
     },
-    action_id: subscribeActionId,
+    action_id: actionIds.subscribe,
   },
 };
 
@@ -73,7 +66,7 @@ const unsubscribeBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Unsubscribe',
     },
-    action_id: unsubscribeActionId,
+    action_id: actionIds.unsubscribe,
   },
 };
 
@@ -90,7 +83,7 @@ const ideaPitchRequestBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Join Idea Pitch Queue',
     },
-    action_id: ideaPitchRequestActionId,
+    action_id: actionIds.joinIdeaPitchRequestQueue,
   },
 };
 
@@ -106,7 +99,7 @@ const technicalRequestBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Join Tech Support Queue',
     },
-    action_id: technicalRequestActionId,
+    action_id: actionIds.joinTechnicalRequestQueue,
   },
 };
 
@@ -122,7 +115,7 @@ const teamRegistrationBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Register',
     },
-    action_id: registerTeamActionId,
+    action_id: actionIds.registerTeam,
   },
 };
 

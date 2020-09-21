@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, BeforeInsert, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import logger from '../logger';
-import { genHash } from '../utilities/genHash';
+import { genHash } from '../utils/genHash';
 
 export enum SupportRequestStatus {
   Pending = 'Pending',
