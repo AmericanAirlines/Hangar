@@ -20,5 +20,4 @@ function register(bolt: App): void {
     }
   });
 }
-
 export default register;
