@@ -1,14 +1,13 @@
 import { BlockAction, Middleware, SlackActionMiddlewareArgs } from '@slack/bolt';
 import { getDashboardContext } from '../utilities/getDashboardContext';
 import { Subscriber } from '../../entities/subscriber';
-import dashboardBlocks from '../blocks/dashboardBlocks';
-import { app } from '..';
-import logger from '../../logger';
+import { openAlertModal } from '../utilities/openAlertModal';
+import updateHomeTabView from '../utilities/updateHomeTabView';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
 
-export const unsubscribe: Middleware<SlackActionMiddlewareArgs<BlockAction>> = async ({ ack, say, context, body }) => {
+export const unsubscribe: Middleware<SlackActionMiddlewareArgs<BlockAction>> = async ({ ack, context, body }) => {
   ack();
   const slackId = body.user.id;
   const dashboardContext = await getDashboardContext(body.user.id);
@@ -25,17 +24,9 @@ export const unsubscribe: Middleware<SlackActionMiddlewareArgs<BlockAction>> = a
     dashboardContext.isSubscribed = false;
   }
 
-  try {
-    await app.client.chat.update({
-      token: context.botToken,
-      ts: body.message.ts,
-      channel: body.channel.id,
-      text: '',
-      blocks: dashboardBlocks(dashboardContext),
-    });
-  } catch (err) {
-    logger.error('Unable to update original message in Slack', err);
-  }
-
-  say("You've been unsubscribed. You can subscribe again at any time if you miss us.");
+  await openAlertModal(context.botToken, body.trigger_id, {
+    title: "You've been unsubscribed",
+    text: 'You can subscribe again at any time if you miss us.',
+  });
+  await updateHomeTabView(slackId);
 };
