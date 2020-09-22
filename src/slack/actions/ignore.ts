@@ -1,16 +1,9 @@
-import { App } from '@slack/bolt';
-import { ignoreActionId } from '../constants';
+import { Middleware, SlackActionMiddlewareArgs, SlackAction } from '@slack/bolt';
+import logger from '../../logger';
 
-// Ignore snake_case types from @slack/bolt
-/* eslint-disable @typescript-eslint/camelcase */
-
-// Anything with this action_id should be ignored
-//  Ack the request and do nothing
-
-function register(bolt: App): void {
-  bolt.action({ action_id: ignoreActionId }, async ({ ack }) => {
-    ack();
-  });
-}
-
-export default register;
+export const ignore: Middleware<SlackActionMiddlewareArgs<SlackAction>> = async ({ ack }) => {
+  // Anything with this action_id should be ignored
+  // Ack the request and do nothing
+  logger.debug('Event ignored');
+  ack();
+};

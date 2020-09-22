@@ -1,16 +1,19 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { App } from '@slack/bolt';
+import { actionIds } from '../constants';
 import logger from '../../logger';
-import registerTeam from './registerTeam';
-import ignore from './ignore';
-import subscribe from './subscribe';
-import unsubscribe from './unsubscribe';
-import supportRequest from './supportRequest';
+import { ignore } from './ignore';
+import { registerTeam } from './registerTeam';
+import { subscribe } from './subscribe';
+import { unsubscribe } from './unsubscribe';
+import { supportRequest } from './supportRequest';
 
-export default function register(app: App): void {
+export default function actions(bolt: App): void {
   logger.info('Registering action listeners');
-  registerTeam(app);
-  ignore(app);
-  subscribe(app);
-  unsubscribe(app);
-  supportRequest(app);
+  // Register all action listeners
+  bolt.action({ action_id: actionIds.ignore }, ignore);
+  bolt.action({ action_id: actionIds.registerTeam }, registerTeam);
+  bolt.action({ action_id: actionIds.subscribe }, subscribe);
+  bolt.action({ action_id: actionIds.unsubscribe }, unsubscribe);
+  bolt.action({ action_id: RegExp(`${actionIds.joinIdeaPitchRequestQueue}|${actionIds.joinTechnicalRequestQueue}`) }, supportRequest);
 }

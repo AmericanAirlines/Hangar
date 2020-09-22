@@ -1,10 +1,9 @@
 import { App } from '@slack/bolt';
-import logger from '../../logger';
-import message from './message';
-import event from './event';
+import { messageRecieved } from './messageRecieved';
+import { appHomeOpened } from './appHomeOpened';
 
-export default function register(app: App): void {
-  logger.info('Registering event listeners');
-  message(app);
-  event(app);
+export default function views(bolt: App): void {
+  // Register all action listeners
+  bolt.message(messageRecieved);
+  bolt.event('app_home_opened', appHomeOpened);
 }

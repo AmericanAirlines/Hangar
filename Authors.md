@@ -9,3 +9,4 @@
 - Austin Slobodnik (austinslobodnik@gmail.com)
 - Osman Findik (osmanfindik1@windowslive.com)
 - Dhruv Tailor (dhruv6198@gmail.com)
+- Maha Siddique (mxs151731@utdallas.edu)
