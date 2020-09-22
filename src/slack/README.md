@@ -17,7 +17,7 @@ Before you deploy your Hangar, follow these steps to generate secrets needed for
 - Using the sidebar, navigate to "_Basic Information_", scroll down, and copy the `Signing Secret` value and write it down somewhere safe
 - Using the sidebar, navigate to "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and write it down somewhere safe
-- Using the sidebar, navidate to "_Home Tab_", scroll to "Show Tabs", and enable "Home Tab"
+- Using the sidebar, navigate to "_Home Tab_", scroll to "Show Tabs", and enable "Home Tab"
 
 At this point, you can deploy and start your Hangar app by clicking on the `Deploy to Heroku` button in your repo. You will be prompted for the values above and once it's deployed, complete the section below to complete your configuration.
 
