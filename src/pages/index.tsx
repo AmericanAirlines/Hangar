@@ -58,7 +58,7 @@ const AdminPage: NextComponentType = () => {
 
     const timer = setInterval(() => {
       setLastUpdateEpoch(Date.now());
-    }, 3000);
+    }, 10000);
 
     return (): void => {
       clearInterval(timer);
