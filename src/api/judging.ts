@@ -24,6 +24,10 @@ judging.get('/results', async (req, res) => {
 
     Object.values(results).forEach((teamResult) => {
       const matchingTeam = teams.find((team) => team.id === teamResult.id);
+      if (!matchingTeam) {
+        logger.crit("Somehow we don't have a matchingTeam");
+        throw new Error('matchingTeam not found');
+      }
       const ideaPitches = requests.filter(
         (request) => request.type === SupportRequestType.IdeaPitch && matchingTeam.members.includes(request.slackId),
       );

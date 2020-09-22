@@ -8,6 +8,7 @@ import { sendUpdateMessage } from './sendUpdateMessage';
 import { judging } from './judging';
 import { config } from './config';
 import { admin } from './admin';
+import logger from '../logger';
 
 const api = express();
 
@@ -19,11 +20,14 @@ api.get('/', (_req, res) => {
 
 api.post('/judge', async (_req, res) => {
   const judge = await new Judge().save();
-
+  if (!judge.id) {
+    logger.crit("Somehow we don't have a judge id");
+    throw new Error('Judge Id not found');
+  }
   res.send(judge.id.toString());
 });
 
-const getJudgeTeams = async (judge: Judge): Promise<{ currentTeam: Team; previousTeam: Team }> => {
+const getJudgeTeams = async (judge: Judge): Promise<{ currentTeam?: Team; previousTeam?: Team }> => {
   const previousTeamId = judge.previousTeam;
 
   let currentTeam;
@@ -57,6 +61,10 @@ api.post('/vote', async (req, res) => {
   }
 
   const judge = await Judge.findOne(req.body.id);
+  if (!judge) {
+    logger.crit("Somehow we don't have a judge for the vote being cast");
+    throw new Error('Judge not found');
+  }
 
   if (req.body.currentTeamChosen === null || req.body.currentTeamChosen === undefined) {
     await judge.continue();
@@ -74,6 +82,10 @@ api.post('/skip', async (req, res) => {
   }
 
   const judge = await Judge.findOne(req.body.id);
+  if (!judge) {
+    logger.crit("Somehow we don't have a judge to skip");
+    throw new Error('Judge not found');
+  }
 
   await judge.skip();
 

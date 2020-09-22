@@ -31,16 +31,16 @@ export class SupportRequest extends BaseEntity {
   }
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | undefined;
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date | undefined;
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date | undefined;
 
   @Column({ nullable: true })
-  movedToInProgressAt: Date;
+  movedToInProgressAt: Date | undefined;
 
   @Column({ nullable: false })
   slackId: string;
@@ -49,7 +49,7 @@ export class SupportRequest extends BaseEntity {
   name: string;
 
   @Column({ nullable: false, default: SupportRequestStatus.Pending, type: 'simple-enum', enum: SupportRequestStatus })
-  status: SupportRequestStatus;
+  status: SupportRequestStatus | undefined;
 
   @Column({ nullable: false, type: 'simple-enum', enum: SupportRequestType })
   type: SupportRequestType;
@@ -130,6 +130,11 @@ export class SupportRequest extends BaseEntity {
           .execute();
 
         await nextRequest.reload();
+
+        if (!result.affected) {
+          logger.crit("Somehow we don't have a result.affected");
+          throw new Error('result.affected not found');
+        }
 
         if (result.affected > 0 || nextRequest.syncHash === newHash) {
           return nextRequest;

@@ -9,11 +9,11 @@ export class Subscriber extends BaseEntity {
   }
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | undefined;
 
   @Column({ unique: true })
   slackId: string;
 
   @Column({ default: true })
-  isActive: boolean;
+  isActive: boolean | undefined;
 }

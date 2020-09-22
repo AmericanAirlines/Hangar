@@ -10,6 +10,7 @@
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["esnext", "esnext.asynciterable"],
+    "strict": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },

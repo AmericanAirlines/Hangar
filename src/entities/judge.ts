@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import logger from '../logger';
 import { JudgingVote } from './judgingVote';
 import { Team } from './team';
 
@@ -8,11 +9,11 @@ export class Judge extends BaseEntity {
     super();
 
     this.visitedTeams = [];
-    this.currentTeam = null;
+    this.currentTeam = undefined;
   }
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | undefined;
 
   @Column('simple-json')
   visitedTeams: number[];
@@ -25,7 +26,7 @@ export class Judge extends BaseEntity {
 
   async getNextTeam(): Promise<Team> {
     const newTeam = await Team.getNextAvailableTeamExcludingTeams(this.visitedTeams);
-    this.currentTeam = newTeam ? newTeam.id : null;
+    this.currentTeam = newTeam ? newTeam.id : undefined;
     await this.save();
     return newTeam;
   }
@@ -40,20 +41,32 @@ export class Judge extends BaseEntity {
   }
 
   async vote(currentTeamChosen?: boolean): Promise<void> {
+    if (!this.currentTeam || !currentTeamChosen) {
+      logger.crit("Somehow we don't have a currentTeamChosen");
+      throw new Error('Judge not found');
+    }
     // Create a new vote object with the outcome of the vote
     await new JudgingVote(this.visitedTeams[this.visitedTeams.length - 1], this.currentTeam, currentTeamChosen).save();
     await this.recordCurrentTeamAndSave();
   }
 
   async recordCurrentTeamAndSave(updatePrevious = true): Promise<void> {
+    if (!this.currentTeam) {
+      logger.crit("Somehow we don't have a currentTeamChosen");
+      throw new Error('Judge not found');
+    }
     this.visitedTeams.push(this.currentTeam);
     if (updatePrevious) {
       this.previousTeam = this.currentTeam;
     }
     const currentTeam = await Team.findOne(this.currentTeam);
+    if (!currentTeam) {
+      logger.crit("Somehow we don't have a currentTeam");
+      throw new Error('currentTeam not found');
+    }
     await currentTeam.decrementActiveJudgeCount();
     await currentTeam.incrementJudgeVisits();
-    this.currentTeam = null;
+    this.currentTeam = undefined;
     await this.save();
   }
 }

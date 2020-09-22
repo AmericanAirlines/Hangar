@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import shuffle from 'shuffle-array';
 import { Team } from './team';
+import logger from '../logger';
 
 export const insufficientVoteCountError = 'InsufficientVoteCount';
 
@@ -24,7 +25,7 @@ export class JudgingVote extends BaseEntity {
   }
 
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | undefined;
 
   @Column()
   previousTeam: number;
@@ -96,6 +97,10 @@ export class JudgingVote extends BaseEntity {
 
     orderedTeams.forEach((scoredTeam) => {
       const matchingTeam = teams.find((team) => team.id === scoredTeam.id);
+      if (!matchingTeam) {
+        logger.crit("Somehow we don't have a matchingTeam");
+        throw new Error('matchingTeam not found');
+      }
       teamResults.push({
         id: matchingTeam.id,
         name: matchingTeam.name,
@@ -142,6 +147,10 @@ export class JudgingVote extends BaseEntity {
         // Get team details for other team
         const otherTeamId = vote.currentTeam !== team.id ? vote.currentTeam : vote.previousTeam;
         const otherTeam = teams.find((teamToCompare) => teamToCompare.id === otherTeamId);
+        if (!otherTeam) {
+          logger.crit("Somehow we don't have a otherTeam");
+          throw new Error('otherTeam not found');
+        }
 
         // Remove that vote from the remaining votes
         remainingVotes.splice(votes.indexOf(vote), 1);
@@ -177,6 +186,10 @@ export class JudgingVote extends BaseEntity {
         }
       } else {
         const vote = remainingVotes.shift();
+        if (!vote) {
+          logger.crit("Somehow we don't have a vote");
+          throw new Error('vote not found');
+        }
 
         const currentTeamId = vote.currentTeam;
         const previousTeamId = vote.previousTeam;

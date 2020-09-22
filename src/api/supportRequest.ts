@@ -115,6 +115,10 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
+    if (!supportRequest) {
+      logger.crit("Somehow we don't have a supportRequest");
+      throw new Error('supportRequest not found');
+    }
     await messageUsers(
       [supportRequest.slackId],
       `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`,
