@@ -12,7 +12,6 @@ Before you deploy your Hangar, follow these steps to generate secrets needed for
     - `users:read`
     - `chat:write`
     - `app_mentions:read`
-    - `chat:write.customize`
     - `chat:write.public`
 
 - Using the sidebar, navigate to the "_App Home_" and enable your bot

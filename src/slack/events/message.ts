@@ -21,14 +21,9 @@ function register(bolt: App): void {
   });
 
   bolt.event('app_mention', ({ event, say }) => {
-    console.log(event);
-    const { text, user } = event;
+    const { user } = event;
     say(`
-
-Hello, <@${user}>! 
-Welcome to Hangar developed by American Airlines.
-This app is a great way to show your skills.
-To use the bot you can just simply send a message to the bot it will respond with a Dashboard that has all the functionality that you will need. :tada:`);
+Hey there, <@${user}> :wave: I can help your team with technical support, you can request to pitch your idea to our team, and I'll also be used for judging! To see all of the things I can help with, simply send me a message and I'll respond with a dashboard of functionality for the hackathon :tada:`);
   });
 }
 
