@@ -13,11 +13,11 @@ Before you deploy your Hangar, follow these steps to generate secrets needed for
     - `chat:write`
 - Using the sidebar, navigate to the "_App Home_" and enable your bot
   - Scroll to "_How Your App Displays_" and click "_Edit_" next to "_App Display Name_" (we reccommend using your company name as the app name, e.g., `American Airlines`/`@americanairlines` for the display name and username respectively)
+  - Scroll to "Show Tabs", and enable "Home Tab"
   - We also recommend enabling "Always Show My Bot as Online"
 - Using the sidebar, navigate to "_Basic Information_", scroll down, and copy the `Signing Secret` value and write it down somewhere safe
 - Using the sidebar, navigate to "_Install App_" and click "Reinstall App"
   - Once finished, copy the `Bot User OAuth Access Token` value and write it down somewhere safe
-- Using the sidebar, navigate to "_Home Tab_", scroll to "Show Tabs", and enable "Home Tab"
 
 At this point, you can deploy and start your Hangar app by clicking on the `Deploy to Heroku` button in your repo. You will be prompted for the values above and once it's deployed, complete the section below to complete your configuration.
 
