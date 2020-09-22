@@ -1,15 +1,22 @@
-// ACTIONS
-export const registerTeamActionId = 'registerTeam';
-export const ignoreActionId = 'ignore';
-export const subscribeActionId = 'subscribe';
-export const unsubscribeActionId = 'unsubscribe';
-export const ideaPitchRequestActionId = 'joinIdeaPitchRequestQueue';
-export const technicalRequestActionId = 'joinTechnicalRequestQueue';
+// ACTION IDS
+export const actionIds = {
+  ignore: 'ignore',
+  registerTeam: 'registerTeam',
+  subscribe: 'subscribe',
+  unsubscribe: 'unsubscribe',
+  joinIdeaPitchRequestQueue: 'joinIdeaPitchRequestQueue',
+  joinTechnicalRequestQueue: 'joinTechnicalRequestQueue',
+};
+
+// CALLBACK IDS
+export const callbackIds = {
+  registerTeamSubmitted: 'registerTeamSubmitted',
+};
 
 // VIEWS
 // Register Team View
 export const registerTeamViewConstants = {
-  viewId: 'registerTeamSubmission',
+  viewId: callbackIds.registerTeamSubmitted,
   fields: {
     teamMembers: 'teamMembers',
     teamName: 'teamName',

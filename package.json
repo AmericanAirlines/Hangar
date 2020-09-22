@@ -61,8 +61,8 @@
     "delay": "400"
   },
   "dependencies": {
-    "@slack/bolt": "^1.4.1",
-    "@slack/types": "^1.2.1",
+    "@slack/bolt": "^2.3.0",
+    "@slack/types": "^1.9.0",
     "@slack/web-api": "^5.3.0",
     "@slack/webhook": "^5.0.2",
     "body-parser": "^1.19.0",
@@ -72,7 +72,7 @@
     "express": "^4.16.4",
     "formik": "^2.1.2",
     "luxon": "^1.21.3",
-    "next": "^9.2.1",
+    "next": "^9.5.3",
     "npm-run-all": "^4.1.5",
     "pg": "^7.12.1",
     "react": "^16.11.0",
@@ -96,6 +96,7 @@
     "@types/shuffle-array": "0.0.28",
     "@types/sqlite3": "^3.1.5",
     "@types/supertest": "^2.0.8",
+    "@types/webpack": "^4.41.22",
     "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
