@@ -39,12 +39,26 @@ const AdminPage: NextComponentType = () => {
     },
   });
 
+  async function getAndSetCount(): Promise<void> {
+    const res = await fetch('/api/supportRequest/getCount');
+    if (!res.ok) {
+      setError(true);
+      return;
+    }
+
+    try {
+      setCounts(await res.json());
+    } catch (err) {
+      setError(true);
+    }
+  }
+
   React.useEffect(() => {
     formik.setFieldValue('adminName', window.localStorage.getItem(ADMIN_NAME_KEY));
 
     const timer = setInterval(() => {
       setLastUpdateEpoch(Date.now());
-    }, 30000);
+    }, 3000);
 
     return (): void => {
       clearInterval(timer);
@@ -71,22 +85,7 @@ const AdminPage: NextComponentType = () => {
       })(),
     );
 
-    promises.push(
-      (async (): Promise<void> => {
-        const res = await fetch('/api/supportRequest/getCount');
-
-        if (!res.ok) {
-          setError(true);
-          return;
-        }
-
-        try {
-          setCounts(await res.json());
-        } catch (err) {
-          setError(true);
-        }
-      })(),
-    );
+    promises.push(getAndSetCount());
 
     promises.push(
       (async (): Promise<void> => {
@@ -146,6 +145,7 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
+      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -162,6 +162,7 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
+      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
