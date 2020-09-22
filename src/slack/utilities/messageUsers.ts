@@ -1,18 +1,22 @@
-import { getWebClient } from '..';
+import { app } from '..';
 import logger from '../../logger';
-
+import getRequiredEnvVar from '../../utilities/getRequiredEnvVar';
 import { DmOpenResult } from '../types';
+
+const token = getRequiredEnvVar('SLACK_BOT_TOKEN');
 
 export default async function messageUsers(users: string[], message: string): Promise<void> {
   const errors: { [userId: string]: Error }[] = [];
   for (let i = 0; i < users.length; i += 1) {
     const user = users[i];
     try {
-      const dm = (await getWebClient().conversations.open({
+      const dm = (await app.client.conversations.open({
+        token,
         users: users[i],
       })) as DmOpenResult;
 
-      await getWebClient().chat.postMessage({
+      await app.client.chat.postMessage({
+        token,
         channel: dm.channel.id,
         text: message,
       });
