@@ -1,14 +1,13 @@
 import { BlockAction, Middleware, SlackActionMiddlewareArgs } from '@slack/bolt';
 import { Subscriber } from '../../entities/subscriber';
 import { getDashboardContext } from '../utilities/getDashboardContext';
-import dashboardBlocks from '../blocks/dashboardBlocks';
-import logger from '../../logger';
-import { app } from '..';
+import { openAlertModal } from '../utilities/openAlertModal';
+import updateHomeTabView from '../utilities/updateHomeTabView';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
 
-export const subscribe: Middleware<SlackActionMiddlewareArgs<BlockAction>> = async ({ ack, say, context, body }) => {
+export const subscribe: Middleware<SlackActionMiddlewareArgs<BlockAction>> = async ({ ack, context, body }) => {
   ack();
   const slackId = body.user.id;
   const dashboardContext = await getDashboardContext(body.user.id);
@@ -25,17 +24,9 @@ export const subscribe: Middleware<SlackActionMiddlewareArgs<BlockAction>> = asy
     dashboardContext.isSubscribed = true;
   }
 
-  try {
-    await app.client.chat.update({
-      token: context.botToken,
-      ts: body.message.ts,
-      channel: body.channel.id,
-      text: '',
-      blocks: dashboardBlocks(dashboardContext),
-    });
-  } catch (err) {
-    logger.error('Unable to update original message in Slack', err);
-  }
-
-  say("You've subscribed! Keep an eye out from direct messages sent from this bot.");
+  await openAlertModal(context.botToken, body.trigger_id, {
+    title: "You're Subscribed",
+    text: 'Keep an eye out from direct messages sent from this bot.',
+  });
+  await updateHomeTabView(slackId);
 };
