@@ -52,7 +52,7 @@ const initDatabase = async (): Promise<void> => {
 const initSlack = async (): Promise<void> => {
   try {
     await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test();
-    app.use(slackApp());
+    app.use(slackApp);
     logger.info('Slack setup successfully');
   } catch (err) {
     logger.error('Slack Bot Token is invalid', err);

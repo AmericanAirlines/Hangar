@@ -1,12 +1,5 @@
 import { KnownBlock } from '@slack/types';
-import {
-  registerTeamActionId,
-  subscribeActionId,
-  unsubscribeActionId,
-  ideaPitchRequestActionId,
-  technicalRequestActionId,
-  ignoreActionId,
-} from '../constants';
+import { actionIds } from '../constants';
 import openSourceBlock from './openSourceFooter';
 
 const challengeUrl = process.env.CHALLENGE_URL;
@@ -15,11 +8,19 @@ const challengeUrl = process.env.CHALLENGE_URL;
 /* eslint-disable @typescript-eslint/camelcase */
 
 const headerBlock: KnownBlock = {
+  type: 'header',
+  text: {
+    type: 'plain_text',
+    text: 'Welcome to Hangar',
+    emoji: true,
+  },
+};
+
+const introBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text:
-      "Hey there :wave: I'm a bot designed to provide you with resources for the hackathon! You can message me at any time to see the options below.",
+    text: "Hey there :wave: I'm a bot designed to provide you with resources for the hackathon!",
   },
 };
 
@@ -40,7 +41,7 @@ const challengeBlock: KnownBlock = {
       text: 'Challenge Info',
     },
     url: challengeUrl,
-    action_id: ignoreActionId,
+    action_id: actionIds.ignore,
   },
 };
 
@@ -57,7 +58,7 @@ const subscribeBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Subscribe',
     },
-    action_id: subscribeActionId,
+    action_id: actionIds.subscribe,
   },
 };
 
@@ -73,7 +74,7 @@ const unsubscribeBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Unsubscribe',
     },
-    action_id: unsubscribeActionId,
+    action_id: actionIds.unsubscribe,
   },
 };
 
@@ -90,7 +91,7 @@ const ideaPitchRequestBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Join Idea Pitch Queue',
     },
-    action_id: ideaPitchRequestActionId,
+    action_id: actionIds.joinIdeaPitchRequestQueue,
   },
 };
 
@@ -106,7 +107,7 @@ const technicalRequestBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Join Tech Support Queue',
     },
-    action_id: technicalRequestActionId,
+    action_id: actionIds.joinTechnicalRequestQueue,
   },
 };
 
@@ -122,7 +123,7 @@ const teamRegistrationBlock: KnownBlock = {
       type: 'plain_text',
       text: 'Register',
     },
-    action_id: registerTeamActionId,
+    action_id: actionIds.registerTeam,
   },
 };
 
@@ -136,8 +137,8 @@ But seriously, I don't have anything else to show you at the moment. Message me 
   },
 };
 
-function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
-  const blocks: KnownBlock[] = [headerBlock, dividerBlock];
+export function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
+  const blocks: KnownBlock[] = [headerBlock, introBlock, dividerBlock];
   const defaultBlocksLengh = blocks.length;
 
   if (challengeUrl) {
@@ -155,9 +156,8 @@ function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
     blocks.push(comingSoonBlock);
   }
 
+  blocks.push(dividerBlock);
   blocks.push(openSourceBlock);
 
   return blocks;
 }
-
-export default dashboardBlocks;
