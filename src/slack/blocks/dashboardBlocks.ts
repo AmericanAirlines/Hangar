@@ -8,11 +8,19 @@ const challengeUrl = process.env.CHALLENGE_URL;
 /* eslint-disable @typescript-eslint/camelcase */
 
 const headerBlock: KnownBlock = {
+  type: 'header',
+  text: {
+    type: 'plain_text',
+    text: 'Welcome to Hangar',
+    emoji: true,
+  },
+};
+
+const introBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text:
-      "Hey there :wave: I'm a bot designed to provide you with resources for the hackathon! You can message me at any time to see the options below.",
+    text: "Hey there :wave: I'm a bot designed to provide you with resources for the hackathon!",
   },
 };
 
@@ -129,8 +137,8 @@ But seriously, I don't have anything else to show you at the moment. Message me 
   },
 };
 
-function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
-  const blocks: KnownBlock[] = [headerBlock, dividerBlock];
+export function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
+  const blocks: KnownBlock[] = [headerBlock, introBlock, dividerBlock];
   const defaultBlocksLengh = blocks.length;
 
   if (challengeUrl) {
@@ -148,9 +156,8 @@ function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
     blocks.push(comingSoonBlock);
   }
 
+  blocks.push(dividerBlock);
   blocks.push(openSourceBlock);
 
   return blocks;
 }
-
-export default dashboardBlocks;
