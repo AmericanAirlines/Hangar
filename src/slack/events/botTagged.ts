@@ -6,10 +6,9 @@ export const botTagged: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = as
 
   try {
     say(`
-    Hey there, :wave: I can help your team with technical support, you can request to pitch your idea to our team, and I'll also be used for judging! To see all of the things I can help with, simply send me a message and I'll respond with a dashboard of functionality for the hackathon :tada:`);
+    Hey there :wave: I can help your team during the hackathon! To see all of the things I can help with, simply click/tap my name and chose `Go to App` :tada:`);
   
   } catch (error) {
-    logger.error('Something went wrong tagging the bot: ', error);
+    logger.error('Something went wrong responding to a bot mention: ', error);
   }
 }
-
