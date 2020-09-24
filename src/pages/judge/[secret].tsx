@@ -13,7 +13,7 @@ const judge = (): JSX.Element => {
   const [startJudging, setStartJudging] = React.useState(false);
   const [error, setError] = React.useState<string | null>();
   const [loading, setLoading] = React.useState(true);
-  const [judgeId, setJudgeId] = React.useState<string | null>('');
+  const [judgeId, setJudgeId] = React.useState<string>('');
   const [currentTeam, setCurrentTeam] = React.useState<Team | null>(null);
   const [previousTeam, setPreviousTeam] = React.useState<Team | null>(null);
 
