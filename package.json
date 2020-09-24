@@ -21,6 +21,7 @@
     "test:changed": "jest -o",
     "test:sync": "npm run test -- --runInBand",
     "clean": "rimraf dist .next",
+    "tsc": "tsc --pretty",
     "typeorm": "ts-node --skip-project --compiler-options \"{\\\"experimentalDecorators\\\": true, \\\"emitDecoratorMetadata\\\": true, \\\"esModuleInterop\\\": true}\" ./node_modules/typeorm/cli.js",
     "tunnel": "ngrok http 3000"
   },
