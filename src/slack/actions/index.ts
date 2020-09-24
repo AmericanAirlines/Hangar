@@ -11,9 +11,9 @@ import { supportRequest } from './supportRequest';
 export default function actions(bolt: App): void {
   logger.info('Registering action listeners');
   // Register all action listeners
-  bolt.action({ action_id: actionIds.ignore }, ignore);
-  bolt.action({ action_id: actionIds.registerTeam }, registerTeam);
-  bolt.action({ action_id: actionIds.subscribe }, subscribe);
-  bolt.action({ action_id: actionIds.unsubscribe }, unsubscribe);
-  bolt.action({ action_id: RegExp(`${actionIds.joinIdeaPitchRequestQueue}|${actionIds.joinTechnicalRequestQueue}`) }, supportRequest);
+  bolt.action(actionIds.ignore, ignore);
+  bolt.action(actionIds.registerTeam, registerTeam);
+  bolt.action(actionIds.subscribe, subscribe);
+  bolt.action(actionIds.unsubscribe, unsubscribe);
+  bolt.action(RegExp(`${actionIds.joinIdeaPitchRequestQueue}|${actionIds.joinTechnicalRequestQueue}`), supportRequest);
 }

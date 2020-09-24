@@ -17,9 +17,9 @@ export interface ViewSubmitInputFieldState {
 }
 
 export interface ViewSubmitStateValues {
-  [blockId: string]: ViewSubmitInputFieldState;
+  [blockId: string]: ViewSubmitInputFieldState | undefined;
 }
 
 export interface ViewSubmitState {
-  values: { [actionId: string]: ViewSubmitStateValues };
+  values: { [actionId: string]: ViewSubmitStateValues | undefined };
 }

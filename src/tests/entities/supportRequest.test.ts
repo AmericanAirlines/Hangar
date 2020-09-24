@@ -104,9 +104,9 @@ describe('support request', () => {
     expect(nextRequest.status).toBe(SupportRequestStatus.InProgress);
   });
 
-  it('if a request cannot be found, null will be returned', async () => {
-    const nextRequest = await SupportRequest.getNextSupportRequest();
-    expect(nextRequest).toBeNull();
+  it('if a request cannot be found, an error will be thrown', async () => {
+    const nextRequestPromise = SupportRequest.getNextSupportRequest();
+    expect(nextRequestPromise).rejects.toThrow();
   });
 
   it('can handle several simultaneous requests and get unique values', async () => {

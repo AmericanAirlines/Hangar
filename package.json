@@ -8,7 +8,7 @@
     "start": "node dist/index.js",
     "start:watch": "nodemon -w dist -e js dist/index.js",
     "build": "run-s build:ts build:next",
-    "build:ts": "tsc -p src/ --pretty",
+    "build:ts": "tsc -p tsconfig.server.json --pretty",
     "build:next": "next build",
     "build:watch": "npm run build:ts -- -w",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",

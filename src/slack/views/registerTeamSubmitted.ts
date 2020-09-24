@@ -4,25 +4,27 @@ import { registerTeamViewConstants } from '../constants';
 import { registeredTeamSummary } from '../blocks/registerTeam';
 import logger from '../../logger';
 import { Team } from '../../entities/team';
-import { ViewSubmitState, DmOpenResult, ViewSubmitInputFieldState } from '../types';
+import { ViewSubmitState, DmOpenResult } from '../types';
 import { Config } from '../../entities/config';
 import postAdminNotification from '../utilities/postAdminNotification';
 
+function retrieveViewValuesForField(view: ViewOutput, actionId: string, type: 'multiUsersSelect', optional?: boolean): string[] | undefined;
+function retrieveViewValuesForField(view: ViewOutput, actionId: string, type: 'plainTextInput', optional?: boolean): string | undefined;
 function retrieveViewValuesForField(
   view: ViewOutput,
   actionId: string,
   type: 'multiUsersSelect' | 'plainTextInput',
   optional = false,
-): string | string[] {
+): string | string[] | undefined {
   const { values } = view.state as ViewSubmitState;
-  let blockData: ViewSubmitInputFieldState;
-  try {
-    blockData = values[actionId][actionId];
-  } catch (err) {
-    if (optional) {
-      return null;
+  const blockData = values[actionId]?.[actionId];
+
+  if (!blockData) {
+    if (!optional) {
+      logger.error(`Failed to parse field from view submission. { value: "${values[actionId]}", actionId: "${actionId}" }`);
     }
-    logger.error('Failed to parse field from view submission:', err);
+
+    return undefined;
   }
 
   switch (type) {
@@ -31,13 +33,13 @@ function retrieveViewValuesForField(
     case 'plainTextInput':
       return blockData.value;
     default:
-      return null;
+      return undefined;
   }
 }
 
 export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmitAction>> = async ({ ack, context, view, body }) => {
   const registeringUser = body.user.id;
-  const tableNumber = parseInt(retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput') as string, 10);
+  const tableNumber = parseInt(retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput') ?? '', 10);
 
   if (Number.isNaN(tableNumber)) {
     ack({

@@ -23,7 +23,7 @@ api.post('/judge', async (_req, res) => {
   res.send(judge.id.toString());
 });
 
-const getJudgeTeams = async (judge: Judge): Promise<{ currentTeam: Team; previousTeam: Team }> => {
+const getJudgeTeams = async (judge: Judge): Promise<{ currentTeam?: Team; previousTeam?: Team }> => {
   const previousTeamId = judge.previousTeam;
 
   let currentTeam;
@@ -56,7 +56,7 @@ api.post('/vote', async (req, res) => {
     return;
   }
 
-  const judge = await Judge.findOne(req.body.id);
+  const judge = await Judge.findOneOrFail(req.body.id);
 
   if (req.body.currentTeamChosen === null || req.body.currentTeamChosen === undefined) {
     await judge.continue();
@@ -73,7 +73,7 @@ api.post('/skip', async (req, res) => {
     return;
   }
 
-  const judge = await Judge.findOne(req.body.id);
+  const judge = await Judge.findOneOrFail(req.body.id);
 
   await judge.skip();
 

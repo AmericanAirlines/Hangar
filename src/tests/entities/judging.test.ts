@@ -99,7 +99,8 @@ describe('judging logistics', () => {
 
     expect(judge.visitedTeams).toContain(team.id);
 
-    const dbJudge = await Judge.findOne(judge.id);
+    const dbJudge = await Judge.findOneOrFail(judge.id);
+
     expect(dbJudge.visitedTeams).toEqual(judge.visitedTeams);
   });
 
@@ -180,8 +181,8 @@ describe('score calculation', () => {
 
     // Now that judging has ended, validate results
     const judgedTeams = await Team.find();
-    let minVisits: number;
-    let maxVisits: number;
+    let minVisits: number | undefined;
+    let maxVisits: number | undefined;
 
     judgedTeams.forEach((judgedTeam) => {
       if (minVisits === undefined || judgedTeam.judgeVisits < minVisits) {
@@ -192,9 +193,11 @@ describe('score calculation', () => {
       }
     });
 
+    expect(minVisits).toBeDefined();
+    expect(maxVisits).toBeDefined();
     expect(minVisits).toBeGreaterThan(0);
     expect(maxVisits).toBeLessThan(judges.length);
-    expect(maxVisits - minVisits).toBeLessThanOrEqual(1);
+    expect((maxVisits ?? 999) - (minVisits ?? 0)).toBeLessThanOrEqual(1);
   });
 
   it('scoring works as expected without judge volatility and full visitation', async (done) => {

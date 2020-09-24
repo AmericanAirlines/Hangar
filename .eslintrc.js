@@ -42,5 +42,11 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
       },
     },
+    {
+      files: ['src/**/*.test.ts'],
+      rules: {
+        '@typescript-eslint/ban-ts-ignore': 'off',
+      },
+    },
   ],
 };

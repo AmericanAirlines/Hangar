@@ -9,7 +9,7 @@ interface ModalOptions {
 }
 
 export async function openAlertModal(token: string, trigger_id: string, options: ModalOptions): Promise<void> {
-  if (options?.title.length > 25) {
+  if ((options.title?.length ?? 0) > 25) {
     throw new Error('Title must be 25 characters or less');
   }
 

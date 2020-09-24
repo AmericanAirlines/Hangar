@@ -53,7 +53,7 @@ describe('judging', () => {
         const result: UpdateResult = {
           affected: 0,
           raw: undefined,
-          generatedMaps: undefined,
+          generatedMaps: [],
         };
         return Promise.resolve(result);
       },
@@ -61,13 +61,15 @@ describe('judging', () => {
 
     Team.updateSelectedTeam = mockMethod;
 
-    let newTeam: Team;
+    let newTeam: Team | undefined;
+
     try {
       newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
       // FAILURE
     } catch (err) {
       // SUCCESS
     }
+
     expect(newTeam).toBeUndefined();
     expect(mockMethod.mock.calls.length).toBe(5);
   });

@@ -11,6 +11,8 @@ describe('getRequiredEnvVar', () => {
     jest.resetModules();
     jest.resetAllMocks();
     processExitSpy.mockImplementation();
+
+    // @ts-ignore: Overriding NODE_ENV for tests
     process.env.NODE_ENV = 'test';
   });
 
@@ -24,15 +26,21 @@ describe('getRequiredEnvVar', () => {
 
   it('will exit the process if a required var is not set in a non-test environment', async () => {
     const varName = 'SOMETHING_NOT_SET';
+
+    // @ts-ignore: Overriding NODE_ENV for tests
     process.env.NODE_ENV = 'development';
+
     getRequiredEnvVar(varName);
     expect(processExitSpy).toBeCalled();
     expect(loggerCritSpy).toBeCalled();
   });
 
-  it('will return undefined for an unset required value if in the test environment', async () => {
+  it('will return empty string for an unset required value if in the test environment', async () => {
     const varName = 'SOMETHING_NOT_SET';
-    process.env.NODE_ENV = 'development';
-    expect(getRequiredEnvVar(varName)).toEqual(undefined);
+
+    // @ts-ignore: Overriding NODE_ENV for tests
+    process.env.NODE_ENV = 'test';
+
+    expect(getRequiredEnvVar(varName)).toEqual('');
   });
 });

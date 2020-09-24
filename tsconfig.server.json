@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "noEmit": false,
+    "outDir": "../dist",
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "lib": ["esnext", "esnext.asynciterable"]
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "./**/*.test.ts"]
+}
