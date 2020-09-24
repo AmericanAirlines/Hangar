@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { app } from '..';
 import logger from '../../logger';
