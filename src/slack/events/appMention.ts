@@ -1,9 +1,8 @@
-import { App } from '@slack/bolt';
 import { Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { app } from '..';
 import logger from '../../logger';
 
-export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = async ({ event, context, payload }) => {
+export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = async ({ context, payload }) => {
   try {
     await app.client.chat.postMessage({
       token: context.botToken,
