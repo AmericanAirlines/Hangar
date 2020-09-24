@@ -1,12 +1,15 @@
-name: PR-Build
+﻿name: linting
 
 on:
   pull_request:
-    branches:
-    - main
+    branches: 
+      - main
+  push:
+    branches: 
+      - main
 
 jobs:
-  pr-build:
+  build:
 
     runs-on: ubuntu-latest
 
