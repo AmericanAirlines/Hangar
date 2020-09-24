@@ -6,7 +6,7 @@ import logger from '../../logger';
 export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = async ({ event, context, payload}) =>{
 
   try {
-  app.client.chat.postMessage({
+  await app.client.chat.postMessage({
     token: context.botToken,
     channel: payload.channel,
     thread_ts: payload.ts,
