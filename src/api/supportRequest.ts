@@ -12,6 +12,28 @@ export interface NextSupportRequestResponse {
   userNotified: boolean;
 }
 
+supportRequestRoutes.get('/getAll', async (req, res) => {
+  const { status } = req.query;
+  const isValidStatus = Object.values(SupportRequestStatus).includes(status);
+
+  if (status && !isValidStatus) {
+    res.status(400).send('Invalid Status');
+    return;
+  }
+
+  try {
+    let requests;
+    if (status) {
+      requests = await SupportRequest.find({ status });
+    } else {
+      requests = await SupportRequest.find();
+    }
+    res.send(requests);
+  } catch (error) {
+    res.status(500).send('There Was An Internal Server Error');
+  }
+});
+
 supportRequestRoutes.get('/getCount', async (req, res) => {
   const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
   const technicalCount = await SupportRequest.count({ type: SupportRequestType.TechnicalSupport, status: SupportRequestStatus.Pending });
