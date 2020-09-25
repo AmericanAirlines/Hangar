@@ -1,5 +1,4 @@
 import express from 'express';
-import { stringify } from 'querystring';
 import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
 import logger from '../logger';
 import messageUsers from '../slack/utilities/messageUsers';
