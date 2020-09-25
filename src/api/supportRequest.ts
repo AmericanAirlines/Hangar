@@ -52,24 +52,6 @@ supportRequestRoutes.get('/getInProgress', async (req, res) => {
   res.send(openRequests);
 });
 
-supportRequestRoutes.get('/getCount', async (req, res) => {
-  const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
-  const technicalCount = await SupportRequest.count({ type: SupportRequestType.TechnicalSupport, status: SupportRequestStatus.Pending });
-
-  res.json({
-    ideaCount,
-    technicalCount,
-  });
-});
-
-supportRequestRoutes.get('/getInProgress', async (req, res) => {
-  const openRequests = await SupportRequest.find({
-    where: { status: SupportRequestStatus.InProgress },
-    order: { movedToInProgressAt: 'DESC' },
-  });
-  res.send(openRequests);
-});
-
 supportRequestRoutes.post('/getNext', async (req, res) => {
   const { adminName } = req.body;
 
