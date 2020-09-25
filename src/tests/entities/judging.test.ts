@@ -63,6 +63,18 @@ describe('judging logistics', () => {
     expect(judge.currentTeam).toEqual(team2.id);
   });
 
+  it('vote will throw an error when there is no current team', async () => {
+    const judge = new Judge();
+
+    expect(judge.vote(true)).rejects.toThrow('No current team to vote on');
+  });
+
+  it('recordCurrentTeamAndSave will throw an error when there is no current team', async () => {
+    const judge = new Judge();
+
+    expect(judge.recordCurrentTeamAndSave()).rejects.toThrow('No current team to record');
+  });
+
   it('current team will be null when all teams have been visted', async () => {
     const judge = await new Judge().save();
     const team1 = await new Team('Some Team', 123, 'A new app', ['123']).save();

@@ -96,15 +96,11 @@ export class JudgingVote extends BaseEntity {
     const teamResults: TeamResult[] = [];
 
     orderedTeams.forEach((scoredTeam) => {
-      const matchingTeam = teams.find((team) => team.id === scoredTeam.id);
-
-      if (matchingTeam) {
-        teamResults.push({
-          id: matchingTeam.id,
-          name: matchingTeam.name,
-          score: trimmedMeanScores[scoredTeam.id],
-        });
-      }
+      teamResults.push({
+        id: scoredTeam.id,
+        name: scoredTeam.name,
+        score: trimmedMeanScores[scoredTeam.id],
+      });
     });
 
     return teamResults;
@@ -147,82 +143,84 @@ export class JudgingVote extends BaseEntity {
         const otherTeamId = vote.currentTeam !== team.id ? vote.currentTeam : vote.previousTeam;
         const otherTeam = teams.find((teamToCompare) => teamToCompare.id === otherTeamId);
 
-        if (otherTeam) {
-          // Remove that vote from the remaining votes
-          remainingVotes.splice(votes.indexOf(vote), 1);
+        if (!otherTeam) {
+          throw new Error('Vote references a team that does not exist');
+        }
 
-          // Increment calibration counts for both teams
-          calibrationCount[team.id] = calibrationCount[team.id] ? calibrationCount[team.id] + 1 : 1;
-          calibrationCount[otherTeam.id] = calibrationCount[otherTeam.id] ? calibrationCount[otherTeam.id] + 1 : 1;
+        // Remove that vote from the remaining votes
+        remainingVotes.splice(votes.indexOf(vote), 1);
 
-          // CALIBRATION SCORING
-          const teamScore = scores[team.id] || { id: team.id, score: 0 };
-          const otherTeamScore = scores[otherTeam.id] || { id: otherTeam.id, score: 0 };
+        // Increment calibration counts for both teams
+        calibrationCount[team.id] = calibrationCount[team.id] ? calibrationCount[team.id] + 1 : 1;
+        calibrationCount[otherTeam.id] = calibrationCount[otherTeam.id] ? calibrationCount[otherTeam.id] + 1 : 1;
 
-          // Apply score impact based on vote outcome
-          const currentTeamScoreImpact = vote.currentTeamChosen ? calibrationScoreImpact : -calibrationScoreImpact;
-          teamScore.score += currentTeamScoreImpact;
-          otherTeamScore.score += -currentTeamScoreImpact;
+        // CALIBRATION SCORING
+        const teamScore = scores[team.id] || { id: team.id, score: 0 };
+        const otherTeamScore = scores[otherTeam.id] || { id: otherTeam.id, score: 0 };
 
-          // Update scores for both teams
-          scores[team.id] = teamScore;
-          scores[otherTeam.id] = otherTeamScore;
+        // Apply score impact based on vote outcome
+        const currentTeamScoreImpact = vote.currentTeamChosen ? calibrationScoreImpact : -calibrationScoreImpact;
+        teamScore.score += currentTeamScoreImpact;
+        otherTeamScore.score += -currentTeamScoreImpact;
 
-          // Check to see if all teams have been calibrated
-          const allTeamsAreInCalibration = Object.keys(calibrationCount).length === teams.length;
-          const allTeamsAreCalibrated = !Object.values(calibrationCount).some((value) => value < votesNeededForCalibration);
-          if (allTeamsAreInCalibration && allTeamsAreCalibrated) {
-            calibrationComplete = true;
-            // Update min/max score for traditional scoring
-            const calibratedScores = Object.values(scores);
-            for (let j = 0; j < calibratedScores.length; j += 1) {
-              minScore = Math.min(minScore, calibratedScores[j].score);
-              maxScore = Math.max(maxScore, calibratedScores[j].score);
-            }
+        // Update scores for both teams
+        scores[team.id] = teamScore;
+        scores[otherTeam.id] = otherTeamScore;
+
+        // Check to see if all teams have been calibrated
+        const allTeamsAreInCalibration = Object.keys(calibrationCount).length === teams.length;
+        const allTeamsAreCalibrated = !Object.values(calibrationCount).some((value) => value < votesNeededForCalibration);
+        if (allTeamsAreInCalibration && allTeamsAreCalibrated) {
+          calibrationComplete = true;
+          // Update min/max score for traditional scoring
+          const calibratedScores = Object.values(scores);
+          for (let j = 0; j < calibratedScores.length; j += 1) {
+            minScore = Math.min(minScore, calibratedScores[j].score);
+            maxScore = Math.max(maxScore, calibratedScores[j].score);
           }
         }
       } else {
-        const vote = remainingVotes.shift();
+        // TODO: Refactor this so that we can avoid the non-null assertion
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const vote = remainingVotes.shift()!;
 
-        if (vote) {
-          const currentTeamId = vote.currentTeam;
-          const previousTeamId = vote.previousTeam;
+        const currentTeamId = vote.currentTeam;
+        const previousTeamId = vote.previousTeam;
 
-          const currentTeamScore = scores[currentTeamId];
-          const previousTeamScore = scores[previousTeamId];
+        const currentTeamScore = scores[currentTeamId];
+        const previousTeamScore = scores[previousTeamId];
 
-          // ELO SCORING - both teams have been calibrated and have an ELO score
-          // In order to determine differential between scores, "shift" minScore to 0, If...
-          //   Positive min: shift is negative
-          //   Negative min: shift is positive (double negative)
-          //   Zero min: shift is zero (-1 * 0 = 0)
-          const normalizationShift = -minScore;
-          const normalizedMaxScore = maxScore + normalizationShift;
+        // ELO SCORING - both teams have been calibrated and have an ELO score
+        // In order to determine differential between scores, "shift" minScore to 0, If...
+        //   Positive min: shift is negative
+        //   Negative min: shift is positive (double negative)
+        //   Zero min: shift is zero (-1 * 0 = 0)
+        const normalizationShift = -minScore;
+        const normalizedMaxScore = maxScore + normalizationShift;
 
-          // Calculate team percentiles using the normalizationShift and normalizedMaxScore
-          // If min and max are equal, normalized max will be 0; replace percentile with 0 to allow for max impact
-          const currentTeamPercentile = (currentTeamScore.score + normalizationShift) / normalizedMaxScore || 0;
-          const previousTeamPercentile = (previousTeamScore.score + normalizationShift) / normalizedMaxScore || 0;
+        // Calculate team percentiles using the normalizationShift and normalizedMaxScore
+        // If min and max are equal, normalized max will be 0; replace percentile with 0 to allow for max impact
+        const currentTeamPercentile = (currentTeamScore.score + normalizationShift) / normalizedMaxScore || 0;
+        const previousTeamPercentile = (previousTeamScore.score + normalizationShift) / normalizedMaxScore || 0;
 
-          // Determine whether the scoreImpact should be positive or negative
-          // Current Team Advantage: potential positive decreases, potential negative increases
-          const advantageCoeficient = currentTeamPercentile > previousTeamPercentile ? -1 : 1;
-          const currentTeamScoreImpact = advantageCoeficient * Math.round(100 * Math.abs(currentTeamPercentile - previousTeamPercentile));
-          const previousTeamScoreImpact = -advantageCoeficient * Math.round(100 * Math.abs(currentTeamPercentile - previousTeamPercentile));
+        // Determine whether the scoreImpact should be positive or negative
+        // Current Team Advantage: potential positive decreases, potential negative increases
+        const advantageCoeficient = currentTeamPercentile > previousTeamPercentile ? -1 : 1;
+        const currentTeamScoreImpact = advantageCoeficient * Math.round(100 * Math.abs(currentTeamPercentile - previousTeamPercentile));
+        const previousTeamScoreImpact = -advantageCoeficient * Math.round(100 * Math.abs(currentTeamPercentile - previousTeamPercentile));
 
-          // Apply score impact based on vote outcome
-          currentTeamScore.score += (vote.currentTeamChosen ? 100 : -100) + currentTeamScoreImpact;
-          previousTeamScore.score += (vote.currentTeamChosen ? -100 : 100) + previousTeamScoreImpact;
+        // Apply score impact based on vote outcome
+        currentTeamScore.score += (vote.currentTeamChosen ? 100 : -100) + currentTeamScoreImpact;
+        previousTeamScore.score += (vote.currentTeamChosen ? -100 : 100) + previousTeamScoreImpact;
 
-          // Update scores for both teams
-          scores[currentTeamId] = currentTeamScore;
-          scores[previousTeamId] = previousTeamScore;
+        // Update scores for both teams
+        scores[currentTeamId] = currentTeamScore;
+        scores[previousTeamId] = previousTeamScore;
 
-          // Update min and max score
-          const rawScores = Object.values(scores).map((score) => score.score);
-          maxScore = Math.max(...rawScores);
-          minScore = Math.min(...rawScores);
-        }
+        // Update min and max score
+        const rawScores = Object.values(scores).map((score) => score.score);
+        maxScore = Math.max(...rawScores);
+        minScore = Math.min(...rawScores);
       }
     }
 

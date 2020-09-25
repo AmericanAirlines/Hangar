@@ -127,7 +127,11 @@ export class SupportRequest extends BaseEntity {
 
         await nextRequest.reload();
 
-        if ((result.affected ?? 0) > 0 || nextRequest.syncHash === newHash) {
+        // Cannot get this fully tested since the tests use Sqlite, `result.affeected` will always be undefined in tests
+        /* istanbul ignore next */
+        const numAffected = result.affected ?? 0;
+
+        if (numAffected > 0 || nextRequest.syncHash === newHash) {
           return nextRequest;
         }
       } finally {
