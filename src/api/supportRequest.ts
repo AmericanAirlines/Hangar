@@ -1,4 +1,5 @@
 import express from 'express';
+import { stringify } from 'querystring';
 import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
 import logger from '../logger';
 import messageUsers from '../slack/utilities/messageUsers';
@@ -11,6 +12,34 @@ export interface NextSupportRequestResponse {
   supportRequest: SupportRequest;
   userNotified: boolean;
 }
+
+supportRequestRoutes.get('/getAll', async (req, res) => {
+
+  let status = req.query.status;
+  var requests;
+  if(status)
+  {
+    switch(status){
+      case "Abandoned":
+        requests = await SupportRequest.find({ status: SupportRequestStatus.Abandoned });
+        res.send(requests);
+      case "Complete":
+        requests = await SupportRequest.find({ status: SupportRequestStatus.Complete });
+        res.send(requests);
+      case "Pending":
+        requests = await SupportRequest.find({ status: SupportRequestStatus.Pending });
+        res.send(requests);
+      case "InProgress":
+        requests = await SupportRequest.find({ status: SupportRequestStatus.InProgress });
+        res.send(requests);
+      default:
+        res.send("It doesn't look like that's a valid status!");
+    }
+  } else {
+    requests = await SupportRequest.find();
+    res.send(requests);
+  }
+});
 
 supportRequestRoutes.get('/getCount', async (req, res) => {
   const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
