@@ -13,44 +13,38 @@ export interface NextSupportRequestResponse {
 }
 
 supportRequestRoutes.get('/getAll', async (req, res) => {
+  const { status } = req.query;
+  let supportRequestStatus: SupportRequestStatus;
 
-  let statusVal = req.query.status;
-  let isEmpty = false;
-  let requests;
-
-  if(statusVal)
-  {
-    switch(statusVal)
-    {
-      case "Abandoned":
-        statusVal = SupportRequestStatus.Abandoned;
+  if (status) {
+    switch (status) {
+      case 'Abandoned':
+        supportRequestStatus = SupportRequestStatus.Abandoned;
         break;
-      case "Complete":
-        statusVal = SupportRequestStatus.Complete;
+      case 'Complete':
+        supportRequestStatus = SupportRequestStatus.Complete;
         break;
-      case "Pending":
-        statusVal = SupportRequestStatus.Pending;
+      case 'Pending':
+        supportRequestStatus = SupportRequestStatus.Pending;
         break;
-      case "InProgress":
-        statusVal = SupportRequestStatus.InProgress;
+      case 'InProgress':
+        supportRequestStatus = SupportRequestStatus.InProgress;
         break;
       default:
         res.status(400).send('Invalid Status');
         return;
     }
-  } else {
-    isEmpty = true;
   }
 
   try {
-    if(!isEmpty)
-    {
-      requests = await SupportRequest.find({ status: statusVal });
+    let requests;
+    if (supportRequestStatus) {
+      requests = await SupportRequest.find({ status: supportRequestStatus });
     } else {
       requests = await SupportRequest.find();
     }
     res.send(requests);
-  } catch(error) {
+  } catch (error) {
     res.status(500).send('There Was An Internal Server Error');
   }
 });
