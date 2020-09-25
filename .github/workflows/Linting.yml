@@ -1,4 +1,4 @@
-name: Build
+name: linting
 
 on:
   pull_request:
@@ -32,4 +32,5 @@ jobs:
     - name: npm install, build, and lint/checkstyle
       run: |
         npm ci
-        npm run build
+        npm run checkstyle
+        npm run lint
