@@ -14,32 +14,17 @@ export interface NextSupportRequestResponse {
 
 supportRequestRoutes.get('/getAll', async (req, res) => {
   const { status } = req.query;
-  let supportRequestStatus: SupportRequestStatus;
+  const isValidStatus = Object.values(SupportRequestStatus).includes(status);
 
-  if (status) {
-    switch (status) {
-      case 'Abandoned':
-        supportRequestStatus = SupportRequestStatus.Abandoned;
-        break;
-      case 'Complete':
-        supportRequestStatus = SupportRequestStatus.Complete;
-        break;
-      case 'Pending':
-        supportRequestStatus = SupportRequestStatus.Pending;
-        break;
-      case 'InProgress':
-        supportRequestStatus = SupportRequestStatus.InProgress;
-        break;
-      default:
-        res.status(400).send('Invalid Status');
-        return;
-    }
+  if (status && !isValidStatus) {
+    res.status(400).send('Invalid Status');
+    return;
   }
 
   try {
     let requests;
-    if (supportRequestStatus) {
-      requests = await SupportRequest.find({ status: supportRequestStatus });
+    if (status) {
+      requests = await SupportRequest.find({ status });
     } else {
       requests = await SupportRequest.find();
     }
