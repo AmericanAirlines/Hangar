@@ -14,29 +14,46 @@ export interface NextSupportRequestResponse {
 
 supportRequestRoutes.get('/getAll', async (req, res) => {
 
-  let status = req.query.status;
-  var requests;
-  if(status)
+  let statusVal = req.query.status;
+  let isValid = true;
+  let isEmpty = false;
+  let requests;
+
+  if(statusVal)
   {
-    switch(status){
+    switch(statusVal)
+    {
       case "Abandoned":
-        requests = await SupportRequest.find({ status: SupportRequestStatus.Abandoned });
-        res.send(requests);
+        statusVal = SupportRequestStatus.Abandoned;
+        break;
       case "Complete":
-        requests = await SupportRequest.find({ status: SupportRequestStatus.Complete });
-        res.send(requests);
+        statusVal = SupportRequestStatus.Complete;
+        break;
       case "Pending":
-        requests = await SupportRequest.find({ status: SupportRequestStatus.Pending });
-        res.send(requests);
+        statusVal = SupportRequestStatus.Pending;
+        break;
       case "InProgress":
-        requests = await SupportRequest.find({ status: SupportRequestStatus.InProgress });
-        res.send(requests);
+        statusVal = SupportRequestStatus.InProgress;
+        break;
       default:
-        res.send("It doesn't look like that's a valid status!");
+        isValid = false;
+        break;
     }
   } else {
-    requests = await SupportRequest.find();
+    isEmpty = true;
+  }
+  
+  if(isValid)
+  {
+    if(!isEmpty)
+    {
+      requests = await SupportRequest.find({ status: statusVal });
+    } else {
+      requests = await SupportRequest.find();
+    }
     res.send(requests);
+  } else {
+    res.status(400).send('Invalid Status');
   }
 });
 
