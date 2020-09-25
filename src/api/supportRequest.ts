@@ -15,7 +15,6 @@ export interface NextSupportRequestResponse {
 supportRequestRoutes.get('/getAll', async (req, res) => {
 
   let statusVal = req.query.status;
-  let isValid = true;
   let isEmpty = false;
   let requests;
 
@@ -36,15 +35,14 @@ supportRequestRoutes.get('/getAll', async (req, res) => {
         statusVal = SupportRequestStatus.InProgress;
         break;
       default:
-        isValid = false;
-        break;
+        res.status(400).send('Invalid Status');
+        return;
     }
   } else {
     isEmpty = true;
   }
-  
-  if(isValid)
-  {
+
+  try {
     if(!isEmpty)
     {
       requests = await SupportRequest.find({ status: statusVal });
@@ -52,9 +50,27 @@ supportRequestRoutes.get('/getAll', async (req, res) => {
       requests = await SupportRequest.find();
     }
     res.send(requests);
-  } else {
-    res.status(400).send('Invalid Status');
+  } catch(error) {
+    res.status(500).send('There Was An Internal Server Error');
   }
+});
+
+supportRequestRoutes.get('/getCount', async (req, res) => {
+  const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
+  const technicalCount = await SupportRequest.count({ type: SupportRequestType.TechnicalSupport, status: SupportRequestStatus.Pending });
+
+  res.json({
+    ideaCount,
+    technicalCount,
+  });
+});
+
+supportRequestRoutes.get('/getInProgress', async (req, res) => {
+  const openRequests = await SupportRequest.find({
+    where: { status: SupportRequestStatus.InProgress },
+    order: { movedToInProgressAt: 'DESC' },
+  });
+  res.send(openRequests);
 });
 
 supportRequestRoutes.get('/getCount', async (req, res) => {
