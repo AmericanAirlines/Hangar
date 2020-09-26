@@ -73,8 +73,12 @@ const initNext = async (): Promise<void> => {
 export const init = async (): Promise<void> => {
   await Promise.all([initDatabase(), initSlack()]);
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.NODE_ENV === 'production') {
     await initNext();
+  } else if (process.env.NODE_ENV !== 'test') {
+    initNext()
+      .then(() => logger.info('Next app initialized'))
+      .catch((err) => logger.info('Unable to start Next app: ', err));
   }
 
   appLoading = false;
