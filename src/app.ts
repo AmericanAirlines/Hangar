@@ -78,7 +78,10 @@ export const init = async (): Promise<void> => {
   } else if (process.env.NODE_ENV !== 'test') {
     initNext()
       .then(() => logger.info('Next app initialized successfully'))
-      .catch((err) => logger.info('Unable to start Next app: ', err));
+      .catch((err) => {
+        logger.crit('Unable to start Next app: ', err);
+        process.exit(1);
+      });
   }
 
   appLoading = false;
