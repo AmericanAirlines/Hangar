@@ -24,8 +24,6 @@ jest.mock('@slack/web-api', () => ({
 describe('app', () => {
   beforeEach(() => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
-    process.env.SLACK_SIGNING_SECRET = 'A JUNK TOKEN';
-    process.env.SLACK_BOT_TOKEN = 'ANOTHER JUNK TOKEN';
     jest.resetModules();
     jest.resetAllMocks();
     mockSlackAuth.mockRejectedValue('Invalid Auth');
@@ -38,7 +36,6 @@ describe('app', () => {
   });
 
   it("fails to initialize Slack when Slack tokens are not provided and env isn't test and exits", async () => {
-    delete process.env.SLACK_BOT_TOKEN;
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
     jest.resetModules();
     await initSlack();
@@ -46,7 +43,6 @@ describe('app', () => {
   });
 
   it('fails to initialize Slack, logs an error, but continues in test env', async () => {
-    delete process.env.SLACK_BOT_TOKEN;
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
     jest.resetModules();
     await initSlack();
