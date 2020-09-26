@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
 import { createDbConnection, closeDbConnection } from '../testdb';
 import '../../slack/utilities/messageUsers';
+import logger from '../../logger';
 
 jest.mock('../../slack/utilities/messageUsers');
 
@@ -10,18 +11,18 @@ const adminSecret = 'Secrets are secretive';
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
+jest.spyOn(logger, 'info').mockImplementation();
+
 describe('api/supportRequest', () => {
   beforeEach(async () => {
     await createDbConnection();
+    process.env.ADMIN_SECRET = adminSecret;
+    jest.spyOn(logger, 'info').mockImplementation();
   });
 
   afterEach(async () => {
     await closeDbConnection();
     jest.resetAllMocks();
-  });
-
-  beforeEach(() => {
-    process.env.ADMIN_SECRET = adminSecret;
   });
 
   it('is protected by admin middleware', (done) => {
