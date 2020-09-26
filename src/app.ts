@@ -53,7 +53,7 @@ const initSlack = async (): Promise<void> => {
   try {
     await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test();
     app.use(slackApp);
-    logger.info('Slack setup successfully');
+    logger.info('Slack app initialized successfully');
   } catch (err) {
     logger.error('Slack Bot Token is invalid', err);
     if (process.env.NODE_ENV !== 'test') {
@@ -77,7 +77,7 @@ export const init = async (): Promise<void> => {
     await initNext();
   } else if (process.env.NODE_ENV !== 'test') {
     initNext()
-      .then(() => logger.info('Next app initialized'))
+      .then(() => logger.info('Next app initialized successfully'))
       .catch((err) => logger.info('Unable to start Next app: ', err));
   }
 

@@ -9,7 +9,7 @@ import { unsubscribe } from './unsubscribe';
 import { supportRequest } from './supportRequest';
 
 export default function actions(bolt: App): void {
-  logger.info('Registering action listeners');
+  logger.info('Registering Slack action listeners');
   // Register all action listeners
   bolt.action({ action_id: actionIds.ignore }, ignore);
   bolt.action({ action_id: actionIds.registerTeam }, registerTeam);
