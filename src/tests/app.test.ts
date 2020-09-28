@@ -24,7 +24,6 @@ jest.mock('@slack/web-api', () => ({
 describe('app', () => {
   beforeEach(() => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
-    jest.resetModules();
     jest.resetAllMocks();
     mockSlackAuth.mockRejectedValue('Invalid Auth');
   });
@@ -35,16 +34,14 @@ describe('app', () => {
       .expect(200, done);
   });
 
-  it("will exit the process when Slack tokens are not provided and NODE_ENV !== "test", because it cannot initialize Slack", async () => {
+  it('will exit the process when Slack tokens are not provided and NODE_ENV !== "test", because it cannot initialize Slack', async () => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
-    jest.resetModules();
     await initSlack();
     expect(processExitSpy).toBeCalledTimes(1);
   });
 
   it('will not exit the process when Slack tokens are not provided and the NODE_ENV is "test"', async () => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
-    jest.resetModules();
     await initSlack();
     expect(processExitSpy).not.toBeCalled();
   });
@@ -54,21 +51,4 @@ describe('app', () => {
     await initSlack();
     expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Slack app initialized successfully');
   });
-
-  // it('will not wait for Next to initialize when not in production', async () => {
-  //   Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
-  //   jest.resetModules();
-
-  //   const functionThatShouldntBeCalled = jest.fn();
-  //   jest.spyOn(app, 'initNext').mockImplementation(async () => {
-  //     return new Promise((resolve) => {
-  //       setTimeout(() => {
-  //         functionThatShouldntBeCalled();
-  //         resolve();
-  //       }, 5000);
-  //     });
-  //   });
-  //   await app.init();
-  //   expect(functionThatShouldntBeCalled).not.toBeCalled();
-  // });
 });
