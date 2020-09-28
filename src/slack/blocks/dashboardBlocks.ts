@@ -121,7 +121,7 @@ const teamRegistrationBlock: KnownBlock = {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: 'Register',
+      text: 'Register Team',
     },
     action_id: actionIds.registerTeam,
   },

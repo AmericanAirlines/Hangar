@@ -1,12 +1,12 @@
-name: Build
+name: Linting
 
 on:
   pull_request:
     branches: 
       - main
   push:
-    branches:
-    - main
+    branches: 
+      - main
 
 jobs:
   build:
@@ -32,4 +32,5 @@ jobs:
     - name: npm install, build, and lint/checkstyle
       run: |
         npm ci
-        npm run build
+        npm run checkstyle
+        npm run lint

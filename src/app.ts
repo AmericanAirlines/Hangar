@@ -2,11 +2,11 @@ import 'dotenv/config';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import next from 'next';
-import { createConnection, getConnectionOptions, ConnectionOptions } from 'typeorm';
+import { createConnection, getConnectionOptions, getConnection, ConnectionOptions } from 'typeorm';
 import path from 'path';
 import { WebClient } from '@slack/web-api';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { slackApp } from './slack';
+import { slackApp, initListeners } from './slack';
 import { apiApp } from './api';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
@@ -34,8 +34,8 @@ app.get(
 
 app.use('/api', apiApp);
 
-const initDatabase = async (): Promise<void> => {
-  if (process.env.NODE_ENV !== 'test') {
+async function initDatabase(): Promise<void> {
+  if (!getConnection() && process.env.NODE_ENV !== 'test') {
     // Pull connection options from ormconfig.json
     const options: ConnectionOptions = await getConnectionOptions();
     const url = process.env.DATABASE_URL || (options as PostgresConnectionOptions).url;
@@ -47,34 +47,43 @@ const initDatabase = async (): Promise<void> => {
       migrationsRun: true,
     } as PostgresConnectionOptions);
   }
-};
+}
 
-const initSlack = async (): Promise<void> => {
+export async function initSlack(): Promise<void> {
+  // console.log(await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test());
   try {
     await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test();
+    initListeners();
     app.use(slackApp);
-    logger.info('Slack setup successfully');
+    logger.info('Slack app initialized successfully');
   } catch (err) {
-    logger.error('Slack Bot Token is invalid', err);
     if (process.env.NODE_ENV !== 'test') {
+      logger.error('Slack Bot Token is invalid', err);
       process.exit(1);
     }
   }
-};
+}
 
-const initNext = async (): Promise<void> => {
+export async function initNext(): Promise<void> {
   const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
   const nextHandler = nextApp.getRequestHandler();
   await nextApp.prepare();
   app.get(['/'], requireAuth(true), (req, res) => nextHandler(req, res));
   app.get('*', (req, res) => nextHandler(req, res));
-};
+}
 
 export const init = async (): Promise<void> => {
   await Promise.all([initDatabase(), initSlack()]);
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (process.env.NODE_ENV === 'production') {
     await initNext();
+  } else if (process.env.NODE_ENV !== 'test') {
+    initNext()
+      .then(() => logger.info('Next app initialized successfully'))
+      .catch((err) => {
+        logger.crit('Unable to start Next app: ', err);
+        process.exit(1);
+      });
   }
 
   appLoading = false;
