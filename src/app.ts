@@ -57,8 +57,8 @@ export async function initSlack(): Promise<void> {
     app.use(slackApp);
     logger.info('Slack app initialized successfully');
   } catch (err) {
-    logger.error('Slack Bot Token is invalid', err);
     if (process.env.NODE_ENV !== 'test') {
+      logger.error('Slack Bot Token is invalid', err);
       process.exit(1);
     }
   }

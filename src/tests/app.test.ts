@@ -2,7 +2,7 @@ import 'jest';
 import supertest from 'supertest';
 import logger from '../logger';
 
-const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
+jest.spyOn(logger, 'error').mockImplementation();
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
 
 // eslint-disable-next-line import/first
@@ -42,11 +42,10 @@ describe('app', () => {
     expect(processExitSpy).toBeCalledTimes(1);
   });
 
-  it('fails to initialize Slack, logs an error, but continues in test env', async () => {
+  it('will not exit the process when Slack tokens are not provided and the NODE_ENV is "test"', async () => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
     jest.resetModules();
     await initSlack();
-    expect(loggerErrorSpy).toBeCalledTimes(1);
     expect(processExitSpy).not.toBeCalled();
   });
 
