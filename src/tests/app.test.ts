@@ -35,7 +35,7 @@ describe('app', () => {
       .expect(200, done);
   });
 
-  it("fails to initialize Slack when Slack tokens are not provided and env isn't test and exits", async () => {
+  it("will exit the process when Slack tokens are not provided and NODE_ENV !== "test", because it cannot initialize Slack", async () => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
     jest.resetModules();
     await initSlack();
