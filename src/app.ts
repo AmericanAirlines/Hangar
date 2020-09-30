@@ -35,14 +35,15 @@ app.get(
 app.use('/api', apiApp);
 
 async function initDatabase(): Promise<void> {
-  let hasConnection = false;
-  
+  let hasConnection;
+
   try {
     getConnection();
     hasConnection = true;
-  } catch(err) {
+  } catch (err) {
+    hasConnection = false;
   }
-  
+
   if (!hasConnection && process.env.NODE_ENV !== 'test') {
     // Pull connection options from ormconfig.json
     const options: ConnectionOptions = await getConnectionOptions();
