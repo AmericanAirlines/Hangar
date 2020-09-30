@@ -35,6 +35,8 @@ app.get(
 app.use('/api', apiApp);
 
 async function initDatabase(): Promise<void> {
+  // hasConnection is used in tests that are testing the initialization of the app, so NODE_ENV will not be 'development' or 'production'.
+  // The tests already connect to an in-memory SQLite database, so connecting to Postgres would cause those tests to fail.
   let hasConnection;
 
   try {
