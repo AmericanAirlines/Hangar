@@ -35,7 +35,15 @@ app.get(
 app.use('/api', apiApp);
 
 async function initDatabase(): Promise<void> {
-  if (!getConnection() && process.env.NODE_ENV !== 'test') {
+  let hasConnection = false;
+  
+  try {
+    getConnection();
+    hasConnection = true;
+  } catch(err) {
+  }
+  
+  if (!hasConnection && process.env.NODE_ENV !== 'test') {
     // Pull connection options from ormconfig.json
     const options: ConnectionOptions = await getConnectionOptions();
     const url = process.env.DATABASE_URL || (options as PostgresConnectionOptions).url;
