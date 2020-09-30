@@ -35,7 +35,14 @@ app.get(
 app.use('/api', apiApp);
 
 async function initDatabase(): Promise<void> {
-  if (!getConnection() && process.env.NODE_ENV !== 'test') {
+  // This is needed for tests that are testing the initialization of the app.
+  // The tests already connect to an in-memory SQLite database, so connecting to Postgres would cause those tests to fail.
+  try {
+    getConnection();
+    return;
+  } catch (err) {} // eslint-disable-line no-empty
+
+  if (process.env.NODE_ENV !== 'test') {
     // Pull connection options from ormconfig.json
     const options: ConnectionOptions = await getConnectionOptions();
     const url = process.env.DATABASE_URL || (options as PostgresConnectionOptions).url;
