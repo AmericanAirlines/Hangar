@@ -35,18 +35,14 @@ app.get(
 app.use('/api', apiApp);
 
 async function initDatabase(): Promise<void> {
-  // hasConnection is used in tests that are testing the initialization of the app, so NODE_ENV will not be 'development' or 'production'.
+  // This is needed for tests that are testing the initialization of the app.
   // The tests already connect to an in-memory SQLite database, so connecting to Postgres would cause those tests to fail.
-  let hasConnection;
-
   try {
     getConnection();
-    hasConnection = true;
-  } catch (err) {
-    hasConnection = false;
-  }
+    return;
+  } catch (err) {} // eslint-disable-line no-empty
 
-  if (!hasConnection && process.env.NODE_ENV !== 'test') {
+  if (process.env.NODE_ENV !== 'test') {
     // Pull connection options from ormconfig.json
     const options: ConnectionOptions = await getConnectionOptions();
     const url = process.env.DATABASE_URL || (options as PostgresConnectionOptions).url;
