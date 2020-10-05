@@ -1,6 +1,9 @@
 name: Build
 
 on:
+  pull_request:
+    branches: 
+      - main
   push:
     branches:
     - main
@@ -30,5 +33,3 @@ jobs:
       run: |
         npm ci
         npm run build
-        npm run checkstyle
-        npm run lint

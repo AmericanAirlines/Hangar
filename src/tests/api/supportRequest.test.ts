@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
 import { createDbConnection, closeDbConnection } from '../testdb';
 import '../../slack/utilities/messageUsers';
+import logger from '../../logger';
 
 jest.mock('../../slack/utilities/messageUsers');
 
@@ -10,17 +11,18 @@ const adminSecret = 'Secrets are secretive';
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
-describe('api/judging', () => {
+jest.spyOn(logger, 'info').mockImplementation();
+
+describe('api/supportRequest', () => {
   beforeEach(async () => {
     await createDbConnection();
+    process.env.ADMIN_SECRET = adminSecret;
+    jest.spyOn(logger, 'info').mockImplementation();
   });
 
   afterEach(async () => {
     await closeDbConnection();
-  });
-
-  beforeEach(() => {
-    process.env.ADMIN_SECRET = adminSecret;
+    jest.resetAllMocks();
   });
 
   it('is protected by admin middleware', (done) => {
@@ -153,5 +155,63 @@ describe('api/judging', () => {
     await supportRequest.reload();
 
     expect(supportRequest.status).toEqual(SupportRequestStatus.Abandoned);
+  });
+
+  it('will throw an error if /getAll is called with an invalid status', async () => {
+    const supportRequestFindSpy = jest.spyOn(SupportRequest, 'find').mockImplementation();
+    const { app } = require('../../app');
+    const request = await supertest(app)
+      .get('/api/supportRequest/getAll?status=wat')
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+    expect(request.text).toEqual('Invalid Status');
+    expect(supportRequestFindSpy).not.toBeCalled();
+  });
+
+  it('will return supportRequests of different status if a status is not provided', async () => {
+    const supportRequestFindSpy = jest.spyOn(SupportRequest, 'find').mockImplementation();
+    const { app } = require('../../app');
+    await supertest(app)
+      .get('/api/supportRequest/getAll')
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(200);
+
+    expect(supportRequestFindSpy).toBeCalledTimes(1);
+    expect(supportRequestFindSpy.mock.calls[0][0]).toBeUndefined();
+  });
+
+  it('will return supportRequests of specific status if a valid status is provided', async () => {
+    const supportRequestFindSpy = jest.spyOn(SupportRequest, 'find').mockImplementation();
+    const { app } = require('../../app');
+    await supertest(app)
+      .get('/api/supportRequest/getAll?status=Pending')
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(200);
+
+    expect(supportRequestFindSpy).toBeCalledTimes(1);
+    expect(supportRequestFindSpy.mock.calls[0][0]).toEqual({ status: 'Pending' });
+  });
+
+  it('will throw a 500 if a database error occurs', async () => {
+    const supportRequestFindSpy = jest.spyOn(SupportRequest, 'find').mockRejectedValueOnce('Womp womp');
+    const { app } = require('../../app');
+    await supertest(app)
+      .get('/api/supportRequest/getAll')
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(500);
+
+    expect(supportRequestFindSpy).toBeCalledTimes(1);
   });
 });

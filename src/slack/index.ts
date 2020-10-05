@@ -51,8 +51,10 @@ export const app = new App({
   authorize,
 });
 
-actions(app);
-events(app);
-views(app);
+export function initListeners(): void {
+  actions(app);
+  events(app);
+  views(app);
+}
 
 export const slackApp = receiver.app;
