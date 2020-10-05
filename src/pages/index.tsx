@@ -65,6 +65,20 @@ const AdminPage: NextComponentType = () => {
     };
   }, []);
 
+  /*
+  React.useEffect(() => {
+    formik.setFieldValue('adminName', window.localStorage.getItem(ADMIN_NAME_KEY));
+
+    const timer = setInterval(() => {
+      setLastUpdateEpoch(Date.now());
+    }, 10000);
+
+    return (): void => {
+      clearInterval(timer);
+    };
+  }, []);
+  */
+ 
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
 
@@ -270,7 +284,56 @@ const AdminPage: NextComponentType = () => {
             </div>
           </div>
         </div>
+        <div className="col-12 col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <h2 className="font-weight-normal">Config Items</h2>
+              {results.length === 0 && <div className="alert alert-info mt-3">Display Database Config Items 🤔</div>}
+              
+              <form className="form-inline" onSubmit={formik.handleSubmit}>
+        <div className="form-group ml-sm-3 mr-3 mb-2">
+        <label htmlFor="adminName" className="mr-3">
+          Team Registration
+        </label>
+              <input
+                type="text"
+                className="form-control"
+                id="adminName"
+                placeholder="Team name"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.adminName}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary mb-2">
+              Save
+            </button>
+          </form>
+          
+          <form className="form-inline" onSubmit={formik.handleSubmit}>
+        <div className="form-group ml-sm-3 mr-3 mb-2">
+        <label htmlFor="adminName" className="mr-3">
+          Support Request
+        </label>
+              <input
+                type="text"
+                className="form-control"
+                id="adminName"
+                placeholder="Your name"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.adminName}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary mb-2">
+              Save
+            </button>
+          </form>
+            </div>
+          </div>
+        </div>
       </div>
+      
     </div>
   );
 };
