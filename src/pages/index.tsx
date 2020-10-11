@@ -64,20 +64,6 @@ const AdminPage: NextComponentType = () => {
       clearInterval(timer);
     };
   }, []);
-
-  /*
-  React.useEffect(() => {
-    formik.setFieldValue('adminName', window.localStorage.getItem(ADMIN_NAME_KEY));
-
-    const timer = setInterval(() => {
-      setLastUpdateEpoch(Date.now());
-    }, 10000);
-
-    return (): void => {
-      clearInterval(timer);
-    };
-  }, []);
-  */
  
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
@@ -312,7 +298,7 @@ const AdminPage: NextComponentType = () => {
           
           <form className="form-inline" onSubmit={formik.handleSubmit}>
         <div className="form-group ml-sm-3 mr-3 mb-2">
-        <label htmlFor="adminName" className="mr-3">
+        <label htmlFor="adminName" className="mr-4">
           Support Request
         </label>
               <input
