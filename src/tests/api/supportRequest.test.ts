@@ -160,7 +160,7 @@ describe('api/supportRequest', () => {
     const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
     supportRequest.status = SupportRequestStatus.Pending;
     await supportRequest.save();
-    
+
     jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
@@ -171,17 +171,14 @@ describe('api/supportRequest', () => {
         'Content-Type': 'application/json',
       })
       .expect(200);
-​
     await supportRequest.reload();
-​
     expect(supportRequest.status).toEqual(SupportRequestStatus.InProgress);
   });
-​
   it('will throw a 400 if an support id is not entered', async () => {
     const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
     supportRequest.status = SupportRequestStatus.Pending;
     await supportRequest.save();
-    
+
     jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
@@ -193,12 +190,11 @@ describe('api/supportRequest', () => {
       })
       .expect(400);
   });
-​
   it('will throw a 400 if a admin name is not entered', async () => {
     const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
     supportRequest.status = SupportRequestStatus.Pending;
     await supportRequest.save();
-    
+
     jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
@@ -210,12 +206,11 @@ describe('api/supportRequest', () => {
       })
       .expect(400);
   });
-​
   it('will throw a 400 if the slack id entered is not correct', async () => {
     const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
     supportRequest.status = SupportRequestStatus.Pending;
     await supportRequest.save();
-    
+
     jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)

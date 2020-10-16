@@ -199,4 +199,3 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   };
   res.send(response);
 });
-
