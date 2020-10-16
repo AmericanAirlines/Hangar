@@ -156,7 +156,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   }
 
   const request = await SupportRequest.findOne(supportRequestId);
-  if (!request || request.status != SupportRequestStatus.Pending) {
+  if (!request || request.status !== SupportRequestStatus.Pending) {
     res.status(400).send('The support request entered is not valid');
     return;
   }
