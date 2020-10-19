@@ -145,7 +145,9 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
-      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
+      if (counts.technicalCount + counts.ideaCount === 0) {
+        getAndSetCount();
+      }
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -162,7 +164,29 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
-      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
+      if (counts.technicalCount + counts.ideaCount === 0) {
+        getAndSetCount();
+      }
+      setLastUpdateEpoch(Date.now());
+    } catch (err) {
+      setError(true);
+    }
+  };
+
+  const remindUser = (supportRequestId: number, movedToInProgressAt: string) => async (): Promise<void> => {
+    const relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
+    await fetch('/api/supportRequest/remindUser', {
+      method: 'POST',
+      body: JSON.stringify({ supportRequestId, relativeTimeElapsedString }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    try {
+      if (counts.technicalCount + counts.ideaCount === 0) {
+        getAndSetCount();
+      }
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -211,11 +235,10 @@ const AdminPage: NextComponentType = () => {
               </button>
               {lastPop && (
                 <div className="alert alert-info mt-3">
-                  {
-                  (lastPop.supportRequest !== null) ?  
-                    (lastPop.userNotified
+                  {lastPop.supportRequest !== null
+                    ? lastPop.userNotified
                       ? `${lastPop.supportRequest.name} has been notified to come over`
-                      : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`)
+                      : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`
                     : 'It appears you are trying to access a support request that does not exist!'}
                 </div>
               )}
@@ -231,6 +254,9 @@ const AdminPage: NextComponentType = () => {
                       <p className="card-text">{request.type === 'TechnicalSupport' ? 'Technical Support' : 'Idea Pitch'}</p>
                       <button className="btn btn-danger mr-2" onClick={abandonRequest(request.id, request.movedToInProgressAt)}>
                         No Show
+                      </button>
+                      <button type="submit" className="btn btn-warning mr-2" onClick={remindUser(request.id, request.movedToInProgressAt)}>
+                        Remind
                       </button>
                       <button className="btn btn-success" onClick={closeRequest(request.id)}>
                         Complete
