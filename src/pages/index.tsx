@@ -33,6 +33,7 @@ const AdminPage: NextComponentType = () => {
   const formik = useFormik({
     initialValues: {
       adminName: '',
+      specificId: 0,
     },
     onSubmit({ adminName }) {
       window.localStorage.setItem(ADMIN_NAME_KEY, adminName.trim());
@@ -145,7 +146,9 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
-      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
+      if (counts.technicalCount + counts.ideaCount === 0) {
+        getAndSetCount();
+      }
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -162,7 +165,40 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
-      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
+      if (counts.technicalCount + counts.ideaCount === 0) {
+        getAndSetCount();
+      }
+      setLastUpdateEpoch(Date.now());
+    } catch (err) {
+      setError(true);
+    }
+  };
+
+  const getSpecific = async (): Promise<void> => {
+    if (!window.localStorage.getItem(ADMIN_NAME_KEY)) {
+      alert('Please set your name first');
+      return;
+    }
+
+    if (!formik.values.specificId) {
+      alert('Please set the specific Id first');
+      return;
+    }
+
+    const res = await fetch('/api/supportRequest/getSpecific', {
+      method: 'PATCH',
+      body: JSON.stringify({ supportRequestId: formik.values.specificId, adminName: window.localStorage.getItem(ADMIN_NAME_KEY) }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      return;
+    }
+
+    try {
+      setLastPop(await res.json());
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -206,16 +242,31 @@ const AdminPage: NextComponentType = () => {
           <div className="card">
             <div className="card-body">
               <h2 className="font-weight-normal">Support Queue</h2>
+              <label htmlFor="specificId" className="mr-3">
+                Search for a specific request:
+              </label>
+              <input
+                type="number"
+                min="0"
+                className="form-control"
+                id="specificId"
+                placeholder="Id of the specified request"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.specificId}
+              />
+              <button className="btn btn-dark w-100 mt-4" onClick={getSpecific} disabled={counts.ideaCount + counts.technicalCount === 0}>
+                Get Specific
+              </button>
               <button className="btn btn-dark w-100 mt-4" onClick={getNext} disabled={counts.ideaCount + counts.technicalCount === 0}>
                 Get Next in Queue ({counts.ideaCount + counts.technicalCount})
               </button>
               {lastPop && (
                 <div className="alert alert-info mt-3">
-                  {
-                  (lastPop.supportRequest !== null) ?  
-                    (lastPop.userNotified
+                  {lastPop.supportRequest !== null
+                    ? lastPop.userNotified
                       ? `${lastPop.supportRequest.name} has been notified to come over`
-                      : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`)
+                      : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`
                     : 'It appears you are trying to access a support request that does not exist!'}
                 </div>
               )}
