@@ -209,15 +209,11 @@ describe('api/supportRequest', () => {
   });
 
   it('will throw a 500 if the user cannot be messaged', async () => {
-    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
-    supportRequest.status = SupportRequestStatus.InProgress;
-    await supportRequest.save();
-
     jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/remindUser')
-      .send({ supportRequestId: 1000, relativeTimeElapsedString: 'some time ago' })
+      .send({ supportRequestId: 1, relativeTimeElapsedString: 'some time ago' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
