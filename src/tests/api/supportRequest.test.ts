@@ -157,6 +157,57 @@ describe('api/supportRequest', () => {
     expect(supportRequest.status).toEqual(SupportRequestStatus.Abandoned);
   });
 
+  it('will send a message to the person Responsible for the support request', async () => {
+    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    supportRequest.status = SupportRequestStatus.InProgress;
+    await supportRequest.save();
+
+    jest.mock('../../slack/utilities/messageUsers');
+    const { app } = require('../../app');
+    await supertest(app)
+      .post('/api/supportRequest/remindUser')
+      .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: 'some time ago' })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(200);
+  });
+
+  it('will throw a 400 if an id is not entered', async () => {
+    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    supportRequest.status = SupportRequestStatus.InProgress;
+    await supportRequest.save();
+
+    jest.mock('../../slack/utilities/messageUsers');
+    const { app } = require('../../app');
+    await supertest(app)
+      .post('/api/supportRequest/remindUser')
+      .send({ relativeTimeElapsedString: 'some time ago' })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+  });
+
+  it('will throw a 400 if a relativeTimeElapsedString is not entered', async () => {
+    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    supportRequest.status = SupportRequestStatus.InProgress;
+    await supportRequest.save();
+
+    jest.mock('../../slack/utilities/messageUsers');
+    const { app } = require('../../app');
+    await supertest(app)
+      .post('/api/supportRequest/remindUser')
+      .send({ supportRequestId: supportRequest.id })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+  });
+
   it('will throw an error if /getAll is called with an invalid status', async () => {
     const supportRequestFindSpy = jest.spyOn(SupportRequest, 'find').mockImplementation();
     const { app } = require('../../app');
