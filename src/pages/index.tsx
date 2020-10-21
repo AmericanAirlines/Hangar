@@ -3,7 +3,6 @@ import React from 'react';
 import { NextComponentType } from 'next';
 import { DateTime } from 'luxon';
 import { useFormik } from 'formik';
-import { SupportRequestType } from '../entities/supportRequest';
 
 interface Request {
   id: number;
