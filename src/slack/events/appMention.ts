@@ -10,7 +10,7 @@ export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = a
       channel: payload.channel,
       thread_ts: payload.ts,
       text:
-        "Hey there :wave: I can help your team during the hackathon! To see all of the things I can help with, simply click/tap my name and chose 'Go to App' :tada:`",
+        "Hey there :wave: I can help your team during the hackathon! To see all of the things I can help with, simply click/tap my name and choose 'Go to App' :tada:",
     });
   } catch (error) {
     logger.error('Something went wrong responding to a bot mention: ', error);
