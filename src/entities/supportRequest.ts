@@ -106,11 +106,11 @@ export class SupportRequest extends BaseEntity {
       const nextRequest =
         supportType === null
           ? await SupportRequest.createQueryBuilder('supportRequests')
-          .orderBy('"supportRequests"."createdAt"', 'ASC')
-          .where({
-            status: SupportRequestStatus.Pending,
-          })
-          .getOne()
+            .orderBy('"supportRequests"."createdAt"', 'ASC')
+            .where({
+              status: SupportRequestStatus.Pending,
+            })
+            .getOne()
           : await SupportRequest.createQueryBuilder('supportRequests')
             .orderBy('"supportRequests"."createdAt"', 'ASC')
             .where({
