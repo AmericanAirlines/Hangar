@@ -114,7 +114,7 @@ const AdminPage: NextComponentType = () => {
     }
 
     if ((supportType === 0 && counts.ideaCount === 0) || (supportType === 1 && counts.technicalCount === 0)) {
-      alert('There are no more support requests of that type!');
+      alert('There are no more support requests of that type!'); // eslint-disable-line no-alert
       return;
     }
 

@@ -54,7 +54,6 @@ supportRequestRoutes.get('/getInProgress', async (req, res) => {
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
   const { adminName, requestType } = req.body;
-
   if (!adminName || !adminName.trim()) {
     res.status(400).send("Property 'adminName' is required");
     return;

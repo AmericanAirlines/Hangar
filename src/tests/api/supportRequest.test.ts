@@ -92,15 +92,15 @@ describe('api/supportRequest', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/getNext')
-      .send({adminName: 'Tim'})
+      .send({ adminName: 'Tim' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
       })
 
-      await supportRequest.reload();
+    await supportRequest.reload();
 
-      expect(supportRequest.status).toEqual(SupportRequestStatus.InProgress);
+    expect(supportRequest.status).toEqual(SupportRequestStatus.InProgress);
   });
 
   it('calling getNext with requestType = 1 will set supportRequest2 to InProgress', async () => {
@@ -115,17 +115,17 @@ describe('api/supportRequest', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/getNext')
-      .send({adminName: 'Tim', requestType: 1})
+      .send({ adminName: 'Tim', requestType: 1 })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
       })
 
-      await supportRequest.reload();
-      await supportRequest2.reload();
+    await supportRequest.reload();
+    await supportRequest2.reload();
 
-      expect(supportRequest.status).toEqual(SupportRequestStatus.Pending);
-      expect(supportRequest2.status).toEqual(SupportRequestStatus.InProgress);
+    expect(supportRequest.status).toEqual(SupportRequestStatus.Pending);
+    expect(supportRequest2.status).toEqual(SupportRequestStatus.InProgress);
   });
 
   it('calling getNext with requestType = 0 will set supportRequest2 to InProgress', async () => {
@@ -140,17 +140,17 @@ describe('api/supportRequest', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/getNext')
-      .send({adminName: 'Tim', requestType: 0})
+      .send({ adminName: 'Tim', requestType: 0 })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
       })
 
-      await supportRequest.reload();
-      await supportRequest2.reload();
+    await supportRequest.reload();
+    await supportRequest2.reload();
 
-      expect(supportRequest.status).toEqual(SupportRequestStatus.Pending);
-      expect(supportRequest2.status).toEqual(SupportRequestStatus.InProgress);
+    expect(supportRequest.status).toEqual(SupportRequestStatus.Pending);
+    expect(supportRequest2.status).toEqual(SupportRequestStatus.InProgress);
   });
 
   it('calling closeRequest without supportRequestId will be a 400', async () => {
