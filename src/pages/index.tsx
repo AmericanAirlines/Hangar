@@ -3,6 +3,7 @@ import React from 'react';
 import { NextComponentType } from 'next';
 import { DateTime } from 'luxon';
 import { useFormik } from 'formik';
+import { SupportRequestType } from '../entities/supportRequest';
 
 interface Request {
   id: number;
@@ -107,15 +108,20 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   }, [lastUpdateEpoch]);
 
-  const getNext = async (): Promise<void> => {
+  const getNext = (supportType?: number) => async (): Promise<void> => {
     if (!window.localStorage.getItem(ADMIN_NAME_KEY)) {
       alert('Please set your name first'); // eslint-disable-line no-alert
       return;
     }
 
+    if ((supportType === 0 && counts.ideaCount === 0) || (supportType === 1 && counts.technicalCount === 0)) {
+      alert('There are no more support requests of that type!');
+      return;
+    }
+
     const res = await fetch('/api/supportRequest/getNext', {
       method: 'POST',
-      body: JSON.stringify({ adminName: window.localStorage.getItem(ADMIN_NAME_KEY) }),
+      body: JSON.stringify({ adminName: window.localStorage.getItem(ADMIN_NAME_KEY), requestType: supportType }),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -145,7 +151,9 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
-      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
+      if (counts.technicalCount + counts.ideaCount === 0) {
+        getAndSetCount();
+      }
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -162,7 +170,9 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
-      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
+      if (counts.technicalCount + counts.ideaCount === 0) {
+        getAndSetCount();
+      }
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -206,16 +216,15 @@ const AdminPage: NextComponentType = () => {
           <div className="card">
             <div className="card-body">
               <h2 className="font-weight-normal">Support Queue</h2>
-              <button className="btn btn-dark w-100 mt-4" onClick={getNext} disabled={counts.ideaCount + counts.technicalCount === 0}>
+              <button className="btn btn-dark w-100 mt-4" onClick={getNext()} disabled={counts.ideaCount + counts.technicalCount === 0}>
                 Get Next in Queue ({counts.ideaCount + counts.technicalCount})
               </button>
               {lastPop && (
                 <div className="alert alert-info mt-3">
-                  {
-                  (lastPop.supportRequest !== null) ?  
-                    (lastPop.userNotified
+                  {lastPop.supportRequest !== null
+                    ? lastPop.userNotified
                       ? `${lastPop.supportRequest.name} has been notified to come over`
-                      : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`)
+                      : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`
                     : 'It appears you are trying to access a support request that does not exist!'}
                 </div>
               )}

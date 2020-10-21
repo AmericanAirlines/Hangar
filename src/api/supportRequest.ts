@@ -53,7 +53,7 @@ supportRequestRoutes.get('/getInProgress', async (req, res) => {
 });
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
-  const { adminName } = req.body;
+  const { adminName, requestType } = req.body;
 
   if (!adminName || !adminName.trim()) {
     res.status(400).send("Property 'adminName' is required");
@@ -62,7 +62,20 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
 
   let nextRequest;
   try {
-    nextRequest = await SupportRequest.getNextSupportRequest();
+    switch (requestType) {
+      case 0: {
+        nextRequest = await SupportRequest.getNextSupportRequest(SupportRequestType.IdeaPitch);
+        break;
+      }
+      case 1: {
+        nextRequest = await SupportRequest.getNextSupportRequest(SupportRequestType.TechnicalSupport);
+        break;
+      }
+      default: {
+        nextRequest = await SupportRequest.getNextSupportRequest(null);
+        break;
+      }
+    }
   } catch (err) {
     res.status(500).send('Something went wrong trying to get the next support request');
     logger.error('Something went wrong trying to get the next support request', err);

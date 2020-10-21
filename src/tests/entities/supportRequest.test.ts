@@ -99,13 +99,31 @@ describe('support request', () => {
     const supportRequest2 = new SupportRequest(slackId2, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest2.save();
 
-    const nextRequest = await SupportRequest.getNextSupportRequest();
+    const nextRequest = await SupportRequest.getNextSupportRequest(null);
     expect(nextRequest.id).toBe(supportRequest1.id);
     expect(nextRequest.status).toBe(SupportRequestStatus.InProgress);
   });
 
+  it('requests for each type will be served FIFO with included specified support type', async () => {
+    const slackId1 = slackIds[0];
+
+    const supportRequest1 = new SupportRequest(slackId1, 'Someone', SupportRequestType.TechnicalSupport);
+    await supportRequest1.save();
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const slackId2 = slackIds[1];
+    const supportRequest2 = new SupportRequest(slackId2, 'Someone', SupportRequestType.IdeaPitch);
+    await supportRequest2.save();
+
+    const nextRequest = await SupportRequest.getNextSupportRequest(SupportRequestType.IdeaPitch);
+    expect(nextRequest.id).toBe(supportRequest2.id);
+    expect(nextRequest.status).toBe(SupportRequestStatus.InProgress);
+    expect(nextRequest.type).toBe(SupportRequestType.IdeaPitch);
+  });
+
   it('if a request cannot be found, null will be returned', async () => {
-    const nextRequest = await SupportRequest.getNextSupportRequest();
+    const nextRequest = await SupportRequest.getNextSupportRequest(null);
     expect(nextRequest).toBeNull();
   });
 
@@ -116,7 +134,7 @@ describe('support request', () => {
 
     const requestPromises = [];
     for (let i = 0; i < slackIds.length; i += 1) {
-      requestPromises.push(SupportRequest.getNextSupportRequest());
+      requestPromises.push(SupportRequest.getNextSupportRequest(null));
     }
 
     expect(Promise.all(requestPromises)).resolves.toHaveLength(slackIds.length);
