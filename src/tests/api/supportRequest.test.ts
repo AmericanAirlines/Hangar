@@ -119,7 +119,8 @@ describe('api/supportRequest', () => {
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
-      });
+      })
+      .expect(200);
 
     await supportRequest.reload();
     await supportRequest2.reload();
@@ -144,7 +145,8 @@ describe('api/supportRequest', () => {
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
-      });
+      })
+      .expect(200);
 
     await supportRequest.reload();
     await supportRequest2.reload();

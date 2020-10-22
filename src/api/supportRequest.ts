@@ -100,7 +100,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
     userNotified,
     supportRequest: nextRequest,
   };
-  res.send(response);
+  res.status(200).send(response);
 });
 
 supportRequestRoutes.post('/closeRequest', async (req, res) => {
