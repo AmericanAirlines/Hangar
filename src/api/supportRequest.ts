@@ -90,10 +90,9 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
   };
   res.send(response);
 });
-
 supportRequestRoutes.post('/closeRequest', async (req, res) => {
   const { supportRequestId } = req.body;
-
+  
   if (!supportRequestId) {
     res.status(400).send("Property 'supportRequestId' is required");
     return;
@@ -109,6 +108,12 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
         id: supportRequestId,
       })
       .execute();
+      
+    const supportRequest = await SupportRequest.findOne(supportRequestId);
+    await messageUsers(
+      [supportRequest.slackId],
+      `Thanks for chatting with our team! You can request idea help or technical help again at any time by using the bot.`,
+    );
 
     res.sendStatus(200);
   } catch (err) {
