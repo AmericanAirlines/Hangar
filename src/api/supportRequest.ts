@@ -92,7 +92,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
 });
 supportRequestRoutes.post('/closeRequest', async (req, res) => {
   const { supportRequestId } = req.body;
-  
+
   if (!supportRequestId) {
     res.status(400).send("Property 'supportRequestId' is required");
     return;
@@ -108,7 +108,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
         id: supportRequestId,
       })
       .execute();
-      
+
     const supportRequest = await SupportRequest.findOne(supportRequestId);
     await messageUsers(
       [supportRequest.slackId],
