@@ -99,7 +99,7 @@ export class SupportRequest extends BaseEntity {
     }
   }
 
-  static async getNextSupportRequest(supportType: SupportRequestType): Promise<SupportRequest> {
+  static async getNextSupportRequest(supportType?: SupportRequestType): Promise<SupportRequest> {
     let retries = 5;
 
     do {
