@@ -134,7 +134,7 @@ describe('support request', () => {
 
     const requestPromises = [];
     for (let i = 0; i < slackIds.length; i += 1) {
-      requestPromises.push(SupportRequest.getNextSupportRequest(null));
+      requestPromises.push(SupportRequest.getNextSupportRequest());
     }
 
     expect(Promise.all(requestPromises)).resolves.toHaveLength(slackIds.length);
