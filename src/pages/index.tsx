@@ -70,7 +70,6 @@ const AdminPage: NextComponentType = () => {
       clearInterval(timer);
     };
   }, []);
- 
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
 
