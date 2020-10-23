@@ -99,7 +99,7 @@ describe('support request', () => {
     const supportRequest2 = new SupportRequest(slackId2, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest2.save();
 
-    const nextRequest = await SupportRequest.getNextSupportRequest(null);
+    const nextRequest = await SupportRequest.getNextSupportRequest();
     expect(nextRequest.id).toBe(supportRequest1.id);
     expect(nextRequest.status).toBe(SupportRequestStatus.InProgress);
   });
