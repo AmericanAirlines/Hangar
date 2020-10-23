@@ -174,6 +174,14 @@ const judge = (): JSX.Element => {
 
   return (
     <div className="container-fluid text-center">
+    <body>
+      <h1 id="timer">00 : 00 . 000</h1>
+        <div>
+          <button id="toggle">Start</button>
+          <button id="reset">Reset</button>
+        </div>
+    </body>
+    
       <h1>Welcome Judge!</h1>
       {error && <p style={{ color: 'red' }}>{error}, refresh and try again</p>}
       {currentTeam && (
