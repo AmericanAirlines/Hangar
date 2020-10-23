@@ -104,7 +104,7 @@ export class SupportRequest extends BaseEntity {
 
     do {
       const nextRequest =
-        supportType === null
+        supportType
           ? await SupportRequest.createQueryBuilder('supportRequests')
             .orderBy('"supportRequests"."createdAt"', 'ASC')
             .where({
