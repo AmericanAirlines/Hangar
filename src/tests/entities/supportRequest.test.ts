@@ -123,7 +123,7 @@ describe('support request', () => {
   });
 
   it('if a request cannot be found, null will be returned', async () => {
-    const nextRequest = await SupportRequest.getNextSupportRequest(null);
+    const nextRequest = await SupportRequest.getNextSupportRequest();
     expect(nextRequest).toBeNull();
   });
 
