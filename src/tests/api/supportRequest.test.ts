@@ -84,7 +84,23 @@ describe('api/supportRequest', () => {
       .expect(400);
   });
 
-  it('calling getNext without requestType will set the next supportRequest to InProgress', async () => {
+  it('calling getNext without proper requestType will be a 400', async () => {
+    const suppportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    suppportRequest.status = SupportRequestStatus.Pending;
+    await suppportRequest.save();
+
+    const { app } = require('../../app');
+    await supertest(app)
+      .post('/api/supportRequest/getNext')
+      .send({ adminName: 'Tim', requestType: 'a' })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+  });
+
+  it('calling getNext without requestType will set the next supportRequest to InProgress (Same block is used for valid requestType input)', async () => {
     const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
     supportRequest.status = SupportRequestStatus.Pending;
     await supportRequest.save();
@@ -101,58 +117,6 @@ describe('api/supportRequest', () => {
     await supportRequest.reload();
 
     expect(supportRequest.status).toEqual(SupportRequestStatus.InProgress);
-  });
-
-  it('calling getNext with requestType = 1 will set supportRequest2 to InProgress', async () => {
-    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
-    supportRequest.status = SupportRequestStatus.Pending;
-    await supportRequest.save();
-
-    const supportRequest2 = new SupportRequest('slackId2', 'name', SupportRequestType.TechnicalSupport);
-    supportRequest2.status = SupportRequestStatus.Pending;
-    await supportRequest2.save();
-
-    const { app } = require('../../app');
-    await supertest(app)
-      .post('/api/supportRequest/getNext')
-      .send({ adminName: 'Tim', requestType: 1 })
-      .set({
-        Authorization: adminSecret,
-        'Content-Type': 'application/json',
-      })
-      .expect(200);
-
-    await supportRequest.reload();
-    await supportRequest2.reload();
-
-    expect(supportRequest.status).toEqual(SupportRequestStatus.Pending);
-    expect(supportRequest2.status).toEqual(SupportRequestStatus.InProgress);
-  });
-
-  it('calling getNext with requestType = 0 will set supportRequest2 to InProgress', async () => {
-    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.TechnicalSupport);
-    supportRequest.status = SupportRequestStatus.Pending;
-    await supportRequest.save();
-
-    const supportRequest2 = new SupportRequest('slackId2', 'name', SupportRequestType.IdeaPitch);
-    supportRequest2.status = SupportRequestStatus.Pending;
-    await supportRequest2.save();
-
-    const { app } = require('../../app');
-    await supertest(app)
-      .post('/api/supportRequest/getNext')
-      .send({ adminName: 'Tim', requestType: 0 })
-      .set({
-        Authorization: adminSecret,
-        'Content-Type': 'application/json',
-      })
-      .expect(200);
-
-    await supportRequest.reload();
-    await supportRequest2.reload();
-
-    expect(supportRequest.status).toEqual(SupportRequestStatus.Pending);
-    expect(supportRequest2.status).toEqual(SupportRequestStatus.InProgress);
   });
 
   it('calling closeRequest without supportRequestId will be a 400', async () => {

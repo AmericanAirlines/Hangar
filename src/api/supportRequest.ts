@@ -59,22 +59,14 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
     return;
   }
 
+  if (requestType && !(requestType in SupportRequestType)) {
+    res.status(400).send(`The request type entered is not valid. Please choose from: ${Object.keys(SupportRequestType)}`);
+    return;
+  }
+
   let nextRequest;
   try {
-    switch (requestType) {
-      case 0: {
-        nextRequest = await SupportRequest.getNextSupportRequest(SupportRequestType.IdeaPitch);
-        break;
-      }
-      case 1: {
-        nextRequest = await SupportRequest.getNextSupportRequest(SupportRequestType.TechnicalSupport);
-        break;
-      }
-      default: {
-        nextRequest = await SupportRequest.getNextSupportRequest(null);
-        break;
-      }
-    }
+    nextRequest = await SupportRequest.getNextSupportRequest(requestType);
   } catch (err) {
     res.status(500).send('Something went wrong trying to get the next support request');
     logger.error('Something went wrong trying to get the next support request', err);

@@ -107,20 +107,14 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   }, [lastUpdateEpoch]);
 
-  const getNext = (supportType?: number) => async (): Promise<void> => {
+  const getNext = async (): Promise<void> => {
     if (!window.localStorage.getItem(ADMIN_NAME_KEY)) {
       alert('Please set your name first'); // eslint-disable-line no-alert
       return;
     }
-
-    if ((supportType === 0 && counts.ideaCount === 0) || (supportType === 1 && counts.technicalCount === 0)) {
-      alert('There are no more support requests of that type!'); // eslint-disable-line no-alert
-      return;
-    }
-
     const res = await fetch('/api/supportRequest/getNext', {
       method: 'POST',
-      body: JSON.stringify({ adminName: window.localStorage.getItem(ADMIN_NAME_KEY), requestType: supportType }),
+      body: JSON.stringify({ adminName: window.localStorage.getItem(ADMIN_NAME_KEY) }),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -215,7 +209,7 @@ const AdminPage: NextComponentType = () => {
           <div className="card">
             <div className="card-body">
               <h2 className="font-weight-normal">Support Queue</h2>
-              <button className="btn btn-dark w-100 mt-4" onClick={getNext()} disabled={counts.ideaCount + counts.technicalCount === 0}>
+              <button className="btn btn-dark w-100 mt-4" onClick={getNext} disabled={counts.ideaCount + counts.technicalCount === 0}>
                 Get Next in Queue ({counts.ideaCount + counts.technicalCount})
               </button>
               {lastPop && (

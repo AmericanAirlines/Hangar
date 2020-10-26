@@ -103,21 +103,23 @@ export class SupportRequest extends BaseEntity {
     let retries = 5;
 
     do {
-      const nextRequest =
-        supportType
-          ? await SupportRequest.createQueryBuilder('supportRequests')
-            .orderBy('"supportRequests"."createdAt"', 'ASC')
-            .where({
-              status: SupportRequestStatus.Pending,
-            })
-            .getOne()
-          : await SupportRequest.createQueryBuilder('supportRequests')
-            .orderBy('"supportRequests"."createdAt"', 'ASC')
-            .where({
-              status: SupportRequestStatus.Pending,
-              type: supportType,
-            })
-            .getOne();
+      let nextRequest;
+      if (supportType) {
+        nextRequest = await SupportRequest.createQueryBuilder('supportRequests')
+          .orderBy('"supportRequests"."createdAt"', 'ASC')
+          .where({
+            status: SupportRequestStatus.Pending,
+            type: supportType,
+          })
+          .getOne();
+      } else {
+        nextRequest = await SupportRequest.createQueryBuilder('supportRequests')
+          .orderBy('"supportRequests"."createdAt"', 'ASC')
+          .where({
+            status: SupportRequestStatus.Pending,
+          })
+          .getOne();
+      }
 
       if (!nextRequest) {
         return null;
