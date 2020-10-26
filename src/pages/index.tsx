@@ -145,7 +145,7 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
-      if (counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
+      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -162,7 +162,7 @@ const AdminPage: NextComponentType = () => {
     });
 
     try {
-      if (counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
+      if(counts.technicalCount + counts.ideaCount === 0){getAndSetCount()};
       setLastUpdateEpoch(Date.now());
     } catch (err) {
       setError(true);
@@ -214,7 +214,6 @@ const AdminPage: NextComponentType = () => {
                   {
                   (lastPop.supportRequest !== null) ?  
                     (lastPop.userNotified
-                    ? lastPop.userNotified
                       ? `${lastPop.supportRequest.name} has been notified to come over`
                       : `There was a problem notifying ${lastPop.supportRequest.name}, send them a message and tell them you're ready for them`)
                     : 'It appears you are trying to access a support request that does not exist!'}
