@@ -51,6 +51,11 @@ During the installation process (if you follow the steps on [postgresql.org](htt
 #### Viewing/Editing the DB
 If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
 
+#### Creating and Editing Configuration Items
+If you want to use the app with all the functionalities you need to edit the configuration items. As it is stated above you can use apps similar to TablePlus or Postman. 
+
+After downloading the app create a new connection with the Host and Port information, Database user and password you specified during Postgres installation. When the connection is successful navigate to the Configuration table and change the supportRequestQueueActive and teamRegistrationActive values to true. 
+
 ## Starting the App
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
 
