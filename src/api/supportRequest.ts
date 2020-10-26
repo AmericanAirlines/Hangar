@@ -66,7 +66,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
 
   let nextRequest;
   try {
-    nextRequest = await SupportRequest.getNextSupportRequest(requestType);
+    nextRequest = await SupportRequest.getNextSupportRequest(requestType as SupportRequestType);
   } catch (err) {
     res.status(500).send('Something went wrong trying to get the next support request');
     logger.error('Something went wrong trying to get the next support request', err);
