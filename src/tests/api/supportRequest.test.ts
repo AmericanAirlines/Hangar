@@ -2,22 +2,23 @@ import 'jest';
 import supertest from 'supertest';
 import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
 import { createDbConnection, closeDbConnection } from '../testdb';
-import '../../slack/utilities/messageUsers';
+import * as messageUsers from '../../slack/utilities/messageUsers';
 import logger from '../../logger';
-
-jest.mock('../../slack/utilities/messageUsers');
 
 const adminSecret = 'Secrets are secretive';
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
-jest.spyOn(logger, 'info').mockImplementation();
+const loggerInfoSpy = jest.spyOn(logger, 'info');
+const loggerErrorSpy = jest.spyOn(logger, 'error');
+const messageUsersSpy = jest.spyOn(messageUsers, 'default');
 
 describe('api/supportRequest', () => {
   beforeEach(async () => {
     await createDbConnection();
     process.env.ADMIN_SECRET = adminSecret;
-    jest.spyOn(logger, 'info').mockImplementation();
+    loggerInfoSpy.mockImplementation();
+    messageUsersSpy.mockImplementation();
   });
 
   afterEach(async () => {
@@ -26,9 +27,7 @@ describe('api/supportRequest', () => {
   });
 
   it('is protected by admin middleware', (done) => {
-    // Hide error output for unauth'd request
-    jest.mock('../../logger');
-
+    loggerErrorSpy.mockImplementation();
     const { app } = require('../../app');
     supertest(app)
       .get('/api/supportRequest/getInProgress')
@@ -141,7 +140,6 @@ describe('api/supportRequest', () => {
     supportRequest.status = SupportRequestStatus.InProgress;
     await supportRequest.save();
 
-    jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/abandonRequest')
@@ -162,7 +160,6 @@ describe('api/supportRequest', () => {
     supportRequest.status = SupportRequestStatus.InProgress;
     await supportRequest.save();
 
-    jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/remindUser')
@@ -179,7 +176,6 @@ describe('api/supportRequest', () => {
     supportRequest.status = SupportRequestStatus.InProgress;
     await supportRequest.save();
 
-    jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/remindUser')
@@ -196,7 +192,6 @@ describe('api/supportRequest', () => {
     supportRequest.status = SupportRequestStatus.InProgress;
     await supportRequest.save();
 
-    jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/remindUser')
@@ -209,7 +204,12 @@ describe('api/supportRequest', () => {
   });
 
   it('will throw a 500 if the user cannot be messaged', async () => {
-    jest.mock('../../slack/utilities/messageUsers');
+    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    supportRequest.status = SupportRequestStatus.InProgress;
+    await supportRequest.save();
+
+    messageUsersSpy.mockRejectedValueOnce('Error messaging user');
+
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/remindUser')
@@ -222,7 +222,6 @@ describe('api/supportRequest', () => {
   });
 
   it('will throw a 404 if the support request cannot be found', async () => {
-    jest.mock('../../slack/utilities/messageUsers');
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/remindUser')
