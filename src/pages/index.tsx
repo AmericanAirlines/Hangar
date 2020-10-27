@@ -298,7 +298,7 @@ const AdminPage: NextComponentType = () => {
       <div className="card">
             <div className="card-body">
               <h2 className="font-weight-normal">Config Items</h2>
-              {results.length === 0 && <div className="alert alert-info mt-3">Display Database Config Items 🤔</div>}
+              {results.length === 0 && <div className="alert alert-info mt-3">No config items to display 🤔</div>}
 
               {
               configItems.map((configItem) => (
