@@ -222,17 +222,17 @@ describe('api/supportRequest', () => {
   });
 
   it('will throw a 404 if the support request cannot be found', async () => {
-     jest.mock('../../slack/utilities/messageUsers');
-     const { app } = require('../../app');
-     await supertest(app)
-       .post('/api/supportRequest/remindUser')
-       .send({ supportRequestId: 1e6, relativeTimeElapsedString: 'some time ago' })
-       .set({
-         Authorization: adminSecret,
-         'Content-Type': 'application/json',
-       })
-       .expect(404);
-   });
+    jest.mock('../../slack/utilities/messageUsers');
+    const { app } = require('../../app');
+    await supertest(app)
+      .post('/api/supportRequest/remindUser')
+      .send({ supportRequestId: 1e6, relativeTimeElapsedString: 'some time ago' })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(404);
+  });
   it('will throw an error if /getAll is called with an invalid status', async () => {
     const supportRequestFindSpy = jest.spyOn(SupportRequest, 'find').mockImplementation();
     const { app } = require('../../app');
