@@ -92,7 +92,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
     userNotified,
     supportRequest: nextRequest,
   };
-  res.status(200).send(response);
+  res.send(response);
 });
 
 supportRequestRoutes.post('/closeRequest', async (req, res) => {
