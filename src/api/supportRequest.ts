@@ -90,6 +90,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
   };
   res.send(response);
 });
+
 supportRequestRoutes.post('/closeRequest', async (req, res) => {
   const { supportRequestId } = req.body;
 
