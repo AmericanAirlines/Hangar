@@ -53,16 +53,20 @@ supportRequestRoutes.get('/getInProgress', async (req, res) => {
 });
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
-  const { adminName } = req.body;
-
+  const { adminName, requestType } = req.body;
   if (!adminName || !adminName.trim()) {
     res.status(400).send("Property 'adminName' is required");
     return;
   }
 
+  if (requestType && !(requestType in SupportRequestType)) {
+    res.status(400).send(`The request type entered is not valid. Please choose from: ${Object.keys(SupportRequestType)}`);
+    return;
+  }
+
   let nextRequest;
   try {
-    nextRequest = await SupportRequest.getNextSupportRequest();
+    nextRequest = await SupportRequest.getNextSupportRequest(requestType as SupportRequestType);
   } catch (err) {
     res.status(500).send('Something went wrong trying to get the next support request');
     logger.error('Something went wrong trying to get the next support request', err);
