@@ -221,7 +221,7 @@ describe('api/supportRequest', () => {
       .expect(500);
   });
 
-  it('will throw a 500 if the user cannot be messaged', async () => {
+  it('will throw a 404 if the support request cannot be found', async () => {
      jest.mock('../../slack/utilities/messageUsers');
      const { app } = require('../../app');
      await supertest(app)
