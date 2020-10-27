@@ -221,6 +221,18 @@ describe('api/supportRequest', () => {
       .expect(500);
   });
 
+  it('will throw a 500 if the user cannot be messaged', async () => {
+     jest.mock('../../slack/utilities/messageUsers');
+     const { app } = require('../../app');
+     await supertest(app)
+       .post('/api/supportRequest/remindUser')
+       .send({ supportRequestId: 1e6, relativeTimeElapsedString: 'some time ago' })
+       .set({
+         Authorization: adminSecret,
+         'Content-Type': 'application/json',
+       })
+       .expect(404);
+   });
   it('will throw an error if /getAll is called with an invalid status', async () => {
     const supportRequestFindSpy = jest.spyOn(SupportRequest, 'find').mockImplementation();
     const { app } = require('../../app');
