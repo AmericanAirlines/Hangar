@@ -206,6 +206,72 @@ describe('api/supportRequest', () => {
 
     expect(supportRequest.status).toEqual(SupportRequestStatus.Abandoned);
   });
+  it('will change the status of a specific support request to InProgress', async () => {
+    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    supportRequest.status = SupportRequestStatus.Pending;
+    await supportRequest.save();
+
+    jest.mock('../../slack/utilities/messageUsers');
+    const { app } = require('../../app');
+    await supertest(app)
+      .patch('/api/supportRequest/getSpecific')
+      .send({ supportRequestId: supportRequest.id, adminName: 'Jimbo' })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(200);
+    await supportRequest.reload();
+    expect(supportRequest.status).toEqual(SupportRequestStatus.InProgress);
+  });
+  it('will throw a 400 if an support id is not entered', async () => {
+    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    supportRequest.status = SupportRequestStatus.Pending;
+    await supportRequest.save();
+
+    jest.mock('../../slack/utilities/messageUsers');
+    const { app } = require('../../app');
+    await supertest(app)
+      .patch('/api/supportRequest/getSpecific')
+      .send({ adminName: 'Jimbo' })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+  });
+  it('will throw a 400 if a admin name is not entered', async () => {
+    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    supportRequest.status = SupportRequestStatus.Pending;
+    await supportRequest.save();
+
+    jest.mock('../../slack/utilities/messageUsers');
+    const { app } = require('../../app');
+    await supertest(app)
+      .patch('/api/supportRequest/getSpecific')
+      .send({ supportRequestId: supportRequest.id })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+  });
+  it('will throw a 400 if the slack id entered is not correct', async () => {
+    const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+    supportRequest.status = SupportRequestStatus.Pending;
+    await supportRequest.save();
+
+    jest.mock('../../slack/utilities/messageUsers');
+    const { app } = require('../../app');
+    await supertest(app)
+      .patch('/api/supportRequest/getSpecific')
+      .send({ supportRequestId: 5000, adminName: 'Jimbo' })
+      .set({
+        Authorization: adminSecret,
+        'Content-Type': 'application/json',
+      })
+      .expect(400);
+  });
 
   it('will throw an error if /getAll is called with an invalid status', async () => {
     const supportRequestFindSpy = jest.spyOn(SupportRequest, 'find').mockImplementation();
