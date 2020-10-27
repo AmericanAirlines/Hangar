@@ -15,7 +15,7 @@ Whether you need help with judging which hack did the best job of tackling your 
 If you need insipiration for challenges, check out some of [our past challenges](https://github.com/AmericanAirlines/Flight-Engine/wiki).
 
 #### :warning: Work in Progress
-This app is still in the early stages of development and only some functionality is currently avaiable. If you want to help expedite our development, [become a contributor](./.github/CONTRIBUTING.md)!
+This app is still in the early stages of development and only some functionality is currently available. If you want to help expedite our development, [become a contributor](./.github/CONTRIBUTING.md)!
 
 <!-- TODO: Add section here to redirect to the pages site if they're interested in using this for an event -->
 
