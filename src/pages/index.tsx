@@ -312,6 +312,7 @@ const AdminPage: NextComponentType = () => {
                         id={configItem.key}
                         placeholder="Team name"
                         value={configItem.value}
+                        disabled
                       />
                     </div>
                 ))}
