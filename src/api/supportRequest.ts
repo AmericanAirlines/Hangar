@@ -158,6 +158,11 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
 
   try {
     const supportRequest = await SupportRequest.findOne(supportRequestId);
+    if (!supportRequest) {
+      res.status(404).send('Unable to find matching Support Request');
+      return;
+    }
+
     await messageUsers(
       [supportRequest.slackId],
       `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`,
