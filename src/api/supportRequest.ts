@@ -112,7 +112,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
     const supportRequest = await SupportRequest.findOne(supportRequestId);
     await messageUsers(
       [supportRequest.slackId],
-      'Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:',
+      "Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:",
     );
 
     res.sendStatus(200);
