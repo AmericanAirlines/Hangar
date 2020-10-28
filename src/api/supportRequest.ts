@@ -200,7 +200,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   };
   res.send(response);
 });
-  
+
 supportRequestRoutes.post('/remindUser', async (req, res) => {
   const { supportRequestId, relativeTimeElapsedString } = req.body;
   if (!supportRequestId || !relativeTimeElapsedString) {
@@ -226,4 +226,3 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
     logger.error(err);
   }
 });
-
