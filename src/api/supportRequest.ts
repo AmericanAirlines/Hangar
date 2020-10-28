@@ -53,16 +53,20 @@ supportRequestRoutes.get('/getInProgress', async (req, res) => {
 });
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
-  const { adminName } = req.body;
-
+  const { adminName, requestType } = req.body;
   if (!adminName || !adminName.trim()) {
     res.status(400).send("Property 'adminName' is required");
     return;
   }
 
+  if (requestType && !(requestType in SupportRequestType)) {
+    res.status(400).send(`The request type entered is not valid. Please choose from: ${Object.keys(SupportRequestType)}`);
+    return;
+  }
+
   let nextRequest;
   try {
-    nextRequest = await SupportRequest.getNextSupportRequest();
+    nextRequest = await SupportRequest.getNextSupportRequest(requestType as SupportRequestType);
   } catch (err) {
     res.status(500).send('Something went wrong trying to get the next support request');
     logger.error('Something went wrong trying to get the next support request', err);
@@ -149,6 +153,53 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
   }
 });
 
+supportRequestRoutes.patch('/getSpecific', async (req, res) => {
+  const { supportRequestId, adminName } = req.body;
+  if (!supportRequestId || !adminName || !adminName.trim()) {
+    res.status(400).send('One or more of the required properties is missing');
+    return;
+  }
+  const request = await SupportRequest.findOne(supportRequestId);
+  if (!request || request.status !== SupportRequestStatus.Pending) {
+    res.status(400).send('The support request entered is not valid');
+    return;
+  }
+  try {
+    await SupportRequest.createQueryBuilder('supportRequest')
+      .update()
+      .set({
+        status: SupportRequestStatus.InProgress,
+      })
+      .where({
+        id: supportRequestId,
+        status: SupportRequestStatus.Pending,
+      })
+      .execute();
+  } catch (err) {
+    res.status(500).send('Unable To Open A Specific Request');
+  }
+
+  let userNotified = false;
+  try {
+    if (request) {
+      await messageUsers(
+        [request.slackId],
+        `:tada: ${adminName} is ready to ${
+          request.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
+        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${adminName}*!`,
+      );
+      userNotified = true;
+    }
+  } catch (err) {
+    logger.error("Unable to notify users they're support request has been served", err);
+  }
+
+  const response: NextSupportRequestResponse = {
+    userNotified,
+    supportRequest: request,
+  };
+  res.send(response);
+  
 supportRequestRoutes.post('/remindUser', async (req, res) => {
   const { supportRequestId, relativeTimeElapsedString } = req.body;
   if (!supportRequestId || !relativeTimeElapsedString) {
@@ -174,3 +225,4 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
     logger.error(err);
   }
 });
+

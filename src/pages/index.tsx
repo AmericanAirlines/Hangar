@@ -20,6 +20,11 @@ interface Result {
   finalScore: number;
 }
 
+interface Config{
+  key: string;
+  value: string;
+}
+
 const ADMIN_NAME_KEY = 'adminName';
 
 const AdminPage: NextComponentType = () => {
@@ -28,6 +33,7 @@ const AdminPage: NextComponentType = () => {
   const [error, setError] = React.useState(false);
   const [counts, setCounts] = React.useState({ ideaCount: 0, technicalCount: 0 });
   const [requests, setRequests] = React.useState<Request[]>([]);
+  const [configItems, setConfigItems] = React.useState<Config[]>([]);
   const [lastPop, setLastPop] = React.useState<null | { userNotified: boolean; supportRequest: Request }>(null);
   const [results, setResults] = React.useState<Result[]>([]);
   const formik = useFormik({
@@ -64,7 +70,6 @@ const AdminPage: NextComponentType = () => {
       clearInterval(timer);
     };
   }, []);
-
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
 
@@ -84,6 +89,23 @@ const AdminPage: NextComponentType = () => {
         }
       })(),
     );
+
+    promises.push(
+      (async (): Promise<void> => {
+        const res = await fetch('/api/config');
+
+        if (!res.ok) {
+          setError(true);
+          return;
+        }
+
+        try {
+          setConfigItems(await res.json());
+        } catch (err) {
+          setError(true);
+        }
+      })(),
+    )
 
     promises.push(getAndSetCount());
 
@@ -270,6 +292,33 @@ const AdminPage: NextComponentType = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="row mt-3">
+      <div className="col-12 col-md-6">
+      <div className="card">
+            <div className="card-body">
+              <h2 className="font-weight-normal">Config Items</h2>
+              {results.length === 0 && <div className="alert alert-info mt-3">No config items to display 🤔</div>}
+
+              {
+              configItems.map((configItem) => (
+                <div className="form-group ml-sm-3 mr-3 mb-2">
+                <label htmlFor={configItem.key} className="mr-3">
+                  {configItem.key}
+                </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id={configItem.key}
+                        placeholder="Team name"
+                        value={configItem.value}
+                        disabled
+                      />
+                    </div>
+                ))}
+            </div>
+          </div>
+      </div>
       </div>
     </div>
   );
