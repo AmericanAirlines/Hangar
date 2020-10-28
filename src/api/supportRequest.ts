@@ -199,6 +199,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
     supportRequest: request,
   };
   res.send(response);
+});
   
 supportRequestRoutes.post('/remindUser', async (req, res) => {
   const { supportRequestId, relativeTimeElapsedString } = req.body;
