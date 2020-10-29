@@ -99,16 +99,27 @@ export class SupportRequest extends BaseEntity {
     }
   }
 
-  static async getNextSupportRequest(): Promise<SupportRequest> {
+  static async getNextSupportRequest(supportType?: SupportRequestType): Promise<SupportRequest> {
     let retries = 5;
 
     do {
-      const nextRequest = await SupportRequest.createQueryBuilder('supportRequests')
-        .orderBy('"supportRequests"."createdAt"', 'ASC')
-        .where({
-          status: SupportRequestStatus.Pending,
-        })
-        .getOne();
+      let nextRequest;
+      if (supportType) {
+        nextRequest = await SupportRequest.createQueryBuilder('supportRequests')
+          .orderBy('"supportRequests"."createdAt"', 'ASC')
+          .where({
+            status: SupportRequestStatus.Pending,
+            type: supportType,
+          })
+          .getOne();
+      } else {
+        nextRequest = await SupportRequest.createQueryBuilder('supportRequests')
+          .orderBy('"supportRequests"."createdAt"', 'ASC')
+          .where({
+            status: SupportRequestStatus.Pending,
+          })
+          .getOne();
+      }
 
       if (!nextRequest) {
         return null;
