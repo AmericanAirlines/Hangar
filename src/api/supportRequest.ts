@@ -114,6 +114,12 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       })
       .execute();
 
+    const supportRequest = await SupportRequest.findOne(supportRequestId);
+    await messageUsers(
+      [supportRequest.slackId],
+      "Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:",
+    );
+
     res.sendStatus(200);
   } catch (err) {
     res.status(500).send('Unable to close request');
