@@ -159,6 +159,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
     res.status(400).send('One or more of the required properties is missing');
     return;
   }
+    
   const request = await SupportRequest.findOne(supportRequestId);
   if (!request || request.status !== SupportRequestStatus.Pending) {
     res.status(400).send('The support request entered is not valid');
