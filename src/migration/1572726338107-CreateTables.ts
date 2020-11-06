@@ -25,7 +25,6 @@ export class CreateTables1572726338107 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.query('DROP TABLE "subscriber"', undefined);
     await queryRunner.query('DROP TABLE "judge"', undefined);
     await queryRunner.query('DROP TABLE "judging_vote"', undefined);
     await queryRunner.query('DROP TABLE "team"', undefined);
