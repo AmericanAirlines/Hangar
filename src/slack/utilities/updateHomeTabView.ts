@@ -7,7 +7,6 @@ import { getDashboardContext } from './getDashboardContext';
 const token = getRequiredEnvVar('SLACK_BOT_TOKEN');
 
 export default async function updateHomeTabView(userId: string): Promise<void> {
-  const context = await getDashboardContext();
   await app.client.views.publish({
     token,
     user_id: userId,
