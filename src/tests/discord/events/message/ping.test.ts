@@ -36,7 +36,7 @@ describe('next.js', () => {
         ),
     }));
 
-    const app = await import('../app');
+    const app = await import('../../../../app');
 
     await app.init();
 
