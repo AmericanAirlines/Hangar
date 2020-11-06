@@ -12,7 +12,7 @@ export const setupDiscord = async (token: string): Promise<Discord.Client> => {
   const readyPromise = new Promise((resolve) => {
     const readyListener = (): void => {
       resolve();
-      client.off('error', readyListener);
+      client.off('ready', readyListener);
     };
 
     client.on('ready', readyListener);
