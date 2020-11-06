@@ -58,4 +58,15 @@ describe('app', () => {
     await initDiscord();
     expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Discord skipped (missing DISCORD_BOT_TOKEN)');
   });
+
+  it('will exit the process when Discord tokens are provided but setup fails, and NODE_ENV !== "test", because it cannot initialize Discord', async () => {
+    jest.mock('../discord', () => ({
+      setupDiscord: (): Promise<Error> => Promise.reject(new Error()),
+    }));
+
+    Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
+    Object.defineProperty(process.env, 'DISCORD_BOT_TOKEN', { value: 'SOMETHING' });
+    await initDiscord();
+    expect(processExitSpy).toBeCalledTimes(1);
+  });
 });
