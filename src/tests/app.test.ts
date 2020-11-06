@@ -24,6 +24,7 @@ jest.mock('@slack/web-api', () => ({
 describe('app', () => {
   beforeEach(() => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
+    Object.defineProperty(process.env, 'DISCORD_BOT_TOKEN', { value: undefined });
     jest.resetAllMocks();
     mockSlackAuth.mockRejectedValue('Invalid Auth');
   });
