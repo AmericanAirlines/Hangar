@@ -15,4 +15,4 @@ Before you deploy your Hangar, follow these steps to generate the token needed f
 
 ## Smoke Test
 
-Send a DM to the bot saying "ping" and it should reply "pong".
+Send a DM to the bot saying "!ping" and it should reply "pong".

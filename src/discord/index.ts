@@ -1,10 +1,10 @@
 import Discord from 'discord.js';
-import { ping } from './events/message/ping';
+import { message } from './events/message';
 
 export const client = new Discord.Client();
 
 // Message Listeners
-client.on('message', ping);
+client.on('message', message);
 
 // TODO: Add additional listeners
 
