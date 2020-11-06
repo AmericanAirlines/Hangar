@@ -2,6 +2,8 @@
 export const actionIds = {
   ignore: 'ignore',
   registerTeam: 'registerTeam',
+  subscribe: 'subscribe',
+  unsubscribe: 'unsubscribe',
   joinIdeaPitchRequestQueue: 'joinIdeaPitchRequestQueue',
   joinTechnicalRequestQueue: 'joinTechnicalRequestQueue',
 };
