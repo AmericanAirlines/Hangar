@@ -77,6 +77,8 @@ export async function initDiscord(): Promise<void> {
 
       await setupDiscord(process.env.DISCORD_BOT_TOKEN);
       logger.info('Discord connected and authenticated successfully');
+
+      return;
     }
 
     logger.info('Discord skipped (missing DISCORD_BOT_TOKEN)');

@@ -6,7 +6,7 @@ jest.spyOn(logger, 'error').mockImplementation();
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
 
 // eslint-disable-next-line import/first
-import { app, initSlack } from '../app';
+import { app, initSlack, initDiscord } from '../app';
 
 const processExitSpy = jest.spyOn(process, 'exit').mockImplementation();
 const mockSlackAuth = jest.fn();
@@ -50,5 +50,12 @@ describe('app', () => {
     mockSlackAuth.mockResolvedValueOnce('Valid Auth');
     await initSlack();
     expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Slack app initialized successfully');
+  });
+
+  it('will not initialize Discord if missing the bot token', async () => {
+    Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
+    Object.defineProperty(process.env, 'DISCORD_BOT_TOKEN', { value: undefined });
+    await initDiscord();
+    expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Discord skipped (missing DISCORD_BOT_TOKEN)');
   });
 });
