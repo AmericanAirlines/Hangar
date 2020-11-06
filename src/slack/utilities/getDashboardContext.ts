@@ -4,7 +4,7 @@ interface DashboardContext {
   [key: string]: boolean;
 }
 
-export async function getDashboardContext(userId: string): Promise<DashboardContext> {
+export async function getDashboardContext(): Promise<DashboardContext> {
   const teamRegistrationToggle = (await Config.findOne({ key: 'teamRegistrationActive' })) || { key: 'teamRegistrationActive', value: 'false' };
   const isSubscribed = false;
 

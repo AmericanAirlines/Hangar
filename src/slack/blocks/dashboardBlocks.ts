@@ -104,7 +104,7 @@ But seriously, I don't have anything else to show you at the moment. Message me 
   },
 };
 
-export function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
+export function dashboardBlocks(): KnownBlock[] {
   const blocks: KnownBlock[] = [headerBlock, introBlock, dividerBlock];
   const defaultBlocksLengh = blocks.length;
 
