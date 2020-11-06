@@ -79,7 +79,6 @@ api.post('/skip', async (req, res) => {
   res.send(await getJudgeTeams(judge));
 });
 
-
 api.use('/supportRequest', requireAuth(), supportRequestRoutes);
 api.use('/judging', requireAuth(), judging);
 api.use('/config', requireAuth(), config);
