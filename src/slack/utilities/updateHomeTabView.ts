@@ -2,7 +2,6 @@
 import { app } from '..';
 import getRequiredEnvVar from '../../utilities/getRequiredEnvVar';
 import { dashboardBlocks } from '../blocks/dashboardBlocks';
-import { getDashboardContext } from './getDashboardContext';
 
 const token = getRequiredEnvVar('SLACK_BOT_TOKEN');
 
