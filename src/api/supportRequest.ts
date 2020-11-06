@@ -158,6 +158,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
     logger.error(err);
   }
 });
+
 supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   const { supportRequestId, adminName } = req.body;
   if (!supportRequestId || !adminName || !adminName.trim()) {
@@ -205,4 +206,30 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
     supportRequest: request,
   };
   res.send(response);
+});
+
+supportRequestRoutes.post('/remindUser', async (req, res) => {
+  const { supportRequestId, relativeTimeElapsedString } = req.body;
+  if (!supportRequestId || !relativeTimeElapsedString) {
+    res.status(400).send('One or more of the required properties is missing');
+    return;
+  }
+
+  try {
+    const supportRequest = await SupportRequest.findOne(supportRequestId);
+    if (!supportRequest) {
+      res.status(404).send('Unable to find matching Support Request');
+      return;
+    }
+
+    await messageUsers(
+      [supportRequest.slackId],
+      `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`,
+    );
+
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(500).send('Unable to remind the user');
+    logger.error(err);
+  }
 });
