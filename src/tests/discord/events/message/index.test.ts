@@ -44,6 +44,5 @@ describe('message handler', () => {
 
     await message(pingMessage);
     expect(pingHandlerSpy).toBeCalledTimes(1);
-    expect(reply).not.toBeCalled();
   });
 });
