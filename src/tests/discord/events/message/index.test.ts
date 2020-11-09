@@ -22,6 +22,7 @@ describe('message handler', () => {
     const reply = jest.fn();
     const genericMessage = ({
       reply,
+      content: '',
       author: {
         id: 'JaneSmith',
       },
