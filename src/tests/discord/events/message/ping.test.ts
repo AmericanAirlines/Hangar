@@ -8,7 +8,12 @@ describe('ping handler', () => {
     const reply = jest.fn();
     const pingMessage = ({
       reply,
+      content: '!ping',
+      author: {
+        id: 'JaneSmith',
+      },
     } as unknown) as Discord.Message;
+
     await ping(pingMessage);
     expect(reply).toBeCalledWith('pong');
   });

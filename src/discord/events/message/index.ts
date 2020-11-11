@@ -6,7 +6,7 @@ interface Command {
   handlerId: string;
   trigger?: string;
   description: string;
-  handler: (message: Discord.Message) => Promise<void>;
+  handler: (message: Discord.Message, context: DiscordContext) => Promise<void>;
 }
 
 export const commands: Command[] = [
@@ -19,25 +19,26 @@ export const commands: Command[] = [
 ];
 
 export async function message(msg: Discord.Message): Promise<void> {
-  const context = await DiscordContext.findOne(msg.author.id);
+  let context = await DiscordContext.findOne(msg.author.id);
 
-  //   if (!context) {
-  //     context = new DiscordContext()
-  //   }
+  if (!context) {
+    context = new DiscordContext(msg.author.id, '');
+  }
+
+  let command: Command | undefined;
 
   // Check to see if the context has a next step
-  let command = commands.find((c) => c.handlerId === context?.nextStep);
-
-  if (command) {
-    await command.handler(msg);
-    return;
+  if (context.nextStep) {
+    command = commands.find((c) => c.handlerId === context.nextStep);
   }
 
   // If not, try to match the content to a known trigger id
-  command = commands.find((c) => c.trigger === msg.content);
+  if (!command) {
+    command = commands.find((c) => c.trigger === msg.content.trim());
+  }
 
   if (command) {
-    await command.handler(msg);
+    await command.handler(msg, context);
     return;
   }
 

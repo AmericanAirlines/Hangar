@@ -22,6 +22,7 @@ describe('message handler', () => {
     const reply = jest.fn();
     const genericMessage = ({
       reply,
+      content: '',
       author: {
         id: 'JaneSmith',
       },
@@ -44,6 +45,5 @@ describe('message handler', () => {
 
     await message(pingMessage);
     expect(pingHandlerSpy).toBeCalledTimes(1);
-    expect(reply).not.toBeCalled();
   });
 });
