@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { DiscordContext } from '../../../entities/discordContext';
 import { ping } from './ping';
+import { help } from './help';
 import { client } from '../..';
 
 interface Command {
@@ -16,6 +17,12 @@ export const commands: Command[] = [
     trigger: '!ping',
     description: 'Replies with pong',
     handler: ping,
+  },
+  {
+    handlerId: 'help',
+    trigger: '!help',
+    description: 'Lists commands the user can user to interact with the bot',
+    handler: help,
   },
 ];
 
