@@ -3,9 +3,11 @@ import Discord from 'discord.js';
 import 'jest';
 import * as ping from '../../../../discord/events/message/ping';
 import { DiscordContext } from '../../../../entities/discordContext';
+import { client } from '../../../../discord';
 
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
 jest.spyOn(DiscordContext, 'findOne').mockImplementation();
+jest.mock('../../../../discord');
 
 /* Because we need to make sure the mocks above are copied
   into`commands`, we need to import the message file below:
@@ -45,5 +47,21 @@ describe('message handler', () => {
 
     await message(pingMessage);
     expect(pingHandlerSpy).toBeCalledTimes(1);
+  });
+
+  it('does not respond if the message is from itself', async () => {
+    client.user.id = 'bot';
+
+    const reply = jest.fn();
+    const botMessage = ({
+      reply,
+      content: 'From the bot',
+      author: {
+        id: 'bot',
+      },
+    } as unknown) as Discord.Message;
+
+    await message(botMessage);
+    expect(reply).not.toHaveBeenCalled();
   });
 });
