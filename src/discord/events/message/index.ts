@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { DiscordContext } from '../../../entities/discordContext';
 import { ping } from './ping';
+import { client } from '../..';
 
 interface Command {
   handlerId: string;
@@ -19,6 +20,8 @@ export const commands: Command[] = [
 ];
 
 export async function message(msg: Discord.Message): Promise<void> {
+  if (msg.author.id === client.user.id) return;
+
   let context = await DiscordContext.findOne(msg.author.id);
 
   if (!context) {
