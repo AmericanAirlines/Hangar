@@ -18,9 +18,14 @@ export class CreateTables1572726338107 implements MigrationInterface {
       'CREATE TABLE "judge" ("id" SERIAL NOT NULL, "visitedTeams" text NOT NULL, "currentTeam" integer, CONSTRAINT "PK_e686dcaea5ac575a0a7fded3b46" PRIMARY KEY ("id"))',
       undefined,
     );
+    await queryRunner.query(
+      'CREATE TABLE "subscriber" ("id" SERIAL NOT NULL, "slackId" character varying NOT NULL, CONSTRAINT "PK_1c52b7ddbaf79cd2650045b79c7" PRIMARY KEY ("id"))',
+      undefined,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
+    await queryRunner.query('DROP TABLE "subscriber"', undefined);
     await queryRunner.query('DROP TABLE "judge"', undefined);
     await queryRunner.query('DROP TABLE "judging_vote"', undefined);
     await queryRunner.query('DROP TABLE "team"', undefined);
