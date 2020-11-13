@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npm-run-all -l clean build:ts -p build:watch start:watch",
     "start": "node -r dotenv/config dist/index.js",
-    "start:watch": "nodemon -w dist -e js -r dotenv/config dist/index.js",
+    "start:watch": "nodemon -w dist -w .env -e js -r dotenv/config dist/index.js",
     "build": "run-s build:ts build:next",
     "build:ts": "tsc -p src/ --pretty",
     "build:next": "next build",
