@@ -2,6 +2,7 @@ import express from 'express';
 import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
 import logger from '../logger';
 import messageUsers from '../slack/utilities/messageUsers';
+import { stringDictionary } from '../StringDictonary';
 
 export const supportRequestRoutes = express.Router();
 
@@ -116,8 +117,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
     await messageUsers(
-      [supportRequest.slackId],
-      "Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:",
+      [supportRequest.slackId], stringDictionary.supportRequestComplete as string,
     );
 
     res.sendStatus(200);

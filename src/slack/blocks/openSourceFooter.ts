@@ -10,7 +10,7 @@ const openSourceBlock: KnownBlock = {
   elements: [
     {
       type: 'mrkdwn',
-      text: `<${repoUrl} | _*Hangar*_> is an Open Source project created by American Airlines.`,
+      text: `${repoUrl} | _*Hangar*_> is an Open Source project created by American Airlines.`,
     },
   ],
 };
