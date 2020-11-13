@@ -2,6 +2,7 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 import { useFormik } from 'formik';
+import { NextPage } from 'next';
 
 interface Request {
   id: number;
@@ -10,9 +11,9 @@ interface Request {
   movedToInProgressAt: string;
 }
 
-const ADMIN_NAME_KEY = 'adminName';
+const SUPPORT_NAME_KEY = 'supportName';
 
-const support = (): JSX.Element => {
+const support: NextPage<{secret: string}> = (props): JSX.Element => {
   const [lastUpdateEpoch, setLastUpdateEpoch] = React.useState(Date.now());
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
@@ -21,15 +22,15 @@ const support = (): JSX.Element => {
   const [lastPop, setLastPop] = React.useState<null | { userNotified: boolean; supportRequest: Request }>(null);
   const formik = useFormik({
     initialValues: {
-      adminName: '',
+      supportName: '',
     },
-    onSubmit({ adminName }) {
-      window.localStorage.setItem(ADMIN_NAME_KEY, adminName.trim());
+    onSubmit({ supportName }) {
+      window.localStorage.setItem(SUPPORT_NAME_KEY, supportName.trim());
     },
   });
 
   async function getAndSetCount(): Promise<void> {
-    const res = await fetch('/api/supportRequest/getCount');
+    const res = await fetch('/api/supportRequest/getCount', { headers: { authorization: props.secret } });
     if (!res.ok) {
       setError(true);
       return;
@@ -43,7 +44,7 @@ const support = (): JSX.Element => {
   }
 
   React.useEffect(() => {
-    formik.setFieldValue('adminName', window.localStorage.getItem(ADMIN_NAME_KEY));
+    formik.setFieldValue('supportName', window.localStorage.getItem(SUPPORT_NAME_KEY));
 
     const timer = setInterval(() => {
       setLastUpdateEpoch(Date.now());
@@ -58,7 +59,7 @@ const support = (): JSX.Element => {
 
     promises.push(
       (async (): Promise<void> => {
-        const res = await fetch('/api/supportRequest/getInProgress');
+        const res = await fetch('/api/supportRequest/getInProgress', { headers: { authorization: props.secret } });
 
         if (!res.ok) {
           setError(true);
@@ -79,16 +80,17 @@ const support = (): JSX.Element => {
   }, [lastUpdateEpoch]);
 
   const getNext = async (): Promise<void> => {
-    if (!window.localStorage.getItem(ADMIN_NAME_KEY)) {
+    if (!window.localStorage.getItem(SUPPORT_NAME_KEY)) {
       alert('Please set your name first'); // eslint-disable-line no-alert
       return;
     }
 
     const res = await fetch('/api/supportRequest/getNext', {
       method: 'POST',
-      body: JSON.stringify({ adminName: window.localStorage.getItem(ADMIN_NAME_KEY) }),
+      body: JSON.stringify({ supportName: window.localStorage.getItem(SUPPORT_NAME_KEY) }),
       headers: {
         'Content-Type': 'application/json',
+        authorization: props.secret,
       },
     });
 
@@ -131,6 +133,7 @@ const support = (): JSX.Element => {
       body: JSON.stringify({ supportRequestId }),
       headers: {
         'Content-Type': 'application/json',
+        authorization: props.secret,
       },
     });
 
@@ -152,22 +155,22 @@ const support = (): JSX.Element => {
     <div className="container mt-4">
       <div className="row mb-4">
         <div className="col-12 col-md-6">
-          <h1>Hello, Support 👋</h1>
+          <h1>Support Dashboard</h1>
         </div>
         <div className="col-12 col-md-6">
           <form className="form-inline float-md-right" onSubmit={formik.handleSubmit}>
             <div className="form-group ml-sm-3 mr-3 mb-2">
-              <label htmlFor="adminName" className="mr-3">
+              <label htmlFor="supportName" className="mr-3">
                 Your Name
               </label>
               <input
                 type="text"
                 className="form-control"
-                id="adminName"
+                id="supportName"
                 placeholder="Your name"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.adminName}
+                value={formik.values.supportName}
               />
             </div>
             <button type="submit" className="btn btn-primary mb-2">
@@ -228,7 +231,8 @@ support.getInitialProps = async (ctx: any): Promise<any> => {
     ctx.res.end('Not found');
   }
 
-  return {};
+  return {
+    secret: process.env.SUPPORT_SECRET };
 };
 
 export default support;
