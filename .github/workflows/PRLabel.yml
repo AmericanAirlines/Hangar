@@ -2,7 +2,9 @@
 # paths that are modified in the pull request.
 
 name: Labeler
-on: [pull_request]
+on:
+ schedule:
+ - cron: "0/15 * * * *"
 
 jobs:
   label:
@@ -10,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/labeler@v2
+    - name: Labeler
+      uses: actions/labeler@v3
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
