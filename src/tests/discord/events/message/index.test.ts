@@ -6,7 +6,8 @@ import { DiscordContext } from '../../../../entities/discordContext';
 import { client } from '../../../../discord';
 
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
-jest.spyOn(DiscordContext, 'findOne').mockImplementation();
+const mockDiscordContext = new DiscordContext('1234', '');
+jest.spyOn(DiscordContext, 'findOne').mockImplementation(() => Promise.resolve(mockDiscordContext));
 jest.mock('../../../../discord');
 
 /* Because we need to make sure the mocks above are copied
@@ -41,12 +42,13 @@ describe('message handler', () => {
       reply,
       content: '!ping',
       author: {
-        id: 'JaneSmith',
+        id: mockDiscordContext.id,
       },
     } as unknown) as Discord.Message;
 
     await message(pingMessage);
     expect(pingHandlerSpy).toBeCalledTimes(1);
+    expect(pingHandlerSpy).toBeCalledWith(pingMessage, mockDiscordContext);
   });
 
   it('does not respond if the message is from itself', async () => {
