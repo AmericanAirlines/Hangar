@@ -4,6 +4,7 @@ import 'jest';
 import * as ping from '../../../../discord/events/message/ping';
 import { DiscordContext } from '../../../../entities/discordContext';
 import { client } from '../../../../discord';
+import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
 const mockDiscordContext = new DiscordContext('1234', '');
@@ -29,6 +30,9 @@ describe('message handler', () => {
       author: {
         id: 'JaneSmith',
       },
+      channel: {
+        type: 'dm',
+      },
     } as unknown) as Discord.Message;
 
     await message(genericMessage);
@@ -44,6 +48,9 @@ describe('message handler', () => {
       author: {
         id: mockDiscordContext.id,
       },
+      channel: {
+        type: 'dm',
+      },
     } as unknown) as Discord.Message;
 
     await message(pingMessage);
@@ -55,15 +62,53 @@ describe('message handler', () => {
     client.user.id = 'bot';
 
     const reply = jest.fn();
-    const botMessage = ({
+    const botMessage = makeDiscordMessage({
       reply,
       content: 'From the bot',
       author: {
         id: 'bot',
       },
-    } as unknown) as Discord.Message;
+    });
 
     await message(botMessage);
     expect(reply).not.toHaveBeenCalled();
+  });
+
+  it('does not respond if in an unapproved channel', async () => {
+    const reply = jest.fn();
+    const channelMessage = makeDiscordMessage({
+      reply,
+      content: 'In a channel',
+      author: {
+        id: 'someone',
+      },
+      channel: {
+        type: 'text',
+        id: '0123',
+      },
+    });
+
+    await message(channelMessage);
+    expect(reply).not.toHaveBeenCalled();
+  });
+
+  it('responds if in an approved channel', async () => {
+    Object.defineProperty(process.env, 'DISCORD_BOT_CHANNEL_IDS', { value: '9423,  13189    ,  0123' });
+
+    const reply = jest.fn();
+    const channelMessage = makeDiscordMessage({
+      reply,
+      content: 'In a channel',
+      author: {
+        id: 'someone',
+      },
+      channel: {
+        type: 'text',
+        id: '0123',
+      },
+    });
+
+    await message(channelMessage);
+    expect(reply).toHaveBeenCalled();
   });
 });
