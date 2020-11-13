@@ -3,7 +3,9 @@ import 'jest';
 import { commands } from '../../../../discord/events/message';
 import { help } from '../../../../discord/events/message/help';
 
-const getHelpMsg = () =>
+jest.mock('../../../../discord');
+
+const getHelpMsg = (): Discord.Message =>
   // eslint-disable-next-line implicit-arrow-linebreak
   (({
     reply: jest.fn(),
