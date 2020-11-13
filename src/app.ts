@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import next from 'next';
@@ -57,7 +56,6 @@ async function initDatabase(): Promise<void> {
 }
 
 export async function initSlack(): Promise<void> {
-  // console.log(await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test());
   try {
     await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test();
     initListeners();
@@ -65,7 +63,27 @@ export async function initSlack(): Promise<void> {
     logger.info('Slack app initialized successfully');
   } catch (err) {
     if (process.env.NODE_ENV !== 'test') {
-      logger.error('Slack Bot Token is invalid', err);
+      logger.error('Slack Bot Token is invalid: ', err);
+      process.exit(1);
+    }
+  }
+}
+
+export async function initDiscord(): Promise<void> {
+  try {
+    if (process.env.DISCORD_BOT_TOKEN) {
+      const { setupDiscord } = await import('./discord');
+
+      await setupDiscord(process.env.DISCORD_BOT_TOKEN);
+      logger.info('Discord connected and authenticated successfully');
+
+      return;
+    }
+
+    logger.info('Discord skipped (missing DISCORD_BOT_TOKEN)');
+  } catch (err) {
+    if (process.env.NODE_ENV !== 'test') {
+      logger.error('Discord token is invalid. ', err);
       process.exit(1);
     }
   }
@@ -80,7 +98,7 @@ export async function initNext(): Promise<void> {
 }
 
 export const init = async (): Promise<void> => {
-  await Promise.all([initDatabase(), initSlack()]);
+  await Promise.all([initDatabase(), initSlack(), initDiscord()]);
 
   if (process.env.NODE_ENV === 'production') {
     await initNext();

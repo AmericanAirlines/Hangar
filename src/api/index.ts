@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import express from 'express';
 import { requireAuth } from './middleware/requireAuth';
 import { supportRequestRoutes } from './supportRequest';
