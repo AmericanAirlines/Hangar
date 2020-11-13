@@ -2,6 +2,7 @@ import Discord from 'discord.js';
 import { DiscordContext } from '../../../entities/discordContext';
 import { ping } from './ping';
 import { client } from '../..';
+import logger from '../../../logger';
 
 interface Command {
   handlerId: string;
@@ -33,6 +34,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   // Check to see if the context has a next step
   if (context.nextStep) {
     command = commands.find((c) => c.handlerId === context.nextStep);
+    logger.error('Discord context next step handler not found');
   }
 
   // If not, try to match the content to a known trigger id
