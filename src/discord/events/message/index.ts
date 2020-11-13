@@ -21,7 +21,8 @@ export const commands: Command[] = [
 ];
 
 export async function message(msg: Discord.Message): Promise<void> {
-  if (msg.author.id === client.user.id) return;
+    // Make sure the bot doesn't respond to itself
+    if (msg.author.id === client.user.id) return;
 
   let context = await DiscordContext.findOne(msg.author.id);
 
