@@ -1,18 +1,18 @@
 /* eslint-disable implicit-arrow-linebreak, function-paren-newline */
-import Discord from 'discord.js';
 import 'jest';
 import { ping } from '../../../../discord/events/message/ping';
+import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 
 describe('ping handler', () => {
   it("will respond with 'pong' when messaged", async () => {
     const reply = jest.fn();
-    const pingMessage = ({
+    const pingMessage = makeDiscordMessage({
       reply,
       content: '!ping',
       author: {
         id: 'JaneSmith',
       },
-    } as unknown) as Discord.Message;
+    });
 
     await ping(pingMessage);
     expect(reply).toBeCalledWith('pong');

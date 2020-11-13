@@ -55,7 +55,6 @@ describe('app', () => {
 
   it('will not initialize Discord if missing the bot token', async () => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
-    delete process.env.DISCORD_BOT_TOKEN;
     await initDiscord();
     expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Discord skipped (missing DISCORD_BOT_TOKEN)');
   });

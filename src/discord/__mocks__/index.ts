@@ -1,8 +1,6 @@
 import Discord from 'discord.js';
+import { DeepPartial } from 'typeorm';
 
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>;
-};
 type MockDiscordClient = DeepPartial<Discord.Client>;
 
 export const client: MockDiscordClient = {
