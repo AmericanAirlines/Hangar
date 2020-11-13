@@ -24,7 +24,7 @@ describe('message handler', () => {
 
   it('will respond with generic info if a matching handler cannot be found', async () => {
     const reply = jest.fn();
-    const genericMessage = ({
+    const genericMessage = makeDiscordMessage({
       reply,
       content: '',
       author: {
@@ -33,7 +33,7 @@ describe('message handler', () => {
       channel: {
         type: 'dm',
       },
-    } as unknown) as Discord.Message;
+    });
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
@@ -42,7 +42,7 @@ describe('message handler', () => {
 
   it('successfully responds to !ping requests', async () => {
     const reply = jest.fn();
-    const pingMessage = ({
+    const pingMessage = makeDiscordMessage({
       reply,
       content: '!ping',
       author: {
@@ -51,7 +51,7 @@ describe('message handler', () => {
       channel: {
         type: 'dm',
       },
-    } as unknown) as Discord.Message;
+    });
 
     await message(pingMessage);
     expect(pingHandlerSpy).toBeCalledTimes(1);
