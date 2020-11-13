@@ -1,5 +1,4 @@
 /* eslint-disable implicit-arrow-linebreak, function-paren-newline */
-import Discord from 'discord.js';
 import 'jest';
 import * as ping from '../../../../discord/events/message/ping';
 import { DiscordContext } from '../../../../entities/discordContext';
