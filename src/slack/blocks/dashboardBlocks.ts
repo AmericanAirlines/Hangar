@@ -45,39 +45,6 @@ const challengeBlock: KnownBlock = {
   },
 };
 
-const subscribeBlock: KnownBlock = {
-  type: 'section',
-  text: {
-    type: 'mrkdwn',
-    text:
-      "*Subscribe to Updates*\nWant to stay informed throughout the event? Subscribe and we'll send you occasional updates here in Slack (_you can unsubscribe at any time_).",
-  },
-  accessory: {
-    type: 'button',
-    text: {
-      type: 'plain_text',
-      text: 'Subscribe',
-    },
-    action_id: actionIds.subscribe,
-  },
-};
-
-const unsubscribeBlock: KnownBlock = {
-  type: 'section',
-  text: {
-    type: 'mrkdwn',
-    text: "*Unsubscribe from Updates*\nWant us to stop sending you messages about the event? Don't worry, we can still be friends.",
-  },
-  accessory: {
-    type: 'button',
-    text: {
-      type: 'plain_text',
-      text: 'Unsubscribe',
-    },
-    action_id: actionIds.unsubscribe,
-  },
-};
-
 const ideaPitchRequestBlock: KnownBlock = {
   type: 'section',
   text: {
@@ -137,15 +104,13 @@ But seriously, I don't have anything else to show you at the moment. Message me 
   },
 };
 
-export function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
+export function dashboardBlocks(): KnownBlock[] {
   const blocks: KnownBlock[] = [headerBlock, introBlock, dividerBlock];
   const defaultBlocksLengh = blocks.length;
 
   if (challengeUrl) {
     blocks.push(challengeBlock);
   }
-
-  blocks.push(context.isSubscribed ? unsubscribeBlock : subscribeBlock);
 
   blocks.push(ideaPitchRequestBlock);
   blocks.push(technicalRequestBlock);
