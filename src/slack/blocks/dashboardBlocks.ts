@@ -12,7 +12,7 @@ const headerBlock: KnownBlock = {
   type: 'header',
   text: {
     type: 'plain_text',
-    text: stringDictionary.headerBlock as string,
+    text: stringDictionary.headerinfo as string,
     emoji: true,
   },
 };
@@ -21,7 +21,7 @@ const introBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.introBlock as string,
+    text: stringDictionary.intro as string,
   },
 };
 
@@ -33,13 +33,13 @@ const challengeBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.challengeBlock as string,
+    text: stringDictionary.challenge as string,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.challengeBlock2 as string,
+      text: stringDictionary.challenge2 as string,
     },
     url: challengeUrl,
     action_id: actionIds.ignore,
@@ -51,13 +51,13 @@ const subscribeBlock: KnownBlock = {
   text: {
     type: 'mrkdwn',
     text:
-    stringDictionary.subscribeBlock as string,
+    stringDictionary.subscribe as string,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.subscribeBlock2 as string,
+      text: stringDictionary.subscribe2 as string,
     },
     action_id: actionIds.subscribe,
   },
@@ -67,13 +67,13 @@ const unsubscribeBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.unsubscribeBlock as string,
+    text: stringDictionary.unsubscribe as string,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.unsubscribeBlock2 as string,
+      text: stringDictionary.unsubscribe2 as string,
     },
     action_id: actionIds.unsubscribe,
   },
@@ -84,13 +84,13 @@ const ideaPitchRequestBlock: KnownBlock = {
   text: {
     type: 'mrkdwn',
     text:
-    stringDictionary.ideaPitchRequestBlock as string,
+    stringDictionary.ideaPitchRequest as string,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.ideaPitchRequestBlock2 as string,
+      text: stringDictionary.ideaPitchRequest2 as string,
     },
     action_id: actionIds.joinIdeaPitchRequestQueue,
   },
@@ -100,13 +100,13 @@ const technicalRequestBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.technicalRequestBlock as string,
+    text: stringDictionary.technicalRequest as string,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.technicalRequestBlock2 as string,
+      text: stringDictionary.technicalRequest2 as string,
     },
     action_id: actionIds.joinTechnicalRequestQueue,
   },
@@ -116,13 +116,13 @@ const teamRegistrationBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.teamRegistrationBlock as string,
+    text: stringDictionary.teamRegistration as string,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.teamRegistrationBlock2 as string,
+      text: stringDictionary.teamRegistration2 as string,
     },
     action_id: actionIds.registerTeam,
   },
@@ -132,7 +132,7 @@ const comingSoonBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.comingSoonBlock as string,
+    text: stringDictionary.comingSoon as string,
   },
 };
 
