@@ -134,24 +134,28 @@ stringDictionary.messageReceived = `Hey there :wave: I'm a bot designed to provi
 \nOccasionally I'll send you updates here as well, so keep an eye out for unread messages in your sidebar.`;
 /*----------------------------------*/
 
-/*----------------------------------
+/*----------------------------------*/
 // src>slack>views>registerTeamSubmitted.ts
-stringDictionary.registerTeamNotOpen = (params) => `:warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.
+stringDictionary.registerTeamNotOpen = (
+  params,
+) => `:warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.
 Team Name: ${params.teamName}
 TableNumber: ${params.tableNumber}
 Project Description: ${params.projectDescription}
-Team Members: ${params.formattedTeamMembers.join(', ')}`;
+Team Members: ${params.formattedTeamMembers}`;
 
 stringDictionary.teamSubmittedAdminNotification = (params) => `<@${params.registeringUser}> registered their team for judging:
 Team Members: ${params.formattedTeamMembers}
 Table Number: ${params.tableNumber}`;
 
-stringDictionary.teamSubmittedpostMessage = (params) => `:warning: Something went wrong while registering your team... come chat with our team for help.
+stringDictionary.teamSubmittedpostMessage = (
+  params,
+) => `:warning: Something went wrong while registering your team... come chat with our team for help.
 To help with resubmitting, here's the info you tried to submit:
 Team Name: ${params.teamName}
 TableNumber: ${params.tableNumber}
 Project Description: ${params.projectDescription}
-Team Members: ${params.formattedTeamMembers.join(', ')}
+Team Members: ${params.formattedTeamMembers}
 Here's what went wrong, it may be helpful (but probably not):
 \`\`\`
 ${JSON.stringify(params.err, null, 2)}
