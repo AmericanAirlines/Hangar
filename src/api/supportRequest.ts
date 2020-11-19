@@ -75,14 +75,14 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
   }
 
   let userNotified = false;
+  const params: Record<string, string> = {
+    adminName,
+    type: requestType,
+  };
+  const dict = stringDictionary as Record<string, (params: Record<string, string>) => string>;
   try {
     if (nextRequest) {
-      await messageUsers(
-        [nextRequest.slackId],
-        `:tada: ${adminName} is ready to ${
-          nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${adminName}*!`,
-      );
+      await messageUsers([nextRequest.slackId], dict.supportRequestSuccess(params));
       userNotified = true;
     }
   } catch (err) {
@@ -116,9 +116,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    await messageUsers(
-      [supportRequest.slackId], stringDictionary.supportRequestComplete as string,
-    );
+    await messageUsers([supportRequest.slackId], stringDictionary.supportRequestComplete as string);
 
     res.sendStatus(200);
   } catch (err) {
@@ -147,10 +145,11 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    await messageUsers(
-      [supportRequest.slackId],
-      `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`,
-    );
+    const params: Record<string, string> = {
+      relativeTimeElapsedString,
+    };
+    const dict = stringDictionary as Record<string, (params: Record<string, string>) => string>;
+    await messageUsers([supportRequest.slackId], dict.supportRequestNoShow(params));
 
     res.sendStatus(200);
   } catch (err) {
@@ -160,7 +159,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
 });
 
 supportRequestRoutes.patch('/getSpecific', async (req, res) => {
-  const { supportRequestId, adminName } = req.body;
+  const { supportRequestId, requestType, adminName } = req.body;
   if (!supportRequestId || !adminName || !adminName.trim()) {
     res.status(400).send('One or more of the required properties is missing');
     return;
@@ -187,14 +186,14 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   }
 
   let userNotified = false;
+  const params: Record<string, string> = {
+    adminName,
+    type: requestType,
+  };
+  const dict = stringDictionary as Record<string, (params: Record<string, string>) => string>;
   try {
     if (request) {
-      await messageUsers(
-        [request.slackId],
-        `:tada: ${adminName} is ready to ${
-          request.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${adminName}*!`,
-      );
+      await messageUsers([request.slackId], dict.supportRequestSuccess(params));
       userNotified = true;
     }
   } catch (err) {
@@ -222,10 +221,12 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
       return;
     }
 
-    await messageUsers(
-      [supportRequest.slackId],
-      `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`,
-    );
+    const params: Record<string, string> = {
+      relativeTimeElapsedString,
+    };
+    const dict = stringDictionary as Record<string, (params: Record<string, string>) => string>;
+
+    await messageUsers([supportRequest.slackId], dict.remindUser(params));
 
     res.sendStatus(200);
   } catch (err) {

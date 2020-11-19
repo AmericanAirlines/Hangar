@@ -1,7 +1,7 @@
 import { KnownBlock } from '@slack/types';
 import { actionIds } from '../constants';
 import openSourceBlock from './openSourceFooter';
-import { stringDictionary } from "../../StringDictonary";
+import { stringDictionary } from '../../StringDictonary';
 
 const challengeUrl = process.env.CHALLENGE_URL;
 
@@ -50,8 +50,7 @@ const ideaPitchRequestBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text:
-    stringDictionary.ideaPitchRequest as string,
+    text: stringDictionary.ideaPitchRequest as string,
   },
   accessory: {
     type: 'button',

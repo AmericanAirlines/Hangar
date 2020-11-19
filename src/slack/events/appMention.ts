@@ -2,7 +2,7 @@
 import { Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { app } from '..';
 import logger from '../../logger';
-import { stringDictionary } from "../../StringDictonary";
+import { stringDictionary } from '../../StringDictonary';
 
 export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = async ({ context, payload }) => {
   try {

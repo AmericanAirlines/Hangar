@@ -4,7 +4,7 @@ import { registerTeamView } from '../blocks/registerTeam';
 import logger from '../../logger';
 import { Config } from '../../entities/config';
 import { openAlertModal } from '../utilities/openAlertModal';
-import { stringDictionary } from "../../StringDictonary";
+import { stringDictionary } from '../../StringDictonary';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */

@@ -121,17 +121,20 @@ export function registeredTeamSummary(
   projectDescription: string,
 ): KnownBlock[] {
   const userString = teamMembers.length === 1 ? 'You have' : `<@${registeringUser}> has`;
+  const dict = stringDictionary as Record<string, (params: Record<string, string>) => string>;
+  const tableNumberStr = tableNumber.toString();
+  const params: Record<string, string> = {
+    userString,
+    teamName,
+    tableNumber: tableNumberStr,
+    projectDescription,
+  };
   return [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `${userString} registered your team for sponsor judging. Our team will stop by during judging to see your hack. Best of luck and see you soon!
-
-*Team Name*: ${teamName}
-*Table Number*: ${tableNumber}
-*Project Description*: ${projectDescription}
-        `,
+        text: dict.registerTeamSummary(params),
       },
     },
     openSourceFooter,
