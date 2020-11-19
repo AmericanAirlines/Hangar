@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* global fetch, window, alert */
 import React from 'react';
 import { DateTime } from 'luxon';
