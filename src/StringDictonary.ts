@@ -13,9 +13,13 @@ stringDictionary.supportRequestSuccess = (params) => `:tada: ${params.adminName}
 
 stringDictionary.supportRequestComplete = `Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:`;
 
-stringDictionary.supportRequestNoShow = (params) => `:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`;
+stringDictionary.supportRequestNoShow = (params) =>
+  // eslint-disable-next-line implicit-arrow-linebreak
+  `:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`;
 
-stringDictionary.remindUser = (params) => `:findik: We messaged you about your support request ${params.relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`;
+stringDictionary.remindUser = (params) =>
+  // eslint-disable-next-line implicit-arrow-linebreak
+  `:findik: We messaged you about your support request ${params.relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`;
 /*----------------------------------*/
 
 /*----------------------------------*/
