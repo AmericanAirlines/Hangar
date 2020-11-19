@@ -46,39 +46,6 @@ const challengeBlock: KnownBlock = {
   },
 };
 
-const subscribeBlock: KnownBlock = {
-  type: 'section',
-  text: {
-    type: 'mrkdwn',
-    text:
-    stringDictionary.subscribe as string,
-  },
-  accessory: {
-    type: 'button',
-    text: {
-      type: 'plain_text',
-      text: stringDictionary.subscribe2 as string,
-    },
-    action_id: actionIds.subscribe,
-  },
-};
-
-const unsubscribeBlock: KnownBlock = {
-  type: 'section',
-  text: {
-    type: 'mrkdwn',
-    text: stringDictionary.unsubscribe as string,
-  },
-  accessory: {
-    type: 'button',
-    text: {
-      type: 'plain_text',
-      text: stringDictionary.unsubscribe2 as string,
-    },
-    action_id: actionIds.unsubscribe,
-  },
-};
-
 const ideaPitchRequestBlock: KnownBlock = {
   type: 'section',
   text: {
@@ -136,15 +103,13 @@ const comingSoonBlock: KnownBlock = {
   },
 };
 
-export function dashboardBlocks(context: { [key: string]: boolean }): KnownBlock[] {
+export function dashboardBlocks(): KnownBlock[] {
   const blocks: KnownBlock[] = [headerBlock, introBlock, dividerBlock];
   const defaultBlocksLengh = blocks.length;
 
   if (challengeUrl) {
     blocks.push(challengeBlock);
   }
-
-  blocks.push(context.isSubscribed ? unsubscribeBlock : subscribeBlock);
 
   blocks.push(ideaPitchRequestBlock);
   blocks.push(technicalRequestBlock);
