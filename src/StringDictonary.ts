@@ -1,206 +1,201 @@
-export const stringDictionary: Record<string, string> | Record<string, (params: Record<string, string>) => string> = {}
+/* eslint-disable quotes */
+import { SupportRequestType } from '/entities/supportRequest';
+
+export const stringDictionary: Record<string, string> | Record<string, (params: Record<string, string>) => string> = {};
+
 
 /*----------------------------------*/
-//src>api>>supportRequest.ts
-stringDictionary.supportRequestSuccess = (params) => 
-`:tada: ${params.adminName} is ready to ${params.nextRequest.type === params.SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'}, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.
+// src>api>>supportRequest.ts
+stringDictionary.supportRequestSuccess = (params) => `:tada: ${params.adminName} is ready to ${params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'}, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.
 \nWhen you arrive, tell one of our team members that you're here to meet with *${params.adminName}*!`;
 
-stringDictionary.supportRequestComplete = 
+stringDictionary.supportRequestComplete =
 `Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:`;
 
-stringDictionary.supportRequestNoShow = (params) => 
-`:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`;
+stringDictionary.supportRequestNoShow = (params) => `:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`;
 
-stringDictionary.ideaPitchSuccess = (params) => 
-`:tada: ${params.adminName} is ready to ${params.request.type === params.SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'}, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.
+stringDictionary.ideaPitchSuccess = (params) => `:tada: ${params.adminName} is ready to ${params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'}, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.
 \nWhen you arrive, tell one of our team members that you're here to meet with *${params.adminName}*!`;
 
-stringDictionary.ideaPitchNoShow= (params) => 
-`:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`;
+stringDictionary.ideaPitchNoShow = (params) => `:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`;
 /*----------------------------------*/
 
 
 /*----------------------------------*/
-//src>slack>actions>registerTeam.ts
-stringDictionary.registrationNotOpen = 
+// src>slack>actions>registerTeam.ts
+stringDictionary.registrationNotOpen =
 `:warning: Team registration is not open yet. Check back later or, if you're subscribed to updates, watch for a direct message from the bot!`;
 /*----------------------------------*/
 
 
 /*----------------------------------*/
-//src>slack>actions>supportRequest.ts
-stringDictionary.supportRequestNotOpentitle = 
+// src>slack>actions>supportRequest.ts
+stringDictionary.supportRequestNotOpentitle =
 'Whoops...';
 
-stringDictionary.supportRequestNotOpentext = (params) => 
-`:see_no_evil: Our team isn't available to help at the moment, check back with us soon!`;
+stringDictionary.supportRequestNotOpentext = (params) => `:see_no_evil: Our team isn't available to help at the moment, check back with us soon!`;
 
-stringDictionary.supportRequestOpentitle = 
+stringDictionary.supportRequestOpentitle =
 `You're All Set`;
 
-stringDictionary.supportRequestOpentext = 
+stringDictionary.supportRequestOpentext =
 `:white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.`;
 
 stringDictionary.supportRequestAdminNotification =
 `:white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.`;
 
-stringDictionary.supportRequestAlreadyInLinetitle = 
+stringDictionary.supportRequestAlreadyInLinetitle =
 `Whoops...`;
 
-stringDictionary.supportRequestAlreadyInLinetext = 
+stringDictionary.supportRequestAlreadyInLinetext =
 `:warning: Looks like you're already waiting to get help from our team`;
 
-stringDictionary.supportRequestExistingActiveRequest = 
+stringDictionary.supportRequestExistingActiveRequest =
 `Keep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.`;
 
-stringDictionary.supportRequestAlertModaltitle = 
+stringDictionary.supportRequestAlertModaltitle =
 `Whoops...`;
 
-stringDictionary.supportRequestAlertModaltext = 
+stringDictionary.supportRequestAlertModaltext =
 `:warning: Something went wrong... come chat with our team and we'll help.`;
 /*----------------------------------*/
 
 
 /*----------------------------------*/
-//src>slack>blocks>dashboardblocks.ts
-stringDictionary.headerinfo = 
+// src>slack>blocks>dashboardblocks.ts
+stringDictionary.headerinfo =
 `Hello, Welcome to Hangar :wave:`;
 
-stringDictionary.intro = 
+stringDictionary.intro =
 `Hey there :wave: I'm a bot designed to provide you with resources for the hackathon!`;
 
-stringDictionary.challenge = 
+stringDictionary.challenge =
 `*Sponsor Challenge*
 Want to read up on our challenge and see what our prizes are?`;
 
-stringDictionary.challenge2 = 
+stringDictionary.challenge2 =
 'Challenge Info';
 
-stringDictionary.subscribe = 
+stringDictionary.subscribe =
 `*Subscribe to Updates*
 Want to stay informed throughout the event? Subscribe and we'll send you occasional updates here in Slack (_you can unsubscribe at any time_).`;
 
-stringDictionary.subscribe2 = 
+stringDictionary.subscribe2 =
 `Subscribe`;
 
-stringDictionary.unsubscribe = 
+stringDictionary.unsubscribe =
 `*Unsubscribe from Updates*
 Want us to stop sending you messages about the event? Don't worry, we can still be friends.`;
 
-stringDictionary.unsubscribe2 = 
+stringDictionary.unsubscribe2 =
 `Unsubscribe`;
 
-stringDictionary.ideaPitchRequest = 
+stringDictionary.ideaPitchRequest =
 `*Need idea help?*
 Come pitch your idea to us and get feedback, you might even get some bonus points towards your final score! No idea what to build? Let's chat!`;
 
-stringDictionary.ideaPitchRequest2 = 
+stringDictionary.ideaPitchRequest2 =
 `Join Idea Pitch Queue`;
 
-stringDictionary.technicalRequest = 
+stringDictionary.technicalRequest =
 `*Need technical help?*
 Having trouble with your app? Our team is here to help!`;
 
-stringDictionary.technicalRequest2 = 
+stringDictionary.technicalRequest2 =
 `Join Tech Support Queue`;
 
-stringDictionary.teamRegistration = 
+stringDictionary.teamRegistration =
 `*Register Your Team*
 Hacking with us this weekend? Make sure to register your team so we know to reach out before judging starts!`;
 
 
-stringDictionary.teamRegistration2 = 
+stringDictionary.teamRegistration2 =
 `Register Team`;
 
-stringDictionary.comingSoon = 
+stringDictionary.comingSoon =
 `404 - Useful Content Not Found
 But seriously, I don't have anything else to show you at the moment. Message me again later!`;
 /*----------------------------------*/
 
 
 /*----------------------------------*/
-//src>slack>blocks>registerTeam.ts
-stringDictionary.registerTeamblocks = 
+// src>slack>blocks>registerTeam.ts
+stringDictionary.registerTeamblocks =
 `*Register your team for judging* :mag:
 \nOnly one person from each team should register`;
 
-stringDictionary.hackingWithWho = 
+stringDictionary.hackingWithWho =
 `Who are you hacking with?`;
 
-stringDictionary.selectTeammate = 
+stringDictionary.selectTeammate =
 `Select teammates`;
 
-stringDictionary.nameNotFound = 
+stringDictionary.nameNotFound =
 `404 - Name not found`;
 
-stringDictionary.askName = 
+stringDictionary.askName =
 `What's your team/app name?`;
 
-stringDictionary.tableDoubleCheck = 
+stringDictionary.tableDoubleCheck =
 `Make sure your table number is correct or we won't be able to find you!`;
 
-stringDictionary.exampleTableNumber = 
+stringDictionary.exampleTableNumber =
 `e.g., 42`;
 
-stringDictionary.askTable = 
+stringDictionary.askTable =
 `What's your table number?`;
 
-stringDictionary.projectInfoDesc = 
+stringDictionary.projectInfoDesc =
 `What does your project do? How will make a difference? What technologies are used?`;
 
-stringDictionary.projectDescription = 
+stringDictionary.projectDescription =
 `What does your project do?`;
 
-stringDictionary.registerTeam = 
+stringDictionary.registerTeam =
 `Register Team`;
 
-stringDictionary.submit = 
+stringDictionary.submit =
 `Submit`;
 
-stringDictionary.cancel = 
+stringDictionary.cancel =
 `Cancel`;
 /*----------------------------------*/
 
 
 /*----------------------------------*/
-//src>slack>blocks>openSourceFooter.ts
-stringDictionary.openSource = (params) =>
-`<${params.repoUrl} | _*Hangar*_> is an Open Source project created by American Airlines.`;
+// src>slack>blocks>openSourceFooter.ts
+stringDictionary.openSource = (params) => `<${params} | _*Hangar*_> is an Open Source project created by American Airlines.`;
 /*----------------------------------*/
 
 
 /*----------------------------------*/
-//src>slack>events>appMention.ts
-stringDictionary.appMention = 
+// src>slack>events>appMention.ts
+stringDictionary.appMention =
 `Hey there :wave: I can help your team during the hackathon! To see all of the things I can help with, simply click/tap my name and choose 'Go to App' :tada:`;
 /*----------------------------------*/
 
 
 /*----------------------------------*/
-//src>slack>events>messageReceived.ts
-stringDictionary.messageReceived = 
+// src>slack>events>messageReceived.ts
+stringDictionary.messageReceived =
 `Hey there :wave: I'm a bot designed to provide you with resources for the hackathon! Most of my functionality can be accessed via the Home Tab above. To get started, just click/tap 'Home' at the top of your screen.
 \nOccasionally I'll send you updates here as well, so keep an eye out for unread messages in your sidebar.`;
 /*----------------------------------*/
 
 
 /*----------------------------------*/
-//src>slack>views>registerTeamSubmitted.ts
-stringDictionary.registerTeamNotOpen = (params) => 
-`:warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.
+// src>slack>views>registerTeamSubmitted.ts
+stringDictionary.registerTeamNotOpen = (params) => `:warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.
 Team Name: ${params.teamName}
 TableNumber: ${params.tableNumber}
 Project Description: ${params.projectDescription}
 Team Members: ${params.formattedTeamMembers.join(', ')}`;
 
-stringDictionary.teamSubmittedAdminNotification = (params) =>
-`<@${params.registeringUser}> registered their team for judging:
+stringDictionary.teamSubmittedAdminNotification = (params) => `<@${params.registeringUser}> registered their team for judging:
 Team Members: ${params.formattedTeamMembers}
 Table Number: ${params.tableNumber}`;
 
-stringDictionary.teamSubmittedpostMessage = (params) => 
-`:warning: Something went wrong while registering your team... come chat with our team for help.
+stringDictionary.teamSubmittedpostMessage = (params) => `:warning: Something went wrong while registering your team... come chat with our team for help.
 To help with resubmitting, here's the info you tried to submit:
 Team Name: ${params.teamName}
 TableNumber: ${params.tableNumber}
