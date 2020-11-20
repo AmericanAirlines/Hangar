@@ -1,10 +1,20 @@
 type stringFunction = (params: Record<string, string>) => string;
 export interface StringDictionary {
+  /*----------------------------------*/
+  // src>api>>supportRequest.ts
   supportRequestSuccess: stringFunction;
   supportRequestComplete: string;
   supportRequestNoShow: stringFunction;
   remindUser: stringFunction;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>actions>registerTeam.ts
   registrationNotOpen: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>actions>supportRequest.ts
   supportRequestWhoops: string;
   supportRequestNotOpentext: string;
   supportRequestOpentitle: string;
@@ -12,6 +22,10 @@ export interface StringDictionary {
   supportRequestAlreadyInLinetext: string;
   supportRequestExistingActiveRequest: string;
   supportRequestAlertModaltext: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>blocks>dashboardblocks.ts
   headerinfo: string;
   intro: string;
   challenge: string;
@@ -27,6 +41,10 @@ export interface StringDictionary {
   teamRegistration: string;
   teamRegistration2: string;
   comingSoon: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>blocks>registerTeam.ts
   registerTeamblocks: string;
   hackingWithWho: string;
   selectTeammate: string;
@@ -41,10 +59,27 @@ export interface StringDictionary {
   submit: string;
   cancel: string;
   registerTeamSummary: stringFunction;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>blocks>openSourceFooter.ts
   openSource: stringFunction;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>events>appMention.ts
   appMention: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>events>messageReceived.ts
   messageReceived: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>views>registerTeamSubmitted.ts
   registerTeamNotOpen: stringFunction;
   teamSubmittedAdminNotification: stringFunction;
   teamSubmittedpostMessage: stringFunction;
+  /*----------------------------------*/
 }
