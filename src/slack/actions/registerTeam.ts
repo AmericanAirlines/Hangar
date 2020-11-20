@@ -16,7 +16,7 @@ export const registerTeam: Middleware<SlackActionMiddlewareArgs<BlockButtonActio
     if (!teamRegistrationActive) {
       await openAlertModal(context.botToken, body.trigger_id, {
         title: 'Registration Not Open',
-        text: stringDictionary.registrationNotOpen as string,
+        text: stringDictionary.registrationNotOpen,
       });
       return;
     }

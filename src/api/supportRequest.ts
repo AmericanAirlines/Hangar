@@ -75,14 +75,16 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
   }
 
   let userNotified = false;
-  const params: Record<string, string> = {
-    adminName,
-    type: requestType,
-  };
-  
+
   try {
     if (nextRequest) {
-      await messageUsers([nextRequest.slackId], stringDictionary.supportRequestSuccess(params));
+      await messageUsers(
+        [nextRequest.slackId],
+        stringDictionary.supportRequestSuccess({
+          adminName,
+          type: requestType,
+        }),
+      );
       userNotified = true;
     }
   } catch (err) {
@@ -116,7 +118,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    await messageUsers([supportRequest.slackId], stringDictionary.supportRequestComplete as string);
+    await messageUsers([supportRequest.slackId], stringDictionary.supportRequestComplete);
 
     res.sendStatus(200);
   } catch (err) {
@@ -145,11 +147,13 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    const params: Record<string, string> = {
-      relativeTimeElapsedString,
-    };
-    
-    await messageUsers([supportRequest.slackId], stringDictionary.supportRequestNoShow(params));
+
+    await messageUsers(
+      [supportRequest.slackId],
+      stringDictionary.supportRequestNoShow({
+        relativeTimeElapsedString,
+      }),
+    );
 
     res.sendStatus(200);
   } catch (err) {
@@ -186,14 +190,16 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   }
 
   let userNotified = false;
-  const params: Record<string, string> = {
-    adminName,
-    type: requestType,
-  };
-  
+
   try {
     if (request) {
-      await messageUsers([request.slackId], stringDictionary.supportRequestSuccess(params));
+      await messageUsers(
+        [request.slackId],
+        stringDictionary.supportRequestSuccess({
+          adminName,
+          type: requestType,
+        }),
+      );
       userNotified = true;
     }
   } catch (err) {
@@ -221,12 +227,12 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
       return;
     }
 
-    const params: Record<string, string> = {
-      relativeTimeElapsedString,
-    };
-    
-
-    await messageUsers([supportRequest.slackId], stringDictionary.remindUser(params));
+    await messageUsers(
+      [supportRequest.slackId],
+      stringDictionary.remindUser({
+        relativeTimeElapsedString,
+      }),
+    );
 
     res.sendStatus(200);
   } catch (err) {

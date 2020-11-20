@@ -1,5 +1,3 @@
-import { StringLiteral } from "typescript";
-
 type stringFunction = (params: Record<string, string>) => string
 export interface StringDictionary {
     supportRequestSuccess: stringFunction;
