@@ -14,7 +14,7 @@ interface Request {
 
 const SUPPORT_NAME_KEY = 'supportName';
 
-const support: NextPage<{secret: string}> = (props): JSX.Element => {
+const support: NextPage<{ secret: string }> = (props): JSX.Element => {
   const [lastUpdateEpoch, setLastUpdateEpoch] = React.useState(Date.now());
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
@@ -233,7 +233,8 @@ support.getInitialProps = async (ctx: any): Promise<any> => {
   }
 
   return {
-    secret: process.env.SUPPORT_SECRET };
+    secret: process.env.SUPPORT_SECRET,
+  };
 };
 
 export default support;
