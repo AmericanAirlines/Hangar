@@ -81,7 +81,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
       await messageUsers(
         [nextRequest.slackId],
         stringDictionary.supportRequestSuccess({
-          adminName,
+          supportName,
           type: requestType,
         }),
       );
@@ -163,7 +163,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
 });
 
 supportRequestRoutes.patch('/getSpecific', async (req, res) => {
-  const { supportRequestId, supportName } = req.body;
+  const { supportRequestId, requestType, supportName } = req.body;
   if (!supportRequestId || !supportName || !supportName.trim()) {
     res.status(400).send('One or more of the required properties is missing');
     return;
@@ -196,7 +196,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
       await messageUsers(
         [request.slackId],
         stringDictionary.supportRequestSuccess({
-          adminName,
+          supportName,
           type: requestType,
         }),
       );

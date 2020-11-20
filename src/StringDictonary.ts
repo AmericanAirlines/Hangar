@@ -7,10 +7,10 @@ export const stringDictionary = {} as StringDictionary;
 
 /*----------------------------------*/
 // src>api>>supportRequest.ts
-stringDictionary.supportRequestSuccess = (params) => `:tada: ${params.adminName} is ready to ${
+stringDictionary.supportRequestSuccess = (params) => `:tada: ${params.supportName} is ready to ${
   params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
 }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.
-\nWhen you arrive, tell one of our team members that you're here to meet with *${params.adminName}*!`;
+\nWhen you arrive, tell one of our team members that you're here to meet with *${params.supportName}*!`;
 
 stringDictionary.supportRequestComplete = `Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:`;
 
