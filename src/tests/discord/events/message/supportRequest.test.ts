@@ -3,7 +3,6 @@ import 'jest';
 import { supportRequest } from '../../../../discord/events/message/supportRequest';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import { createDbConnection, closeDbConnection } from '../../../testdb';
-import { Config } from '../../../../entities/config';
 
 jest.mock('../../../../discord');
 
