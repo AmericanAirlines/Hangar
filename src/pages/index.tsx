@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 /* global fetch, window, alert */
 import React from 'react';
 import { NextComponentType } from 'next';
