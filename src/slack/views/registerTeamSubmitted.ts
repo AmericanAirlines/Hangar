@@ -64,14 +64,6 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
   const tableNumberStr = tableNumber.toString();
   const formattedTeamMembers = allTeamMembers.map((member) => `<@${member}>`).join(', ');
 
-  const params: Record<string, string> = {
-    teamName,
-    tableNumber: tableNumberStr,
-    projectDescription,
-    formattedTeamMembers,
-    registeringUser,
-  };
-
   const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
   if (!teamRegistrationActive) {
     const dm = (await app.client.conversations.open({
@@ -82,7 +74,12 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     await app.client.chat.postMessage({
       token: context.botToken,
       channel: dm.channel.id,
-      text: stringDictionary.registerTeamNotOpen(params),
+      text: stringDictionary.registerTeamNotOpen({
+        teamName,
+        tableNumber: tableNumberStr,
+        projectDescription,
+        formattedTeamMembers,
+      }),
     });
     return;
   }
@@ -103,7 +100,13 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
       blocks: registeredTeamSummary(registeringUser, allTeamMembers, teamName, tableNumber, projectDescription),
     });
 
-    await postAdminNotification(stringDictionary.teamSubmittedAdminNotification(params));
+    await postAdminNotification(
+      stringDictionary.teamSubmittedAdminNotification({
+        tableNumber: tableNumberStr,
+        formattedTeamMembers,
+        registeringUser,
+      }),
+    );
   } catch (err) {
     // TODO: Determine a more appropriate error to share with the user
     logger.error('Error registering team: ', err);
@@ -115,7 +118,13 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     await app.client.chat.postMessage({
       token: context.botToken,
       channel: dm.channel.id,
-      text: stringDictionary.teamSubmittedpostMessage(params),
+      text: stringDictionary.teamSubmittedpostMessage({
+        teamName,
+        tableNumber: tableNumberStr,
+        projectDescription,
+        formattedTeamMembers,
+        err,
+      }),
     });
   }
 };

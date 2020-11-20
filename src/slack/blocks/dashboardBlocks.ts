@@ -12,7 +12,7 @@ const headerBlock: KnownBlock = {
   type: 'header',
   text: {
     type: 'plain_text',
-    text: stringDictionary.headerinfo as string,
+    text: stringDictionary.headerinfo,
     emoji: true,
   },
 };
@@ -21,7 +21,7 @@ const introBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.intro as string,
+    text: stringDictionary.intro,
   },
 };
 
@@ -33,13 +33,13 @@ const challengeBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.challenge as string,
+    text: stringDictionary.challenge,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.challenge2 as string,
+      text: stringDictionary.challenge2,
     },
     url: challengeUrl,
     action_id: actionIds.ignore,
@@ -50,13 +50,13 @@ const ideaPitchRequestBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.ideaPitchRequest as string,
+    text: stringDictionary.ideaPitchRequest,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.ideaPitchRequest2 as string,
+      text: stringDictionary.ideaPitchRequest2,
     },
     action_id: actionIds.joinIdeaPitchRequestQueue,
   },
@@ -66,13 +66,13 @@ const technicalRequestBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.technicalRequest as string,
+    text: stringDictionary.technicalRequest,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.technicalRequest2 as string,
+      text: stringDictionary.technicalRequest2,
     },
     action_id: actionIds.joinTechnicalRequestQueue,
   },
@@ -82,13 +82,13 @@ const teamRegistrationBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.teamRegistration as string,
+    text: stringDictionary.teamRegistration,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.teamRegistration2 as string,
+      text: stringDictionary.teamRegistration2,
     },
     action_id: actionIds.registerTeam,
   },
@@ -98,7 +98,7 @@ const comingSoonBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.comingSoon as string,
+    text: stringDictionary.comingSoon,
   },
 };
 

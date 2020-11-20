@@ -20,8 +20,8 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
 
   if (!supportRequestQueueActive) {
     await openAlertModal(context.botToken, body.trigger_id, {
-      title: stringDictionary.supportRequestWhoops as string,
-      text: stringDictionary.supportRequestNotOpentext as string,
+      title: stringDictionary.supportRequestWhoops,
+      text: stringDictionary.supportRequestNotOpentext,
     });
   } else {
     let slackName = 'Unknown (Check logs)';
@@ -40,8 +40,8 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       );
       await requestItem.save();
       await openAlertModal(context.botToken, body.trigger_id, {
-        title: stringDictionary.supportRequestOpentitle as string,
-        text: stringDictionary.supportRequestOpentext as string,
+        title: stringDictionary.supportRequestOpentitle,
+        text: stringDictionary.supportRequestOpentext,
       });
 
       await postAdminNotification(
@@ -50,14 +50,14 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
     } catch (err) {
       if (err.name === SupportRequestErrors.ExistingActiveRequest) {
         await openAlertModal(context.botToken, body.trigger_id, {
-          title: stringDictionary.supportRequestWhoops as string,
-          text: stringDictionary.supportRequestAlreadyInLinetext as string,
+          title: stringDictionary.supportRequestWhoops,
+          text: stringDictionary.supportRequestAlreadyInLinetext,
           blocks: [
             {
               type: 'section',
               text: {
                 type: 'plain_text',
-                text: stringDictionary.supportRequestExistingActiveRequest as string,
+                text: stringDictionary.supportRequestExistingActiveRequest,
               },
             },
           ],
@@ -65,7 +65,7 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       } else {
         await openAlertModal(context.botToken, body.trigger_id, {
           title: 'Whoops...',
-          text: stringDictionary.supportRequestAlertModaltext as string,
+          text: stringDictionary.supportRequestAlertModaltext,
         });
         logger.error('Something went wrong trying to create a support request', err);
       }

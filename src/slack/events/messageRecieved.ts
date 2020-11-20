@@ -6,7 +6,7 @@ export const messageRecieved: Middleware<SlackEventMiddlewareArgs<'message'>> = 
   try {
     // Only respond if the message doesn't have a subtype (i.e., original user message event, deletion/edits are ignored)
     if (!message.subtype) {
-      say(stringDictionary.messageReceived as string);
+      say(stringDictionary.messageReceived);
     }
   } catch (err) {
     logger.error('Something went wrong messaging the user...', err);

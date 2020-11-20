@@ -11,7 +11,7 @@ export const blocks: KnownBlock[] = [
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: stringDictionary.registerTeamblocks as string,
+      text: stringDictionary.registerTeamblocks,
     },
   },
   {
@@ -23,14 +23,14 @@ export const blocks: KnownBlock[] = [
     block_id: registerTeamViewConstants.fields.teamMembers,
     label: {
       type: 'plain_text',
-      text: stringDictionary.hackingWithWho as string,
+      text: stringDictionary.hackingWithWho,
     },
     element: {
       action_id: registerTeamViewConstants.fields.teamMembers,
       type: 'multi_users_select',
       placeholder: {
         type: 'plain_text',
-        text: stringDictionary.selectTeammate as string,
+        text: stringDictionary.selectTeammate,
       },
     },
   },
@@ -42,12 +42,12 @@ export const blocks: KnownBlock[] = [
       type: 'plain_text_input',
       placeholder: {
         type: 'plain_text',
-        text: stringDictionary.nameNotFound as string,
+        text: stringDictionary.nameNotFound,
       },
     },
     label: {
       type: 'plain_text',
-      text: stringDictionary.askName as string,
+      text: stringDictionary.askName,
       emoji: false,
     },
   },
@@ -56,19 +56,19 @@ export const blocks: KnownBlock[] = [
     block_id: registerTeamViewConstants.fields.tableNumber,
     hint: {
       type: 'plain_text',
-      text: stringDictionary.tableDoubleCheck as string,
+      text: stringDictionary.tableDoubleCheck,
     },
     element: {
       action_id: registerTeamViewConstants.fields.tableNumber,
       type: 'plain_text_input',
       placeholder: {
         type: 'plain_text',
-        text: stringDictionary.exampleTableNumber as string,
+        text: stringDictionary.exampleTableNumber,
       },
     },
     label: {
       type: 'plain_text',
-      text: stringDictionary.askTable as string,
+      text: stringDictionary.askTable,
       emoji: false,
     },
   },
@@ -81,12 +81,12 @@ export const blocks: KnownBlock[] = [
       multiline: true,
       placeholder: {
         type: 'plain_text',
-        text: stringDictionary.projectInfoDesc as string,
+        text: stringDictionary.projectInfoDesc,
       },
     },
     label: {
       type: 'plain_text',
-      text: stringDictionary.projectDescription as string,
+      text: stringDictionary.projectDescription,
       emoji: false,
     },
   },
@@ -96,17 +96,17 @@ export const registerTeamView: View = {
   type: 'modal',
   title: {
     type: 'plain_text',
-    text: stringDictionary.registerTeam as string,
+    text: stringDictionary.registerTeam,
     emoji: true,
   },
   submit: {
     type: 'plain_text',
-    text: stringDictionary.submit as string,
+    text: stringDictionary.submit,
     emoji: true,
   },
   close: {
     type: 'plain_text',
-    text: stringDictionary.cancel as string,
+    text: stringDictionary.cancel,
     emoji: true,
   },
   callback_id: registerTeamViewConstants.viewId,
@@ -121,20 +121,19 @@ export function registeredTeamSummary(
   projectDescription: string,
 ): KnownBlock[] {
   const userString = teamMembers.length === 1 ? 'You have' : `<@${registeringUser}> has`;
-  
+
   const tableNumberStr = tableNumber.toString();
-  const params: Record<string, string> = {
-    userString,
-    teamName,
-    tableNumber: tableNumberStr,
-    projectDescription,
-  };
   return [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: stringDictionary.registerTeamSummary(params),
+        text: stringDictionary.registerTeamSummary({
+          userString,
+          teamName,
+          tableNumber: tableNumberStr,
+          projectDescription,
+        }),
       },
     },
     openSourceFooter,

@@ -10,7 +10,7 @@ export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = a
       token: context.botToken,
       channel: payload.channel,
       thread_ts: payload.ts,
-      text: stringDictionary.appMention as string,
+      text: stringDictionary.appMention,
     });
   } catch (error) {
     logger.error('Something went wrong responding to a bot mention: ', error);
