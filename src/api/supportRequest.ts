@@ -54,9 +54,9 @@ supportRequestRoutes.get('/getInProgress', async (req, res) => {
 });
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
-  const { adminName, requestType } = req.body;
-  if (!adminName || !adminName.trim()) {
-    res.status(400).send("Property 'adminName' is required");
+  const { supportName, requestType } = req.body;
+  if (!supportName || !supportName.trim()) {
+    res.status(400).send("Property 'supportName' is required");
     return;
   }
 
@@ -163,8 +163,8 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
 });
 
 supportRequestRoutes.patch('/getSpecific', async (req, res) => {
-  const { supportRequestId, requestType, adminName } = req.body;
-  if (!supportRequestId || !adminName || !adminName.trim()) {
+  const { supportRequestId, supportName } = req.body;
+  if (!supportRequestId || !supportName || !supportName.trim()) {
     res.status(400).send('One or more of the required properties is missing');
     return;
   }
