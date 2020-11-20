@@ -82,7 +82,7 @@ const AdminPage: NextComponentType = () => {
               {results.length === 0 && <div className="alert alert-info mt-3">No config items to display 🤔</div>}
 
               {configItems.map((configItem) => (
-                <div className="form-group ml-sm-3 mr-3 mb-2">
+                <div key={configItem.key} className="form-group ml-sm-3 mr-3 mb-2">
                   <label htmlFor={configItem.key} className="mr-3">
                     {configItem.key}
                   </label>
