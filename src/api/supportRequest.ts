@@ -53,9 +53,9 @@ supportRequestRoutes.get('/getInProgress', async (req, res) => {
 });
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
-  const { adminName, requestType } = req.body;
-  if (!adminName || !adminName.trim()) {
-    res.status(400).send("Property 'adminName' is required");
+  const { supportName, requestType } = req.body;
+  if (!supportName || !supportName.trim()) {
+    res.status(400).send("Property 'supportName' is required");
     return;
   }
 
@@ -78,9 +78,9 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
     if (nextRequest) {
       await messageUsers(
         [nextRequest.slackId],
-        `:tada: ${adminName} is ready to ${
+        `:tada: ${supportName} is ready to ${
           nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${adminName}*!`,
+        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`,
       );
       userNotified = true;
     }
@@ -160,8 +160,8 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
 });
 
 supportRequestRoutes.patch('/getSpecific', async (req, res) => {
-  const { supportRequestId, adminName } = req.body;
-  if (!supportRequestId || !adminName || !adminName.trim()) {
+  const { supportRequestId, supportName } = req.body;
+  if (!supportRequestId || !supportName || !supportName.trim()) {
     res.status(400).send('One or more of the required properties is missing');
     return;
   }
@@ -191,9 +191,9 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
     if (request) {
       await messageUsers(
         [request.slackId],
-        `:tada: ${adminName} is ready to ${
+        `:tada: ${supportName} is ready to ${
           request.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${adminName}*!`,
+        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`,
       );
       userNotified = true;
     }
