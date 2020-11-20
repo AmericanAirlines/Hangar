@@ -1,0 +1,52 @@
+import { StringLiteral } from "typescript";
+
+type stringFunction = (params: Record<string, string>) => string
+export interface StringDictionary {
+    supportRequestSuccess: stringFunction;
+    supportRequestComplete: string;
+    supportRequestNoShow: stringFunction;
+    remindUser: stringFunction;
+    registrationNotOpen: string;
+    supportRequestWhoops: string;
+    supportRequestNotOpentext: string;
+    supportRequestOpentitle: string;
+    supportRequestOpentext: string;
+    supportRequestAlreadyInLinetext: string;
+    supportRequestExistingActiveRequest: string;
+    supportRequestAlertModaltext: string;
+    headerinfo: string;
+    intro: string;
+    challenge: string;
+    challenge2: string;
+    subscribe: string;
+    subscribe2: string;
+    unsubscribe: string;
+    unsubscribe2: string;
+    ideaPitchRequest: string;
+    ideaPitchRequest2: string;
+    technicalRequest: string;
+    technicalRequest2: string;
+    teamRegistration: string;
+    teamRegistration2: string;
+    comingSoon: string;
+    registerTeamblocks: string;
+    hackingWithWho: string;
+    selectTeammate: string;
+    nameNotFound: string;
+    askName: string;
+    tableDoubleCheck: string;
+    exampleTableNumber: string;
+    askTable: string;
+    projectInfoDesc: string;
+    projectDescription: string;
+    registerTeam: string;
+    submit: string;
+    cancel: string;
+    registerTeamSummary: stringFunction;
+    openSource: stringFunction;
+    appMention: string;
+    messageReceived: string;
+    registerTeamNotOpen: stringFunction;
+    teamSubmittedAdminNotification: stringFunction;
+    teamSubmittedpostMessage: stringFunction;    
+}

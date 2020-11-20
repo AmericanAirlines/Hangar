@@ -71,7 +71,6 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     formattedTeamMembers,
     registeringUser,
   };
-  const dict = stringDictionary as Record<string, (params: Record<string, string>) => string>;
 
   const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
   if (!teamRegistrationActive) {
@@ -83,7 +82,7 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     await app.client.chat.postMessage({
       token: context.botToken,
       channel: dm.channel.id,
-      text: dict.registerTeamNotOpen(params),
+      text: stringDictionary.registerTeamNotOpen(params),
     });
     return;
   }
@@ -104,7 +103,7 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
       blocks: registeredTeamSummary(registeringUser, allTeamMembers, teamName, tableNumber, projectDescription),
     });
 
-    await postAdminNotification(dict.teamSubmittedAdminNotification(params));
+    await postAdminNotification(stringDictionary.teamSubmittedAdminNotification(params));
   } catch (err) {
     // TODO: Determine a more appropriate error to share with the user
     logger.error('Error registering team: ', err);
@@ -116,7 +115,7 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     await app.client.chat.postMessage({
       token: context.botToken,
       channel: dm.channel.id,
-      text: dict.teamSubmittedpostMessage(params),
+      text: stringDictionary.teamSubmittedpostMessage(params),
     });
   }
 };

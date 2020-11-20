@@ -9,14 +9,13 @@ const repoUrl = 'https://github.com/AmericanAirlines/Hangar';
 const params: Record<string, string> = {
   repoUrl,
 };
-const dict = stringDictionary as Record<string, (params: Record<string, string>) => string>;
 
 const openSourceBlock: KnownBlock = {
   type: 'context',
   elements: [
     {
       type: 'mrkdwn',
-      text: dict.openSource(params),
+      text: stringDictionary.openSource(params),
     },
   ],
 };

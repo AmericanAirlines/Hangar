@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable quotes */
 import { SupportRequestType } from './entities/supportRequest';
+import { StringDictionary } from './IStringDictionary';
 
-export const stringDictionary: Record<string, string> | Record<string, (params: Record<string, string>) => string> = {};
+export const stringDictionary = {} as StringDictionary;
 
 /*----------------------------------*/
 // src>api>>supportRequest.ts
@@ -113,9 +114,7 @@ stringDictionary.submit = `Submit`;
 
 stringDictionary.cancel = `Cancel`;
 
-stringDictionary.registerTeamSummary = (
-  params,
-) => `${params.userString} registered your team for sponsor judging. Our team will stop by during judging to see your hack. Best of luck and see you soon!
+stringDictionary.registerTeamSummary = (params) => `${params.userString} registered your team for sponsor judging. Our team will stop by during judging to see your hack. Best of luck and see you soon!
 
 *Team Name*: ${params.teamName}
 *Table Number*: ${params.tableNumber}
@@ -140,9 +139,7 @@ stringDictionary.messageReceived = `Hey there :wave: I'm a bot designed to provi
 
 /*----------------------------------*/
 // src>slack>views>registerTeamSubmitted.ts
-stringDictionary.registerTeamNotOpen = (
-  params,
-) => `:warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.
+stringDictionary.registerTeamNotOpen = (params) => `:warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.
 Team Name: ${params.teamName}
 TableNumber: ${params.tableNumber}
 Project Description: ${params.projectDescription}
@@ -152,9 +149,7 @@ stringDictionary.teamSubmittedAdminNotification = (params) => `<@${params.regist
 Team Members: ${params.formattedTeamMembers}
 Table Number: ${params.tableNumber}`;
 
-stringDictionary.teamSubmittedpostMessage = (
-  params,
-) => `:warning: Something went wrong while registering your team... come chat with our team for help.
+stringDictionary.teamSubmittedpostMessage = (params) => `:warning: Something went wrong while registering your team... come chat with our team for help.
 To help with resubmitting, here's the info you tried to submit:
 Team Name: ${params.teamName}
 TableNumber: ${params.tableNumber}

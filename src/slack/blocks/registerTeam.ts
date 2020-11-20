@@ -121,7 +121,7 @@ export function registeredTeamSummary(
   projectDescription: string,
 ): KnownBlock[] {
   const userString = teamMembers.length === 1 ? 'You have' : `<@${registeringUser}> has`;
-  const dict = stringDictionary as Record<string, (params: Record<string, string>) => string>;
+  
   const tableNumberStr = tableNumber.toString();
   const params: Record<string, string> = {
     userString,
@@ -134,7 +134,7 @@ export function registeredTeamSummary(
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: dict.registerTeamSummary(params),
+        text: stringDictionary.registerTeamSummary(params),
       },
     },
     openSourceFooter,
