@@ -1,6 +1,5 @@
 import 'jest';
 import supertest from 'supertest';
-import { AdvancedConsoleLogger } from 'typeorm';
 import { Config } from '../../entities/config';
 import { createDbConnection, closeDbConnection } from '../testdb';
 
