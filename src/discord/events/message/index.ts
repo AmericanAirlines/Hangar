@@ -4,6 +4,7 @@ import { ping } from './ping';
 import { supportRequest } from './supportRequest';
 import { client } from '../..';
 import logger from '../../../logger';
+import { help } from './help';
 
 interface Command {
   handlerId: string;
@@ -22,14 +23,20 @@ export const commands: Command[] = [
   {
     handlerId: 'ideaPitch',
     trigger: '!ideaPitch',
-    description: 'adds the user to the idea pitch queue',
+    description: 'Adds the user to the idea pitch queue',
     handler: supportRequest,
   },
   {
     handlerId: 'techincalSupport',
     trigger: '!technicalSupport',
-    description: 'adds the user to the technical support queue',
+    description: 'Adds the user to the technical support queue',
     handler: supportRequest,
+  },
+  {
+    handlerId: 'help',
+    trigger: '!help',
+    description: 'Lists commands the user can use to interact with the bot',
+    handler: help,
   },
 ];
 

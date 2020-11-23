@@ -15,7 +15,7 @@ export interface NextSupportRequestResponse {
 
 async function sendMsg(receiverId: string, sendString: string): Promise<void> {
   try {
-    if (receiverId[0] === 'U' || receiverId[0] === 'W') {
+    if (!(receiverId[0] === 'U' || receiverId[0] === 'W')) {
       await messageUsers([receiverId], sendString);
     } else {
       await client.users.cache.get(receiverId).send(sendString);
@@ -66,9 +66,9 @@ supportRequestRoutes.get('/getInProgress', async (req, res) => {
 });
 
 supportRequestRoutes.post('/getNext', async (req, res) => {
-  const { adminName, requestType } = req.body;
-  if (!adminName || !adminName.trim()) {
-    res.status(400).send("Property 'adminName' is required");
+  const { supportName, requestType } = req.body;
+  if (!supportName || !supportName.trim()) {
+    res.status(400).send("Property 'supportName' is required");
     return;
   }
 
@@ -89,9 +89,9 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
   let userNotified = false;
   try {
     if (nextRequest) {
-      const msgContents = `:tada: ${adminName} is ready to ${
+      const msgContents = `:tada: ${supportName} is ready to ${
         nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-      }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${adminName}*!`;
+      }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`;
       sendMsg(nextRequest.slackId, msgContents);
       userNotified = true;
     }
@@ -166,8 +166,8 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
 });
 
 supportRequestRoutes.patch('/getSpecific', async (req, res) => {
-  const { supportRequestId, adminName } = req.body;
-  if (!supportRequestId || !adminName || !adminName.trim()) {
+  const { supportRequestId, supportName } = req.body;
+  if (!supportRequestId || !supportName || !supportName.trim()) {
     res.status(400).send('One or more of the required properties is missing');
     return;
   }
@@ -195,9 +195,9 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   let userNotified = false;
   try {
     if (nextRequest) {
-      const msgContents = `:tada: ${adminName} is ready to ${
+      const msgContents = `:tada: ${supportName} is ready to ${
         nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-      }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${adminName}*!`;
+      }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`;
       sendMsg(nextRequest.slackId, msgContents);
       userNotified = true;
     }

@@ -48,7 +48,6 @@ describe('api/supportRequest', () => {
         Authorization: adminSecret,
       })
       .expect(200);
-
     expect(result.body).toEqual([]);
   });
 
@@ -68,7 +67,7 @@ describe('api/supportRequest', () => {
     expect(result.body.length).toEqual(1);
   });
 
-  it('calling getNext without adminName will be a 400', async () => {
+  it('calling getNext without supportName will be a 400', async () => {
     const suppportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
     suppportRequest.status = SupportRequestStatus.Pending;
     await suppportRequest.save();
@@ -91,7 +90,7 @@ describe('api/supportRequest', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/getNext')
-      .send({ adminName: 'Tim', requestType: 'a' })
+      .send({ supportName: 'Tim', requestType: 'a' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
@@ -107,11 +106,12 @@ describe('api/supportRequest', () => {
     const { app } = require('../../app');
     await supertest(app)
       .post('/api/supportRequest/getNext')
-      .send({ adminName: 'Tim' })
+      .send({ supportName: 'Tim' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
-      });
+      })
+      .expect(200);
 
     await supportRequest.reload();
 
@@ -213,7 +213,7 @@ describe('api/supportRequest', () => {
     const { app } = require('../../app');
     await supertest(app)
       .patch('/api/supportRequest/getSpecific')
-      .send({ supportRequestId: supportRequest.id, adminName: 'Jimbo' })
+      .send({ supportRequestId: supportRequest.id, supportName: 'Jimbo' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
@@ -231,14 +231,14 @@ describe('api/supportRequest', () => {
     const { app } = require('../../app');
     await supertest(app)
       .patch('/api/supportRequest/getSpecific')
-      .send({ adminName: 'Jimbo' })
+      .send({ supportName: 'Jimbo' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
       })
       .expect(400);
   });
-  it('will throw a 400 if a admin name is not entered', async () => {
+  it('will throw a 400 if a support name is not entered', async () => {
     const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
     supportRequest.status = SupportRequestStatus.Pending;
     await supportRequest.save();
@@ -263,7 +263,7 @@ describe('api/supportRequest', () => {
     const { app } = require('../../app');
     await supertest(app)
       .patch('/api/supportRequest/getSpecific')
-      .send({ supportRequestId: 5000, adminName: 'Jimbo' })
+      .send({ supportRequestId: 5000, supportName: 'Jimbo' })
       .set({
         Authorization: adminSecret,
         'Content-Type': 'application/json',
