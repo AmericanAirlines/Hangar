@@ -2,7 +2,6 @@ import express from 'express';
 import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
 import logger from '../logger';
 import messageUsers from '../slack/utilities/messageUsers';
-import { client } from '../discord';
 
 export const supportRequestRoutes = express.Router();
 
@@ -11,18 +10,6 @@ supportRequestRoutes.use(express.json());
 export interface NextSupportRequestResponse {
   supportRequest: SupportRequest;
   userNotified: boolean;
-}
-
-async function sendMsg(receiverId: string, sendString: string): Promise<void> {
-  try {
-    if (!(receiverId[0] === 'U' || receiverId[0] === 'W')) {
-      await messageUsers([receiverId], sendString);
-    } else {
-      await client.users.cache.get(receiverId).send(sendString);
-    }
-  } catch (err) {
-    logger.error('Unable to message the user', err);
-  }
 }
 
 supportRequestRoutes.get('/getAll', async (req, res) => {
@@ -89,10 +76,12 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
   let userNotified = false;
   try {
     if (nextRequest) {
-      const msgContents = `:tada: ${supportName} is ready to ${
-        nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-      }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`;
-      sendMsg(nextRequest.slackId, msgContents);
+      await messageUsers(
+        [nextRequest.slackId],
+        `:tada: ${supportName} is ready to ${
+          nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
+        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`,
+      );
       userNotified = true;
     }
   } catch (err) {
@@ -126,9 +115,11 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    const msgContents =
-      "Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:";
-    sendMsg(supportRequest.slackId, msgContents);
+    await messageUsers(
+      [supportRequest.slackId],
+      "Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:",
+    );
+
     res.sendStatus(200);
   } catch (err) {
     res.status(500).send('Unable to close request');
@@ -156,8 +147,11 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    const msgContents = `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`;
-    sendMsg(supportRequest.slackId, msgContents);
+    await messageUsers(
+      [supportRequest.slackId],
+      `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`,
+    );
+
     res.sendStatus(200);
   } catch (err) {
     res.status(500).send('Unable to close request');
@@ -172,8 +166,8 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
     return;
   }
 
-  const nextRequest = await SupportRequest.findOne(supportRequestId);
-  if (!nextRequest || nextRequest.status !== SupportRequestStatus.Pending) {
+  const request = await SupportRequest.findOne(supportRequestId);
+  if (!request || request.status !== SupportRequestStatus.Pending) {
     res.status(400).send('The support request entered is not valid');
     return;
   }
@@ -194,11 +188,13 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
 
   let userNotified = false;
   try {
-    if (nextRequest) {
-      const msgContents = `:tada: ${supportName} is ready to ${
-        nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-      }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`;
-      sendMsg(nextRequest.slackId, msgContents);
+    if (request) {
+      await messageUsers(
+        [request.slackId],
+        `:tada: ${supportName} is ready to ${
+          request.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
+        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`,
+      );
       userNotified = true;
     }
   } catch (err) {
@@ -207,7 +203,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
 
   const response: NextSupportRequestResponse = {
     userNotified,
-    supportRequest: nextRequest,
+    supportRequest: request,
   };
   res.send(response);
 });
@@ -226,8 +222,11 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
       return;
     }
 
-    const msgContents = `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`;
-    sendMsg(supportRequest.slackId, msgContents);
+    await messageUsers(
+      [supportRequest.slackId],
+      `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`,
+    );
+
     res.sendStatus(200);
   } catch (err) {
     res.status(500).send('Unable to remind the user');

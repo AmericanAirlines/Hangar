@@ -9,7 +9,6 @@ export async function supportRequest(msg: Discord.Message): Promise<void> {
   const actionId = msg.content === '!technicalSupport' ? SupportRequestType.TechnicalSupport : SupportRequestType.IdeaPitch;
 
   const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
-
   if (!supportRequestQueueActive) {
     msg.author.send("**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!");
   } else {
