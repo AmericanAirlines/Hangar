@@ -48,6 +48,7 @@ describe('api/supportRequest', () => {
         Authorization: adminSecret,
       })
       .expect(200);
+      
     expect(result.body).toEqual([]);
   });
 
