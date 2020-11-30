@@ -23,7 +23,7 @@ export const commands: Command[] = [
   {
     handlerId: 'ideaPitch',
     trigger: '!ideaPitch',
-    description: 'Adds the user to the idea pitch queue',
+    description: 'Think you have a good idea? Join a queue to come pitch to our team!',
     handler: supportRequest,
   },
   {
