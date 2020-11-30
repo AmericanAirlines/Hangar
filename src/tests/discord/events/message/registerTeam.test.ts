@@ -18,15 +18,6 @@ const startMsg = makeDiscordMessage({
   },
 });
 
-const firstMsg = makeDiscordMessage({
-  content: '12345',
-  author: {
-    send: jest.fn(),
-    username: 'Joe',
-    id: '123',
-  },
-});
-
 describe('registerTeam handler', () => {
   beforeEach(async () => {
     await createDbConnection();
