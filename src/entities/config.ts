@@ -34,8 +34,10 @@ export class Config extends BaseEntity {
         throw new Error('Config item found but cannot be cast to boolean');
       } else if (toggle.value === 'true') {
         toggle.value = 'false';
+        return false;
       } else {
         toggle.value = 'true';
+        return true;
       }
     }
     return true;
