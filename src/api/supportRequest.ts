@@ -2,6 +2,7 @@ import express from 'express';
 import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
 import logger from '../logger';
 import messageUsers from '../slack/utilities/messageUsers';
+import { stringDictionary } from '../StringDictonary';
 
 export const supportRequestRoutes = express.Router();
 
@@ -74,13 +75,15 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
   }
 
   let userNotified = false;
+
   try {
     if (nextRequest) {
       await messageUsers(
         [nextRequest.slackId],
-        `:tada: ${supportName} is ready to ${
-          nextRequest.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`,
+        stringDictionary.supportRequestSuccess({
+          supportName,
+          type: requestType,
+        }),
       );
       userNotified = true;
     }
@@ -115,10 +118,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    await messageUsers(
-      [supportRequest.slackId],
-      "Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:",
-    );
+    await messageUsers([supportRequest.slackId], stringDictionary.supportRequestComplete);
 
     res.sendStatus(200);
   } catch (err) {
@@ -147,9 +147,12 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
+
     await messageUsers(
       [supportRequest.slackId],
-      `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`,
+      stringDictionary.supportRequestNoShow({
+        relativeTimeElapsedString,
+      }),
     );
 
     res.sendStatus(200);
@@ -160,7 +163,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
 });
 
 supportRequestRoutes.patch('/getSpecific', async (req, res) => {
-  const { supportRequestId, supportName } = req.body;
+  const { supportRequestId, requestType, supportName } = req.body;
   if (!supportRequestId || !supportName || !supportName.trim()) {
     res.status(400).send('One or more of the required properties is missing');
     return;
@@ -187,13 +190,15 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   }
 
   let userNotified = false;
+
   try {
     if (request) {
       await messageUsers(
         [request.slackId],
-        `:tada: ${supportName} is ready to ${
-          request.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-        }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.\n\nWhen you arrive, tell one of our team members that you're here to meet with *${supportName}*!`,
+        stringDictionary.supportRequestSuccess({
+          supportName,
+          type: requestType,
+        }),
       );
       userNotified = true;
     }
@@ -224,7 +229,9 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
 
     await messageUsers(
       [supportRequest.slackId],
-      `:exclamation: We messaged you about your support request ${relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`,
+      stringDictionary.remindUser({
+        relativeTimeElapsedString,
+      }),
     );
 
     res.sendStatus(200);

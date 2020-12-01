@@ -7,6 +7,7 @@ import { Team } from '../../entities/team';
 import { ViewSubmitState, DmOpenResult, ViewSubmitInputFieldState } from '../types';
 import { Config } from '../../entities/config';
 import postAdminNotification from '../utilities/postAdminNotification';
+import { stringDictionary } from '../../StringDictonary';
 
 function retrieveViewValuesForField(
   view: ViewOutput,
@@ -60,11 +61,11 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
   const allTeamMembers = Array.from(new Set([registeringUser, ...teamMembers]));
   const teamName = retrieveViewValuesForField(view, registerTeamViewConstants.fields.teamName, 'plainTextInput') as string;
   const projectDescription = retrieveViewValuesForField(view, registerTeamViewConstants.fields.projectDescription, 'plainTextInput') as string;
+  const tableNumberStr = tableNumber.toString();
+  const formattedTeamMembers = allTeamMembers.map((member) => `<@${member}>`).join(', ');
 
   const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
   if (!teamRegistrationActive) {
-    const formattedTeamMembers = allTeamMembers.map((member) => `<@${member}>`);
-
     const dm = (await app.client.conversations.open({
       token: context.botToken,
       users: registeringUser,
@@ -73,13 +74,12 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     await app.client.chat.postMessage({
       token: context.botToken,
       channel: dm.channel.id,
-      text: `:warning: Team registration isn't currently open, please try again later or come chat with our team if you think this is an error.
-
-Team Name: ${teamName}
-TableNumber: ${tableNumber}
-Project Description: ${projectDescription}
-Team Members: ${formattedTeamMembers.join(', ')}
-      `,
+      text: stringDictionary.registerTeamNotOpen({
+        teamName,
+        tableNumber: tableNumberStr,
+        projectDescription,
+        formattedTeamMembers,
+      }),
     });
     return;
   }
@@ -100,9 +100,12 @@ Team Members: ${formattedTeamMembers.join(', ')}
       blocks: registeredTeamSummary(registeringUser, allTeamMembers, teamName, tableNumber, projectDescription),
     });
 
-    const formattedTeamMembers = teamMembers.map((member) => `<@${member}>`).join(', ');
     await postAdminNotification(
-      `<@${registeringUser}> registered their team for judging:\nTeam Members: ${formattedTeamMembers}\nTable Number: ${tableNumber}`,
+      stringDictionary.teamSubmittedAdminNotification({
+        tableNumber: tableNumberStr,
+        formattedTeamMembers,
+        registeringUser,
+      }),
     );
   } catch (err) {
     // TODO: Determine a more appropriate error to share with the user
@@ -112,23 +115,16 @@ Team Members: ${formattedTeamMembers.join(', ')}
       users: registeringUser,
     })) as DmOpenResult;
 
-    const formattedTeamMembers = allTeamMembers.map((member) => `<@${member}>`);
     await app.client.chat.postMessage({
       token: context.botToken,
       channel: dm.channel.id,
-      text: `:warning: Something went wrong while registering your team... come chat with our team for help.
-
-To help with resubmitting, here's the info you tried to submit:
-Team Name: ${teamName}
-TableNumber: ${tableNumber}
-Project Description: ${projectDescription}
-Team Members: ${formattedTeamMembers.join(', ')}
-
-Here's what went wrong, it may be helpful (but probably not):
-\`\`\`
-${JSON.stringify(err, null, 2)}
-\`\`\`
-`,
+      text: stringDictionary.teamSubmittedpostMessage({
+        teamName,
+        tableNumber: tableNumberStr,
+        projectDescription,
+        formattedTeamMembers,
+        err,
+      }),
     });
   }
 };

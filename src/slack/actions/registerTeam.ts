@@ -4,6 +4,7 @@ import { registerTeamView } from '../blocks/registerTeam';
 import logger from '../../logger';
 import { Config } from '../../entities/config';
 import { openAlertModal } from '../utilities/openAlertModal';
+import { stringDictionary } from '../../StringDictonary';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */
@@ -15,8 +16,7 @@ export const registerTeam: Middleware<SlackActionMiddlewareArgs<BlockButtonActio
     if (!teamRegistrationActive) {
       await openAlertModal(context.botToken, body.trigger_id, {
         title: 'Registration Not Open',
-        text:
-          ":warning: Team registration is not open yet. Check back later or, if you're subscribed to updates, watch for a direct message from the bot!",
+        text: stringDictionary.registrationNotOpen,
       });
       return;
     }

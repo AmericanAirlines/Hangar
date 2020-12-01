@@ -1,4 +1,5 @@
 import { KnownBlock } from '@slack/types';
+import { stringDictionary } from '../../StringDictonary';
 
 const repoUrl = 'https://github.com/AmericanAirlines/Hangar';
 
@@ -10,7 +11,9 @@ const openSourceBlock: KnownBlock = {
   elements: [
     {
       type: 'mrkdwn',
-      text: `<${repoUrl} | _*Hangar*_> is an Open Source project created by American Airlines.`,
+      text: stringDictionary.openSource({
+        repoUrl,
+      }),
     },
   ],
 };
