@@ -28,7 +28,6 @@ const AdminPage: NextComponentType = () => {
     promises.push(
       (async (): Promise<void> => {
         const res = await fetch('/api/config');
-
         if (!res.ok) {
           setError(true);
           return;
@@ -62,6 +61,21 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   });
 
+  const handleChange = (configItem: Config) => async (): Promise<void> => {
+    const newValue = configItem.value === 'true' ? 'false' : 'true';
+
+    await fetch('/api/config', {
+      method: 'POST',
+      body: JSON.stringify({
+        configKey: configItem.key,
+        configValue: newValue,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  };
+
   if (loading) return null;
 
   if (error) return <h4>Error loading, check the console</h4>;
@@ -86,6 +100,9 @@ const AdminPage: NextComponentType = () => {
                     {configItem.key}
                   </label>
                   <input type="text" className="form-control" id={configItem.key} placeholder="Team name" value={configItem.value} disabled />
+                  <button type="button" className="btn btn-primary mb-2 mt-3" onClick={() => handleChange(configItem)}>
+                    {configItem.value === 'true' ? 'Disable' : 'Enable'}
+                  </button>
                 </div>
               ))}
             </div>
