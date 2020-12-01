@@ -61,10 +61,15 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   });
 
-  const handleChange = () => async (): Promise<void> => {
+  const handleChange = (configItem: Config) => async (): Promise<void> => {
+    const newValue = configItem.value === 'true' ? 'false' : 'true';
+
     await fetch('/api/config', {
       method: 'POST',
-      body: JSON.stringify({}),
+      body: JSON.stringify({
+        configKey: configItem.key,
+        configValue: newValue
+      }),
       headers: {
         'Content-Type': 'application/json',
       },
