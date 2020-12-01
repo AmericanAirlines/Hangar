@@ -68,7 +68,7 @@ const AdminPage: NextComponentType = () => {
       method: 'POST',
       body: JSON.stringify({
         configKey: configItem.key,
-        configValue: newValue
+        configValue: newValue,
       }),
       headers: {
         'Content-Type': 'application/json',
