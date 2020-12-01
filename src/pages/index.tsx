@@ -86,6 +86,9 @@ const AdminPage: NextComponentType = () => {
                     {configItem.key}
                   </label>
                   <input type="text" className="form-control" id={configItem.key} placeholder="Team name" value={configItem.value} disabled />
+                  <button type="button" className="btn btn-primary mb-2 mt-3" /* onClick={toggleKey()} */>
+                    Change
+                  </button>
                 </div>
               ))}
             </div>
