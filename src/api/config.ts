@@ -6,7 +6,7 @@ export const config = express.Router();
 
 config.get('/', async (req, res) => {
   try {
-    res.send(await Config.find());
+    res.send(await Config.find({ order: { key: 'ASC' } }));
   } catch (err) {
     /* istanbul ignore next */
     res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
