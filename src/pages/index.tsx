@@ -21,6 +21,17 @@ const AdminPage: NextComponentType = () => {
   const [error, setError] = React.useState(false);
   const [configItems, setConfigItems] = React.useState<Config[]>([]);
   const [results, setResults] = React.useState<Result[]>([]);
+  const [lastRefreshTimestamp, setLastRefreshTimestamp] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setLastRefreshTimestamp(Date.now());
+    }, 10000);
+
+    return (): void => {
+      clearInterval(interval);
+    };
+  }, []);
 
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
@@ -60,7 +71,7 @@ const AdminPage: NextComponentType = () => {
     );
 
     Promise.all(promises).then(() => setLoading(false));
-  }, []);
+  }, [lastRefreshTimestamp]);
 
   const handleChange = (configItem: Config) => async (): Promise<void> => {
     const newValue = configItem.value === 'true' ? 'false' : 'true';
