@@ -1,4 +1,4 @@
-/* global fetch, window, alert */
+/* global fetch */
 import React from 'react';
 import { NextComponentType } from 'next';
 
@@ -28,6 +28,7 @@ const AdminPage: NextComponentType = () => {
     promises.push(
       (async (): Promise<void> => {
         const res = await fetch('/api/config');
+
         if (!res.ok) {
           setError(true);
           return;
@@ -59,21 +60,30 @@ const AdminPage: NextComponentType = () => {
     );
 
     Promise.all(promises).then(() => setLoading(false));
-  });
+  }, []);
 
   const handleChange = (configItem: Config) => async (): Promise<void> => {
     const newValue = configItem.value === 'true' ? 'false' : 'true';
 
-    await fetch('/api/config', {
-      method: 'POST',
-      body: JSON.stringify({
-        configKey: configItem.key,
-        configValue: newValue,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    try {
+      const newConfigItem: Config = await fetch('/api/config', {
+        method: 'POST',
+        body: JSON.stringify({
+          configKey: configItem.key,
+          configValue: newValue,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((res) => res.json());
+
+      const items = [...configItems];
+      const index = items.findIndex((i) => i.key === newConfigItem.key);
+      items[index] = newConfigItem;
+      setConfigItems(items);
+    } catch (err) {
+      setError(true);
+    }
   };
 
   if (loading) return null;
@@ -95,14 +105,24 @@ const AdminPage: NextComponentType = () => {
               {results.length === 0 && <div className="alert alert-info mt-3">No config items to display 🤔</div>}
 
               {configItems.map((configItem) => (
-                <div key={configItem.key} className="form-group ml-sm-3 mr-3 mb-2">
+                <div key={configItem.key} className="form-group mb-2">
                   <label htmlFor={configItem.key} className="mr-3">
                     {configItem.key}
                   </label>
-                  <input type="text" className="form-control" id={configItem.key} placeholder="Team name" value={configItem.value} disabled />
-                  <button type="button" className="btn btn-primary mb-2 mt-3" onClick={() => handleChange(configItem)}>
-                    {configItem.value === 'true' ? 'Disable' : 'Enable'}
-                  </button>
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="text"
+                      style={{ flex: 1 }}
+                      className="form-control"
+                      id={configItem.key}
+                      placeholder="Team name"
+                      value={configItem.value}
+                      disabled
+                    />
+                    <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}>
+                      {configItem.value === 'true' ? 'Disable' : 'Enable'}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
