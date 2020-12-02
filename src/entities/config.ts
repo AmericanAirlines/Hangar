@@ -25,21 +25,4 @@ export class Config extends BaseEntity {
     }
     return toggle ? toggle.value === 'true' : false;
   }
-
-  static async toggleKey(key: string): Promise<boolean> {
-    const toggle = await this.findOne({ key });
-    if (toggle) {
-      toggle.value = toggle.value.toLowerCase();
-      if (toggle.value !== 'false' && toggle.value !== 'true') {
-        throw new Error('Config item found but cannot be cast to boolean');
-      } else if (toggle.value === 'true') {
-        toggle.value = 'false';
-        return false;
-      } else {
-        toggle.value = 'true';
-        return true;
-      }
-    }
-    return true;
-  }
 }
