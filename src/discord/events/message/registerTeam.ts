@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { colors } from '../../constants';
 import { Team } from '../../../entities/team';
+import { Config } from '../../../entities/config';
 import { DiscordContext } from '../../../entities/discordContext';
 import { SubCommands } from '.';
 
@@ -21,6 +22,11 @@ interface PartialTeamInfo {
 
 export async function registerTeam(msg: Discord.Message, context: DiscordContext): Promise<void> {
   // Respond with generic info about the flow, set context + save, ask for team members
+  const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
+  if (!teamRegistrationActive) {
+    await msg.author.send(':warning: Team registration is not open yet. Please check back later or wait for announcements!');
+    return;
+  }
   await msg.author.send({
     embed: {
       color: colors.info,
@@ -79,12 +85,14 @@ export const regSubCommands: SubCommands = {
     if (Number.isNaN(parseInt(msg.content, 10))) {
       await msg.author.send('Oops, looks like the table number you entered is not a number! Please try again.');
     } else {
-      const findNum = await Team.findOne({ tableNumber: parseInt(msg.content, 10) });
-      if (findNum === undefined) {
-        team.table = parseInt(msg.content, 10);
-        ctx.payload = team;
-        await ctx.save();
-        const finalTeam = Team.findOne({ tableNumber: team.table });
+      team.table = parseInt(msg.content, 10);
+      ctx.payload = team;
+      await ctx.save();
+      const finalTeam = new Team(team.name, team.table, team.description, team.members);
+      // await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again.');
+      try {
+        await finalTeam.save();
+        await ctx.clear();
         await msg.author.send({
           embed: {
             color: colors.info,
@@ -110,8 +118,12 @@ export const regSubCommands: SubCommands = {
             ],
           },
         });
-      } else {
-        await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again.');
+      } catch (err) {
+        if (Team.count({ tableNumber: team.table })) {
+          await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again.');
+        } else {
+          await msg.author.send('Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.');
+        }
       }
     }
   },

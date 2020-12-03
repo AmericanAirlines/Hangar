@@ -23,7 +23,7 @@ export class DiscordContext extends BaseEntity {
   @Column()
   nextStep: string;
 
-  @Column({ type: 'json' })
+  @Column({ type: 'simple-json' })
   payload: Payload;
 
   async clear(): Promise<void> {

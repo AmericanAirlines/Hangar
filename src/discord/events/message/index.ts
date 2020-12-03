@@ -49,11 +49,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   // If not in a DM, check to make sure it's in one of the approved channels
   const botChannelIds = (process.env.DISCORD_BOT_CHANNEL_IDS ?? '').split(',').map((id) => id.trim());
   if (msg.channel.type !== 'dm' && !botChannelIds.includes(msg.channel.id)) return;
-  try {
-    context = await DiscordContext.findOne(msg.author.id);
-  } catch (err) {
-    console.log('one');
-  }
+  context = await DiscordContext.findOne(msg.author.id);
 
   if (!context) {
     context = new DiscordContext(msg.author.id, '', '');
@@ -70,7 +66,6 @@ export async function message(msg: Discord.Message): Promise<void> {
 
     // Find the current command (user in flow)
     const command = commands.find((c) => c.handlerId === context.currentCommand);
-    console.log(command);
     // Find matching sub command
     [, handler] = Object.entries(command.subCommands ?? {}).find(([key]) => context.nextStep === key);
 
@@ -78,17 +73,15 @@ export async function message(msg: Discord.Message): Promise<void> {
       // Invoke the matching sub command
       try {
         await handler(msg, context);
+        return;
       } catch (err) {
-        console.log('two');
+        logger.error(`Error was thrown trying to handle a subcommand for message: ${msg.content}\nContext: ${JSON.stringify(context)}`);
+        return;
       }
     } else {
       // Something went wrong... we didn't expect to be here :(
       logger.error(`Discord context next step handler not found for ${context.currentCommand}`);
-      try {
-        await context.clear();
-      } catch (err) {
-        console.log('three');
-      }
+      await context.clear();
       msg.reply("Something went wrong... please try again and come chat with our team if you're still having trouble.");
       return;
     }
@@ -96,18 +89,15 @@ export async function message(msg: Discord.Message): Promise<void> {
     // handler && !currentCommand -- normal command handler
     // handler && currentCommand -- switching commands/restarting
     // !handler && !currentCommand -- jibberish
-    try {
-      await context.clear();
-    } catch (err) {
-      console.log('four');
-    }
+    await context.clear();
   }
 
+  // Handle a root-level command
   if (handler) {
     try {
       await handler(msg, context);
     } catch (err) {
-      console.log('five');
+      logger.error(`Error was thrown trying to handle a command for message: ${msg.content}\nContext: ${JSON.stringify(context)}`);
     }
     return;
   }
