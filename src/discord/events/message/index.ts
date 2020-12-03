@@ -4,14 +4,19 @@ import { ping } from './ping';
 import { client } from '../..';
 import logger from '../../../logger';
 import { help } from './help';
-import { registerTeam, getUsers } from './registerTeam';
+import { registerTeam, regSubCommands } from './registerTeam';
+
+type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
 
 interface Command {
   handlerId: string;
   trigger?: string;
   description: string;
-  handler: (message: Discord.Message, context: DiscordContext) => Promise<void>;
+  handler: HandlerFn;
+  subCommands?: SubCommands;
 }
+
+export type SubCommands = Record<string, HandlerFn>;
 
 export const commands: Command[] = [
   {
@@ -31,42 +36,80 @@ export const commands: Command[] = [
     trigger: '!registerTeam',
     description: 'Leads the user through the process of registering a team',
     handler: registerTeam,
+    subCommands: regSubCommands,
   },
 ];
 
 export async function message(msg: Discord.Message): Promise<void> {
-  if (!getUsers().includes(msg.author.id)) {
-    // Make sure the bot doesn't respond to itself
-    if (msg.author.id === client.user.id) return;
+  // Make sure the bot doesn't respond to itself
+  if (msg.author.id === client.user.id) return;
 
-    // If not in a DM, check to make sure it's in one of the approved channels
-    const botChannelIds = (process.env.DISCORD_BOT_CHANNEL_IDS ?? '').split(',').map((id) => id.trim());
-    if (msg.channel.type !== 'dm' && !botChannelIds.includes(msg.channel.id)) return;
+  let context: DiscordContext; // move back to line 53 when done
 
-    let context = await DiscordContext.findOne(msg.author.id);
+  // If not in a DM, check to make sure it's in one of the approved channels
+  const botChannelIds = (process.env.DISCORD_BOT_CHANNEL_IDS ?? '').split(',').map((id) => id.trim());
+  if (msg.channel.type !== 'dm' && !botChannelIds.includes(msg.channel.id)) return;
+  try {
+    context = await DiscordContext.findOne(msg.author.id);
+  } catch (err) {
+    console.log('one');
+  }
 
-    if (!context) {
-      context = new DiscordContext(msg.author.id, '');
-    }
+  if (!context) {
+    context = new DiscordContext(msg.author.id, '', '');
+  }
 
-    let command: Command | undefined;
+  let handler: HandlerFn | undefined;
 
-    // Check to see if the context has a next step
-    if (context.nextStep) {
-      command = commands.find((c) => c.handlerId === context.nextStep);
-      logger.error('Discord context next step handler not found');
-    }
+  // Find a command handler matching the raw message (e.g., '!help')
+  handler = commands.find((c) => c.trigger === msg.content.trim())?.handler;
 
-    // If not, try to match the content to a known trigger id
-    if (!command) {
-      command = commands.find((c) => c.trigger === msg.content.trim());
-    }
+  // Check to see if the context has a current command
+  if (!handler && context.currentCommand) {
+    // The text does not match a known command && the user is in a flow (currentCommand is set)
 
-    if (command) {
-      await command.handler(msg, context);
+    // Find the current command (user in flow)
+    const command = commands.find((c) => c.handlerId === context.currentCommand);
+    console.log(command);
+    // Find matching sub command
+    [, handler] = Object.entries(command.subCommands ?? {}).find(([key]) => context.nextStep === key);
+
+    if (handler) {
+      // Invoke the matching sub command
+      try {
+        await handler(msg, context);
+      } catch (err) {
+        console.log('two');
+      }
+    } else {
+      // Something went wrong... we didn't expect to be here :(
+      logger.error(`Discord context next step handler not found for ${context.currentCommand}`);
+      try {
+        await context.clear();
+      } catch (err) {
+        console.log('three');
+      }
+      msg.reply("Something went wrong... please try again and come chat with our team if you're still having trouble.");
       return;
     }
-
-    msg.reply("I'm not sure what you need, try replying with `!help` for some useful information!");
+  } else {
+    // handler && !currentCommand -- normal command handler
+    // handler && currentCommand -- switching commands/restarting
+    // !handler && !currentCommand -- jibberish
+    try {
+      await context.clear();
+    } catch (err) {
+      console.log('four');
+    }
   }
+
+  if (handler) {
+    try {
+      await handler(msg, context);
+    } catch (err) {
+      console.log('five');
+    }
+    return;
+  }
+  msg.reply("I'm not sure what you need, try replying with `!help` for some useful information!");
 }
