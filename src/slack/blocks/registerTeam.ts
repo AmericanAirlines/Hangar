@@ -1,6 +1,7 @@
 import { KnownBlock, View } from '@slack/types';
 import { registerTeamViewConstants } from '../constants';
 import openSourceFooter from './openSourceFooter';
+import { stringDictionary } from '../../StringDictonary';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -10,7 +11,7 @@ export const blocks: KnownBlock[] = [
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: '*Register your team for judging* :mag:\n\nOnly one person from each team should register',
+      text: stringDictionary.registerTeamblocks,
     },
   },
   {
@@ -22,14 +23,14 @@ export const blocks: KnownBlock[] = [
     block_id: registerTeamViewConstants.fields.teamMembers,
     label: {
       type: 'plain_text',
-      text: 'Who are you hacking with?',
+      text: stringDictionary.hackingWithWho,
     },
     element: {
       action_id: registerTeamViewConstants.fields.teamMembers,
       type: 'multi_users_select',
       placeholder: {
         type: 'plain_text',
-        text: 'Select teammates',
+        text: stringDictionary.selectTeammate,
       },
     },
   },
@@ -41,12 +42,12 @@ export const blocks: KnownBlock[] = [
       type: 'plain_text_input',
       placeholder: {
         type: 'plain_text',
-        text: '404 - Name not found',
+        text: stringDictionary.nameNotFound,
       },
     },
     label: {
       type: 'plain_text',
-      text: "What's your team/app name?",
+      text: stringDictionary.askName,
       emoji: false,
     },
   },
@@ -55,19 +56,19 @@ export const blocks: KnownBlock[] = [
     block_id: registerTeamViewConstants.fields.tableNumber,
     hint: {
       type: 'plain_text',
-      text: "Make sure your table number is correct or we won't be able to find you!",
+      text: stringDictionary.tableDoubleCheck,
     },
     element: {
       action_id: registerTeamViewConstants.fields.tableNumber,
       type: 'plain_text_input',
       placeholder: {
         type: 'plain_text',
-        text: 'e.g., 42',
+        text: stringDictionary.exampleTableNumber,
       },
     },
     label: {
       type: 'plain_text',
-      text: "What's your table number?",
+      text: stringDictionary.askTable,
       emoji: false,
     },
   },
@@ -80,12 +81,12 @@ export const blocks: KnownBlock[] = [
       multiline: true,
       placeholder: {
         type: 'plain_text',
-        text: 'What does your project do? How will make a difference? What technologies are used?',
+        text: stringDictionary.projectInfoDesc,
       },
     },
     label: {
       type: 'plain_text',
-      text: 'What does your project do?',
+      text: stringDictionary.projectDescription,
       emoji: false,
     },
   },
@@ -95,17 +96,17 @@ export const registerTeamView: View = {
   type: 'modal',
   title: {
     type: 'plain_text',
-    text: 'Register Team',
+    text: stringDictionary.registerTeam,
     emoji: true,
   },
   submit: {
     type: 'plain_text',
-    text: 'Submit',
+    text: stringDictionary.submit,
     emoji: true,
   },
   close: {
     type: 'plain_text',
-    text: 'Cancel',
+    text: stringDictionary.cancel,
     emoji: true,
   },
   callback_id: registerTeamViewConstants.viewId,
@@ -120,17 +121,19 @@ export function registeredTeamSummary(
   projectDescription: string,
 ): KnownBlock[] {
   const userString = teamMembers.length === 1 ? 'You have' : `<@${registeringUser}> has`;
+
+  const tableNumberStr = tableNumber.toString();
   return [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `${userString} registered your team for sponsor judging. Our team will stop by during judging to see your hack. Best of luck and see you soon!
-
-*Team Name*: ${teamName}
-*Table Number*: ${tableNumber}
-*Project Description*: ${projectDescription}
-        `,
+        text: stringDictionary.registerTeamSummary({
+          userString,
+          teamName,
+          tableNumber: tableNumberStr,
+          projectDescription,
+        }),
       },
     },
     openSourceFooter,
