@@ -67,30 +67,34 @@ export async function message(msg: Discord.Message): Promise<void> {
     // Find the current command (user in flow)
     const command = commands.find((c) => c.handlerId === context.currentCommand);
     // Find matching sub command
-    [, handler] = Object.entries(command.subCommands ?? {}).find(([key]) => context.nextStep === key);
+    [, handler] = Object.entries(command.subCommands ?? {}).find(([key]) => context.nextStep === key) ?? [];
 
-    if (handler) {
-      // Invoke the matching sub command
-      try {
-        await handler(msg, context);
-        return;
-      } catch (err) {
-        logger.error(`Error was thrown trying to handle a subcommand for message: ${msg.content}\nContext: ${JSON.stringify(context)}`);
-        return;
+    try {
+      if (handler) {
+        // Invoke the matching sub command
+        try {
+          await handler(msg, context);
+        } catch (err) {
+          logger.error(err);
+          throw new Error(`Error was thrown trying to handle a subcommand for message: ${msg.content}\nContext: ${JSON.stringify(context)}`);
+        }
+      } else {
+        // Something went wrong... we didn't expect to be here :(
+        throw new Error(`Discord context next step handler not found for ${context.currentCommand}`);
       }
-    } else {
-      // Something went wrong... we didn't expect to be here :(
-      logger.error(`Discord context next step handler not found for ${context.currentCommand}`);
+    } catch (err) {
       await context.clear();
+      logger.error(err);
       msg.reply("Something went wrong... please try again and come chat with our team if you're still having trouble.");
-      return;
     }
-  } else {
-    // handler && !currentCommand -- normal command handler
-    // handler && currentCommand -- switching commands/restarting
-    // !handler && !currentCommand -- jibberish
-    await context.clear();
+
+    return;
   }
+
+  // handler && !currentCommand -- normal command handler
+  // handler && currentCommand -- switching commands/restarting
+  // !handler && !currentCommand -- jibberish
+  await context.clear();
 
   // Handle a root-level command
   if (handler) {

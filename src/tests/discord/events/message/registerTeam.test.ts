@@ -2,12 +2,35 @@
 import 'jest';
 import { registerTeam } from '../../../../discord/events/message/registerTeam';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
-import { createDbConnection, closeDbConnection } from '../../../testdb';
 import { Config } from '../../../../entities/config';
 import { DiscordContext } from '../../../../entities/discordContext';
 
 jest.mock('../../../../discord');
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
+
+const saveCtx = jest.fn();
+const saveTeam = jest.fn();
+
+jest.mock('../../../../entities/discordContext', () => {
+  function MockDiscordContext(): object {
+    return {
+      save: saveCtx,
+    };
+  }
+
+  return { DiscordContext: MockDiscordContext };
+});
+
+jest.mock('../../../../entities/team', () => {
+  function Team(): object {
+    return {
+      save: saveTeam,
+    };
+  }
+
+  return { Team };
+});
+
 let teamRegistrationActive = false;
 
 const startMsg = makeDiscordMessage({
@@ -21,14 +44,10 @@ const startMsg = makeDiscordMessage({
 
 describe('registerTeam handler', () => {
   beforeEach(async () => {
-    await createDbConnection();
     jest.resetAllMocks();
+    jest.resetModules();
     configFindToggleForKeySpy.mockImplementation(async (key: string) => (key === 'teamRegistrationActive' ? teamRegistrationActive : false));
     teamRegistrationActive = false;
-  });
-
-  afterEach(async () => {
-    await closeDbConnection();
   });
 
   it('will let the user know that team registration is not open', async () => {

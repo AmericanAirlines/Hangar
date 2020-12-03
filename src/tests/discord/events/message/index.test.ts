@@ -4,11 +4,34 @@ import * as ping from '../../../../discord/events/message/ping';
 import { DiscordContext } from '../../../../entities/discordContext';
 import { client } from '../../../../discord';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
+import { regSubCommands } from '../../../../discord/events/message/registerTeam';
+import logger from '../../../../logger';
 
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
-const mockDiscordContext = new DiscordContext('1234', '');
-jest.spyOn(DiscordContext, 'findOne').mockImplementation(() => Promise.resolve(mockDiscordContext));
+const teamNameSpy = jest.spyOn(regSubCommands, 'teamName').mockImplementation();
+const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
+const mockDiscordContext = new DiscordContext('1234', '', '');
 jest.mock('../../../../discord');
+
+const discordContextConstructorMock = jest.fn();
+const discordContextFindOneMock = jest.fn().mockImplementation(async () => mockDiscordContext);
+jest.mock('../../../../entities/discordContext', () => {
+  function MockedDiscordContext(id: string, currentCommand: string, nextStep: string): object {
+    return {
+      id,
+      currentCommand,
+      nextStep,
+      payload: {},
+      clear: jest.fn(),
+    };
+  }
+
+  MockedDiscordContext.findOne = jest.fn(() => discordContextFindOneMock);
+
+  return {
+    DiscordContext: MockedDiscordContext,
+  };
+});
 
 /* Because we need to make sure the mocks above are copied
   into`commands`, we need to import the message file below:
@@ -54,7 +77,8 @@ describe('message handler', () => {
 
     await message(pingMessage);
     expect(pingHandlerSpy).toBeCalledTimes(1);
-    expect(pingHandlerSpy).toBeCalledWith(pingMessage, mockDiscordContext);
+    const messageArg = pingHandlerSpy.mock.calls[0][0];
+    expect(messageArg).toEqual(pingMessage);
   });
 
   it('does not respond if the message is from itself', async () => {
@@ -110,4 +134,103 @@ describe('message handler', () => {
     await message(channelMessage);
     expect(reply).toHaveBeenCalled();
   });
+
+  it('will invoke a subcommand if context has a currentCommand', async () => {
+    (DiscordContext.findOne as jest.Mock).mockResolvedValueOnce({
+      currentCommand: 'registerTeam',
+      nextStep: 'teamName',
+      payload: {},
+    });
+
+    const reply = jest.fn();
+
+    await message(
+      makeDiscordMessage({
+        reply,
+        content: 'Something mid flow!',
+        author: {
+          id: 'JaneSmith',
+        },
+        channel: {
+          type: 'dm',
+        },
+      }),
+    );
+    expect(teamNameSpy).toBeCalled();
+  });
+
+  it('will log an error if a subcommand throws', async () => {
+    // const ctx = new DiscordContext('JaneSmith', 'registerTeam', 'teamName');
+    const ctxClear = jest.fn();
+    (DiscordContext.findOne as jest.Mock).mockResolvedValueOnce({
+      currentCommand: 'registerTeam',
+      nextStep: 'teamName',
+      clear: ctxClear,
+    });
+
+    const reply = jest.fn();
+
+    teamNameSpy.mockRejectedValueOnce(new Error('Something went wrong'));
+    await message(
+      makeDiscordMessage({
+        reply,
+        content: 'Something mid flow!',
+        author: {
+          id: 'JaneSmith',
+        },
+        channel: {
+          type: 'dm',
+        },
+      }),
+    );
+    expect(teamNameSpy).toBeCalled();
+    expect(loggerErrorSpy).toBeCalledTimes(2);
+    expect(ctxClear).toBeCalled();
+    expect(reply).toBeCalledWith("Something went wrong... please try again and come chat with our team if you're still having trouble.");
+  });
+
+  it("will log an error if a matching subcommand can't be found", async () => {
+    // const ctx = new DiscordContext('JaneSmith', 'registerTeam', 'teamName');
+    (DiscordContext.findOne as jest.Mock).mockResolvedValueOnce({
+      currentCommand: 'registerTeam',
+      nextStep: 'junk',
+      clear: jest.fn(),
+    });
+
+    const reply = jest.fn();
+
+    await message(
+      makeDiscordMessage({
+        reply,
+        content: 'Something mid flow!',
+        author: {
+          id: 'JaneSmith',
+        },
+        channel: {
+          type: 'dm',
+        },
+      }),
+    );
+    expect(loggerErrorSpy).toBeCalledTimes(1);
+    expect(reply).toBeCalledWith("Something went wrong... please try again and come chat with our team if you're still having trouble.");
+  });
+
+  // it('will create a context if none exists', async () => {
+  //   (DiscordContext.findOne as jest.Mock).mockImplementation(async () => null);
+  //   const discordId = 'discordId';
+
+  //   await message(
+  //     makeDiscordMessage({
+  //       reply: jest.fn(),
+  //       content: '',
+  //       author: { id: discordId },
+  //       channel: {
+  //         type: 'text',
+  //         id: '0123',
+  //       },
+  //     }),
+  //   );
+
+  //   expect(DiscordContext).toHaveBeenCalledWith(discordId, '', '');
+  // });
 });
