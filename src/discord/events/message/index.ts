@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { DiscordContext } from '../../../entities/discordContext';
 import { ping } from './ping';
+import { supportRequest } from './supportRequest';
 import { client } from '../..';
 import logger from '../../../logger';
 import { help } from './help';
@@ -24,6 +25,18 @@ export const commands: Command[] = [
     trigger: '!ping',
     description: 'Replies with pong',
     handler: ping,
+  },
+  {
+    handlerId: 'ideaPitch',
+    trigger: '!ideaPitch',
+    description: 'Think you have a good idea? Join a queue to come pitch to our team!',
+    handler: supportRequest,
+  },
+  {
+    handlerId: 'techincalSupport',
+    trigger: '!technicalSupport',
+    description: 'Need help with your hack? Join our tech support queue so our team can help!',
+    handler: supportRequest,
   },
   {
     handlerId: 'help',

@@ -2,6 +2,7 @@
 import { Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import { app } from '..';
 import logger from '../../logger';
+import { stringDictionary } from '../../StringDictonary';
 
 export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = async ({ context, payload }) => {
   try {
@@ -9,8 +10,7 @@ export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = a
       token: context.botToken,
       channel: payload.channel,
       thread_ts: payload.ts,
-      text:
-        "Hey there :wave: I can help your team during the hackathon! To see all of the things I can help with, simply click/tap my name and choose 'Go to App' :tada:",
+      text: stringDictionary.appMention,
     });
   } catch (error) {
     logger.error('Something went wrong responding to a bot mention: ', error);

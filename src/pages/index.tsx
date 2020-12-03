@@ -1,4 +1,4 @@
-/* global fetch, window, alert */
+/* global fetch */
 import React from 'react';
 import { NextComponentType } from 'next';
 
@@ -21,6 +21,17 @@ const AdminPage: NextComponentType = () => {
   const [error, setError] = React.useState(false);
   const [configItems, setConfigItems] = React.useState<Config[]>([]);
   const [results, setResults] = React.useState<Result[]>([]);
+  const [lastRefreshTimestamp, setLastRefreshTimestamp] = React.useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setLastRefreshTimestamp(Date.now());
+    }, 10000);
+
+    return (): void => {
+      clearInterval(interval);
+    };
+  }, []);
 
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
@@ -60,7 +71,37 @@ const AdminPage: NextComponentType = () => {
     );
 
     Promise.all(promises).then(() => setLoading(false));
-  });
+  }, [lastRefreshTimestamp]);
+
+  const handleChange = (configItem: Config) => async (): Promise<void> => {
+    const newValue = configItem.value === 'true' ? 'false' : 'true';
+
+    try {
+      const res = await fetch('/api/config', {
+        method: 'POST',
+        body: JSON.stringify({
+          configKey: configItem.key,
+          configValue: newValue,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error();
+      }
+
+      const newConfigItem: Config = await res.json();
+
+      const items = [...configItems];
+      const index = items.findIndex((i) => i.key === newConfigItem.key);
+      items[index] = newConfigItem;
+      setConfigItems(items);
+    } catch (err) {
+      setError(true);
+    }
+  };
 
   if (loading) return null;
 
@@ -81,11 +122,24 @@ const AdminPage: NextComponentType = () => {
               {results.length === 0 && <div className="alert alert-info mt-3">No config items to display 🤔</div>}
 
               {configItems.map((configItem) => (
-                <div key={configItem.key} className="form-group ml-sm-3 mr-3 mb-2">
+                <div key={configItem.key} className="form-group mb-2">
                   <label htmlFor={configItem.key} className="mr-3">
                     {configItem.key}
                   </label>
-                  <input type="text" className="form-control" id={configItem.key} placeholder="Team name" value={configItem.value} disabled />
+                  <div style={{ display: 'flex' }}>
+                    <input
+                      type="text"
+                      style={{ flex: 1 }}
+                      className="form-control"
+                      id={configItem.key}
+                      placeholder="Team name"
+                      value={configItem.value}
+                      disabled
+                    />
+                    <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}>
+                      {configItem.value === 'true' ? 'Disable' : 'Enable'}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

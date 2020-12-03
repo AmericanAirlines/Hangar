@@ -6,6 +6,7 @@ import { Config } from '../../entities/config';
 import { SupportRequest, SupportRequestType, SupportRequestErrors } from '../../entities/supportRequest';
 import postAdminNotification from '../utilities/postAdminNotification';
 import { openAlertModal } from '../utilities/openAlertModal';
+import { stringDictionary } from '../../StringDictonary';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -19,8 +20,8 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
 
   if (!supportRequestQueueActive) {
     await openAlertModal(context.botToken, body.trigger_id, {
-      title: 'Whoops...',
-      text: ":see_no_evil: Our team isn't available to help at the moment, check back with us soon!",
+      title: stringDictionary.supportRequestWhoops,
+      text: stringDictionary.supportRequestNotOpentext,
     });
   } else {
     let slackName = 'Unknown (Check logs)';
@@ -39,9 +40,8 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       );
       await requestItem.save();
       await openAlertModal(context.botToken, body.trigger_id, {
-        title: "You're All Set",
-        text:
-          ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
+        title: stringDictionary.supportRequestOpentitle,
+        text: stringDictionary.supportRequestOpentext,
       });
 
       await postAdminNotification(
@@ -50,14 +50,14 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
     } catch (err) {
       if (err.name === SupportRequestErrors.ExistingActiveRequest) {
         await openAlertModal(context.botToken, body.trigger_id, {
-          title: 'Whoops...',
-          text: ":warning: Looks like you're already waiting to get help from our team",
+          title: stringDictionary.supportRequestWhoops,
+          text: stringDictionary.supportRequestAlreadyInLinetext,
           blocks: [
             {
               type: 'section',
               text: {
                 type: 'plain_text',
-                text: 'Keep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.',
+                text: stringDictionary.supportRequestExistingActiveRequest,
               },
             },
           ],
@@ -65,7 +65,7 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       } else {
         await openAlertModal(context.botToken, body.trigger_id, {
           title: 'Whoops...',
-          text: ":warning: Something went wrong... come chat with our team and we'll help.",
+          text: stringDictionary.supportRequestAlertModaltext,
         });
         logger.error('Something went wrong trying to create a support request', err);
       }
