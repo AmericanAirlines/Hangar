@@ -57,13 +57,10 @@ export async function message(msg: Discord.Message): Promise<void> {
   // Make sure the bot doesn't respond to itself
   if (msg.author.id === client.user.id) return;
 
-  let context: DiscordContext; // move back to line 53 when done
-
   // If not in a DM, check to make sure it's in one of the approved channels
   const botChannelIds = (process.env.DISCORD_BOT_CHANNEL_IDS ?? '').split(',').map((id) => id.trim());
   if (msg.channel.type !== 'dm' && !botChannelIds.includes(msg.channel.id)) return;
-  context = await DiscordContext.findOne(msg.author.id);
-
+  let context = await DiscordContext.findOne(msg.author.id);
   if (!context) {
     context = new DiscordContext(msg.author.id, '', '');
   }
@@ -81,7 +78,6 @@ export async function message(msg: Discord.Message): Promise<void> {
     const command = commands.find((c) => c.handlerId === context.currentCommand);
     // Find matching sub command
     [, handler] = Object.entries(command.subCommands ?? {}).find(([key]) => context.nextStep === key) ?? [];
-
     try {
       if (handler) {
         // Invoke the matching sub command
@@ -103,7 +99,6 @@ export async function message(msg: Discord.Message): Promise<void> {
 
     return;
   }
-
   // handler && !currentCommand -- normal command handler
   // handler && currentCommand -- switching commands/restarting
   // !handler && !currentCommand -- jibberish

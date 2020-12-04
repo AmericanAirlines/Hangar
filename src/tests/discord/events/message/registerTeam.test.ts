@@ -1,15 +1,17 @@
 /* eslint-disable implicit-arrow-linebreak, function-paren-newline */
 import 'jest';
-import { registerTeam } from '../../../../discord/events/message/registerTeam';
+import { registerTeam, regSubCommands } from '../../../../discord/events/message/registerTeam';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import { Config } from '../../../../entities/config';
 import { DiscordContext } from '../../../../entities/discordContext';
 
 jest.mock('../../../../discord');
+
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 
 const saveCtx = jest.fn();
 const saveTeam = jest.fn();
+const countTeam = jest.fn();
 
 jest.mock('../../../../entities/discordContext', () => {
   function MockDiscordContext(): object {
@@ -25,6 +27,7 @@ jest.mock('../../../../entities/team', () => {
   function Team(): object {
     return {
       save: saveTeam,
+      count: countTeam,
     };
   }
 
@@ -67,16 +70,113 @@ describe('registerTeam handler', () => {
     );
   });
 
-  it("will prompt the user for the second question's input", async () => {
+  it('will call the subCommand dealing with team members', async () => {
     const ctx = new DiscordContext('1', 'registerTeam', 'teamMembers');
+    const send = jest.fn();
+    ctx.payload = {};
+    teamRegistrationActive = true;
+    const memberList = 'me, myself';
     const memberMsg = makeDiscordMessage({
-      content: 'me, myself',
+      content: memberList,
       author: {
-        send: jest.fn(),
+        send,
         username: 'Joe',
         id: '123',
       },
     });
-    await registerTeam(startMsg, ctx);
+    await regSubCommands.teamMembers(memberMsg, ctx);
+    expect(ctx.currentCommand).toBe('registerTeam');
+    expect(send).toBeCalledWith("What's your team or app name?");
+    expect(ctx.nextStep).toBe('teamName');
+    expect(ctx.payload).toStrictEqual({ members: ['me', 'myself'] });
+  });
+
+  it('will call the subCommand dealing with team name', async () => {
+    const ctx = new DiscordContext('1', 'registerTeam', 'teamName');
+    const send = jest.fn();
+    ctx.payload = {};
+    teamRegistrationActive = true;
+    const teamName = 'Jane';
+    const nameMsg = makeDiscordMessage({
+      content: teamName,
+      author: {
+        send,
+        username: 'Joe',
+        id: '123',
+      },
+    });
+    await regSubCommands.teamName(nameMsg, ctx);
+    expect(ctx.currentCommand).toBe('registerTeam');
+    expect(send).toBeCalledWith('What does your project do? How will it make a difference? What technologies are used?');
+    expect(ctx.nextStep).toBe('teamDescription');
+    expect(ctx.payload).toStrictEqual({ name: teamName });
+  });
+
+  it('will call the subCommand dealing with team description', async () => {
+    const ctx = new DiscordContext('1', 'registerTeam', 'teamDescription');
+    const send = jest.fn();
+    ctx.payload = {};
+    teamRegistrationActive = true;
+    const descript = 'does stuff';
+    const descMsg = makeDiscordMessage({
+      content: descript,
+      author: {
+        send,
+        username: 'Joe',
+        id: '123',
+      },
+    });
+    await regSubCommands.teamDescription(descMsg, ctx);
+
+    expect(send).toBeCalledWith("What's your table number (e.g. 42)?");
+    expect(ctx.payload).toStrictEqual({ description: descript });
+    expect(ctx.currentCommand).toBe('registerTeam');
+    expect(ctx.nextStep).toBe('tableNumber');
+    //const [msg] = send.mock.calls[0];
+    //  expect(msg).toBe("What's your table number (e.g. 42)");
+    //expect(msg.includes("substr")).toBeTruthy();
+  });
+
+  it('will call the subCommand dealing with table number', async () => {
+    const ctx = new DiscordContext('1', 'registerTeam', 'tableNumber');
+    const send = jest.fn();
+    ctx.payload = {};
+    teamRegistrationActive = true;
+    const tableNum = '22';
+    const numMsg = makeDiscordMessage({
+      content: tableNum,
+      author: {
+        send,
+        username: 'Joe',
+        id: '123',
+      },
+    });
+    await regSubCommands.tableNumber(numMsg, ctx);
+    const [msg] = send.mock.calls[0];
+    //expect(msg.includes('Below is what has been submitted as your team!')).toBeTruthy();
+    expect(ctx.payload).toStrictEqual({ table: parseInt(tableNum, 10) });
+    expect(ctx.currentCommand).toBe(undefined);
+    expect(ctx.nextStep).toBe(undefined);
+  });
+
+  it('will let the user know that what the entered is NaN', async () => {
+    const ctx = new DiscordContext('1', 'registerTeam', 'tableNumber');
+    const send = jest.fn();
+    ctx.payload = {};
+    teamRegistrationActive = true;
+    const tableNum = 'abc';
+    const numMsg = makeDiscordMessage({
+      content: tableNum,
+      author: {
+        send,
+        username: 'Joe',
+        id: '123',
+      },
+    });
+    await regSubCommands.tableNumber(numMsg, ctx);
+    expect(send).toBeCalledWith('Oops, looks like the table number you entered is not a number! Please try again.');
+    expect(ctx.payload).toEqual({});
+    expect(ctx.currentCommand).toBe('registerTeam');
+    expect(ctx.nextStep).toBe('tableNumber');
   });
 });

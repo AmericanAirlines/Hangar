@@ -4,6 +4,7 @@ import { Team } from '../../../entities/team';
 import { Config } from '../../../entities/config';
 import { DiscordContext } from '../../../entities/discordContext';
 import { SubCommands } from '.';
+import logger from '../../../logger';
 
 enum RegistrationSteps {
   teamMembers = 'teamMembers',
@@ -21,7 +22,6 @@ interface PartialTeamInfo {
 }
 
 export async function registerTeam(msg: Discord.Message, context: DiscordContext): Promise<void> {
-  // Respond with generic info about the flow, set context + save, ask for team members
   const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
   if (!teamRegistrationActive) {
     await msg.author.send(':warning: Team registration is not open yet. Please check back later or wait for announcements!');
@@ -57,10 +57,13 @@ export const regSubCommands: SubCommands = {
       members: [],
     };
     const temp = msg.content.split(',');
+
     for (let i = 0; i < temp.length; i += 1) {
+      temp[i] = temp[i].trim();
       team.members.push(temp[i]);
     }
     ctx.payload = team;
+    ctx.currentCommand = 'registerTeam';
     await ctx.save();
     msg.author.send("What's your team or app name?");
   },
@@ -69,6 +72,7 @@ export const regSubCommands: SubCommands = {
     const team = ctx.payload as PartialTeamInfo;
     team.name = msg.content;
     ctx.payload = team;
+    ctx.currentCommand = 'registerTeam';
     await ctx.save();
     await msg.author.send('What does your project do? How will it make a difference? What technologies are used?');
   },
@@ -77,11 +81,14 @@ export const regSubCommands: SubCommands = {
     const team = ctx.payload as PartialTeamInfo;
     team.description = msg.content;
     ctx.payload = team;
+    ctx.currentCommand = 'registerTeam';
     await ctx.save();
-    await msg.author.send("What's your table number (e.g. 42)");
+    await msg.author.send("What's your table number (e.g. 42)?");
   },
   tableNumber: async (msg, ctx) => {
     const team = ctx.payload as PartialTeamInfo;
+    ctx.currentCommand = 'registerTeam';
+    ctx.nextStep = 'tableNumber';
     if (Number.isNaN(parseInt(msg.content, 10))) {
       await msg.author.send('Oops, looks like the table number you entered is not a number! Please try again.');
     } else {
@@ -89,9 +96,10 @@ export const regSubCommands: SubCommands = {
       ctx.payload = team;
       await ctx.save();
       const finalTeam = new Team(team.name, team.table, team.description, team.members);
-      // await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again.');
       try {
         await finalTeam.save();
+        ctx.currentCommand = undefined;
+        ctx.nextStep = undefined;
         await ctx.clear();
         await msg.author.send({
           embed: {
@@ -119,8 +127,9 @@ export const regSubCommands: SubCommands = {
           },
         });
       } catch (err) {
+        logger.error('Saving team failed: ', err);
         if (Team.count({ tableNumber: team.table })) {
-          await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again.');
+          await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again');
         } else {
           await msg.author.send('Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.');
         }
