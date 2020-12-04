@@ -35,9 +35,7 @@ describe('supportRequest handler', () => {
     });
     await supportRequest(technicalMessage);
     expect(technicalMessage.author.send).toBeCalledTimes(1);
-    expect(technicalMessage.author.send).toBeCalledWith(
-      stringDictionary.supportAddedQueue,
-    );
+    expect(technicalMessage.author.send).toBeCalledWith(stringDictionary.supportAddedQueue);
   });
 
   it('will message the user to let them know they have been added to the idea pitch queue', async () => {
@@ -52,9 +50,7 @@ describe('supportRequest handler', () => {
     });
     await supportRequest(ideaMessage);
     expect(ideaMessage.author.send).toBeCalledTimes(1);
-    expect(ideaMessage.author.send).toBeCalledWith(
-      stringDictionary.supportAddedQueue,
-    );
+    expect(ideaMessage.author.send).toBeCalledWith(stringDictionary.supportAddedQueue);
   });
 
   it('will message the user to let them know the support team is unavailable', async () => {
@@ -68,9 +64,7 @@ describe('supportRequest handler', () => {
     });
     await supportRequest(unavailableMessage);
     expect(unavailableMessage.author.send).toBeCalledTimes(1);
-    expect(unavailableMessage.author.send).toBeCalledWith(
-      stringDictionary.supportNotAvailable,
-    );
+    expect(unavailableMessage.author.send).toBeCalledWith(stringDictionary.supportNotAvailable);
   });
 
   it('will message the user to let them know there is something wrong with signing up for a support queue', async () => {
@@ -101,8 +95,6 @@ describe('supportRequest handler', () => {
     await existingMessage.save();
     await supportRequest(newMessage);
     expect(newMessage.author.send).toBeCalledTimes(1);
-    expect(newMessage.author.send).toBeCalledWith(
-      stringDictionary.supportAlredyinLine,
-    );
+    expect(newMessage.author.send).toBeCalledWith(stringDictionary.supportAlredyinLine);
   });
 });
