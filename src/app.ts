@@ -9,6 +9,7 @@ import { slackApp, initListeners } from './slack';
 import { apiApp } from './api';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
+import { setSlackActive, activePlatform } from './common';
 
 export const app = express();
 
@@ -61,6 +62,7 @@ export async function initSlack(): Promise<void> {
     initListeners();
     app.use(slackApp);
     logger.info('Slack app initialized successfully');
+    setSlackActive(true);
   } catch (err) {
     if (process.env.NODE_ENV !== 'test') {
       logger.error('Slack Bot Token is invalid: ', err);
@@ -98,7 +100,13 @@ export async function initNext(): Promise<void> {
 }
 
 export const init = async (): Promise<void> => {
-  await Promise.all([initDatabase(), initSlack(), initDiscord()]);
+  // await Promise.all([initDatabase(), initSlack(), initDiscord()])
+
+  const promises = [];
+  await promises.push(initDatabase());
+  if (activePlatform === 'Slack') promises.push(initSlack());
+  else promises.push(initDiscord());
+  Promise.all(promises);
 
   if (process.env.NODE_ENV === 'production') {
     await initNext();
