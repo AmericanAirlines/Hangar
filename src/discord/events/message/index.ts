@@ -53,6 +53,8 @@ export const commands: Command[] = [
   },
 ];
 
+const genericErrorMessage = "Something went wrong... please try again and come chat with our team if you're still having trouble.";
+
 export async function message(msg: Discord.Message): Promise<void> {
   // Make sure the bot doesn't respond to itself
   if (msg.author.id === client.user.id) return;
@@ -80,8 +82,8 @@ export async function message(msg: Discord.Message): Promise<void> {
     [, handler] = Object.entries(command.subCommands ?? {}).find(([key]) => context.nextStep === key) ?? [];
     try {
       if (handler) {
-        // Invoke the matching sub command
         try {
+          // Invoke the matching sub command
           await handler(msg, context);
         } catch (err) {
           logger.error(err);
@@ -94,7 +96,7 @@ export async function message(msg: Discord.Message): Promise<void> {
     } catch (err) {
       await context.clear();
       logger.error(err);
-      msg.reply("Something went wrong... please try again and come chat with our team if you're still having trouble.");
+      msg.reply(genericErrorMessage);
     }
 
     return;
@@ -110,6 +112,7 @@ export async function message(msg: Discord.Message): Promise<void> {
       await handler(msg, context);
     } catch (err) {
       logger.error(`Error was thrown trying to handle a command for message: ${msg.content}\nContext: ${JSON.stringify(context)}`);
+      msg.reply(genericErrorMessage);
     }
     return;
   }

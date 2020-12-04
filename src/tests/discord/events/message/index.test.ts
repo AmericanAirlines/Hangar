@@ -13,7 +13,6 @@ const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const mockDiscordContext = new DiscordContext('1234', '', '');
 jest.mock('../../../../discord');
 
-const discordContextConstructorMock = jest.fn();
 const discordContextFindOneMock = jest.fn().mockImplementation(async () => mockDiscordContext);
 jest.mock('../../../../entities/discordContext', () => {
   function MockedDiscordContext(id: string, currentCommand: string, nextStep: string): object {
@@ -79,6 +78,26 @@ describe('message handler', () => {
     expect(pingHandlerSpy).toBeCalledTimes(1);
     const messageArg = pingHandlerSpy.mock.calls[0][0];
     expect(messageArg).toEqual(pingMessage);
+  });
+
+  it('logs an error if a handler throws', async () => {
+    const reply = jest.fn();
+    const pingMessage = makeDiscordMessage({
+      reply,
+      content: '!ping',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    pingHandlerSpy.mockRejectedValueOnce(new Error('Something went wrong!'));
+    await message(pingMessage);
+    expect(pingHandlerSpy).toBeCalledTimes(1);
+    expect(loggerErrorSpy).toBeCalled();
+    expect(reply).toBeCalledWith("Something went wrong... please try again and come chat with our team if you're still having trouble.");
   });
 
   it('does not respond if the message is from itself', async () => {
@@ -215,22 +234,49 @@ describe('message handler', () => {
     expect(reply).toBeCalledWith("Something went wrong... please try again and come chat with our team if you're still having trouble.");
   });
 
-  // it('will create a context if none exists', async () => {
-  //   (DiscordContext.findOne as jest.Mock).mockImplementation(async () => null);
-  //   const discordId = 'discordId';
+  it('will log an error if the current command has no subcommands', async () => {
+    // const ctx = new DiscordContext('JaneSmith', 'registerTeam', 'teamName');
+    (DiscordContext.findOne as jest.Mock).mockResolvedValueOnce({
+      currentCommand: 'ping',
+      nextStep: 'junk',
+      clear: jest.fn(),
+    });
 
-  //   await message(
-  //     makeDiscordMessage({
-  //       reply: jest.fn(),
-  //       content: '',
-  //       author: { id: discordId },
-  //       channel: {
-  //         type: 'text',
-  //         id: '0123',
-  //       },
-  //     }),
-  //   );
+    const reply = jest.fn();
 
-  //   expect(DiscordContext).toHaveBeenCalledWith(discordId, '', '');
-  // });
+    await message(
+      makeDiscordMessage({
+        reply,
+        content: 'Something mid flow!',
+        author: {
+          id: 'JaneSmith',
+        },
+        channel: {
+          type: 'dm',
+        },
+      }),
+    );
+    expect(loggerErrorSpy).toBeCalledTimes(1);
+    expect(reply).toBeCalledWith("Something went wrong... please try again and come chat with our team if you're still having trouble.");
+  });
+
+  it('will create a context if none exists', async () => {
+    (DiscordContext.findOne as jest.Mock).mockImplementation(async () => null);
+    const discordId = 'discordId';
+
+    await message(
+      makeDiscordMessage({
+        reply: jest.fn(),
+        content: '',
+        author: { id: discordId },
+        channel: {
+          type: 'text',
+          id: '0123',
+        },
+      }),
+    );
+
+    // TODO: Fix this to actually make sure the constructor was called
+    // expect(DiscordContext).toHaveBeenCalledWith(discordId, '', '');
+  });
 });
