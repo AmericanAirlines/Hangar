@@ -5,6 +5,7 @@ import { createDbConnection, closeDbConnection } from '../../../testdb';
 import { Config } from '../../../../entities/config';
 import { supportRequest } from '../../../../discord/events/message/supportRequest';
 import { SupportRequest, SupportRequestType } from '../../../../entities/supportRequest';
+import { stringDictionary } from '../../../../StringDictonary';
 
 jest.mock('../../../../discord');
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
@@ -35,7 +36,7 @@ describe('supportRequest handler', () => {
     await supportRequest(technicalMessage);
     expect(technicalMessage.author.send).toBeCalledTimes(1);
     expect(technicalMessage.author.send).toBeCalledWith(
-      ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
+      stringDictionary.supportAddedQueue,
     );
   });
 
@@ -52,7 +53,7 @@ describe('supportRequest handler', () => {
     await supportRequest(ideaMessage);
     expect(ideaMessage.author.send).toBeCalledTimes(1);
     expect(ideaMessage.author.send).toBeCalledWith(
-      ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
+      stringDictionary.supportAddedQueue,
     );
   });
 
@@ -68,7 +69,7 @@ describe('supportRequest handler', () => {
     await supportRequest(unavailableMessage);
     expect(unavailableMessage.author.send).toBeCalledTimes(1);
     expect(unavailableMessage.author.send).toBeCalledWith(
-      "**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!",
+      stringDictionary.supportNotAvailable,
     );
   });
 
@@ -83,7 +84,7 @@ describe('supportRequest handler', () => {
     });
     await supportRequest(errorMessage);
     expect(errorMessage.author.send).toBeCalledTimes(1);
-    expect(errorMessage.author.send).toBeCalledWith("**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.");
+    expect(errorMessage.author.send).toBeCalledWith(stringDictionary.supportError);
   });
 
   it('will message the user to let them know they already have a pending support request', async () => {
@@ -101,7 +102,7 @@ describe('supportRequest handler', () => {
     await supportRequest(newMessage);
     expect(newMessage.author.send).toBeCalledTimes(1);
     expect(newMessage.author.send).toBeCalledWith(
-      "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.",
+      stringDictionary.supportAlredyinLine,
     );
   });
 });

@@ -4,6 +4,7 @@ import * as ping from '../../../../discord/events/message/ping';
 import { DiscordContext } from '../../../../entities/discordContext';
 import { client } from '../../../../discord';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
+import { stringDictionary } from '../../../../StringDictonary';
 
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
 const mockDiscordContext = new DiscordContext('1234', '');
@@ -36,7 +37,7 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith("I'm not sure what you need, try replying with '!help' for some useful information!");
+    expect(reply).toBeCalledWith(stringDictionary.errorReply);
   });
 
   it('successfully responds to !ping requests', async () => {
