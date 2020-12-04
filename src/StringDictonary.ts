@@ -24,6 +24,29 @@ stringDictionary.remindUser = (params) =>
 /*----------------------------------*/
 
 /*----------------------------------*/
+// src>discord>events/message>help.ts
+stringDictionary.welcomeTitle = `**Welcome to the Hangar bot** :wave:`;
+stringDictionary.welcomeDescription = `Listed below are various commands that you can use to interact with the bot!\n\nIf you are looking for more information in regard to this challenge, [Click Here](${process.env.CHALLENGE_URL})`;
+stringDictionary.welcomeReply = `Hey there! :wave:\nCheck your DMs for information on how to interact with me!`;
+/*----------------------------------*/
+
+/*----------------------------------*/
+// src>discord>events/message>index.ts
+stringDictionary.ideaPitchDescription = `Think you have a good idea? Join a queue to come pitch to our team!`;
+stringDictionary.technicalSupportDescription = `Need help with your hack? Join our tech support queue so our team can help!`;
+stringDictionary.helpDescription = `Lists commands the user can use to interact with the bot`;
+stringDictionary.errorReply = `I'm not sure what you need, try replying with '!help' for some useful information!`;
+/*----------------------------------*/
+
+/*----------------------------------*/
+// src>discord>events/message>supportRequest.ts
+stringDictionary.supportNotAvailable = `**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!`;
+stringDictionary.supportAddedQueue = `:white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.`;
+stringDictionary.supportAlredyinLine = `**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.`;
+stringDictionary.supportError = `**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.`;
+/*----------------------------------*/
+
+/*----------------------------------*/
 // src>slack>actions>registerTeam.ts
 stringDictionary.registrationNotOpen = `:warning: Team registration is not open yet. Check back later or, if you're subscribed to updates, watch for a direct message from the bot!`;
 /*----------------------------------*/

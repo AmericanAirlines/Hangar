@@ -36,7 +36,7 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith("I'm not sure what you need, try replying with `!help` for some useful information!");
+    expect(reply).toBeCalledWith("I'm not sure what you need, try replying with '!help' for some useful information!");
   });
 
   it('successfully responds to !ping requests', async () => {

@@ -9,6 +9,29 @@ export interface StringDictionary {
   /*----------------------------------*/
 
   /*----------------------------------*/
+  // src>discord>events/message>help.ts
+  welcomeTitle: string;
+  welcomeDescription: string;
+  welcomeReply: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>discord>events/message>index.ts
+  ideaPitchDescription: string;
+  technicalSupportDescription: string;
+  helpDescription: string;
+  errorReply: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>discord>events/message>supportRequest.ts
+  supportNotAvailable: string;
+  supportAddedQueue: string;
+  supportAlredyinLine: string;
+  supportError: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
   // src>slack>actions>registerTeam.ts
   registrationNotOpen: string;
   /*----------------------------------*/

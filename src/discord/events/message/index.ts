@@ -5,6 +5,7 @@ import { supportRequest } from './supportRequest';
 import { client } from '../..';
 import logger from '../../../logger';
 import { help } from './help';
+import { stringDictionary } from '../../../StringDictonary';
 
 interface Command {
   handlerId: string;
@@ -23,19 +24,19 @@ export const commands: Command[] = [
   {
     handlerId: 'ideaPitch',
     trigger: '!ideaPitch',
-    description: 'Think you have a good idea? Join a queue to come pitch to our team!',
+    description: stringDictionary.ideaPitchDescription,
     handler: supportRequest,
   },
   {
     handlerId: 'techincalSupport',
     trigger: '!technicalSupport',
-    description: 'Need help with your hack? Join our tech support queue so our team can help!',
+    description: stringDictionary.technicalSupportDescription,
     handler: supportRequest,
   },
   {
     handlerId: 'help',
     trigger: '!help',
-    description: 'Lists commands the user can use to interact with the bot',
+    description: stringDictionary.helpDescription,
     handler: help,
   },
 ];
@@ -72,5 +73,5 @@ export async function message(msg: Discord.Message): Promise<void> {
     return;
   }
 
-  msg.reply("I'm not sure what you need, try replying with `!help` for some useful information!");
+  msg.reply(stringDictionary.errorReply);
 }
