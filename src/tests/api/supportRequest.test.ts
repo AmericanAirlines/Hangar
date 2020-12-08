@@ -9,6 +9,8 @@ const adminSecret = 'Secrets are secretive';
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
+jest.mock('../../discord');
+
 const loggerInfoSpy = jest.spyOn(logger, 'info');
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 const messageUsersSpy = jest.spyOn(messageUsers, 'sendMessage');

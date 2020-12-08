@@ -4,6 +4,7 @@ import 'jest';
 import logger from '../logger';
 import { closeDbConnection, createDbConnection } from './testdb';
 
+jest.mock('../discord');
 jest.spyOn(logger, 'crit').mockImplementation();
 jest.spyOn(logger, 'error').mockImplementation();
 jest.spyOn(logger, 'info').mockImplementation();
