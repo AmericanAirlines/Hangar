@@ -3,6 +3,8 @@ import * as common from '../../common';
 import * as slackMessageUsers from '../../slack/utilities/messageUsers';
 import * as discordMessageUsers from '../../discord/utilities/messageUsers';
 
+jest.mock('../../discord');
+
 const getActivePlatformSpy = jest.spyOn(common, 'getActivePlatform');
 const slackMessageUsersSpy = jest.spyOn(slackMessageUsers, 'default').mockImplementation();
 const discordMessageUsersSpy = jest.spyOn(discordMessageUsers, 'messageUsers').mockImplementation();
@@ -11,6 +13,10 @@ const discordMessageUsersSpy = jest.spyOn(discordMessageUsers, 'messageUsers').m
 import { sendMessage } from '../../common/messageUsers';
 
 describe('common messageUsers', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   it('calls slack messageUsers when activePlatform is Slack', async () => {
     const userIds = ['slackId'];
     const message = 'hello world';
