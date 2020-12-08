@@ -102,7 +102,7 @@ export const regSubCommands: SubCommands = {
           embed: {
             color: colors.info,
             title: '**You are signed up :partying_face:**',
-            description: 'Below is what has been submitted as your team!',
+            description: 'Here are the details for your team:',
             fields: [
               {
                 name: 'Team Name:',
