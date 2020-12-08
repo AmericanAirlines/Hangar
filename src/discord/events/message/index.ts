@@ -27,7 +27,7 @@ export const commands: Command[] = [
     handler: supportRequest,
   },
   {
-    handlerId: 'techincalSupport',
+    handlerId: 'technicalSupport',
     trigger: '!technicalSupport',
     description: 'Need help with your hack? Join our tech support queue so our team can help!',
     handler: supportRequest,
