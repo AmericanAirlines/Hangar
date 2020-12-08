@@ -7,6 +7,7 @@ export const client: MockDiscordClient = {
   user: {
     id: 'default_bot_id',
   },
+  users: {},
 };
 
 export const setupDiscord = async (): Promise<MockDiscordClient> => Promise.resolve(client);
