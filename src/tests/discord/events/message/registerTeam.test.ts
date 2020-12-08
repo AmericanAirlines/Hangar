@@ -37,6 +37,10 @@ jest.mock('../../../../entities/team', () => {
   return { Team: MockTeam };
 });
 
+interface DbError extends Error {
+  code: string;
+}
+
 let teamRegistrationActive = false;
 
 const startMsg = makeDiscordMessage({
@@ -195,10 +199,35 @@ describe('registerTeam handler', () => {
         id: '123',
       },
     });
-    const existingTeam = new Team('team', convertedNum, 'stuff', ['Bob']);
-    existingTeam.save();
+    const keyConstraintError = new Error('table num taken');
+    (keyConstraintError as DbError).code = '23505';
+    saveTeam.mockRejectedValueOnce(keyConstraintError);
     await regSubCommands.tableNumber(numMsg, ctx);
     expect(send).toBeCalledWith('Oops, looks like someone already entered the table that you input! Please try again');
+    expect(ctx.payload).toEqual({ table: convertedNum });
+    expect(ctx.currentCommand).toBe('registerTeam');
+    expect(ctx.nextStep).toBe('tableNumber');
+  });
+
+  it('will let the user know that someone has already signed up for the table they entered', async () => {
+    const ctx = new DiscordContext('1', 'registerTeam', 'tableNumber');
+    const send = jest.fn();
+    ctx.payload = {};
+    teamRegistrationActive = true;
+    const tableNum = '2';
+    const convertedNum = parseInt(tableNum, 10);
+    const numMsg = makeDiscordMessage({
+      content: tableNum,
+      author: {
+        send,
+        username: 'Joe',
+        id: '123',
+      },
+    });
+    const keyConstraintError = new Error('generic error');
+    saveTeam.mockRejectedValueOnce(keyConstraintError);
+    await regSubCommands.tableNumber(numMsg, ctx);
+    expect(send).toBeCalledWith('Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.');
     expect(ctx.payload).toEqual({ table: convertedNum });
     expect(ctx.currentCommand).toBe('registerTeam');
     expect(ctx.nextStep).toBe('tableNumber');

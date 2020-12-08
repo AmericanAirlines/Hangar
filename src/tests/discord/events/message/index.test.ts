@@ -135,8 +135,7 @@ describe('message handler', () => {
   });
 
   it('responds if in an approved channel', async () => {
-    Object.defineProperty(process.env, 'DISCORD_BOT_CHANNEL_IDS', { value: '9423,  13189    ,  0123' });
-
+    process.env.DISCORD_BOT_CHANNEL_IDS = '9423,  13189    ,  0123';
     const reply = jest.fn();
     const channelMessage = makeDiscordMessage({
       reply,

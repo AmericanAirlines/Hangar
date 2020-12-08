@@ -128,11 +128,11 @@ export const regSubCommands: SubCommands = {
         ctx.save();
         await ctx.clear();
       } catch (err) {
-        logger.error('Saving team failed: ', err);
-        const checkTable = await Team.find({ where: { tableNumber: team.table } });
-        if (checkTable !== undefined) {
+        // Check if duplicate key constraint error (Postgres error 23505 - unique_violation)
+        if (err.code === '23505') {
           await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again');
         } else {
+          logger.error('Saving team failed: ', err);
           await msg.author.send('Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.');
         }
       }
