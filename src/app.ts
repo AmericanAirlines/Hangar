@@ -9,6 +9,7 @@ import { slackApp, initListeners } from './slack';
 import { apiApp } from './api';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
+import { getActivePlatform, SupportedPlatform } from './common';
 
 export const app = express();
 
@@ -98,7 +99,17 @@ export async function initNext(): Promise<void> {
 }
 
 export const init = async (): Promise<void> => {
-  await Promise.all([initDatabase(), initSlack(), initDiscord()]);
+  // await Promise.all([initDatabase(), initSlack(), initDiscord()])
+
+  const promises = [];
+  promises.push(initDatabase());
+
+  if (getActivePlatform() === SupportedPlatform.slack) {
+    promises.push(initSlack());
+  } else {
+    promises.push(initDiscord());
+  }
+  await Promise.all(promises);
 
   if (process.env.NODE_ENV === 'production') {
     await initNext();

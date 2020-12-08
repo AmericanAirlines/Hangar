@@ -2,16 +2,18 @@ import 'jest';
 import supertest from 'supertest';
 import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
 import { createDbConnection, closeDbConnection } from '../testdb';
-import * as messageUsers from '../../slack/utilities/messageUsers';
+import * as messageUsers from '../../common/messageUsers';
 import logger from '../../logger';
 
 const adminSecret = 'Secrets are secretive';
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
+jest.mock('../../discord');
+
 const loggerInfoSpy = jest.spyOn(logger, 'info');
 const loggerErrorSpy = jest.spyOn(logger, 'error');
-const messageUsersSpy = jest.spyOn(messageUsers, 'default');
+const messageUsersSpy = jest.spyOn(messageUsers, 'sendMessage');
 
 describe('api/supportRequest', () => {
   beforeEach(async () => {

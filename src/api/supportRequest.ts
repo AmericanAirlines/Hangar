@@ -1,7 +1,7 @@
 import express from 'express';
 import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
 import logger from '../logger';
-import messageUsers from '../slack/utilities/messageUsers';
+import { sendMessage } from '../common/messageUsers';
 import { stringDictionary } from '../StringDictonary';
 
 export const supportRequestRoutes = express.Router();
@@ -78,7 +78,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
 
   try {
     if (nextRequest) {
-      await messageUsers(
+      await sendMessage(
         [nextRequest.slackId],
         stringDictionary.supportRequestSuccess({
           supportName,
@@ -118,7 +118,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    await messageUsers([supportRequest.slackId], stringDictionary.supportRequestComplete);
+    await sendMessage([supportRequest.slackId], stringDictionary.supportRequestComplete);
 
     res.sendStatus(200);
   } catch (err) {
@@ -148,7 +148,7 @@ supportRequestRoutes.post('/abandonRequest', async (req, res) => {
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
 
-    await messageUsers(
+    await sendMessage(
       [supportRequest.slackId],
       stringDictionary.supportRequestNoShow({
         relativeTimeElapsedString,
@@ -193,7 +193,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
 
   try {
     if (request) {
-      await messageUsers(
+      await sendMessage(
         [request.slackId],
         stringDictionary.supportRequestSuccess({
           supportName,
@@ -227,7 +227,7 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
       return;
     }
 
-    await messageUsers(
+    await sendMessage(
       [supportRequest.slackId],
       stringDictionary.remindUser({
         relativeTimeElapsedString,

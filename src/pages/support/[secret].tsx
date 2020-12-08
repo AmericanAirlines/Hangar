@@ -115,6 +115,7 @@ const support: NextPage<{ secret: string }> = (props): JSX.Element => {
       body: JSON.stringify({ supportRequestId, relativeTimeElapsedString }),
       headers: {
         'Content-Type': 'application/json',
+        authorization: props.secret,
       },
     });
 
