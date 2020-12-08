@@ -15,6 +15,12 @@ interface Command {
 
 export const commands: Command[] = [
   {
+    handlerId: 'help',
+    trigger: '!help',
+    description: 'Lists commands the user can use to interact with the bot',
+    handler: help,
+  },
+  {
     handlerId: 'ping',
     trigger: '!ping',
     description: 'Replies with pong',
@@ -31,12 +37,6 @@ export const commands: Command[] = [
     trigger: '!technicalSupport',
     description: 'Need help with your hack? Join our tech support queue so our team can help!',
     handler: supportRequest,
-  },
-  {
-    handlerId: 'help',
-    trigger: '!help',
-    description: 'Lists commands the user can use to interact with the bot',
-    handler: help,
   },
 ];
 
