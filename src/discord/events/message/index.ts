@@ -5,13 +5,20 @@ import { supportRequest } from './supportRequest';
 import { client } from '../..';
 import logger from '../../../logger';
 import { help } from './help';
+import { registerTeam, regSubCommands } from './registerTeam';
+import { exit } from './exit';
+
+type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
 
 interface Command {
   handlerId: string;
   trigger?: string;
   description: string;
-  handler: (message: Discord.Message, context: DiscordContext) => Promise<void>;
+  handler: HandlerFn;
+  subCommands?: SubCommands;
 }
+
+export type SubCommands = Record<string, HandlerFn>;
 
 export const commands: Command[] = [
   {
@@ -38,7 +45,22 @@ export const commands: Command[] = [
     description: 'Need help with your hack? Join our tech support queue so our team can help!',
     handler: supportRequest,
   },
+  {
+    handlerId: 'exit',
+    trigger: '!exit',
+    description: 'Exits the user out of any flows they might be in (such as team registration)',
+    handler: exit,
+  },
+  {
+    handlerId: 'registerTeam',
+    trigger: '!registerTeam',
+    description: 'Leads the user through the process of registering a team',
+    handler: registerTeam,
+    subCommands: regSubCommands,
+  },
 ];
+
+const genericErrorMessage = "Something went wrong... please try again and come chat with our team if you're still having trouble.";
 
 export async function message(msg: Discord.Message): Promise<void> {
   // Make sure the bot doesn't respond to itself
@@ -47,30 +69,59 @@ export async function message(msg: Discord.Message): Promise<void> {
   // If not in a DM, check to make sure it's in one of the approved channels
   const botChannelIds = (process.env.DISCORD_BOT_CHANNEL_IDS ?? '').split(',').map((id) => id.trim());
   if (msg.channel.type !== 'dm' && !botChannelIds.includes(msg.channel.id)) return;
-
   let context = await DiscordContext.findOne(msg.author.id);
-
   if (!context) {
-    context = new DiscordContext(msg.author.id, '');
+    context = new DiscordContext(msg.author.id, '', '');
   }
 
-  let command: Command | undefined;
+  let handler: HandlerFn | undefined;
 
-  // Check to see if the context has a next step
-  if (context.nextStep) {
-    command = commands.find((c) => c.handlerId === context.nextStep);
-    logger.error('Discord context next step handler not found');
-  }
+  // Find a command handler matching the raw message (e.g., '!help')
+  handler = commands.find((c) => c.trigger === msg.content.trim())?.handler;
 
-  // If not, try to match the content to a known trigger id
-  if (!command) {
-    command = commands.find((c) => c.trigger === msg.content.trim());
-  }
+  // Check to see if the context has a current command
+  if (!handler && context.currentCommand) {
+    // The text does not match a known command && the user is in a flow (currentCommand is set)
 
-  if (command) {
-    await command.handler(msg, context);
+    // Find the current command (user in flow)
+    const command = commands.find((c) => c.handlerId === context.currentCommand);
+    // Find matching sub command
+    [, handler] = Object.entries(command.subCommands ?? {}).find(([key]) => context.nextStep === key) ?? [];
+    try {
+      if (handler) {
+        try {
+          // Invoke the matching sub command
+          await handler(msg, context);
+        } catch (err) {
+          logger.error(err);
+          throw new Error(`Error was thrown trying to handle a subcommand for message: ${msg.content}\nContext: ${JSON.stringify(context)}`);
+        }
+      } else {
+        // Something went wrong... we didn't expect to be here :(
+        throw new Error(`Discord context next step handler not found for ${context.currentCommand}`);
+      }
+    } catch (err) {
+      await context.clear();
+      logger.error(err);
+      msg.reply(genericErrorMessage);
+    }
+
     return;
   }
+  // handler && !currentCommand -- normal command handler
+  // handler && currentCommand -- switching commands/restarting
+  // !handler && !currentCommand -- jibberish
+  await context.clear();
 
+  // Handle a root-level command
+  if (handler) {
+    try {
+      await handler(msg, context);
+    } catch (err) {
+      logger.error(`Error was thrown trying to handle a command for message: ${msg.content}\nContext: ${JSON.stringify(context)}`);
+      msg.reply(genericErrorMessage);
+    }
+    return;
+  }
   msg.reply("I'm not sure what you need, try replying with `!help` for some useful information!");
 }
