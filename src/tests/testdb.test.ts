@@ -2,6 +2,7 @@ import 'jest';
 import { Config } from '../entities/config';
 import { createDbConnection, closeDbConnection } from './testdb';
 
+jest.mock('../discord');
 /* eslint-disable no-await-in-loop */
 
 describe('judging', () => {

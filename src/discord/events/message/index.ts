@@ -22,6 +22,12 @@ export type SubCommands = Record<string, HandlerFn>;
 
 export const commands: Command[] = [
   {
+    handlerId: 'help',
+    trigger: '!help',
+    description: 'Lists commands the user can use to interact with the bot',
+    handler: help,
+  },
+  {
     handlerId: 'ping',
     trigger: '!ping',
     description: 'Replies with pong',
@@ -34,21 +40,15 @@ export const commands: Command[] = [
     handler: supportRequest,
   },
   {
-    handlerId: 'techincalSupport',
+    handlerId: 'technicalSupport',
     trigger: '!technicalSupport',
     description: 'Need help with your hack? Join our tech support queue so our team can help!',
     handler: supportRequest,
   },
   {
-    handlerId: 'help',
-    trigger: '!help',
-    description: 'Lists commands the user can use to interact with the bot',
-    handler: help,
-  },
-  {
     handlerId: 'exit',
     trigger: '!exit',
-    description: 'Exits the user out of any flows the might be in (such as team registration)',
+    description: 'Exits the user out of any flows they might be in (such as team registration)',
     handler: exit,
   },
   {
