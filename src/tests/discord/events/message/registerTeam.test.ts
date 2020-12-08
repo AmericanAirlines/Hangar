@@ -4,7 +4,6 @@ import { registerTeam, regSubCommands } from '../../../../discord/events/message
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import { Config } from '../../../../entities/config';
 import { DiscordContext } from '../../../../entities/discordContext';
-import { Team } from '../../../../entities/team';
 
 jest.mock('../../../../discord');
 
