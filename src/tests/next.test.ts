@@ -4,6 +4,7 @@ import 'jest';
 import logger from '../logger';
 import { closeDbConnection, createDbConnection } from './testdb';
 
+jest.mock('../discord');
 jest.spyOn(logger, 'crit').mockImplementation();
 jest.spyOn(logger, 'error').mockImplementation();
 jest.spyOn(logger, 'info').mockImplementation();
@@ -31,6 +32,7 @@ describe('next.js', () => {
 
   it('will not hold up app start when not in production', async () => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
+    process.env.PLATFORM_USED = 'slack';
 
     const nextPrepareDone = jest.fn().mockName('nextPrepareDone()');
 

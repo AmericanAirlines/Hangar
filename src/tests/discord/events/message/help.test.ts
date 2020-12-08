@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import 'jest';
 import { commands } from '../../../../discord/events/message';
-import { help } from '../../../../discord/events/message/help';
+import { help, hiddenHandlers } from '../../../../discord/events/message/help';
 
 jest.mock('../../../../discord');
 
@@ -37,6 +37,6 @@ describe('help handler', () => {
     const msg = getHelpMsg();
     await help(msg);
     const args = (msg.author.send as jest.Mock).mock.calls[0][0];
-    expect(args.embed.fields).toHaveLength(commands.length);
+    expect(args.embed.fields).toHaveLength(commands.length - hiddenHandlers.length);
   });
 });

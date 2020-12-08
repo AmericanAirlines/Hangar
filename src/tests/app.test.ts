@@ -8,6 +8,8 @@ const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
 // eslint-disable-next-line import/first
 import { app, initSlack, initDiscord } from '../app';
 
+jest.mock('../discord');
+
 const processExitSpy = jest.spyOn(process, 'exit').mockImplementation();
 const mockSlackAuth = jest.fn();
 jest.mock('@slack/web-api', () => ({
@@ -60,6 +62,7 @@ describe('app', () => {
   });
 
   it('will exit the process when Discord tokens are provided but setup fails, and NODE_ENV !== "test", because it cannot initialize Discord', async () => {
+    jest.resetModules();
     jest.mock('../discord', () => ({
       setupDiscord: (): Promise<Error> => Promise.reject(new Error()),
     }));

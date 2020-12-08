@@ -5,6 +5,8 @@ import { createDbConnection, closeDbConnection } from '../testdb';
 
 const adminSecret = 'Secrets are secretive';
 
+jest.mock('../../discord');
+
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
 describe('api/judging', () => {
