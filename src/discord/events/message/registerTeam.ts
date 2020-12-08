@@ -6,6 +6,8 @@ import { DiscordContext } from '../../../entities/discordContext';
 import { SubCommands } from '.';
 import logger from '../../../logger';
 
+/* eslint-disable no-param-reassign */
+
 enum RegistrationSteps {
   teamMembers = 'teamMembers',
   teamName = 'teamName',
@@ -41,7 +43,6 @@ export async function registerTeam(msg: Discord.Message, context: DiscordContext
       ],
     },
   });
-  /* eslint-disable no-param-reassign */
   context.nextStep = RegistrationSteps.teamMembers;
   context.currentCommand = 'registerTeam';
   await context.save();
