@@ -4,19 +4,22 @@ import { registerTeam, regSubCommands } from '../../../../discord/events/message
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import { Config } from '../../../../entities/config';
 import { DiscordContext } from '../../../../entities/discordContext';
+import { Team } from '../../../../entities/team';
 
 jest.mock('../../../../discord');
 
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 
 const saveCtx = jest.fn();
+const clearCtx = jest.fn();
 const saveTeam = jest.fn();
-const countTeam = jest.fn();
+const findTeam = jest.fn();
 
 jest.mock('../../../../entities/discordContext', () => {
   function MockDiscordContext(): object {
     return {
       save: saveCtx,
+      clear: clearCtx,
     };
   }
 
@@ -24,14 +27,14 @@ jest.mock('../../../../entities/discordContext', () => {
 });
 
 jest.mock('../../../../entities/team', () => {
-  function Team(): object {
+  function MockTeam(): object {
     return {
       save: saveTeam,
-      count: countTeam,
+      find: findTeam,
     };
   }
 
-  return { Team };
+  return { Team: MockTeam };
 });
 
 let teamRegistrationActive = false;
@@ -132,9 +135,6 @@ describe('registerTeam handler', () => {
     expect(ctx.payload).toStrictEqual({ description: descript });
     expect(ctx.currentCommand).toBe('registerTeam');
     expect(ctx.nextStep).toBe('tableNumber');
-    //const [msg] = send.mock.calls[0];
-    //  expect(msg).toBe("What's your table number (e.g. 42)");
-    //expect(msg.includes("substr")).toBeTruthy();
   });
 
   it('will call the subCommand dealing with table number', async () => {
@@ -153,7 +153,7 @@ describe('registerTeam handler', () => {
     });
     await regSubCommands.tableNumber(numMsg, ctx);
     const [msg] = send.mock.calls[0];
-    //expect(msg.includes('Below is what has been submitted as your team!')).toBeTruthy();
+    expect(msg.embed.title === '**You are signed up :partying_face:**').toBeTruthy();
     expect(ctx.payload).toStrictEqual({ table: parseInt(tableNum, 10) });
     expect(ctx.currentCommand).toBe(undefined);
     expect(ctx.nextStep).toBe(undefined);
@@ -176,6 +176,30 @@ describe('registerTeam handler', () => {
     await regSubCommands.tableNumber(numMsg, ctx);
     expect(send).toBeCalledWith('Oops, looks like the table number you entered is not a number! Please try again.');
     expect(ctx.payload).toEqual({});
+    expect(ctx.currentCommand).toBe('registerTeam');
+    expect(ctx.nextStep).toBe('tableNumber');
+  });
+
+  it('will let the user know that someone has already signed up for the table they entered', async () => {
+    const ctx = new DiscordContext('1', 'registerTeam', 'tableNumber');
+    const send = jest.fn();
+    ctx.payload = {};
+    teamRegistrationActive = true;
+    const tableNum = '2';
+    const convertedNum = parseInt(tableNum, 10);
+    const numMsg = makeDiscordMessage({
+      content: tableNum,
+      author: {
+        send,
+        username: 'Joe',
+        id: '123',
+      },
+    });
+    const existingTeam = new Team('team', convertedNum, 'stuff', ['Bob']);
+    existingTeam.save();
+    await regSubCommands.tableNumber(numMsg, ctx);
+    expect(send).toBeCalledWith('Oops, looks like someone already entered the table that you input! Please try again');
+    expect(ctx.payload).toEqual({ table: convertedNum });
     expect(ctx.currentCommand).toBe('registerTeam');
     expect(ctx.nextStep).toBe('tableNumber');
   });

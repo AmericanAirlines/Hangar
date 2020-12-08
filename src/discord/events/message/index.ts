@@ -6,6 +6,7 @@ import { client } from '../..';
 import logger from '../../../logger';
 import { help } from './help';
 import { registerTeam, regSubCommands } from './registerTeam';
+import { exit } from './exit';
 
 type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
 
@@ -43,6 +44,12 @@ export const commands: Command[] = [
     trigger: '!help',
     description: 'Lists commands the user can use to interact with the bot',
     handler: help,
+  },
+  {
+    handlerId: 'exit',
+    trigger: '!exit',
+    description: 'Exits the user out of any flows the might be in (such as team registration)',
+    handler: exit,
   },
   {
     handlerId: 'registerTeam',

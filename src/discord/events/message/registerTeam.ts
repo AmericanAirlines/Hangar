@@ -98,9 +98,6 @@ export const regSubCommands: SubCommands = {
       const finalTeam = new Team(team.name, team.table, team.description, team.members);
       try {
         await finalTeam.save();
-        ctx.currentCommand = undefined;
-        ctx.nextStep = undefined;
-        await ctx.clear();
         await msg.author.send({
           embed: {
             color: colors.info,
@@ -126,9 +123,14 @@ export const regSubCommands: SubCommands = {
             ],
           },
         });
+        ctx.nextStep = undefined;
+        ctx.currentCommand = undefined;
+        ctx.save();
+        await ctx.clear();
       } catch (err) {
         logger.error('Saving team failed: ', err);
-        if (Team.count({ tableNumber: team.table })) {
+        const checkTable = await Team.find({ where: { tableNumber: team.table } });
+        if (checkTable !== undefined) {
           await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again');
         } else {
           await msg.author.send('Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.');
