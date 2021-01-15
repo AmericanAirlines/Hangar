@@ -128,7 +128,6 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
 
     res.sendStatus(200);
   } catch (err) {
-    console.log(err);
     res.status(500).send('Unable to close request');
     logger.error(err);
   }
@@ -194,21 +193,21 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
       .execute();
   } catch (err) {
     res.status(500).send('Unable To Open A Specific Request');
+    logger.error('Something went wrong opening a specific request: ', err);
+    return;
   }
 
   let userNotified = false;
 
   try {
-    if (request) {
-      await sendMessage(
-        [request.slackId],
-        stringDictionary.supportRequestSuccess({
-          supportName,
-          type: requestType,
-        }),
-      );
-      userNotified = true;
-    }
+    await sendMessage(
+      [request.slackId],
+      stringDictionary.supportRequestSuccess({
+        supportName,
+        type: requestType,
+      }),
+    );
+    userNotified = true;
   } catch (err) {
     logger.error("Unable to notify users they're support request has been served", err);
   }

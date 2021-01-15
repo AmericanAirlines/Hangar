@@ -56,6 +56,44 @@ describe('api/supportRequest', () => {
         .expect(400);
     });
 
+    it('will successfully identify the next request and notify the user', async () => {
+      const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+      supportRequest.status = SupportRequestStatus.InProgress;
+      supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
+
+      const { app } = require('../../app');
+      const response = await supertest(app)
+        .post('/api/supportRequest/getNext')
+        .send({ supportName: 'Tim', requestType: 'IdeaPitch' })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(200);
+
+      expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+      expect(response.body.userNotified).toBe(true);
+    });
+
+    it("will successfully identify the next request and mark that the user was not notified if they can't be reached", async () => {
+      const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+      supportRequest.status = SupportRequestStatus.InProgress;
+      supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
+      sendMessageSpy.mockRejectedValueOnce(new Error('idk who this is'));
+
+      const { app } = require('../../app');
+      const response = await supertest(app)
+        .post('/api/supportRequest/getNext')
+        .send({ supportName: 'Tim', requestType: 'IdeaPitch' })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(200);
+
+      expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+      expect(loggerErrorSpy).toBeCalled();
+      expect(response.body.userNotified).toBe(false);
+    });
+
     it('will return a 500 if an error occurs while trying to get the next request', async () => {
       const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
       supportRequest.status = SupportRequestStatus.InProgress;
@@ -70,6 +108,22 @@ describe('api/supportRequest', () => {
         })
         .expect(500);
       expect(loggerErrorSpy).toBeCalled();
+    });
+
+    it('will return a 200 without a request if a next request does not exist', async () => {
+      supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(null);
+
+      const { app } = require('../../app');
+      const response = await supertest(app)
+        .post('/api/supportRequest/getNext')
+        .send({ supportName: 'Tim', requestType: 'IdeaPitch' })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(200);
+
+      expect(response.body.supportRequest).toBe(null);
+      expect(response.body.userNotified).toBe(false);
     });
   });
 
@@ -141,7 +195,7 @@ describe('api/supportRequest', () => {
   });
 
   describe('/closeRequest', () => {
-    it('calling closeRequest without supportRequestId will be a 400', async () => {
+    it('will throw a 400 when called without supportRequestId', async () => {
       const { app } = require('../../app');
       await supertest(app)
         .post('/api/supportRequest/closeRequest')
@@ -151,7 +205,7 @@ describe('api/supportRequest', () => {
         .expect(400);
     });
 
-    it('calling closeRequest will set the status to complete', async () => {
+    it('will set the status to complete', async () => {
       const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
       supportRequest.status = SupportRequestStatus.InProgress;
       supportRequest.id = 1234;
@@ -170,10 +224,26 @@ describe('api/supportRequest', () => {
       expect(mockQueryBuilder.where).toBeCalledWith({ id: supportRequest.id });
       expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
     });
+
+    it('will throw a 500 if something goes wrong', async () => {
+      mockQueryBuilder.execute.mockRejectedValueOnce('Oops...');
+
+      const { app } = require('../../app');
+      await supertest(app)
+        .post('/api/supportRequest/closeRequest')
+        .send({ supportRequestId: 1234 })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(500);
+
+      expect(sendMessageSpy).not.toBeCalled();
+      expect(loggerErrorSpy).toBeCalled();
+    });
   });
 
   describe('/abandonRequest', () => {
-    it('calling abandonRequest without supportRequestId will be a 400', async () => {
+    it('will throw a 400 if called without supportRequestId', async () => {
       const { app } = require('../../app');
       await supertest(app)
         .post('/api/supportRequest/abandonRequest')
@@ -184,7 +254,7 @@ describe('api/supportRequest', () => {
         .expect(400);
     });
 
-    it('calling abandonRequest without relativeTimeElapsedString will be a 400', async () => {
+    it('will throw a 400 if called without relativeTimeElapsedString', async () => {
       const { app } = require('../../app');
       await supertest(app)
         .post('/api/supportRequest/abandonRequest')
@@ -195,7 +265,7 @@ describe('api/supportRequest', () => {
         .expect(400);
     });
 
-    it('calling abandonRequest will set the status to abandoned', async () => {
+    it('will set the status to abandoned', async () => {
       const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
       supportRequest.id = 3628;
       supportRequest.status = SupportRequestStatus.InProgress;
@@ -213,6 +283,20 @@ describe('api/supportRequest', () => {
       expect(mockQueryBuilder.set).toBeCalledWith({ status: SupportRequestStatus.Abandoned });
       expect(mockQueryBuilder.where).toBeCalledWith({ id: supportRequest.id });
       expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+    });
+
+    it('will throw a 500 if something goes wrong', async () => {
+      const { app } = require('../../app');
+      await supertest(app)
+        .post('/api/supportRequest/abandonRequest')
+        .send({ supportRequestId: 1234, relativeTimeElapsedString: 'some time ago' })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(500);
+
+      expect(sendMessageSpy).not.toBeCalled();
+      expect(loggerErrorSpy).toBeCalled();
     });
   });
 
@@ -299,6 +383,44 @@ describe('api/supportRequest', () => {
       expect(mockQueryBuilder.set).toBeCalledWith({ status: SupportRequestStatus.InProgress });
       expect(mockQueryBuilder.where).toBeCalledWith({ id: supportRequest.id, status: SupportRequestStatus.Pending });
       expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+    });
+
+    it('will throw a 500 if something goes wrong opening an request', async () => {
+      const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+      supportRequest.status = SupportRequestStatus.Pending;
+      supportRequest.id = 27278;
+      supportRequestFindOneSpy.mockResolvedValueOnce(supportRequest);
+      mockQueryBuilder.execute.mockRejectedValueOnce(new Error('Whoops!'));
+
+      const { app } = require('../../app');
+      await supertest(app)
+        .patch('/api/supportRequest/getSpecific')
+        .send({ supportRequestId: supportRequest.id, supportName: 'Jimbo' })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(500);
+
+      expect(loggerErrorSpy).toBeCalled();
+    });
+
+    it("will succeed even if the user can't be notified", async () => {
+      const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
+      supportRequest.status = SupportRequestStatus.Pending;
+      supportRequest.id = 27278;
+      supportRequestFindOneSpy.mockResolvedValueOnce(supportRequest);
+      sendMessageSpy.mockRejectedValueOnce(new Error('Cannot message user'));
+
+      const { app } = require('../../app');
+      await supertest(app)
+        .patch('/api/supportRequest/getSpecific')
+        .send({ supportRequestId: supportRequest.id, supportName: 'Jimbo' })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(200);
+
+      expect(loggerErrorSpy).toBeCalled();
     });
   });
 

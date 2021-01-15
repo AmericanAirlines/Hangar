@@ -21,9 +21,9 @@ module.exports = {
     '!./src/discord/index.ts',
     '!./src/logger.ts',
     '!./src/app.ts',
+    '!./src/StringDictionary.ts',
     '!./src/api/admin.ts',
     '!./src/api/index.ts',
-    '!./src/api/StringDictionary.ts',
   ],
   coverageDirectory: './coverage',
   coverageThreshold: {
