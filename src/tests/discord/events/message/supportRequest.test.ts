@@ -5,8 +5,10 @@ import { createDbConnection, closeDbConnection } from '../../../testdb';
 import { Config } from '../../../../entities/config';
 import { supportRequest } from '../../../../discord/events/message/supportRequest';
 import { SupportRequest, SupportRequestType } from '../../../../entities/supportRequest';
+import logger from '../../../../logger';
 
 jest.mock('../../../../discord');
+jest.spyOn(logger, 'error').mockImplementation();
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 let supportRequestQueueActive = false;
 

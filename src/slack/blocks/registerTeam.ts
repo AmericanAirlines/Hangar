@@ -1,7 +1,7 @@
 import { KnownBlock, View } from '@slack/types';
 import { registerTeamViewConstants } from '../constants';
 import openSourceFooter from './openSourceFooter';
-import { stringDictionary } from '../../StringDictonary';
+import { stringDictionary } from '../../StringDictionary';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
