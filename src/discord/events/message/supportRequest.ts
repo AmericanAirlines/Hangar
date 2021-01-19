@@ -51,7 +51,8 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
   };
   const cmdName = msg.content.replace('!', '');
   const info = payloadInfo;
-  msg.author.send("Hello :wave:, welcome to the queue! Please input your team's channel name!");
+  const prompt = payloadInfo.requestType === SupportRequestStatus.jobChat ? 'what\'s your name': 'what\'s the name of your team\'s voice channel?';
+  msg.author.send(`Hey there :wave: before we add you to the queue, ${prompt}?`);
   context.nextStep = steps.inputName;
   context.currentCommand = cmdName;
   context.payload = info;
