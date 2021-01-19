@@ -51,7 +51,7 @@ export const commands: Command[] = [
   {
     handlerId: 'jobChat',
     trigger: '!jobChat',
-    description: 'Looking for an opportunity to work with our team one day? Join our job queue to chat about it!',
+    description: 'Interested in joining our team? Come chat with us about Full Time and Internship positions!',
     handler: supportRequest,
     subCommands: suppSubCommands,
   },

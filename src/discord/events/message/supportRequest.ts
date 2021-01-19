@@ -11,7 +11,7 @@ import { DiscordContext } from '../../../entities/discordContext';
 interface UserInfo {
   [k: string]: number | string | string[];
   id: string;
-  suppTyping: SupportRequestType;
+  requestType: SupportRequestType;
   username: string;
 }
 
@@ -19,11 +19,11 @@ enum steps {
   inputName = 'inputName',
 }
 
-const suppMap = new Map([
-  ['!technicalSupport', SupportRequestType.TechnicalSupport],
-  ['!ideaPitch', SupportRequestType.IdeaPitch],
-  ['!jobChat', SupportRequestType.JobChat],
-]);
+const requestTypeMapping = {
+  '!technicalSupport': SupportRequestType.TechnicalSupport,
+  '!ideaPitch': SupportRequestType.IdeaPitch,
+  '!jobChat': SupportRequestType.JobChat,
+};
 
 export async function supportRequest(msg: Discord.Message, context: DiscordContext): Promise<void> {
   const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
