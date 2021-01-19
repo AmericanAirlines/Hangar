@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import { DiscordContext } from '../../../entities/discordContext';
 import { ping } from './ping';
-import { supportRequest } from './supportRequest';
+import { supportRequest, suppSubCommands } from './supportRequest';
 import { client } from '../..';
 import logger from '../../../logger';
 import { help } from './help';
@@ -38,12 +38,21 @@ export const commands: Command[] = [
     trigger: '!ideaPitch',
     description: 'Think you have a good idea? Join a queue to come pitch to our team!',
     handler: supportRequest,
+    subCommands: suppSubCommands,
   },
   {
     handlerId: 'technicalSupport',
     trigger: '!technicalSupport',
     description: 'Need help with your hack? Join our tech support queue so our team can help!',
     handler: supportRequest,
+    subCommands: suppSubCommands,
+  },
+  {
+    handlerId: 'jobChat',
+    trigger: '!jobChat',
+    description: 'Looking for an opportunity to work with our team one day? Join our job queue to chat about it!',
+    handler: supportRequest,
+    subCommands: suppSubCommands,
   },
   {
     handlerId: 'exit',

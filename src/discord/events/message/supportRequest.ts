@@ -2,19 +2,56 @@ import Discord from 'discord.js';
 import { SupportRequest, SupportRequestType, SupportRequestErrors } from '../../../entities/supportRequest';
 import logger from '../../../logger';
 import { Config } from '../../../entities/config';
+import { SubCommands } from '.';
+import { DiscordContext } from '../../../entities/discordContext';
 
-export async function supportRequest(msg: Discord.Message): Promise<void> {
-  const discordId = msg.author.id;
-  const discordName = msg.author.username;
-  const actionId = msg.content === '!technicalSupport' ? SupportRequestType.TechnicalSupport : SupportRequestType.IdeaPitch;
+/* eslint-disable no-param-reassign */
 
+interface UserInfo {
+  [k: string]: number | string | string[];
+  id: string;
+  suppTyping: SupportRequestType;
+  username: string;
+}
+
+enum steps {
+  inputName = 'inputName',
+}
+
+const suppMap = new Map([
+  ['!technicalSupport', SupportRequestType.TechnicalSupport],
+  ['!ideaPitch', SupportRequestType.IdeaPitch],
+  ['!jobChat', SupportRequestType.JobChat],
+]);
+
+export async function supportRequest(msg: Discord.Message, context: DiscordContext): Promise<void> {
   const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
   if (!supportRequestQueueActive) {
     msg.author.send("**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!");
   } else {
+    const payloadInfo: UserInfo = {
+      id: msg.author.id,
+      suppTyping: suppMap.get(msg.content),
+      username: '',
+    };
+    const cmdName = msg.content.replace('!', '');
+    const info = payloadInfo;
+    msg.author.send('Hello :wave:, welcome to the queue! Please input your name to join the queue!');
+    context.nextStep = steps.inputName;
+    context.currentCommand = cmdName;
+    context.payload = info;
+    await context.save();
+  }
+}
+
+export const suppSubCommands: SubCommands = {
+  inputName: async (msg, ctx) => {
+    const info = ctx.payload as UserInfo;
+    info.username = msg.content;
+    ctx.payload = info;
+    const userInfo = new SupportRequest(info.id, info.username, info.suppTyping);
     try {
-      const requestItem = new SupportRequest(discordId, discordName, actionId);
-      await requestItem.save();
+      await userInfo.save();
       msg.author.send(
         ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
       );
@@ -28,5 +65,6 @@ export async function supportRequest(msg: Discord.Message): Promise<void> {
         logger.error('Something went wrong trying to create a support request', err);
       }
     }
-  }
-}
+    await ctx.clear();
+  },
+};

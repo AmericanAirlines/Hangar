@@ -13,6 +13,7 @@ export enum SupportRequestStatus {
 export enum SupportRequestType {
   IdeaPitch = 'IdeaPitch',
   TechnicalSupport = 'TechnicalSupport',
+  JobChat = 'JobChat',
 }
 
 export enum SupportRequestErrors {
