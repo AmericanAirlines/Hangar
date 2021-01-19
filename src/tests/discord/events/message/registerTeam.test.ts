@@ -4,10 +4,12 @@ import { registerTeam, regSubCommands } from '../../../../discord/events/message
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import { Config } from '../../../../entities/config';
 import { DiscordContext } from '../../../../entities/discordContext';
+import logger from '../../../../logger';
 
 jest.mock('../../../../discord');
 
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
+jest.spyOn(logger, 'error').mockImplementation();
 
 const saveCtx = jest.fn();
 const clearCtx = jest.fn();

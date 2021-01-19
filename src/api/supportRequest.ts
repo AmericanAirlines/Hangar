@@ -2,7 +2,7 @@ import express from 'express';
 import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
 import logger from '../logger';
 import { sendMessage } from '../common/messageUsers';
-import { stringDictionary } from '../StringDictonary';
+import { stringDictionary } from '../StringDictionary';
 
 export const supportRequestRoutes = express.Router();
 
@@ -31,18 +31,24 @@ supportRequestRoutes.get('/getAll', async (req, res) => {
     }
     res.send(requests);
   } catch (error) {
+    logger.error('Unable to retrieve support requests: ', error);
     res.status(500).send('There Was An Internal Server Error');
   }
 });
 
 supportRequestRoutes.get('/getCount', async (req, res) => {
-  const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
-  const technicalCount = await SupportRequest.count({ type: SupportRequestType.TechnicalSupport, status: SupportRequestStatus.Pending });
+  try {
+    const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
+    const technicalCount = await SupportRequest.count({ type: SupportRequestType.TechnicalSupport, status: SupportRequestStatus.Pending });
 
-  res.json({
-    ideaCount,
-    technicalCount,
-  });
+    res.json({
+      ideaCount,
+      technicalCount,
+    });
+  } catch (err) {
+    logger.error('Unable to retrieve count of support requests: ', err);
+    res.status(500).send('Something went wrong retrieving support request count.');
+  }
 });
 
 supportRequestRoutes.get('/getInProgress', async (req, res) => {
@@ -187,21 +193,21 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
       .execute();
   } catch (err) {
     res.status(500).send('Unable To Open A Specific Request');
+    logger.error('Something went wrong opening a specific request: ', err);
+    return;
   }
 
   let userNotified = false;
 
   try {
-    if (request) {
-      await sendMessage(
-        [request.slackId],
-        stringDictionary.supportRequestSuccess({
-          supportName,
-          type: requestType,
-        }),
-      );
-      userNotified = true;
-    }
+    await sendMessage(
+      [request.slackId],
+      stringDictionary.supportRequestSuccess({
+        supportName,
+        type: requestType,
+      }),
+    );
+    userNotified = true;
   } catch (err) {
     logger.error("Unable to notify users they're support request has been served", err);
   }

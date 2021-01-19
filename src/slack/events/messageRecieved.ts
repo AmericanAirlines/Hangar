@@ -1,6 +1,6 @@
 import { Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
 import logger from '../../logger';
-import { stringDictionary } from '../../StringDictonary';
+import { stringDictionary } from '../../StringDictionary';
 
 export const messageRecieved: Middleware<SlackEventMiddlewareArgs<'message'>> = async ({ say, message }) => {
   try {
