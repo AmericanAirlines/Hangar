@@ -8,6 +8,7 @@ jest.mock('../discord');
 jest.spyOn(logger, 'crit').mockImplementation();
 jest.spyOn(logger, 'error').mockImplementation();
 jest.spyOn(logger, 'info').mockImplementation();
+jest.spyOn(console, 'debug').mockImplementation();
 
 jest.spyOn(process, 'exit').mockImplementation();
 jest.mock('@slack/web-api', () => ({

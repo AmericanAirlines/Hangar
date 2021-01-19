@@ -5,6 +5,7 @@ import { Config } from '../../../../entities/config';
 import { supportRequest, suppSubCommands } from '../../../../discord/events/message/supportRequest';
 import { SupportRequest, SupportRequestType } from '../../../../entities/supportRequest';
 import { DiscordContext } from '../../../../entities/discordContext';
+import logger from '../../../../logger';
 
 jest.mock('../../../../discord');
 
@@ -34,6 +35,8 @@ jest.mock('../../../../entities/supportRequest', () => {
   }
   return { SupportRequestType: MockSupportRequestType, suppTyping: jest.mock };
 });
+
+jest.spyOn(logger, 'error').mockImplementation();
 
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 let supportRequestQueueActive = false;

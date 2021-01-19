@@ -1,7 +1,7 @@
 import { KnownBlock } from '@slack/types';
 import { actionIds } from '../constants';
 import openSourceBlock from './openSourceFooter';
-import { stringDictionary } from '../../StringDictonary';
+import { stringDictionary } from '../../StringDictionary';
 
 const challengeUrl = process.env.CHALLENGE_URL;
 

@@ -1,5 +1,5 @@
 import { KnownBlock } from '@slack/types';
-import { stringDictionary } from '../../StringDictonary';
+import { stringDictionary } from '../../StringDictionary';
 
 const repoUrl = 'https://github.com/AmericanAirlines/Hangar';
 

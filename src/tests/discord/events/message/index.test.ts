@@ -6,10 +6,12 @@ import { client } from '../../../../discord';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import { regSubCommands } from '../../../../discord/events/message/registerTeam';
 import logger from '../../../../logger';
+import * as botWasTagged from '../../../../discord/utilities/botWasTagged';
 
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
 const teamNameSpy = jest.spyOn(regSubCommands, 'teamName').mockImplementation();
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
+const botWasTaggedSpy = jest.spyOn(botWasTagged, 'botWasTagged').mockReturnValue(false);
 const mockDiscordContext = new DiscordContext('1234', '', '');
 jest.mock('../../../../discord');
 
@@ -58,7 +60,7 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith("I'm not sure what you need, try replying with `!help` for some useful information!");
+    expect(reply).toBeCalledWith("That isn't a command I understand. Try replying with `!help` to see the full list of things I can help with!");
   });
 
   it('successfully responds to !ping requests', async () => {
@@ -134,7 +136,8 @@ describe('message handler', () => {
     expect(reply).not.toHaveBeenCalled();
   });
 
-  it('responds if in an approved channel', async () => {
+  it('responds if notified of message in monitored channel and was tagged', async () => {
+    botWasTaggedSpy.mockReturnValueOnce(true);
     process.env.DISCORD_BOT_CHANNEL_IDS = '9423,  13189    ,  0123';
     const reply = jest.fn();
     const channelMessage = makeDiscordMessage({
@@ -151,6 +154,25 @@ describe('message handler', () => {
 
     await message(channelMessage);
     expect(reply).toHaveBeenCalled();
+  });
+
+  it('does not respond if notified of message in monitored channel and was NOT tagged', async () => {
+    process.env.DISCORD_BOT_CHANNEL_IDS = '9423,  13189    ,  0123';
+    const reply = jest.fn();
+    const channelMessage = makeDiscordMessage({
+      reply,
+      content: 'In a channel',
+      author: {
+        id: 'someone',
+      },
+      channel: {
+        type: 'text',
+        id: '0123',
+      },
+    });
+
+    await message(channelMessage);
+    expect(reply).not.toHaveBeenCalled();
   });
 
   it('will invoke a subcommand if context has a currentCommand', async () => {

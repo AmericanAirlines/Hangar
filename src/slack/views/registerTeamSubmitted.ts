@@ -7,7 +7,7 @@ import { Team } from '../../entities/team';
 import { ViewSubmitState, DmOpenResult, ViewSubmitInputFieldState } from '../types';
 import { Config } from '../../entities/config';
 import postAdminNotification from '../utilities/postAdminNotification';
-import { stringDictionary } from '../../StringDictonary';
+import { stringDictionary } from '../../StringDictionary';
 
 function retrieveViewValuesForField(
   view: ViewOutput,

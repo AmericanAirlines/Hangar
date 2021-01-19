@@ -73,7 +73,6 @@ export class SupportRequest extends BaseEntity {
     });
 
     const minutesUntilStale = 15;
-
     for (let i = 0; i < existingActiveRequests.length; i += 1) {
       const { movedToInProgressAt, status } = existingActiveRequests[i];
       const minutesInProgress = Math.abs(DateTime.fromJSDate(movedToInProgressAt || new Date()).diffNow('minutes').minutes);

@@ -6,7 +6,7 @@ import { Config } from '../../entities/config';
 import { SupportRequest, SupportRequestType, SupportRequestErrors } from '../../entities/supportRequest';
 import postAdminNotification from '../utilities/postAdminNotification';
 import { openAlertModal } from '../utilities/openAlertModal';
-import { stringDictionary } from '../../StringDictonary';
+import { stringDictionary } from '../../StringDictionary';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */

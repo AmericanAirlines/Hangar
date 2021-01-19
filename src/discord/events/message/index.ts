@@ -7,6 +7,7 @@ import logger from '../../../logger';
 import { help } from './help';
 import { registerTeam, regSubCommands } from './registerTeam';
 import { exit } from './exit';
+import { botWasTagged } from '../../utilities/botWasTagged';
 
 type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
 
@@ -77,7 +78,14 @@ export async function message(msg: Discord.Message): Promise<void> {
 
   // If not in a DM, check to make sure it's in one of the approved channels
   const botChannelIds = (process.env.DISCORD_BOT_CHANNEL_IDS ?? '').split(',').map((id) => id.trim());
-  if (msg.channel.type !== 'dm' && !botChannelIds.includes(msg.channel.id)) return;
+  if (msg.channel.type !== 'dm') {
+    if (botChannelIds.includes(msg.channel.id) && botWasTagged(msg)) {
+      // Bot was tagged in a channel it's listening to AND should respond in
+      msg.reply('Hi there :wave: I can only help from within a Direct Message. Click my name and send the message `!help` to get started!');
+    }
+    return;
+  }
+
   let context = await DiscordContext.findOne(msg.author.id);
   if (!context) {
     context = new DiscordContext(msg.author.id, '', '');
@@ -132,5 +140,6 @@ export async function message(msg: Discord.Message): Promise<void> {
     }
     return;
   }
-  msg.reply("I'm not sure what you need, try replying with `!help` for some useful information!");
+
+  msg.reply("That isn't a command I understand. Try replying with `!help` to see the full list of things I can help with!");
 }
