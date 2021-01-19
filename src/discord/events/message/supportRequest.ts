@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
-import { SupportRequest, SupportRequestType, SupportRequestErrors } from '../../../entities/supportRequest';
+import { Not } from 'typeorm';
+import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../../entities/supportRequest';
 import logger from '../../../logger';
 import { Config } from '../../../entities/config';
 import { SubCommands } from '.';
@@ -28,20 +29,33 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
   const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
   if (!supportRequestQueueActive) {
     msg.author.send("**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!");
-  } else {
-    const payloadInfo: UserInfo = {
-      id: msg.author.id,
-      suppTyping: suppMap.get(msg.content),
-      username: '',
-    };
-    const cmdName = msg.content.replace('!', '');
-    const info = payloadInfo;
-    msg.author.send('Hello :wave:, welcome to the queue! Please input your name to join the queue!');
-    context.nextStep = steps.inputName;
-    context.currentCommand = cmdName;
-    context.payload = info;
-    await context.save();
+    return;
   }
+
+  const userHasOpenRequests =
+    (await SupportRequest.createQueryBuilder()
+      .where({ slackId: msg.author.id, status: Not(SupportRequestStatus.Complete) })
+      .getCount()) > 0;
+  if (userHasOpenRequests) {
+    await msg.author.send(
+      "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.",
+    );
+    context.clear();
+    return;
+  }
+
+  const payloadInfo: UserInfo = {
+    id: msg.author.id,
+    suppTyping: suppMap.get(msg.content),
+    username: '',
+  };
+  const cmdName = msg.content.replace('!', '');
+  const info = payloadInfo;
+  msg.author.send("Hello :wave:, welcome to the queue! Please input your team's channel name!");
+  context.nextStep = steps.inputName;
+  context.currentCommand = cmdName;
+  context.payload = info;
+  await context.save();
 }
 
 export const suppSubCommands: SubCommands = {
@@ -49,21 +63,15 @@ export const suppSubCommands: SubCommands = {
     const info = ctx.payload as UserInfo;
     info.username = msg.content;
     ctx.payload = info;
-    const userInfo = new SupportRequest(info.id, info.username, info.suppTyping);
+    const userSupportRequest = new SupportRequest(info.id, info.username, info.suppTyping);
     try {
-      await userInfo.save();
+      await userSupportRequest.save();
       msg.author.send(
         ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
       );
     } catch (err) {
-      if (err.name === SupportRequestErrors.ExistingActiveRequest) {
-        await msg.author.send(
-          "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.",
-        );
-      } else {
-        await msg.author.send("**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.");
-        logger.error('Something went wrong trying to create a support request', err);
-      }
+      await msg.author.send("**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.");
+      logger.error('Something went wrong trying to create a support request', err);
     }
     await ctx.clear();
   },
