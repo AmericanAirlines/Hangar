@@ -19,7 +19,7 @@ enum steps {
   inputName = 'inputName',
 }
 
-const requestTypeMapping = {
+const requestTypeMapping: { [id: string]: SupportRequestType } = {
   '!technicalSupport': SupportRequestType.TechnicalSupport,
   '!ideaPitch': SupportRequestType.IdeaPitch,
   '!jobChat': SupportRequestType.JobChat,
@@ -46,7 +46,7 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
 
   const payloadInfo: UserInfo = {
     id: msg.author.id,
-    suppTyping: suppMap.get(msg.content),
+    requestType: requestTypeMapping[msg.content],
     username: '',
   };
   const cmdName = msg.content.replace('!', '');
@@ -63,7 +63,7 @@ export const suppSubCommands: SubCommands = {
     const info = ctx.payload as UserInfo;
     info.username = msg.content;
     ctx.payload = info;
-    const userSupportRequest = new SupportRequest(info.id, info.username, info.suppTyping);
+    const userSupportRequest = new SupportRequest(info.id, info.username, info.requestType);
     try {
       await userSupportRequest.save();
       msg.author.send(
