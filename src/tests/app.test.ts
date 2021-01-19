@@ -25,7 +25,7 @@ jest.mock('@slack/web-api', () => ({
 
 describe('app', () => {
   beforeEach(() => {
-    Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
+    process.env.NODE_ENV = 'test';
     delete process.env.DISCORD_BOT_TOKEN;
     jest.resetAllMocks();
     mockSlackAuth.mockRejectedValue('Invalid Auth');
@@ -38,13 +38,13 @@ describe('app', () => {
   });
 
   it('will exit the process when Slack tokens are not provided and NODE_ENV !== "test", because it cannot initialize Slack', async () => {
-    Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
+    process.env.NODE_ENV = 'development';
     await initSlack();
     expect(processExitSpy).toBeCalledTimes(1);
   });
 
   it('will not exit the process when Slack tokens are not provided and the NODE_ENV is "test"', async () => {
-    Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
+    process.env.NODE_ENV = 'test';
     await initSlack();
     expect(processExitSpy).not.toBeCalled();
   });
@@ -56,7 +56,7 @@ describe('app', () => {
   });
 
   it('will not initialize Discord if missing the bot token', async () => {
-    Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
+    process.env.NODE_ENV = 'development';
     await initDiscord();
     expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Discord skipped (missing DISCORD_BOT_TOKEN)');
   });
@@ -67,8 +67,8 @@ describe('app', () => {
       setupDiscord: (): Promise<Error> => Promise.reject(new Error()),
     }));
 
-    Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
-    Object.defineProperty(process.env, 'DISCORD_BOT_TOKEN', { value: 'SOMETHING' });
+    process.env.NODE_ENV = 'development';
+    process.env.DISCORD_BOT_TOKEN = 'SOMETHING';
     await initDiscord();
     expect(processExitSpy).toBeCalledTimes(1);
   });
