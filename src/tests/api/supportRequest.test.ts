@@ -5,6 +5,7 @@ import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../
 import * as messageUsers from '../../common/messageUsers';
 import * as requireAuth from '../../api/middleware/requireAuth';
 import logger from '../../logger';
+import { stringDictionary } from '../../StringDictionary';
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
@@ -60,17 +61,18 @@ describe('api/supportRequest', () => {
       const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
       supportRequest.status = SupportRequestStatus.InProgress;
       supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
-
+      const supportRequestSuccessSpy = jest.spyOn(stringDictionary, 'supportRequestSuccess');
+      const supportName = 'Tim';
       const { app } = require('../../app');
       const response = await supertest(app)
         .post('/api/supportRequest/getNext')
-        .send({ supportName: 'Tim', requestType: 'IdeaPitch' })
+        .send({ supportName, requestType: supportRequest.type })
         .set({
           'Content-Type': 'application/json',
         })
         .expect(200);
-
       expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+      expect(supportRequestSuccessSpy).toHaveBeenCalledWith({ supportName, type: supportRequest.type });
       expect(response.body.userNotified).toBe(true);
     });
 

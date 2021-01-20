@@ -88,7 +88,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
         [nextRequest.slackId],
         stringDictionary.supportRequestSuccess({
           supportName,
-          type: requestType,
+          type: nextRequest.type,
         }),
       );
       userNotified = true;
