@@ -43,7 +43,7 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
     context.clear();
     return;
   }
-  console.log(SupportRequestType);
+
   const payloadInfo: UserInfo = {
     id: msg.author.id,
     requestType: requestTypeMapping[msg.content],
