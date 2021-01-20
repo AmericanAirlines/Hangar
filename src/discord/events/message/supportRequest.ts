@@ -8,14 +8,14 @@ import { DiscordContext } from '../../../entities/discordContext';
 
 /* eslint-disable no-param-reassign */
 
-interface UserInfo {
+interface PayloadInfo {
   [k: string]: number | string | string[];
   id: string;
   requestType: SupportRequestType;
   username: string;
 }
 
-enum steps {
+enum Steps {
   inputName = 'inputName',
 }
 
@@ -40,10 +40,10 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
     await msg.author.send(
       "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.",
     );
-    context.clear();
+    await context.clear();
     return;
   }
-  const payloadInfo: UserInfo = {
+  const payloadInfo: PayloadInfo = {
     id: msg.author.id,
     requestType: requestTypeMapping[msg.content],
     username: '',
@@ -52,7 +52,7 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
   const info = payloadInfo;
   const prompt = payloadInfo.requestType === SupportRequestType.JobChat ? "what's your name" : "what's the name of your team's voice channel";
   msg.author.send(`Hey there :wave: before we add you to the queue, ${prompt}?`);
-  context.nextStep = steps.inputName;
+  context.nextStep = Steps.inputName;
   context.currentCommand = cmdName;
   context.payload = info;
   await context.save();
@@ -60,7 +60,7 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
 
 export const supportRequestSubCommands: SubCommands = {
   inputName: async (msg, ctx) => {
-    const info = ctx.payload as UserInfo;
+    const info = ctx.payload as PayloadInfo;
     info.username = msg.content;
     ctx.payload = info;
     const userSupportRequest = new SupportRequest(info.id, info.username, info.requestType);

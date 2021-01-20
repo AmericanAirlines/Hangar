@@ -9,6 +9,8 @@ import { registerTeam, regSubCommands } from './registerTeam';
 import { exit } from './exit';
 import { botWasTagged } from '../../utilities/botWasTagged';
 
+/* eslint-disable no-param-reassign */
+
 type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
 
 interface Command {
@@ -73,6 +75,7 @@ export const commands: Command[] = [
 const genericErrorMessage = "Something went wrong... please try again and come chat with our team if you're still having trouble.";
 
 export async function message(msg: Discord.Message): Promise<void> {
+  msg.content = msg.content.trim();
   // Make sure the bot doesn't respond to itself
   if (msg.author.id === client.user.id) return;
 
