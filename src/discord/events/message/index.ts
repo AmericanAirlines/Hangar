@@ -97,7 +97,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   let handler: HandlerFn | undefined;
 
   // Find a command handler matching the raw message (e.g., '!help')
-  handler = commands.find((c) => c.trigger === msg.content.trim())?.handler;
+  handler = commands.find((c) => c.trigger === msg.content)?.handler;
 
   // Check to see if the context has a current command
   if (!handler && context.currentCommand) {
