@@ -32,11 +32,10 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
     return;
   }
 
-  const userHasOpenRequests =
-    (await SupportRequest.createQueryBuilder()
-      .where({ slackId: msg.author.id, status: Not(SupportRequestStatus.Complete) })
-      .getCount()) > 0;
-  if (userHasOpenRequests) {
+  const userOpenRequestsCount = await SupportRequest.createQueryBuilder()
+    .where({ slackId: msg.author.id, status: Not(SupportRequestStatus.Complete) })
+    .getCount();
+  if (userOpenRequestsCount > 0) {
     await msg.author.send(
       "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.",
     );
