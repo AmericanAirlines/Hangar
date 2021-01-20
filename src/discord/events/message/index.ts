@@ -1,13 +1,15 @@
 import Discord from 'discord.js';
 import { DiscordContext } from '../../../entities/discordContext';
 import { ping } from './ping';
-import { supportRequest } from './supportRequest';
+import { supportRequest, supportRequestSubCommands } from './supportRequest';
 import { client } from '../..';
 import logger from '../../../logger';
 import { help } from './help';
 import { registerTeam, regSubCommands } from './registerTeam';
 import { exit } from './exit';
 import { botWasTagged } from '../../utilities/botWasTagged';
+
+/* eslint-disable no-param-reassign */
 
 type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
 
@@ -39,12 +41,21 @@ export const commands: Command[] = [
     trigger: '!ideaPitch',
     description: 'Think you have a good idea? Join a queue to come pitch to our team!',
     handler: supportRequest,
+    subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'technicalSupport',
     trigger: '!technicalSupport',
     description: 'Need help with your hack? Join our tech support queue so our team can help!',
     handler: supportRequest,
+    subCommands: supportRequestSubCommands,
+  },
+  {
+    handlerId: 'jobChat',
+    trigger: '!jobChat',
+    description: 'Interested in joining our team? Come chat with us about Full Time and Internship positions!',
+    handler: supportRequest,
+    subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'exit',
@@ -64,6 +75,7 @@ export const commands: Command[] = [
 const genericErrorMessage = "Something went wrong... please try again and come chat with our team if you're still having trouble.";
 
 export async function message(msg: Discord.Message): Promise<void> {
+  msg.content = msg.content.trim();
   // Make sure the bot doesn't respond to itself
   if (msg.author.id === client.user.id) return;
 
@@ -85,7 +97,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   let handler: HandlerFn | undefined;
 
   // Find a command handler matching the raw message (e.g., '!help')
-  handler = commands.find((c) => c.trigger === msg.content.trim())?.handler;
+  handler = commands.find((c) => c.trigger === msg.content)?.handler;
 
   // Check to see if the context has a current command
   if (!handler && context.currentCommand) {
