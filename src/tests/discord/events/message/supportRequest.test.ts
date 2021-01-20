@@ -34,7 +34,6 @@ jest.mock('../../../../entities/supportRequest', () => {
   const { SupportRequestStatus, SupportRequestType } = jest.requireActual('../../../../entities/supportRequest');
   return { SupportRequest: MockSupportRequest, SupportRequestType, SupportRequestStatus };
 });
-
 SupportRequest.count = countSupportRequest;
 
 const mockQueryBuilder = {
