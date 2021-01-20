@@ -35,6 +35,8 @@ jest.mock('../../../../entities/supportRequest', () => {
   return { SupportRequest: MockSupportRequest, SupportRequestType, SupportRequestStatus };
 });
 
+SupportRequest.count = countSupportRequest;
+
 const mockQueryBuilder = {
   where: jest.fn().mockReturnThis(),
   getCount: jest.fn().mockReturnThis(),
@@ -94,7 +96,7 @@ describe('supportRequest handler', () => {
     );
   });
 
-  it('will prompt the user for a name upon the user using tech support command', async () => {
+  it('will prompt the user for a team voice channel name upon the user using tech support command', async () => {
     const ctx = new DiscordContext('1', '', '');
     supportRequestQueueActive = true;
     await supportRequest(techMsg, ctx);
