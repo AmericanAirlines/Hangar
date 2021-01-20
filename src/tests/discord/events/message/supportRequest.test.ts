@@ -6,7 +6,7 @@ import { Config } from '../../../../entities/config';
 import { supportRequest, suppSubCommands } from '../../../../discord/events/message/supportRequest';
 import { DiscordContext } from '../../../../entities/discordContext';
 import logger from '../../../../logger';
-import { SupportRequest } from '../../../../entities/supportRequest';
+import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../../../../entities/supportRequest';
 
 jest.mock('../../../../discord');
 
@@ -31,7 +31,7 @@ jest.mock('../../../../entities/supportRequest', () => {
       save: saveSupportRequest,
     };
   }
-  return { SupportRequest: MockSupportRequest, SupportRequestType: MockSupportRequest, SupportRequestStatus: MockSupportRequest };
+  return { SupportRequest: MockSupportRequest };
 });
 SupportRequest.count = countSupportRequest;
 
@@ -146,12 +146,12 @@ describe('supportRequest handler', () => {
     );
   });
 
-  it('will prompt the user for a name upon the user using idea pitch command', async () => {
+  it('will prompt the user for a team voice channel upon the user using idea pitch command', async () => {
     const ctx = new DiscordContext('1', '', '');
     supportRequestQueueActive = true;
     await supportRequest(ideaMsg, ctx);
     expect(ideaMsg.author.send).toBeCalledTimes(1);
-    expect(ideaMsg.author.send).toBeCalledWith("Hello :wave:, welcome to the queue! Please input your team's channel name!");
+    expect(ideaMsg.author.send).toBeCalledWith("Hey there :wave: before we add you to the queue, what's your name?");
   });
 
   it('will add the user to the db for idea pitch command once a name is entered', async () => {
