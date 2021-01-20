@@ -43,7 +43,6 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
     context.clear();
     return;
   }
-  console.log(SupportRequestType);
   const payloadInfo: UserInfo = {
     id: msg.author.id,
     requestType: requestTypeMapping[msg.content],
@@ -59,7 +58,7 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
   await context.save();
 }
 
-export const suppSubCommands: SubCommands = {
+export const supportRequestSubCommands: SubCommands = {
   inputName: async (msg, ctx) => {
     const info = ctx.payload as UserInfo;
     info.username = msg.content;
