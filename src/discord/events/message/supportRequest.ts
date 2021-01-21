@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { Not } from 'typeorm';
 import { SupportRequest } from '../../../entities/supportRequest';
 import { SupportRequestType, SupportRequestStatus } from '../../../types/supportRequest';
 import logger from '../../../logger';
@@ -32,9 +31,12 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
     msg.author.send("**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!");
     return;
   }
-
+  const commonConditions = { slackId: msg.author.id };
   const userOpenRequestsCount = await SupportRequest.createQueryBuilder()
-    .where({ slackId: msg.author.id, status: Not(SupportRequestStatus.Complete) })
+    .where([
+      { status: SupportRequestStatus.Pending, ...commonConditions },
+      { status: SupportRequestStatus.InProgress, ...commonConditions },
+    ])
     .getCount();
   if (userOpenRequestsCount > 0) {
     await msg.author.send(
@@ -51,7 +53,7 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
   const cmdName = msg.content.replace('!', '');
   const info = payloadInfo;
   const prompt = payloadInfo.requestType === SupportRequestType.JobChat ? "what's your name" : "what's the name of your team's voice channel";
-  msg.author.send(`Hey there :wave: before we add you to the queue, ${prompt}?`);
+  msg.author.send(`Hey there! :wave: Before we add you to the queue, ${prompt}?`);
   context.nextStep = Steps.inputName;
   context.currentCommand = cmdName;
   context.payload = info;

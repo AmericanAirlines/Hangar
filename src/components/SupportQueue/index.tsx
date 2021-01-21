@@ -98,9 +98,11 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, optio
       if (!data.supportRequest) {
         setMessage('It appears you are trying to access a support request that does not exist!');
       } else if (!data.userNotified) {
-        setMessage(`There was a problem notifying ${data.supportRequest.name}, send them a message and tell them you're ready for them`);
+        setMessage(`There was a problem notifying ${data.supportRequest.name}, send them a direct message in Discord.`);
+      } else if (data.supportRequest.type === SupportRequestType.JobChat) {
+        setMessage(`${data.supportRequest.name} has been sent a link and should join soon!`);
       } else {
-        setMessage(`${data.supportRequest.name} has been notified to come over`);
+        setMessage(`The team has been notified, go join the ${data.supportRequest.name} voice channel in Discord!`);
       }
 
       await fetchValues();
@@ -136,7 +138,7 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, optio
         {message !== '' ? <div className="alert alert-info mt-3">{message}</div> : null}
         {loading ? <h4 className="font-weight-normal">Loading</h4> : null}
         {inProgress.length === 0 ? (
-          <div className="alert alert-info mt-3">None in progress, press button to get the next one ☝️</div>
+          <div className="alert alert-info mt-3">None in progress, get started when you're ready ☝️</div>
         ) : (
           inProgress
             .filter((request) => requestTypes.includes(request.type))

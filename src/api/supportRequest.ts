@@ -93,7 +93,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
         [nextRequest.slackId],
         requestType === SupportRequestType.JobChat
           ? stringDictionary.jobChatSuccess({ supportName, type: requestType })
-          : stringDictionary.supportRequestSuccess({ supportName, type: requestType }),
+          : stringDictionary.supportRequestSuccess({ supportName, type: requestType, name: nextRequest.name }),
       );
       userNotified = true;
     }

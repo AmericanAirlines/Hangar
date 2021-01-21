@@ -74,7 +74,7 @@ describe('api/supportRequest', () => {
         .expect(200);
 
       expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
-      expect(supportRequestSuccessSpy).toHaveBeenCalledWith({ supportName, type: supportRequest.type });
+      expect(supportRequestSuccessSpy).toHaveBeenCalledWith({ name: supportRequest.name, supportName, type: supportRequest.type });
       expect(response.body.userNotified).toBe(true);
     });
 
