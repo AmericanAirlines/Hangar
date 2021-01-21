@@ -485,16 +485,15 @@ describe('api/supportRequest', () => {
   describe('/getCount', () => {
     it('calling getCount will respond with the correct count for technical and idea requests', async () => {
       const mockCounts = {
-        technical: 3,
-        idea: 12,
+        [SupportRequestType.TechnicalSupport]: 3,
+        [SupportRequestType.IdeaPitch]: 12,
+        [SupportRequestType.JobChat]: 2,
       };
 
       jest.spyOn(SupportRequest, 'count').mockImplementation(
         async (request): Promise<number> => {
-          if ((request as { [id: string]: string }).type === 'TechnicalSupport') {
-            return mockCounts.technical;
-          }
-          return mockCounts.idea;
+          const type = (request as { [id: string]: string }).type as SupportRequestType;
+          return mockCounts[type];
         },
       );
 
@@ -505,8 +504,9 @@ describe('api/supportRequest', () => {
           'Content-Type': 'application/json',
         });
 
-      expect(countData.body.ideaCount).toBe(mockCounts.idea);
-      expect(countData.body.technicalCount).toBe(mockCounts.technical);
+      expect(countData.body[SupportRequestType.IdeaPitch]).toBe(mockCounts[SupportRequestType.IdeaPitch]);
+      expect(countData.body[SupportRequestType.TechnicalSupport]).toBe(mockCounts[SupportRequestType.TechnicalSupport]);
+      expect(countData.body[SupportRequestType.JobChat]).toBe(mockCounts[SupportRequestType.JobChat]);
     });
 
     it('calling getCount will respond with a 500 if something goes wrong', async () => {

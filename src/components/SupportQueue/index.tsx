@@ -109,16 +109,24 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, optio
     }
   };
 
+  const getButtonWidth = (idx: number, length: number): string => {
+    if (length > 1 && (idx % 2 === 1 || idx !== length - 1)) {
+      return 'col-6';
+    }
+
+    return 'col-12';
+  };
+
   return (
     <div className="card">
       <div className="card-body">
         {error ? <div className="alert alert-error mt-3">There was an error fetching data for the queue</div> : null}
         <h2 className="font-weight-normal">{title}</h2>
-        <div className="container">
-          <div className="row mt-4">
-            {options.map((option) => (
-              <div key={option.requestType} className="col-6">
-                <button className="btn btn-dark w-100" onClick={() => getNext(option.requestType)} disabled={counts[option.requestType] === 0}>
+        <div className="container px-0">
+          <div className="row">
+            {options.map((option, idx) => (
+              <div key={option.requestType} className={getButtonWidth(idx, options.length)}>
+                <button className="btn btn-dark w-100 my-2" onClick={() => getNext(option.requestType)} disabled={counts[option.requestType] === 0}>
                   Get Next {option.name} ({counts[option.requestType]})
                 </button>
               </div>
@@ -132,7 +140,7 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, optio
         ) : (
           inProgress
             .filter((request) => requestTypes.includes(request.type))
-            .map((request) => <SupportQueueItem key={request.id} request={request} refetch={fetchValues} />)
+            .map((request) => <SupportQueueItem key={request.id} request={request} refetch={fetchValues} secret={secret} />)
         )}
       </div>
     </div>
