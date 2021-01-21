@@ -3,6 +3,7 @@ export interface StringDictionary {
   /*----------------------------------*/
   // src>api>>supportRequest.ts
   supportRequestSuccess: stringFunction;
+  jobChatSuccess: stringFunction;
   supportRequestComplete: string;
   supportRequestNoShow: stringFunction;
   remindUser: stringFunction;

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable quotes */
-import { SupportRequestType } from './entities/supportRequest';
+import { SupportRequestType } from './types/supportRequest';
 import { StringDictionary } from './IStringDictionary';
 
 export const stringDictionary = {} as StringDictionary;
@@ -11,6 +11,11 @@ stringDictionary.supportRequestSuccess = (params) => `:tada: ${params.supportNam
   params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
 }, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.
 \nWhen you arrive, tell one of our team members that you're here to meet with *${params.supportName}*!`;
+
+stringDictionary.jobChatSuccess = (
+  params,
+) => `:tada: ${params.supportName} is ready to discuss job opportunities with you! Please join our Zoom waiting 
+room with the link provided and we will move you into a meeting when we are ready!\nLink ${process.env.JOB_CHAT_LINK}`;
 
 stringDictionary.supportRequestComplete = `Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:`;
 

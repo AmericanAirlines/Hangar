@@ -1,20 +1,8 @@
 import { DateTime } from 'luxon';
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, BeforeInsert, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { SupportRequestStatus, SupportRequestType } from '../types/supportRequest';
 import logger from '../logger';
 import { genHash } from '../utilities/genHash';
-
-export enum SupportRequestStatus {
-  Pending = 'Pending',
-  InProgress = 'InProgress',
-  Complete = 'Complete',
-  Abandoned = 'Abandoned',
-}
-
-export enum SupportRequestType {
-  IdeaPitch = 'IdeaPitch',
-  TechnicalSupport = 'TechnicalSupport',
-  JobChat = 'JobChat',
-}
 
 export enum SupportRequestErrors {
   ExistingActiveRequest = 'ExistingActiveRequest',

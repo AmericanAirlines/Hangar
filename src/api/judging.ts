@@ -1,7 +1,8 @@
 import express from 'express';
 import logger from '../logger';
 import { JudgingVote, insufficientVoteCountError, TeamResult } from '../entities/judgingVote';
-import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
+import { SupportRequest } from '../entities/supportRequest';
+import { SupportRequestStatus, SupportRequestType } from '../types/supportRequest';
 import { Team } from '../entities/team';
 
 export const judging = express.Router();

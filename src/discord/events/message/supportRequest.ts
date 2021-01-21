@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { Not } from 'typeorm';
-import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../../entities/supportRequest';
+import { SupportRequest } from '../../../entities/supportRequest';
+import { SupportRequestType, SupportRequestStatus } from '../../../types/supportRequest';
 import logger from '../../../logger';
 import { Config } from '../../../entities/config';
 import { SubCommands } from '.';

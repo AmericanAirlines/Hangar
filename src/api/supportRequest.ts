@@ -1,5 +1,6 @@
 import express from 'express';
-import { SupportRequest, SupportRequestStatus, SupportRequestType } from '../entities/supportRequest';
+import { SupportRequest } from '../entities/supportRequest';
+import { SupportRequestStatus, SupportRequestType } from '../types/supportRequest';
 import logger from '../logger';
 import { sendMessage } from '../common/messageUsers';
 import { stringDictionary } from '../StringDictionary';
@@ -11,6 +12,7 @@ supportRequestRoutes.use(express.json());
 export interface NextSupportRequestResponse {
   supportRequest: SupportRequest;
   userNotified: boolean;
+  type: SupportRequestType;
 }
 
 supportRequestRoutes.get('/getAll', async (req, res) => {
@@ -40,10 +42,13 @@ supportRequestRoutes.get('/getCount', async (req, res) => {
   try {
     const ideaCount = await SupportRequest.count({ type: SupportRequestType.IdeaPitch, status: SupportRequestStatus.Pending });
     const technicalCount = await SupportRequest.count({ type: SupportRequestType.TechnicalSupport, status: SupportRequestStatus.Pending });
+    const jobCount = await SupportRequest.count({ type: SupportRequestType.JobChat, status: SupportRequestStatus.Pending });
+    // TODO: Improve the efficiency of these calls
 
     res.json({
-      ideaCount,
-      technicalCount,
+      [SupportRequestType.IdeaPitch]: ideaCount,
+      [SupportRequestType.TechnicalSupport]: technicalCount,
+      [SupportRequestType.JobChat]: jobCount,
     });
   } catch (err) {
     logger.error('Unable to retrieve count of support requests: ', err);
@@ -73,7 +78,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
 
   let nextRequest;
   try {
-    nextRequest = await SupportRequest.getNextSupportRequest(requestType as SupportRequestType);
+    nextRequest = await SupportRequest.getNextSupportRequest(requestType as SupportRequestType | undefined);
   } catch (err) {
     res.status(500).send('Something went wrong trying to get the next support request');
     logger.error('Something went wrong trying to get the next support request', err);
@@ -86,10 +91,9 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
     if (nextRequest) {
       await sendMessage(
         [nextRequest.slackId],
-        stringDictionary.supportRequestSuccess({
-          supportName,
-          type: requestType,
-        }),
+        requestType === SupportRequestType.JobChat
+          ? stringDictionary.jobChatSuccess({ supportName, type: requestType })
+          : stringDictionary.supportRequestSuccess({ supportName, type: requestType }),
       );
       userNotified = true;
     }
@@ -100,6 +104,7 @@ supportRequestRoutes.post('/getNext', async (req, res) => {
   const response: NextSupportRequestResponse = {
     userNotified,
     supportRequest: nextRequest,
+    type: requestType,
   };
   res.send(response);
 });
@@ -215,6 +220,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   const response: NextSupportRequestResponse = {
     userNotified,
     supportRequest: request,
+    type: requestType,
   };
   res.send(response);
 });
