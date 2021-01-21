@@ -5,7 +5,8 @@ import { Judge } from '../../entities/judge';
 import { ExpandedTeamResult, bonusPointsForIdeaPitch } from '../../api/judging';
 import { createJudgeData, createTeamData, visitTeamsAndJudge } from '../utilities';
 import { createDbConnection, closeDbConnection } from '../testdb';
-import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
+import { SupportRequest } from '../../entities/supportRequest';
+import { SupportRequestType, SupportRequestStatus } from '../../types/supportRequest';
 import { JudgingVote } from '../../entities/judgingVote';
 
 const adminSecret = 'Secrets are secretive';
