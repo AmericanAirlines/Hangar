@@ -11,8 +11,8 @@ stringDictionary.supportRequestSuccess = (params) => `:tada: ${params.supportNam
   params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
 }, they should join the \`${params.name}\` voice channel soon!`;
 
-stringDictionary.jobChatSuccess = (params) => `:tada: We're almost ready for you! Please join our Zoom waiting 
-room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\n**JOIN NOW: **${process.env.JOB_CHAT_LINK}`;
+stringDictionary.jobChatSuccess = (params) => `:tada: We're almost ready for you! Please join our Zoom waiting
+room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\n**JOIN NOW: **${process.env.JOB_CHAT_URL}`;
 
 stringDictionary.supportRequestComplete = `Thanks for chatting with our team! If you want to chat with us again, just rejoin one of our support queues :smile:`;
 
