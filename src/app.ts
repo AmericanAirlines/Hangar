@@ -44,15 +44,34 @@ async function initDatabase(): Promise<void> {
 
   if (process.env.NODE_ENV !== 'test') {
     // Pull connection options from ormconfig.json
-    const options: ConnectionOptions = await getConnectionOptions();
+    let options: ConnectionOptions = await getConnectionOptions();
     const url = process.env.DATABASE_URL || (options as PostgresConnectionOptions).url;
-    await createConnection({
-      ...options,
-      url,
-      entities: [path.join(__dirname, 'entities/*')],
-      migrations: [path.join(__dirname, 'migration/*')],
-      migrationsRun: true,
-    } as PostgresConnectionOptions);
+
+    // NOTE: This should only apply to apps hosted in Heroku with the Heroku Postgres add-on
+    if (process.env.DB_SSL_DISABLED === 'true') {
+      logger.warning(
+        'SSL validation for database connection is disabled. If SSL validation is available, modify the DB_SSL_DISABLED environment variable.',
+      );
+      options = {
+        ...options,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      } as ConnectionOptions;
+    }
+
+    try {
+      await createConnection({
+        ...options,
+        url,
+        entities: [path.join(__dirname, 'entities/*')],
+        migrations: [path.join(__dirname, 'migration/*')],
+        migrationsRun: true,
+      } as PostgresConnectionOptions);
+    } catch (err) {
+      logger.error('Database Connection Error: ', err);
+      throw new Error('Failed to connect to Database. See logs above for details.');
+    }
   }
 }
 
