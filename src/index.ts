@@ -12,6 +12,6 @@ async function start(): Promise<Server> {
 }
 
 start().catch((err) => {
-  logger.error('Something went wrong starting the app', err);
+  logger.error('Something went wrong starting the app: ', err);
   process.exit(1);
 });
