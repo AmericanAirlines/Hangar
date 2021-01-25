@@ -1,5 +1,6 @@
 import express from 'express';
 import { requireAuth } from './middleware/requireAuth';
+import { supportRoutes } from './support';
 import { supportRequestRoutes } from './supportRequest';
 import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';
@@ -79,6 +80,7 @@ api.post('/skip', async (req, res) => {
 });
 
 api.use('/supportRequest', requireAuth(), supportRequestRoutes);
+api.use('/support', requireAuth(), supportRoutes);
 api.use('/judging', requireAuth(), judging);
 api.use('/config', requireAuth(), config);
 api.use('/admin', admin);
