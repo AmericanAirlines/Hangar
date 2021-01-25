@@ -16,7 +16,7 @@ describe('getAllTeams', () => {
     teamFindSpy.mockResolvedValue([]);
     const { app } = require('../../app');
     await supertest(app)
-      .get('/api/support/getAllTeams')
+      .get('/api/team/getAll')
       .set({
         'Content-Type': 'application/json',
       })
@@ -30,7 +30,7 @@ describe('getAllTeams', () => {
     teamFindSpy.mockRejectedValueOnce('oh no :(');
     const { app } = require('../../app');
     await supertest(app)
-      .get('/api/support/getAllTeams')
+      .get('/api/team/getAll')
       .set({
         'Content-Type': 'application/json',
       })

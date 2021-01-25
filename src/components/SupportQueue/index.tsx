@@ -130,7 +130,7 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, optio
   return (
     <div className="card">
       <div className="card-body">
-        {error ? <div className="alert alert-error mt-3">There was an error fetching data for the queue</div> : null}
+        {error ? <div className="alert alert-danger mt-3">There was an error fetching data for the queue</div> : null}
         <h2 className="font-weight-normal">{title}</h2>
         <div className="container px-0">
           <div className="row">
