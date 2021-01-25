@@ -4,11 +4,12 @@ import { genHash } from '../utilities/genHash';
 // TODO: Enforce only one team registered per person
 @Entity()
 export class Team extends BaseEntity {
-  constructor(name: string, tableNumber: number, projectDescription: string, members?: string[]) {
+  constructor(name: string, tableNumber: number, projectDescription: string, members?: string[], channelName?: string) {
     super();
 
     this.name = name;
-    this.tableNumber = tableNumber;
+    this.tableNumber = tableNumber || null;
+    this.channelName = channelName || null;
     this.projectDescription = projectDescription;
     this.members = members || [];
     this.judgeVisits = 0;
@@ -22,8 +23,11 @@ export class Team extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   tableNumber: number;
+
+  @Column({ unique: true, nullable: true })
+  channelName: string;
 
   @Column()
   projectDescription: string;

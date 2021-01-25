@@ -136,10 +136,10 @@ describe('registerTeam handler', () => {
     });
     await regSubCommands.teamDescription(descMsg, ctx);
 
-    expect(send).toBeCalledWith("What's your table number (e.g. 42)?");
+    expect(send).toBeCalledWith("What's your team's channel name?");
     expect(ctx.payload).toStrictEqual({ description: descript });
     expect(ctx.currentCommand).toBe('registerTeam');
-    expect(ctx.nextStep).toBe('tableNumber');
+    expect(ctx.nextStep).toBe('teamChannel');
   });
 
   it('will call the subCommand dealing with table number', async () => {
@@ -147,51 +147,28 @@ describe('registerTeam handler', () => {
     const send = jest.fn();
     ctx.payload = {};
     teamRegistrationActive = true;
-    const tableNum = '22';
-    const numMsg = makeDiscordMessage({
-      content: tableNum,
+    const nameMsg = makeDiscordMessage({
+      content: 'Team-25',
       author: {
         send,
         username: 'Joe',
         id: '123',
       },
     });
-    await regSubCommands.tableNumber(numMsg, ctx);
+    await regSubCommands.teamChannel(nameMsg, ctx);
     const [msg] = send.mock.calls[0];
     expect(msg.embed.title === '**You are signed up :partying_face:**').toBeTruthy();
-    expect(ctx.payload).toStrictEqual({ table: parseInt(tableNum, 10) });
+    expect(ctx.payload).toStrictEqual({ channel: 'Team-25' });
     expect(ctx.currentCommand).toBe(undefined);
     expect(ctx.nextStep).toBe(undefined);
   });
 
-  it('will let the user know that what the entered is NaN', async () => {
-    const ctx = new DiscordContext('1', 'registerTeam', 'tableNumber');
-    const send = jest.fn();
-    ctx.payload = {};
-    teamRegistrationActive = true;
-    const tableNum = 'abc';
-    const numMsg = makeDiscordMessage({
-      content: tableNum,
-      author: {
-        send,
-        username: 'Joe',
-        id: '123',
-      },
-    });
-    await regSubCommands.tableNumber(numMsg, ctx);
-    expect(send).toBeCalledWith('Oops, looks like the table number you entered is not a number! Please try again.');
-    expect(ctx.payload).toEqual({});
-    expect(ctx.currentCommand).toBe('registerTeam');
-    expect(ctx.nextStep).toBe('tableNumber');
-  });
-
   it('will let the user know that someone has already signed up for the table they entered', async () => {
     const ctx = new DiscordContext('1', 'registerTeam', 'tableNumber');
     const send = jest.fn();
     ctx.payload = {};
     teamRegistrationActive = true;
     const tableNum = '2';
-    const convertedNum = parseInt(tableNum, 10);
     const numMsg = makeDiscordMessage({
       content: tableNum,
       author: {
@@ -200,14 +177,14 @@ describe('registerTeam handler', () => {
         id: '123',
       },
     });
-    const keyConstraintError = new Error('table num taken');
+    const keyConstraintError = new Error('Channel name taken');
     (keyConstraintError as DbError).code = '23505';
     saveTeam.mockRejectedValueOnce(keyConstraintError);
-    await regSubCommands.tableNumber(numMsg, ctx);
-    expect(send).toBeCalledWith('Oops, looks like someone already entered the table that you input! Please try again');
-    expect(ctx.payload).toEqual({ table: convertedNum });
+    await regSubCommands.teamChannel(numMsg, ctx);
+    expect(send).toBeCalledWith('Oops, looks like someone already entered the channel name that you input! Please try again');
+    expect(ctx.payload).toEqual({ channel: tableNum });
     expect(ctx.currentCommand).toBe('registerTeam');
-    expect(ctx.nextStep).toBe('tableNumber');
+    expect(ctx.nextStep).toBe('teamChannel');
   });
 
   it('will let the user know that someone has already signed up for the table they entered', async () => {
@@ -216,7 +193,6 @@ describe('registerTeam handler', () => {
     ctx.payload = {};
     teamRegistrationActive = true;
     const tableNum = '2';
-    const convertedNum = parseInt(tableNum, 10);
     const numMsg = makeDiscordMessage({
       content: tableNum,
       author: {
@@ -227,10 +203,10 @@ describe('registerTeam handler', () => {
     });
     const keyConstraintError = new Error('generic error');
     saveTeam.mockRejectedValueOnce(keyConstraintError);
-    await regSubCommands.tableNumber(numMsg, ctx);
+    await regSubCommands.teamChannel(numMsg, ctx);
     expect(send).toBeCalledWith('Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.');
-    expect(ctx.payload).toEqual({ table: convertedNum });
+    expect(ctx.payload).toEqual({ channel: tableNum });
     expect(ctx.currentCommand).toBe('registerTeam');
-    expect(ctx.nextStep).toBe('tableNumber');
+    expect(ctx.nextStep).toBe('teamChannel');
   });
 });

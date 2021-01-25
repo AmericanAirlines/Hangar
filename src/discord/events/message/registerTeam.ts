@@ -12,7 +12,7 @@ enum RegistrationSteps {
   teamMembers = 'teamMembers',
   teamName = 'teamName',
   teamDescription = 'teamDescription',
-  tableNumber = 'tableNumber',
+  teamChannel = 'teamChannel',
 }
 
 interface PartialTeamInfo {
@@ -20,7 +20,7 @@ interface PartialTeamInfo {
   members?: string[];
   name?: string;
   description?: string;
-  table?: number;
+  channel?: string;
 }
 
 export async function registerTeam(msg: Discord.Message, context: DiscordContext): Promise<void> {
@@ -78,64 +78,59 @@ export const regSubCommands: SubCommands = {
     await msg.author.send('What does your project do? How will it make a difference? What technologies are used?');
   },
   teamDescription: async (msg, ctx) => {
-    ctx.nextStep = RegistrationSteps.tableNumber;
+    ctx.nextStep = RegistrationSteps.teamChannel;
     const team = ctx.payload as PartialTeamInfo;
     team.description = msg.content;
     ctx.payload = team;
     ctx.currentCommand = 'registerTeam';
     await ctx.save();
-    await msg.author.send("What's your table number (e.g. 42)?");
+    await msg.author.send("What's your team's channel name?");
   },
-  tableNumber: async (msg, ctx) => {
+  teamChannel: async (msg, ctx) => {
     const team = ctx.payload as PartialTeamInfo;
     ctx.currentCommand = 'registerTeam';
-    ctx.nextStep = 'tableNumber';
-    if (Number.isNaN(parseInt(msg.content, 10))) {
-      await msg.author.send('Oops, looks like the table number you entered is not a number! Please try again.');
-    } else {
-      team.table = parseInt(msg.content, 10);
-      ctx.payload = team;
+    ctx.nextStep = 'teamChannel';
+    team.channel = msg.content;
+    ctx.payload = team;
+    await ctx.save();
+    const finalTeam = new Team(team.name, null, team.description, team.members, team.channel);
+    try {
+      await finalTeam.save();
+      await msg.author.send({
+        embed: {
+          color: colors.info,
+          title: '**You are signed up :partying_face:**',
+          description: 'Here are the details for your team:',
+          fields: [
+            {
+              name: 'Team Name:',
+              value: (await finalTeam).name,
+            },
+            {
+              name: 'Team Members:',
+              value: (await finalTeam).members,
+            },
+            {
+              name: 'Team Description:',
+              value: (await finalTeam).projectDescription,
+            },
+            {
+              name: 'Channel Name',
+              value: (await finalTeam).channelName,
+            },
+          ],
+        },
+      });
+      ctx.currentCommand = undefined;
+      ctx.nextStep = undefined;
       await ctx.save();
-      const finalTeam = new Team(team.name, team.table, team.description, team.members);
-      try {
-        await finalTeam.save();
-        await msg.author.send({
-          embed: {
-            color: colors.info,
-            title: '**You are signed up :partying_face:**',
-            description: 'Here are the details for your team:',
-            fields: [
-              {
-                name: 'Team Name:',
-                value: (await finalTeam).name,
-              },
-              {
-                name: 'Team Members:',
-                value: (await finalTeam).members,
-              },
-              {
-                name: 'Team Description:',
-                value: (await finalTeam).projectDescription,
-              },
-              {
-                name: 'Table Number:',
-                value: (await finalTeam).tableNumber,
-              },
-            ],
-          },
-        });
-        ctx.nextStep = undefined;
-        ctx.currentCommand = undefined;
-        ctx.save();
-        await ctx.clear();
-      } catch (err) {
-        // Check if duplicate key constraint error (Postgres error 23505 - unique_violation)
-        if (err.code === '23505') {
-          await msg.author.send('Oops, looks like someone already entered the table that you input! Please try again');
-        } else {
-          logger.error('Saving team failed: ', err);
-          await msg.author.send('Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.');
-        }
+    } catch (err) {
+      // Check if duplicate key constraint error (Postgres error 23505 - unique_violation)
+      if (err.code === '23505') {
+        await msg.author.send('Oops, looks like someone already entered the channel name that you input! Please try again');
+      } else {
+        logger.error('Saving team failed: ', err);
+        await msg.author.send('Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.');
       }
     }
   },
