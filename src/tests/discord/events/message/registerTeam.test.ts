@@ -136,7 +136,7 @@ describe('registerTeam handler', () => {
     });
     await regSubCommands.teamDescription(descMsg, ctx);
 
-    expect(send).toBeCalledWith("What's your team's channel name?");
+    expect(send).toBeCalledWith("What's your team's channel name? (e.g. Hacker Room 51)");
     expect(ctx.payload).toStrictEqual({ description: descript });
     expect(ctx.currentCommand).toBe('registerTeam');
     expect(ctx.nextStep).toBe('teamChannel');

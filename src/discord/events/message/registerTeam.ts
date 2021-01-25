@@ -32,7 +32,7 @@ export async function registerTeam(msg: Discord.Message, context: DiscordContext
   await msg.author.send({
     embed: {
       color: colors.info,
-      title: '*Register your team for judging* :mag:\nOnly one person from each team should register',
+      title: '*Register your team for judging* :mag:\n:warning: Only one person from each team should register',
       description:
         'Answer each question the bot provides. Once you are done answering a question, DM the answer to the bot and it will reply prompting for the next answer!',
       fields: [
@@ -84,7 +84,7 @@ export const regSubCommands: SubCommands = {
     ctx.payload = team;
     ctx.currentCommand = 'registerTeam';
     await ctx.save();
-    await msg.author.send("What's your team's channel name?");
+    await msg.author.send("What's your team's channel name? (e.g. Hacker Room 51)");
   },
   teamChannel: async (msg, ctx) => {
     const team = ctx.payload as PartialTeamInfo;
@@ -115,7 +115,7 @@ export const regSubCommands: SubCommands = {
               value: (await finalTeam).projectDescription,
             },
             {
-              name: 'Channel Name',
+              name: 'Team Channel Name',
               value: (await finalTeam).channelName,
             },
           ],
