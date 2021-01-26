@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - tamuhack-2021
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.8.8
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+        env:
+          NODE_ENV: production
+          PLATFORM_USED: discord
+          DISCORD_BOT_TOKEN: ${{secrets.DISCORD_BOT_TOKEN}}
+          DISCORD_BOT_CHANNEL_IDS: ${{secrets.DISCORD_BOT_CHANNEL_IDS}}
+          ADMIN_SECRET: ${{secrets.ADMIN_SECRET}}
+          JUDGE_SECRET: ${{secrets.JUDGE_SECRET}}
+          SUPPORT_SECRET: ${{secrets.SUPPORT_SECRET}}
+          SLACK_BOT_TOKEN: disabled
+          SLACK_SIGNING_SECRET: disabled
+          CHALLENGE_URL: ${{secrets.CHALLENGE_URL}}
+          JOB_CHAT_URL: ${{secrets.JOB_CHAT_URL}}
