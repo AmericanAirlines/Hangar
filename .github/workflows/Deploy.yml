@@ -15,6 +15,8 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.APP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
+          healthcheck: "https://${{secrets.APP_NAME}}.herokuapp.com"
+          rollbackonhealthcheckfailed: true
         env:
           HD_NODE_ENV: production
           HD_PLATFORM_USED: discord
@@ -27,3 +29,4 @@ jobs:
           HD_SLACK_SIGNING_SECRET: disabled
           HD_CHALLENGE_URL: ${{secrets.CHALLENGE_URL}}
           HD_JOB_CHAT_URL: ${{secrets.JOB_CHAT_URL}}
+          HD_DB_SSL_DISABLED: ${{secrets.DB_SSL_DISABLED}}
