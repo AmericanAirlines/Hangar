@@ -70,14 +70,6 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, optio
     };
   }, []);
 
-  // Unsure how the query should be handled once it is used, so only the query is here for now (I can add more if wanted!)
-  const getAllTeams = async (): Promise<void> => {
-    const res = await fetch('/api/support/getAllTeams', {
-      method: 'GET',
-      headers: { authorization: secret, 'Content-Type': 'application/json' },
-    });
-  };
-
   const getNext = async (requestType: SupportRequestType): Promise<void> => {
     setMessage('');
 
