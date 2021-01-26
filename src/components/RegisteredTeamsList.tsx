@@ -1,7 +1,6 @@
 /* global fetch */
 import React from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
-// import { DateTime } from 'luxon';
 
 export interface Team {
   id: number;
