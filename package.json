@@ -80,6 +80,7 @@
     "react": "^16.11.0",
     "react-data-table-component": "^7.0.0-alpha-5",
     "react-dom": "^16.11.0",
+    "react-table": "^7.6.3",
     "reflect-metadata": "^0.1.13",
     "shuffle-array": "^1.0.1",
     "styled-components": "^5.2.1",

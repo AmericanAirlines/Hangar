@@ -12,9 +12,9 @@ interface RegisteredTeamsListProps {
 }
 
 export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret }) => {
-  const fetchValues = async (): Promise<void> => {
-    // TODO: Retrieve all teams
-  };
+  //const fetchValues = async (): Promise<void> => {
+  // TODO: Retrieve all teams
+  //};
 
   // React.useEffect(() => {
   //   fetchValues();
