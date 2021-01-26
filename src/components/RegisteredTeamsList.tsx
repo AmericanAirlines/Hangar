@@ -28,7 +28,7 @@ const ExpandableRow: React.FC<{ data?: Team }> = (props) => (
 );
 
 export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret }) => {
-  const [loading, setLoading] = React.useState(true);
+  //const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
   const [teams, setTeams] = React.useState<Team[]>([]);
 
