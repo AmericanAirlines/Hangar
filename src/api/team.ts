@@ -10,6 +10,6 @@ team.get('/getAll', async (req, res) => {
     res.status(200).send(teamList);
   } catch (error) {
     logger.error('Unable to retrieve team list: ', error);
-    res.status(500).send('There Was An Internal Server Error');
+    res.status(500).send('Unable to retrieve teams from database');
   }
 });
