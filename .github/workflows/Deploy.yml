@@ -15,7 +15,7 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.APP_NAME}}
           heroku_email: ${{secrets.HEROKU_EMAIL}}
-          healthcheck: "https://${{secrets.APP_NAME}}.herokuapp.com"
+          healthcheck: "https://${{secrets.APP_NAME}}.herokuapp.com/api/health"
           rollbackonhealthcheckfailed: true
         env:
           HD_NODE_ENV: production
