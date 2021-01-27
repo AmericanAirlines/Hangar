@@ -48,6 +48,7 @@ jest.spyOn(logger, 'error').mockImplementation();
 
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 let supportRequestQueueActive = false;
+let jobChatQueueActive = false;
 
 const techMsg = makeDiscordMessage({
   content: '!technicalSupport',
@@ -80,10 +81,23 @@ describe('supportRequest handler', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetModules();
-    configFindToggleForKeySpy.mockImplementation(async (key: string) => (key === 'supportRequestQueueActive' ? supportRequestQueueActive : false));
+    configFindToggleForKeySpy.mockImplementation(async (key: string) => {
+      switch (key) {
+        case 'supportRequestQueueActive':
+          return supportRequestQueueActive;
+
+        case 'jobChatQueueActive':
+          return jobChatQueueActive;
+
+        default:
+          return false;
+      }
+    });
     countSupportRequest.mockResolvedValue(0);
     supportRequestQueueActive = false;
+    jobChatQueueActive = false;
     techMsg.content = '!technicalSupport';
+    jobMsg.content = '!jobChat';
   });
 
   it('will notify the user that support queues are not active if the config value is false for tech support command', async () => {
@@ -201,7 +215,7 @@ describe('supportRequest handler', () => {
 
   it('will prompt the user for a name upon the user using job chat command', async () => {
     const ctx = new DiscordContext('1', '', '');
-    supportRequestQueueActive = true;
+    jobChatQueueActive = true;
     await supportRequest(jobMsg, ctx);
     expect(jobMsg.author.send).toBeCalledTimes(1);
     expect(jobMsg.author.send).toBeCalledWith("Hey there! :wave: Before we add you to the queue, what's your name?");
@@ -224,7 +238,7 @@ describe('supportRequest handler', () => {
   it('will notify the user that they are already in a queue for job chat command', async () => {
     mockQueryBuilder.getCount.mockResolvedValueOnce(1);
     const ctx = new DiscordContext('1', '', '');
-    supportRequestQueueActive = true;
+    jobChatQueueActive = true;
     await supportRequest(jobMsg, ctx);
     expect(jobMsg.author.send).toBeCalledWith(
       "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.",

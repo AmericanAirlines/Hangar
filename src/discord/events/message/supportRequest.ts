@@ -26,8 +26,16 @@ const requestTypeMapping: { [id: string]: SupportRequestType } = {
 };
 
 export async function supportRequest(msg: Discord.Message, context: DiscordContext): Promise<void> {
-  const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
-  if (!supportRequestQueueActive) {
+  let queueActive = false;
+  switch (msg.content) {
+    case '!jobChat':
+      queueActive = await Config.findToggleForKey('jobChatQueueActive');
+      break;
+    default:
+      queueActive = await Config.findToggleForKey('supportRequestQueueActive');
+      break;
+  }
+  if (!queueActive) {
     msg.author.send("**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!");
     return;
   }

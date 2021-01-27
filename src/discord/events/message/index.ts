@@ -60,7 +60,7 @@ export const commands: Command[] = [
   {
     handlerId: 'registerTeam',
     trigger: '!registerTeam',
-    description: 'Leads the user through the process of registering a team',
+    description: 'Let us know who you’re hacking with and what you’re hacking on! There may even be prizes involved :wink:',
     handler: registerTeam,
     subCommands: regSubCommands,
   },
