@@ -28,7 +28,6 @@ const ExpandableRow: React.FC<{ data?: Team }> = (props) => (
 );
 
 export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret }) => {
-  //const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
   const [teams, setTeams] = React.useState<Team[]>([]);
 
@@ -50,11 +49,7 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
       .map((key) => ({
         name: toTitleCase(key),
         selector: key,
-        sortable: key !== 'projectDescription',
-        // wrap: ['projectDescription', 'members'].includes(key),
-        maxWidth: key === 'projectDescription' ? '200px' : false,
-        // highlightOnHover: true,
-        // grow: 1,
+        sortable: true,
       })) as TableColumn[];
 
     columns = [
@@ -82,7 +77,7 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
 
     setTeams(teamData);
 
-    timeoutRef.current = setTimeout(fetchValues, 10000);
+    timeoutRef.current = setTimeout(fetchValues, 60000);
   };
 
   React.useEffect(() => {
@@ -106,7 +101,7 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
               {teams.length > 0 ? (
                 <DataTable columns={columns} data={teams} expandableRows expandableRowsComponent={<ExpandableRow />} />
               ) : (
-                'No teams registered yet!'
+                'No teams registered yet... check back soon!'
               )}
             </div>
           </div>

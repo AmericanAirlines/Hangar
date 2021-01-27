@@ -1,10 +1,12 @@
 import 'jest';
 import supertest from 'supertest';
 import { Team } from '../../entities/team';
+import logger from '../../logger';
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
 jest.mock('../../discord');
+const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const teamFindSpy = jest.spyOn(Team, 'find');
 describe('getAllTeams', () => {
@@ -37,5 +39,6 @@ describe('getAllTeams', () => {
       .expect(500);
 
     expect(teamFindSpy).toBeCalledTimes(1);
+    expect(loggerErrorSpy).toBeCalledTimes(1);
   });
 });

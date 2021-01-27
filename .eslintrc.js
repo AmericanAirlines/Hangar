@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['off'],
     'no-await-in-loop': ['off'],
     'operator-linebreak': ['off'],
+    'react/prop-types': 'off',
   },
   settings: {
     'import/resolver': {
