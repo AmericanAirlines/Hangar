@@ -46,7 +46,7 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
     teamData.forEach((team: Team) => {
       Object.keys(team).forEach((key) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const val = ((team as unknown) as any)[key];
+        const val = (team as any)[key as keyof Team];
         if (Array.isArray(val)) {
           // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-explicit-any
           ((team as unknown) as any)[key] = val.join(', ');

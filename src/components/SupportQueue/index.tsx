@@ -7,13 +7,14 @@ import { RequestItem, SupportQueueItem } from './SupportQueueItem';
 interface SupportQueueProps {
   title: string;
   secret: string;
+  supportName: string;
   options: Array<{
     name: string;
     requestType: SupportRequestType;
   }>;
 }
 
-export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, options }) => {
+export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, supportName, options }) => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
   const [message, setMessage] = React.useState('');
@@ -142,7 +143,7 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, optio
         ) : (
           inProgress
             .filter((request) => requestTypes.includes(request.type))
-            .map((request) => <SupportQueueItem key={request.id} request={request} refetch={fetchValues} secret={secret} />)
+            .map((request) => <SupportQueueItem key={request.id} request={request} refetch={fetchValues} secret={secret} supportName={supportName} />)
         )}
       </div>
     </div>
