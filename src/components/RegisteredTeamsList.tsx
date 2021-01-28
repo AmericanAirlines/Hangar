@@ -43,6 +43,15 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
 
     const teamData: Team[] = await res.json();
     const keys = Object.keys(teamData[0]).filter((key) => !['id', 'name', 'members', 'tableNumber', 'projectDescription'].includes(key));
+    teamData.forEach((team) => {
+      Object.keys(team).forEach((key) => {
+        const val = team[key];
+        if (Array.isArray(val)) {
+          // eslint-disable-next-line no-param-reassign
+          team[key] = val.join(', ');
+        }
+      });
+    });
 
     columns = keys
       .sort((a, b) => a.localeCompare(b))
@@ -61,6 +70,13 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
         wrap: true,
       },
       {
+        name: 'Channel Name',
+        selector: 'channelName',
+        sortable: true,
+        grow: 2,
+        wrap: true,
+      },
+      {
         name: 'Members',
         selector: 'members',
         sortable: false,
@@ -72,7 +88,16 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
         selector: 'tableNumber',
         sortable: true,
       },
-      ...columns,
+      {
+        name: 'Active Judge Count',
+        selector: 'activeJudgeCount',
+        sortable: true,
+      },
+      {
+        name: 'Judge Visits',
+        selector: 'judgeVisits',
+        sortable: true,
+      },
     ];
 
     setTeams(teamData);
