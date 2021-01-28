@@ -114,7 +114,9 @@ describe('supportRequest handler', () => {
     supportRequestQueueActive = true;
     await supportRequest(techMsg, ctx);
     expect(techMsg.author.send).toBeCalledTimes(1);
-    expect(techMsg.author.send).toBeCalledWith("Hey there! :wave: Before we add you to the queue, what's the name of your team's voice channel?");
+    expect(techMsg.author.send).toBeCalledWith(
+      "Hey there! :wave: Before we add you to the queue, what's the name of your team's voice channel (e.g. Hacker Room 51)?",
+    );
   });
 
   it('will add the user to the db for tech support command once a name is entered', async () => {
@@ -166,7 +168,9 @@ describe('supportRequest handler', () => {
     supportRequestQueueActive = true;
     await supportRequest(ideaMsg, ctx);
     expect(ideaMsg.author.send).toBeCalledTimes(1);
-    expect(ideaMsg.author.send).toBeCalledWith("Hey there! :wave: Before we add you to the queue, what's the name of your team's voice channel?");
+    expect(ideaMsg.author.send).toBeCalledWith(
+      "Hey there! :wave: Before we add you to the queue, what's the name of your team's voice channel (e.g. Hacker Room 51)?",
+    );
   });
 
   it('will add the user to the db for idea pitch command once a name is entered', async () => {
