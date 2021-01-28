@@ -45,10 +45,11 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
     const keys = Object.keys(teamData[0]).filter((key) => !['id', 'name', 'members', 'tableNumber', 'projectDescription'].includes(key));
     teamData.forEach((team: Team) => {
       Object.keys(team).forEach((key) => {
-        const val = team[key];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const val = ((team as unknown) as any)[key];
         if (Array.isArray(val)) {
-          // eslint-disable-next-line no-param-reassign
-          team[key] = val.join(', ');
+          // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-explicit-any
+          ((team as unknown) as any)[key] = val.join(', ');
         }
       });
     });
