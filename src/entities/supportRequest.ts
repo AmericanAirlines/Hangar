@@ -37,6 +37,9 @@ export class SupportRequest extends BaseEntity {
   @Column({ nullable: false })
   name: string;
 
+  @Column({ nullable: true })
+  supportName: string;
+
   @Column({ nullable: false, default: SupportRequestStatus.Pending, type: 'simple-enum', enum: SupportRequestStatus })
   status: SupportRequestStatus;
 
@@ -87,7 +90,7 @@ export class SupportRequest extends BaseEntity {
     }
   }
 
-  static async getNextSupportRequest(supportType?: SupportRequestType): Promise<SupportRequest> {
+  static async getNextSupportRequest(supportName: string, supportType?: SupportRequestType): Promise<SupportRequest> {
     let retries = 5;
 
     do {
@@ -125,6 +128,7 @@ export class SupportRequest extends BaseEntity {
             status: SupportRequestStatus.InProgress,
             movedToInProgressAt: new Date(),
             syncHash: newHash,
+            supportName,
           })
           .execute();
 
