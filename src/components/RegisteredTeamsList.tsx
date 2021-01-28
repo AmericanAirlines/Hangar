@@ -43,7 +43,7 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
 
     const teamData: Team[] = await res.json();
     const keys = Object.keys(teamData[0]).filter((key) => !['id', 'name', 'members', 'tableNumber', 'projectDescription'].includes(key));
-    teamData.forEach((team) => {
+    teamData.forEach((team: Team) => {
       Object.keys(team).forEach((key) => {
         const val = team[key];
         if (Array.isArray(val)) {
