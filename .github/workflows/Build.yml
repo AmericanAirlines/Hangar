@@ -6,7 +6,8 @@ on:
       - main
   push:
     branches:
-    - main
+      - main
+      - tamuhack-2021
 
 jobs:
   build:
