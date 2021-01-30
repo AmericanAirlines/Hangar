@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable quotes */
 import { SupportRequestType } from './types/supportRequest';
@@ -7,14 +8,18 @@ export const stringDictionary = {} as StringDictionary;
 
 /*----------------------------------*/
 // src>api>>supportRequest.ts
-stringDictionary.supportRequestSuccess = (params) => `:tada: ${params.supportName} is ready to ${
-  params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-}, they should join the \`${params.name}\` voice channel soon!`;
+stringDictionary.supportRequestSuccess = (params) =>
+  `:tada: ${params.supportName} is ready to ${
+    params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
+  }, they should join the \`${params.name}\` voice channel soon!`;
 
-stringDictionary.jobChatSuccess = (params) => `:tada: We're almost ready for you! Please join our Zoom waiting
-room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\n**JOIN NOW: **${process.env.JOB_CHAT_URL}`;
+stringDictionary.jobChatSuccess = (params) =>
+  `:tada: We're almost ready for you! Please join our Zoom waiting room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\n**JOIN NOW: **${process.env.JOB_CHAT_URL}`;
 
-stringDictionary.supportRequestComplete = `Thanks for chatting with our team! If you want to chat with us again, just rejoin one of our support queues :smile:`;
+stringDictionary.supportRequestComplete = (params) =>
+  `${
+    params.type === SupportRequestType.JobChat ? 'We hope you enjoy chatting with our team!' : 'Thanks for chatting with our team!'
+  } If you want to chat with us again, just rejoin one of our support queues :smile:`;
 
 stringDictionary.supportRequestNoShow = (params) =>
   // eslint-disable-next-line implicit-arrow-linebreak

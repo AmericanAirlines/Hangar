@@ -79,9 +79,12 @@ export const supportRequestSubCommands: SubCommands = {
     const userSupportRequest = new SupportRequest(info.id, info.username, info.requestType);
     try {
       await userSupportRequest.save();
-      msg.author.send(
-        ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
-      );
+      let responseString =
+        ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.";
+      if (userSupportRequest.type === SupportRequestType.JobChat) {
+        responseString += '\n\nPlease make sure to have your resume ready for our team!';
+      }
+      msg.author.send(responseString);
     } catch (err) {
       await msg.author.send("**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.");
       logger.error('Something went wrong trying to create a support request', err);

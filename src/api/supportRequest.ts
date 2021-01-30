@@ -129,7 +129,7 @@ supportRequestRoutes.post('/closeRequest', async (req, res) => {
       .execute();
 
     const supportRequest = await SupportRequest.findOne(supportRequestId);
-    await sendMessage([supportRequest.slackId], stringDictionary.supportRequestComplete);
+    await sendMessage([supportRequest.slackId], stringDictionary.supportRequestComplete({ type: supportRequest.type }));
 
     res.sendStatus(200);
   } catch (err) {
