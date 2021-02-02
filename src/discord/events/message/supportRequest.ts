@@ -81,7 +81,7 @@ export const supportRequestSubCommands: SubCommands = {
       await userSupportRequest.save();
       let responseString =
         ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.";
-      if (userSupportRequest.type === SupportRequestType.JobChat) {
+      if (info.requestType === SupportRequestType.JobChat) {
         responseString += '\n\nPlease make sure to have your resume ready for our team!';
       }
       msg.author.send(responseString);

@@ -58,7 +58,27 @@ describe('api/supportRequest', () => {
         .expect(400);
     });
 
-    it('will successfully identify the next request and notify the user', async () => {
+    it('will successfully identify the next technical support request and notify the user', async () => {
+      const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.TechnicalSupport);
+      supportRequest.status = SupportRequestStatus.InProgress;
+      supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
+      const supportRequestSuccessSpy = jest.spyOn(stringDictionary, 'supportRequestSuccess');
+      const supportName = 'Tim';
+      const { app } = require('../../app');
+      const response = await supertest(app)
+        .post('/api/supportRequest/getNext')
+        .send({ supportName, requestType: supportRequest.type })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(200);
+
+      expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+      expect(supportRequestSuccessSpy).toHaveBeenCalledWith({ name: supportRequest.name, supportName, type: supportRequest.type });
+      expect(response.body.userNotified).toBe(true);
+    });
+
+    it('will successfully identify the next idea pitch request and notify the user', async () => {
       const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
       supportRequest.status = SupportRequestStatus.InProgress;
       supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
@@ -75,6 +95,26 @@ describe('api/supportRequest', () => {
 
       expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
       expect(supportRequestSuccessSpy).toHaveBeenCalledWith({ name: supportRequest.name, supportName, type: supportRequest.type });
+      expect(response.body.userNotified).toBe(true);
+    });
+
+    it('will successfully identify the next jobChat and notify the user', async () => {
+      const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.JobChat);
+      supportRequest.status = SupportRequestStatus.InProgress;
+      supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
+      const jobChatSuccessSpy = jest.spyOn(stringDictionary, 'jobChatSuccess');
+      const supportName = 'Tim';
+      const { app } = require('../../app');
+      const response = await supertest(app)
+        .post('/api/supportRequest/getNext')
+        .send({ supportName, requestType: supportRequest.type })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(200);
+
+      expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+      expect(jobChatSuccessSpy).toHaveBeenCalledWith({ supportName, type: supportRequest.type });
       expect(response.body.userNotified).toBe(true);
     });
 
