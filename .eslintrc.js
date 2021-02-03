@@ -7,7 +7,7 @@ module.exports = {
     node: true,
     'jest/globals': true,
   },
-  extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended', 'plugin:react/recommended'],
+  extends: ['airbnb-base', 'plugin:react/recommended', 'plugin:@typescript-eslint/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['off'],
     'no-await-in-loop': ['off'],
     'operator-linebreak': ['off'],
+    'react/prop-types': 'off',
   },
   settings: {
     'import/resolver': {

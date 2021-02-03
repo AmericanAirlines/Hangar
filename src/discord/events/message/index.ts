@@ -53,22 +53,22 @@ export const commands: Command[] = [
   {
     handlerId: 'jobChat',
     trigger: '!jobChat',
-    description: 'Interested in joining our team? Come chat with us about Full Time and Internship positions!',
+    description: 'Interested in joining our team? Come chat with us about Full Time and Internship opportunities!',
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
+  },
+  {
+    handlerId: 'registerTeam',
+    trigger: '!registerTeam',
+    description: 'Let us know who you’re hacking with and what you’re hacking on! There may even be prizes involved :wink:',
+    handler: registerTeam,
+    subCommands: regSubCommands,
   },
   {
     handlerId: 'exit',
     trigger: '!exit',
     description: 'Exits the user out of any flows they might be in (such as team registration)',
     handler: exit,
-  },
-  {
-    handlerId: 'registerTeam',
-    trigger: '!registerTeam',
-    description: 'Leads the user through the process of registering a team',
-    handler: registerTeam,
-    subCommands: regSubCommands,
   },
 ];
 
@@ -84,7 +84,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   if (msg.channel.type !== 'dm') {
     if (botChannelIds.includes(msg.channel.id) && botWasTagged(msg)) {
       // Bot was tagged in a channel it's listening to AND should respond in
-      msg.reply('Hi there :wave: I can only help from within a Direct Message. Click my name and send the message `!help` to get started!');
+      msg.reply('Hi there! :wave: I can only help from within a Direct Message. Click my name and send the message `!help` to get started!');
     }
     return;
   }

@@ -1,7 +1,8 @@
 import 'jest';
 import supertest from 'supertest';
 import { SelectQueryBuilder } from 'typeorm';
-import { SupportRequest, SupportRequestType, SupportRequestStatus } from '../../entities/supportRequest';
+import { SupportRequest } from '../../entities/supportRequest';
+import { SupportRequestType, SupportRequestStatus } from '../../types/supportRequest';
 import * as messageUsers from '../../common/messageUsers';
 import * as requireAuth from '../../api/middleware/requireAuth';
 import logger from '../../logger';
@@ -57,7 +58,27 @@ describe('api/supportRequest', () => {
         .expect(400);
     });
 
-    it('will successfully identify the next request and notify the user', async () => {
+    it('will successfully identify the next technical support request and notify the user', async () => {
+      const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.TechnicalSupport);
+      supportRequest.status = SupportRequestStatus.InProgress;
+      supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
+      const supportRequestSuccessSpy = jest.spyOn(stringDictionary, 'supportRequestSuccess');
+      const supportName = 'Tim';
+      const { app } = require('../../app');
+      const response = await supertest(app)
+        .post('/api/supportRequest/getNext')
+        .send({ supportName, requestType: supportRequest.type })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(200);
+
+      expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+      expect(supportRequestSuccessSpy).toHaveBeenCalledWith({ name: supportRequest.name, supportName, type: supportRequest.type });
+      expect(response.body.userNotified).toBe(true);
+    });
+
+    it('will successfully identify the next idea pitch request and notify the user', async () => {
       const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.IdeaPitch);
       supportRequest.status = SupportRequestStatus.InProgress;
       supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
@@ -73,7 +94,27 @@ describe('api/supportRequest', () => {
         .expect(200);
 
       expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
-      expect(supportRequestSuccessSpy).toHaveBeenCalledWith({ supportName, type: supportRequest.type });
+      expect(supportRequestSuccessSpy).toHaveBeenCalledWith({ name: supportRequest.name, supportName, type: supportRequest.type });
+      expect(response.body.userNotified).toBe(true);
+    });
+
+    it('will successfully identify the next jobChat and notify the user', async () => {
+      const supportRequest = new SupportRequest('slackId', 'name', SupportRequestType.JobChat);
+      supportRequest.status = SupportRequestStatus.InProgress;
+      supportRequestGetNextSupportRequestSpy.mockResolvedValueOnce(supportRequest);
+      const jobChatSuccessSpy = jest.spyOn(stringDictionary, 'jobChatSuccess');
+      const supportName = 'Tim';
+      const { app } = require('../../app');
+      const response = await supertest(app)
+        .post('/api/supportRequest/getNext')
+        .send({ supportName, requestType: supportRequest.type })
+        .set({
+          'Content-Type': 'application/json',
+        })
+        .expect(200);
+
+      expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+      expect(jobChatSuccessSpy).toHaveBeenCalledWith({ supportName, type: supportRequest.type });
       expect(response.body.userNotified).toBe(true);
     });
 
@@ -484,16 +525,15 @@ describe('api/supportRequest', () => {
   describe('/getCount', () => {
     it('calling getCount will respond with the correct count for technical and idea requests', async () => {
       const mockCounts = {
-        technical: 3,
-        idea: 12,
+        [SupportRequestType.TechnicalSupport]: 3,
+        [SupportRequestType.IdeaPitch]: 12,
+        [SupportRequestType.JobChat]: 2,
       };
 
       jest.spyOn(SupportRequest, 'count').mockImplementation(
         async (request): Promise<number> => {
-          if ((request as { [id: string]: string }).type === 'TechnicalSupport') {
-            return mockCounts.technical;
-          }
-          return mockCounts.idea;
+          const type = (request as { [id: string]: string }).type as SupportRequestType;
+          return mockCounts[type];
         },
       );
 
@@ -504,8 +544,9 @@ describe('api/supportRequest', () => {
           'Content-Type': 'application/json',
         });
 
-      expect(countData.body.ideaCount).toBe(mockCounts.idea);
-      expect(countData.body.technicalCount).toBe(mockCounts.technical);
+      expect(countData.body[SupportRequestType.IdeaPitch]).toBe(mockCounts[SupportRequestType.IdeaPitch]);
+      expect(countData.body[SupportRequestType.TechnicalSupport]).toBe(mockCounts[SupportRequestType.TechnicalSupport]);
+      expect(countData.body[SupportRequestType.JobChat]).toBe(mockCounts[SupportRequestType.JobChat]);
     });
 
     it('calling getCount will respond with a 500 if something goes wrong', async () => {

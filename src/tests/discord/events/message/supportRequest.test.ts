@@ -48,6 +48,7 @@ jest.spyOn(logger, 'error').mockImplementation();
 
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 let supportRequestQueueActive = false;
+let jobChatQueueActive = false;
 
 const techMsg = makeDiscordMessage({
   content: '!technicalSupport',
@@ -80,10 +81,23 @@ describe('supportRequest handler', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetModules();
-    configFindToggleForKeySpy.mockImplementation(async (key: string) => (key === 'supportRequestQueueActive' ? supportRequestQueueActive : false));
+    configFindToggleForKeySpy.mockImplementation(async (key: string) => {
+      switch (key) {
+        case 'supportRequestQueueActive':
+          return supportRequestQueueActive;
+
+        case 'jobChatQueueActive':
+          return jobChatQueueActive;
+
+        default:
+          return false;
+      }
+    });
     countSupportRequest.mockResolvedValue(0);
     supportRequestQueueActive = false;
+    jobChatQueueActive = false;
     techMsg.content = '!technicalSupport';
+    jobMsg.content = '!jobChat';
   });
 
   it('will notify the user that support queues are not active if the config value is false for tech support command', async () => {
@@ -100,13 +114,15 @@ describe('supportRequest handler', () => {
     supportRequestQueueActive = true;
     await supportRequest(techMsg, ctx);
     expect(techMsg.author.send).toBeCalledTimes(1);
-    expect(techMsg.author.send).toBeCalledWith("Hey there :wave: before we add you to the queue, what's the name of your team's voice channel?");
+    expect(techMsg.author.send).toBeCalledWith(
+      "Hey there! :wave: Before we add you to the queue, what's the name of your team's voice channel (e.g. Hacker Room 51)?",
+    );
   });
 
   it('will add the user to the db for tech support command once a name is entered', async () => {
     techMsg.content = 'John';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
-    ctx.payload = { id: '1', suppTyping: 'TechnicalSupport' };
+    ctx.payload = { id: '1', requestType: 'TechnicalSupport' };
     await supportRequestSubCommands.inputName(techMsg, ctx);
     expect(ctx.currentCommand).toBe(undefined);
     expect(ctx.nextStep).toBe(undefined);
@@ -130,7 +146,7 @@ describe('supportRequest handler', () => {
   it('will notify the user that something went wrong adding them to the queue for tech support command', async () => {
     techMsg.content = 'John';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
-    ctx.payload = { id: '1', suppTyping: 'TechnicalSupport' };
+    ctx.payload = { id: '1', requestType: 'TechnicalSupport' };
     const keyConstraintError = new Error('generic error');
     saveSupportRequest.mockRejectedValueOnce(keyConstraintError);
     await supportRequestSubCommands.inputName(techMsg, ctx);
@@ -152,13 +168,15 @@ describe('supportRequest handler', () => {
     supportRequestQueueActive = true;
     await supportRequest(ideaMsg, ctx);
     expect(ideaMsg.author.send).toBeCalledTimes(1);
-    expect(ideaMsg.author.send).toBeCalledWith("Hey there :wave: before we add you to the queue, what's the name of your team's voice channel?");
+    expect(ideaMsg.author.send).toBeCalledWith(
+      "Hey there! :wave: Before we add you to the queue, what's the name of your team's voice channel (e.g. Hacker Room 51)?",
+    );
   });
 
   it('will add the user to the db for idea pitch command once a name is entered', async () => {
     ideaMsg.content = 'John';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
-    ctx.payload = { id: '1', suppTyping: 'IdeaPitch' };
+    ctx.payload = { id: '1', requestType: 'IdeaPitch' };
     await supportRequestSubCommands.inputName(ideaMsg, ctx);
     expect(ctx.currentCommand).toBe(undefined);
     expect(ctx.nextStep).toBe(undefined);
@@ -182,7 +200,7 @@ describe('supportRequest handler', () => {
   it('will notify the user that something went wrong adding them to the queue for idea pitch command', async () => {
     ideaMsg.content = 'John';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
-    ctx.payload = { id: '1', suppTyping: 'IdeaPitch' };
+    ctx.payload = { id: '1', requestType: 'IdeaPitch' };
     const keyConstraintError = new Error('generic error');
     saveSupportRequest.mockRejectedValueOnce(keyConstraintError);
     await supportRequestSubCommands.inputName(ideaMsg, ctx);
@@ -201,22 +219,22 @@ describe('supportRequest handler', () => {
 
   it('will prompt the user for a name upon the user using job chat command', async () => {
     const ctx = new DiscordContext('1', '', '');
-    supportRequestQueueActive = true;
+    jobChatQueueActive = true;
     await supportRequest(jobMsg, ctx);
     expect(jobMsg.author.send).toBeCalledTimes(1);
-    expect(jobMsg.author.send).toBeCalledWith("Hey there :wave: before we add you to the queue, what's your name?");
+    expect(jobMsg.author.send).toBeCalledWith("Hey there! :wave: Before we add you to the queue, what's your name?");
   });
 
   it('will add the user to the db for job chat command once a name is entered', async () => {
     jobMsg.content = 'John';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
-    ctx.payload = { id: '1', suppTyping: 'JobChat' };
+    ctx.payload = { id: '1', requestType: 'JobChat' };
     await supportRequestSubCommands.inputName(jobMsg, ctx);
     expect(ctx.currentCommand).toBe(undefined);
     expect(ctx.nextStep).toBe(undefined);
     expect(jobMsg.author.send).toBeCalledTimes(1);
     expect(jobMsg.author.send).toBeCalledWith(
-      ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
+      ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.\n\nPlease make sure to have your resume ready for our team!",
     );
     expect(ctx.clear).toBeCalledTimes(1);
   });
@@ -224,7 +242,7 @@ describe('supportRequest handler', () => {
   it('will notify the user that they are already in a queue for job chat command', async () => {
     mockQueryBuilder.getCount.mockResolvedValueOnce(1);
     const ctx = new DiscordContext('1', '', '');
-    supportRequestQueueActive = true;
+    jobChatQueueActive = true;
     await supportRequest(jobMsg, ctx);
     expect(jobMsg.author.send).toBeCalledWith(
       "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.",
@@ -234,7 +252,7 @@ describe('supportRequest handler', () => {
   it('will notify the user that something went wrong adding them to the queue for job chat command', async () => {
     jobMsg.content = 'John';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
-    ctx.payload = { id: '1', suppTyping: 'JobChat' };
+    ctx.payload = { id: '1', requestType: 'JobChat' };
     const keyConstraintError = new Error('generic error');
     saveSupportRequest.mockRejectedValueOnce(keyConstraintError);
     await supportRequestSubCommands.inputName(jobMsg, ctx);

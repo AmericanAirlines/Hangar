@@ -38,7 +38,7 @@
   },
   "homepage": "https://github.com/AmericanAirlines/Hangar#readme",
   "engines": {
-    "node": ">=11.0.0"
+    "node": "12.x"
   },
   "husky": {
     "hooks": {
@@ -78,9 +78,11 @@
     "npm-run-all": "^4.1.5",
     "pg": "^8.3.3",
     "react": "^16.11.0",
+    "react-data-table-component": "^7.0.0-alpha-5",
     "react-dom": "^16.11.0",
     "reflect-metadata": "^0.1.13",
     "shuffle-array": "^1.0.1",
+    "styled-components": "^5.2.1",
     "typeorm": "^0.2.26",
     "typescript": "^3.7.5",
     "winston": "^3.2.1"

@@ -8,14 +8,17 @@ export async function help(msg: Discord.Message): Promise<void> {
   await msg.author.send({
     embed: {
       color: colors.info,
-      title: '**Welcome to the Hangar bot** :wave:',
-      description: `Listed below are various commands that you can use to interact with the bot!\n\nIf you are looking for more information in regard to this challenge, [Click Here](${process.env.CHALLENGE_URL})`,
-      fields: commands
-        .filter((command) => !hiddenHandlers.includes(command.handlerId))
-        .map((command) => ({
-          name: `**\n**\`${command.trigger}\``,
-          value: command.description,
-        })),
+      title: '**Welcome to Hangar** :wave:',
+      description: `**PRIZES** - Think your team has what it takes to win?\nCheck out our :sparkles:[**CHALLENGE AND PRIZES**](${process.env.CHALLENGE_URL}):sparkles:\n\n**SWAG** - Want a free American Hacker shirt? Make sure to come chat with us about jobs, your idea, or get technical help using the options below!\n\n**BONUS PRIZES** - Hacking on our challenge? Use \`!registerTeam\` below and you’ll be entered into a raffle to win prizes for your whole team!\n\n\nListed below are various commands that you can use to interact with the bot!`,
+      fields: [
+        ...commands
+          .filter((command) => !hiddenHandlers.includes(command.handlerId))
+          .map((command) => ({
+            name: `**\n**\`${command.trigger}\``,
+            value: command.description,
+          })),
+        { name: '**\n**', value: '[Hangar](https://github.com/AmericanAirlines/Hangar) is an Open Source project created by American Airlines.' },
+      ],
     },
   });
   if (msg.channel.type !== 'dm') {

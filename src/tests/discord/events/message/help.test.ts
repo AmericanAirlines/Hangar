@@ -37,6 +37,7 @@ describe('help handler', () => {
     const msg = getHelpMsg();
     await help(msg);
     const args = (msg.author.send as jest.Mock).mock.calls[0][0];
-    expect(args.embed.fields).toHaveLength(commands.length - hiddenHandlers.length);
+    const numberOfCommandsIncludingFooter = commands.length - hiddenHandlers.length + 1;
+    expect(args.embed.fields).toHaveLength(numberOfCommandsIncludingFooter);
   });
 });

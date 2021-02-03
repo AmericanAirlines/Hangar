@@ -1,6 +1,7 @@
 import 'jest';
 import { DateTime } from 'luxon';
-import { SupportRequest, SupportRequestStatus, SupportRequestType, SupportRequestErrors } from '../../entities/supportRequest';
+import { SupportRequest, SupportRequestErrors } from '../../entities/supportRequest';
+import { SupportRequestType, SupportRequestStatus } from '../../types/supportRequest';
 import { createDbConnection, closeDbConnection } from '../testdb';
 
 /* eslint-disable no-await-in-loop */
@@ -99,13 +100,14 @@ describe('support request', () => {
     const supportRequest2 = new SupportRequest(slackId2, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest2.save();
 
-    const nextRequest = await SupportRequest.getNextSupportRequest();
+    const nextRequest = await SupportRequest.getNextSupportRequest('Someone helpful');
     expect(nextRequest.id).toBe(supportRequest1.id);
     expect(nextRequest.status).toBe(SupportRequestStatus.InProgress);
   });
 
   it('requests for each type will be served FIFO with included specified support type', async () => {
     const slackId1 = slackIds[0];
+    const supportName = 'Some Helper';
 
     const supportRequest1 = new SupportRequest(slackId1, 'Someone', SupportRequestType.TechnicalSupport);
     await supportRequest1.save();
@@ -116,14 +118,14 @@ describe('support request', () => {
     const supportRequest2 = new SupportRequest(slackId2, 'Someone', SupportRequestType.IdeaPitch);
     await supportRequest2.save();
 
-    const nextRequest = await SupportRequest.getNextSupportRequest(SupportRequestType.IdeaPitch);
+    const nextRequest = await SupportRequest.getNextSupportRequest(supportName, SupportRequestType.IdeaPitch);
     expect(nextRequest.id).toBe(supportRequest2.id);
     expect(nextRequest.status).toBe(SupportRequestStatus.InProgress);
     expect(nextRequest.type).toBe(SupportRequestType.IdeaPitch);
   });
 
   it('if a request cannot be found, null will be returned', async () => {
-    const nextRequest = await SupportRequest.getNextSupportRequest();
+    const nextRequest = await SupportRequest.getNextSupportRequest('Someone helpful');
     expect(nextRequest).toBeNull();
   });
 
@@ -134,7 +136,7 @@ describe('support request', () => {
 
     const requestPromises = [];
     for (let i = 0; i < slackIds.length; i += 1) {
-      requestPromises.push(SupportRequest.getNextSupportRequest());
+      requestPromises.push(SupportRequest.getNextSupportRequest('Someone helpful'));
     }
 
     expect(Promise.all(requestPromises)).resolves.toHaveLength(slackIds.length);

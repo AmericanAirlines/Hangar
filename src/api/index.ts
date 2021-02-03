@@ -1,11 +1,13 @@
 import express from 'express';
 import { requireAuth } from './middleware/requireAuth';
+import { team } from './team';
 import { supportRequestRoutes } from './supportRequest';
 import { Judge } from '../entities/judge';
 import { Team } from '../entities/team';
 import { judging } from './judging';
 import { config } from './config';
 import { admin } from './admin';
+import { health } from './health';
 
 const api = express();
 
@@ -79,8 +81,10 @@ api.post('/skip', async (req, res) => {
 });
 
 api.use('/supportRequest', requireAuth(), supportRequestRoutes);
+api.use('/team', requireAuth(), team);
 api.use('/judging', requireAuth(), judging);
 api.use('/config', requireAuth(), config);
 api.use('/admin', admin);
+api.use(health);
 
 export const apiApp = api;

@@ -1,22 +1,29 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable quotes */
-import { SupportRequestType } from './entities/supportRequest';
+import { SupportRequestType } from './types/supportRequest';
 import { StringDictionary } from './IStringDictionary';
 
 export const stringDictionary = {} as StringDictionary;
 
 /*----------------------------------*/
 // src>api>>supportRequest.ts
-stringDictionary.supportRequestSuccess = (params) => `:tada: ${params.supportName} is ready to ${
-  params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
-}, so head over to our booth. Feel free to bring other members of your team and make sure to bring your laptop if relevant.
-\nWhen you arrive, tell one of our team members that you're here to meet with *${params.supportName}*!`;
+stringDictionary.supportRequestSuccess = (params) =>
+  `:tada: ${params.supportName} is ready to ${
+    params.type === SupportRequestType.IdeaPitch ? 'help you with an idea' : 'help with your technical issue'
+  }, they should join the \`${params.name}\` voice channel soon!`;
 
-stringDictionary.supportRequestComplete = `Thanks for chatting with our team! If you need help again, just rejoin the idea pitch queue or the technical support queue and we'll be happy to meet with you :smile:`;
+stringDictionary.jobChatSuccess = (params) =>
+  `:tada: We're almost ready for you! Please join our Zoom waiting room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\n**JOIN NOW: **${process.env.JOB_CHAT_URL}`;
+
+stringDictionary.supportRequestComplete = (params) =>
+  `${
+    params.type === SupportRequestType.JobChat ? 'We hope you enjoy chatting with our team!' : 'Thanks for chatting with our team!'
+  } If you want to chat with us again, just rejoin one of our support queues :smile:`;
 
 stringDictionary.supportRequestNoShow = (params) =>
   // eslint-disable-next-line implicit-arrow-linebreak
-  `:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but we didn't hear from you at our booth. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`;
+  `:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but it seems we weren't able to connect with you. Your request has been closed, but if you'd still like to meet with our team, please rejoin the queue!`;
 
 stringDictionary.remindUser = (params) =>
   // eslint-disable-next-line implicit-arrow-linebreak
@@ -49,7 +56,7 @@ stringDictionary.supportRequestAlertModaltext = `:warning: Something went wrong.
 // src>slack>blocks>dashboardblocks.ts
 stringDictionary.headerinfo = `Hello, Welcome to Hangar :wave:`;
 
-stringDictionary.intro = `Hey there :wave: I'm a bot designed to provide you with resources for the hackathon!`;
+stringDictionary.intro = `Hey there! :wave: I'm a bot designed to provide you with resources for the hackathon!`;
 
 stringDictionary.challenge = `*Sponsor Challenge*
 Want to read up on our challenge and see what our prizes are?`;
@@ -130,12 +137,12 @@ stringDictionary.openSource = (params) => `<${params.repoUrl} | _*Hangar*_> is a
 
 /*----------------------------------*/
 // src>slack>events>appMention.ts
-stringDictionary.appMention = `Hey there :wave: I can help your team during the hackathon! To see all of the things I can help with, simply click/tap my name and choose 'Go to App' :tada:`;
+stringDictionary.appMention = `Hey there! :wave: I can help your team during the hackathon! To see all of the things I can help with, simply click/tap my name and choose 'Go to App' :tada:`;
 /*----------------------------------*/
 
 /*----------------------------------*/
 // src>slack>events>messageReceived.ts
-stringDictionary.messageReceived = `Hey there :wave: I'm a bot designed to provide you with resources for the hackathon! Most of my functionality can be accessed via the Home Tab above. To get started, just click/tap 'Home' at the top of your screen.
+stringDictionary.messageReceived = `Hey there! :wave: I'm a bot designed to provide you with resources for the hackathon! Most of my functionality can be accessed via the Home Tab above. To get started, just click/tap 'Home' at the top of your screen.
 \nOccasionally I'll send you updates here as well, so keep an eye out for unread messages in your sidebar.`;
 /*----------------------------------*/
 
