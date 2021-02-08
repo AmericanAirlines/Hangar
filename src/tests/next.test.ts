@@ -33,7 +33,8 @@ describe('next.js', () => {
 
   it('will not hold up app start when not in production', async () => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
-    process.env.PLATFORM_USED = 'slack';
+    process.env.SLACK_BOT_TOKEN = '123';
+    process.env.SLACK_SIGNING_SECRET = '456';
 
     const nextPrepareDone = jest.fn().mockName('nextPrepareDone()');
 

@@ -27,6 +27,8 @@ describe('app', () => {
   beforeEach(() => {
     process.env.NODE_ENV = 'test';
     delete process.env.DISCORD_BOT_TOKEN;
+    delete process.env.SLACK_BOT_TOKEN;
+    delete process.env.SLACK_SIGNING_SECRET;
     jest.resetAllMocks();
     mockSlackAuth.mockRejectedValue('Invalid Auth');
   });
@@ -39,6 +41,8 @@ describe('app', () => {
 
   it('will exit the process when Slack tokens are not provided and NODE_ENV !== "test", because it cannot initialize Slack', async () => {
     process.env.NODE_ENV = 'development';
+    process.env.SLACK_BOT_TOKEN = '123';
+    process.env.SLACK_SIGNING_SECRET = '456';
     await initSlack();
     expect(processExitSpy).toBeCalledTimes(1);
   });
@@ -51,6 +55,8 @@ describe('app', () => {
 
   it('will initialize correctly when provided with a valid token', async () => {
     mockSlackAuth.mockResolvedValueOnce('Valid Auth');
+    process.env.SLACK_BOT_TOKEN = '123';
+    process.env.SLACK_SIGNING_SECRET = '456';
     await initSlack();
     expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Slack app initialized successfully');
   });

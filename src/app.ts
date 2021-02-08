@@ -77,10 +77,15 @@ async function initDatabase(): Promise<void> {
 
 export async function initSlack(): Promise<void> {
   try {
-    await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test();
-    initListeners();
-    app.use(slackApp);
-    logger.info('Slack app initialized successfully');
+    if (process.env.SLACK_BOT_TOKEN) {
+      await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test();
+      initListeners();
+      app.use(slackApp);
+      logger.info('Slack app initialized successfully');
+      return;
+    }
+
+    logger.info('Slack skipped (missing SLACK_BOT_TOKEN)');
   } catch (err) {
     if (process.env.NODE_ENV !== 'test') {
       logger.error('Slack Bot Token is invalid: ', err);

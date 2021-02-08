@@ -1,11 +1,10 @@
 import { App, AuthorizeResult, ExpressReceiver, LogLevel } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
-import getRequiredEnvVar from '../utilities/getRequiredEnvVar';
 import actions from './actions';
 import events from './events';
 import views from './views';
 
-export const receiver = new ExpressReceiver({ signingSecret: getRequiredEnvVar('SLACK_SIGNING_SECRET') });
+export const receiver = new ExpressReceiver({ signingSecret: process.env.SLACK_SIGNING_SECRET });
 let authorizeResult: AuthorizeResult;
 
 let logLevel: LogLevel;
@@ -32,7 +31,7 @@ async function authorize(): Promise<AuthorizeResult> {
     return authorizeResult;
   }
 
-  const botToken = getRequiredEnvVar('SLACK_BOT_TOKEN');
+  const botToken = process.env.SLACK_BOT_TOKEN;
   const client = new WebClient(botToken);
   const auth = (await client.auth.test()) as { [id: string]: string };
   authorizeResult = {

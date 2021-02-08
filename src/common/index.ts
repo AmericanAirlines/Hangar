@@ -3,10 +3,18 @@ export enum SupportedPlatform {
   discord = 'discord',
 }
 
+// TODO: Proper casing for the SupportedPlatform enum and remove strings from the enum
+
 export const getActivePlatform = (): SupportedPlatform => {
-  if (Object.keys(SupportedPlatform).includes(process.env.PLATFORM_USED)) {
-    return (SupportedPlatform as Record<string, string>)[process.env.PLATFORM_USED] as SupportedPlatform;
+  if (!process.env.DISCORD_BOT_TOKEN && process.env.SLACK_BOT_TOKEN && process.env.SLACK_SIGNING_SECRET) {
+    return SupportedPlatform.slack;
   }
 
-  throw new Error(`Unknown platform, specify PLATFORM_USED to be one of [${Object.keys(SupportedPlatform).join(', ')}]`);
+  if (process.env.DISCORD_BOT_TOKEN && !(process.env.SLACK_BOT_TOKEN || process.env.SLACK_SIGNING_SECRET)) {
+    return SupportedPlatform.discord;
+  }
+
+  throw new Error(
+    'Error, must set a Slack token and signing secret OR a Discord token! (Unable to set neither or both sets of environment variables)',
+  );
 };
