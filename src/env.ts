@@ -15,8 +15,8 @@ const env = setEnv({
     slackSigningSecret: 'SLACK_SIGNING_SECRET',
     discordBotToken: 'DISCORD_BOT_TOKEN',
     discordChannelIds: 'DISCORD_BOT_CHANNEL_IDS',
-    pgUser: 'PGUSER',
-    pgPassword: 'PGPASSWORD',
+    pgUser: 'PG_USER',
+    pgPassword: 'PG_PASSWORD',
   },
 });
 
