@@ -35,6 +35,7 @@ describe('next.js', () => {
     Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
     process.env.SLACK_BOT_TOKEN = '123';
     process.env.SLACK_SIGNING_SECRET = '456';
+    process.env.ADMIN_SECRET = '7898';
 
     const nextPrepareDone = jest.fn().mockName('nextPrepareDone()');
 

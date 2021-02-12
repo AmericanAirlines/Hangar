@@ -4,6 +4,7 @@ import supertest from 'supertest';
 import { app } from '../../app';
 
 jest.mock('../../discord');
+jest.mock('../../env');
 
 describe('/api/health', () => {
   it('returns status, details, and timestamp', async () => {

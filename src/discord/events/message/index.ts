@@ -8,6 +8,7 @@ import { help } from './help';
 import { registerTeam, regSubCommands } from './registerTeam';
 import { exit } from './exit';
 import { botWasTagged } from '../../utilities/botWasTagged';
+import { env } from '../../../env';
 
 /* eslint-disable no-param-reassign */
 
@@ -80,7 +81,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   if (msg.author.id === client.user.id) return;
 
   // If not in a DM, check to make sure it's in one of the approved channels
-  const botChannelIds = (process.env.DISCORD_BOT_CHANNEL_IDS ?? '').split(',').map((id) => id.trim());
+  const botChannelIds = (env.discordChannelIds ?? '').split(',').map((id) => id.trim());
   if (msg.channel.type !== 'dm') {
     if (botChannelIds.includes(msg.channel.id) && botWasTagged(msg)) {
       // Bot was tagged in a channel it's listening to AND should respond in

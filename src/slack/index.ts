@@ -3,15 +3,16 @@ import { WebClient } from '@slack/web-api';
 import actions from './actions';
 import events from './events';
 import views from './views';
+import { env } from '../env';
 
-export const receiver = new ExpressReceiver({ signingSecret: process.env.SLACK_SIGNING_SECRET });
+export const receiver = new ExpressReceiver({ signingSecret: env.slackSigningSecret });
 let authorizeResult: AuthorizeResult;
 
 let logLevel: LogLevel;
-if (process.env.SLACK_LOG_LEVEL) {
-  logLevel = process.env.SLACK_LOG_LEVEL as LogLevel;
+if (env.slackLogLevel) {
+  logLevel = env.slackLogLevel as LogLevel;
 } else {
-  logLevel = process.env.NODE_ENV === 'development' ? LogLevel.DEBUG : LogLevel.INFO;
+  logLevel = env.nodeEnv === 'development' ? LogLevel.DEBUG : LogLevel.INFO;
 }
 
 async function authorize(): Promise<AuthorizeResult> {
@@ -21,7 +22,7 @@ async function authorize(): Promise<AuthorizeResult> {
     return authorizeResult;
   }
 
-  if (process.env.NODE_ENV === 'test') {
+  if (env.nodeEnv === 'test') {
     // During testing, avoid hittin the API and use junk data
     authorizeResult = {
       botToken: 'junk test token',
@@ -31,7 +32,7 @@ async function authorize(): Promise<AuthorizeResult> {
     return authorizeResult;
   }
 
-  const botToken = process.env.SLACK_BOT_TOKEN;
+  const botToken = env.slackBotToken;
   const client = new WebClient(botToken);
   const auth = (await client.auth.test()) as { [id: string]: string };
   authorizeResult = {

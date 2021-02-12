@@ -2,6 +2,8 @@ import 'jest';
 import supertest from 'supertest';
 import logger from '../logger';
 
+process.env.ADMIN_SECRET = 'iAdmin';
+
 jest.spyOn(logger, 'error').mockImplementation();
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
 
