@@ -8,8 +8,7 @@ import { createDbConnection, closeDbConnection } from '../testdb';
 import { SupportRequest } from '../../entities/supportRequest';
 import { SupportRequestType, SupportRequestStatus } from '../../types/supportRequest';
 import { JudgingVote } from '../../entities/judgingVote';
-
-const adminSecret = 'Secrets are secretive';
+import { env } from '../../env';
 
 jest.mock('../../discord');
 jest.mock('../../env', () => {
@@ -64,7 +63,7 @@ describe('api/judging', () => {
     const response = await supertest(app)
       .get('/api/judging/results/')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 
@@ -85,7 +84,7 @@ describe('api/judging', () => {
     const response = await supertest(app)
       .get('/api/judging/results/')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 
@@ -107,7 +106,7 @@ describe('api/judging', () => {
     const response = await supertest(app)
       .get('/api/judging/results/')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 
@@ -131,7 +130,7 @@ describe('api/judging', () => {
     const response = await supertest(app)
       .get('/api/judging/results/')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 

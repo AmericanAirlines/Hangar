@@ -2,8 +2,7 @@ import 'jest';
 import supertest from 'supertest';
 import { Config } from '../../entities/config';
 import { createDbConnection, closeDbConnection } from '../testdb';
-
-const adminSecret = 'Secrets are secretive';
+import { env } from '../../env';
 
 jest.mock('../../discord');
 jest.mock('../../env', () => {
@@ -53,7 +52,7 @@ describe('api/judging', () => {
     const result = await supertest(app)
       .get('/api/config')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 
@@ -71,7 +70,7 @@ describe('api/judging', () => {
     const result = await supertest(app)
       .post('/api/config')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .send({ configKey, configValue })
       .expect(200);
@@ -92,7 +91,7 @@ describe('api/judging', () => {
     const result = await supertest(app)
       .post('/api/config')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .send({ configKey, configValue: newConfigValue })
       .expect(200);
@@ -106,7 +105,7 @@ describe('api/judging', () => {
     supertest(app)
       .post('/api/config')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(400, done);
   });
