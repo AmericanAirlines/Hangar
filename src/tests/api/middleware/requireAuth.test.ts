@@ -1,11 +1,18 @@
 import 'jest';
 import { Request, Response, NextFunction } from 'express';
 import logger from '../../../logger';
+import { env } from '../../../env';
 
-const adminSecret = 'Secrets are secretive';
-process.env.ADMIN_SECRET = adminSecret;
-const supportSecret = 'This secret is supportive!';
-process.env.SUPPORT_SECRET = supportSecret;
+jest.mock('../../../env', () => {
+  const realEnv = jest.requireActual('../../../env');
+  return {
+    env: {
+      ...realEnv,
+      adminSecret: 'Secrets are secretive',
+      supportSecret: 'This secret is supportive!',
+    },
+  };
+});
 // eslint-disable-next-line import/first
 import { requireAuth } from '../../../api/middleware/requireAuth';
 
@@ -59,14 +66,14 @@ describe('requireAuth middleware', () => {
 
   it('allow traffic with and ADMIN_SECRET auth header', () => {
     const mockRequest = getMockRequest();
-    mockRequest.headers.authorization = adminSecret;
+    mockRequest.headers.authorization = env.adminSecret;
     requireAuth()(mockRequest, mockRes, mockNext);
     expect(mockNext).toBeCalled();
   });
 
   it('allow traffic with and SUPPORT_SECRET auth header', () => {
     const mockRequest = getMockRequest();
-    mockRequest.headers.authorization = supportSecret;
+    mockRequest.headers.authorization = env.adminSecret;
     requireAuth()(mockRequest, mockRes, mockNext);
     expect(mockNext).toBeCalled();
   });

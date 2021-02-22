@@ -6,6 +6,17 @@ import { createDbConnection, closeDbConnection } from '../testdb';
 const adminSecret = 'Secrets are secretive';
 
 jest.mock('../../discord');
+jest.mock('../../env', () => {
+  const realEnv = jest.requireActual('../../env');
+  return {
+    env: {
+      ...realEnv,
+      adminSecret: 'Secrets are secretive',
+      slackBotToken: 'junk token',
+      slackSigningSecret: 'another junk token',
+    },
+  };
+});
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
@@ -16,10 +27,6 @@ describe('api/judging', () => {
 
   afterEach(async () => {
     await closeDbConnection();
-  });
-
-  beforeEach(() => {
-    process.env.ADMIN_SECRET = adminSecret;
   });
 
   it('is protected by admin middleware', (done) => {

@@ -1,6 +1,7 @@
 import express from 'express';
 import { Config } from '../entities/config';
 import logger from '../logger';
+import { env } from '../env';
 
 export const config = express.Router();
 
@@ -9,7 +10,6 @@ config.get('/', async (req, res) => {
     res.send(await Config.find({ order: { key: 'ASC' } }));
   } catch (err) {
     /* istanbul ignore next */
-    console.log('hello there', err);
     res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
     /* istanbul ignore next */
     logger.error(err);

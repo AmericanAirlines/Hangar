@@ -14,6 +14,15 @@ const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const botWasTaggedSpy = jest.spyOn(botWasTagged, 'botWasTagged').mockReturnValue(false);
 const mockDiscordContext = new DiscordContext('1234', '', '');
 jest.mock('../../../../discord');
+jest.mock('../../../../env', () => {
+  const realEnv = jest.requireActual('../../../../env');
+  return {
+    env: {
+      ...realEnv,
+      discordChannelIds: '9423,  13189    ,  0123',
+    },
+  };
+});
 
 const discordContextFindOneMock = jest.fn().mockImplementation(async () => mockDiscordContext);
 jest.mock('../../../../entities/discordContext', () => {
@@ -138,7 +147,6 @@ describe('message handler', () => {
 
   it('responds if notified of message in monitored channel and was tagged', async () => {
     botWasTaggedSpy.mockReturnValueOnce(true);
-    process.env.DISCORD_BOT_CHANNEL_IDS = '9423,  13189    ,  0123';
     const reply = jest.fn();
     const channelMessage = makeDiscordMessage({
       reply,
@@ -151,13 +159,11 @@ describe('message handler', () => {
         id: '0123',
       },
     });
-
     await message(channelMessage);
     expect(reply).toHaveBeenCalled();
   });
 
   it('does not respond if notified of message in monitored channel and was NOT tagged', async () => {
-    process.env.DISCORD_BOT_CHANNEL_IDS = '9423,  13189    ,  0123';
     const reply = jest.fn();
     const channelMessage = makeDiscordMessage({
       reply,

@@ -5,6 +5,18 @@ import logger from '../logger';
 import { closeDbConnection, createDbConnection } from './testdb';
 
 jest.mock('../discord');
+jest.mock('../env', () => {
+  const realEnv = jest.requireActual('../env');
+  return {
+    env: {
+      ...realEnv,
+      adminSecret: 'Secrets are secretive',
+      slackBotToken: 'junk token',
+      slackSigningSecret: 'another junk token',
+      nodeEnv: 'development',
+    },
+  };
+});
 jest.spyOn(logger, 'crit').mockImplementation();
 jest.spyOn(logger, 'error').mockImplementation();
 jest.spyOn(logger, 'info').mockImplementation();
@@ -32,11 +44,6 @@ describe('next.js', () => {
   });
 
   it('will not hold up app start when not in production', async () => {
-    Object.defineProperty(process.env, 'NODE_ENV', { value: 'development' });
-    process.env.SLACK_BOT_TOKEN = '123';
-    process.env.SLACK_SIGNING_SECRET = '456';
-    process.env.ADMIN_SECRET = '7898';
-
     const nextPrepareDone = jest.fn().mockName('nextPrepareDone()');
 
     jest.mock('next', () => (): object => ({
