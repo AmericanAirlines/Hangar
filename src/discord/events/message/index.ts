@@ -11,7 +11,6 @@ import { botWasTagged } from '../../utilities/botWasTagged';
 import { env } from '../../../env';
 
 /* eslint-disable no-param-reassign */
-
 type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
 
 interface Command {
