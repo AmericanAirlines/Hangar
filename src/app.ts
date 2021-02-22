@@ -78,7 +78,6 @@ async function initDatabase(): Promise<void> {
 
 export async function initSlack(): Promise<void> {
   try {
-    console.log(env.nodeEnv);
     if (env.slackBotToken) {
       await new WebClient(env.slackBotToken).auth.test();
       initListeners();

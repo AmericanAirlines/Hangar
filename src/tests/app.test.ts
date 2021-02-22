@@ -1,6 +1,7 @@
 import 'jest';
 import supertest from 'supertest';
 import logger from '../logger';
+import { env } from '../env';
 
 jest.spyOn(logger, 'error').mockImplementation();
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
@@ -9,7 +10,6 @@ const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
 import { app, initSlack, initDiscord } from '../app';
 
 jest.mock('../discord');
-
 jest.mock('../env', () => {
   const realEnv = jest.requireActual('../env');
   return {
@@ -20,6 +20,7 @@ jest.mock('../env', () => {
     },
   };
 });
+
 const processExitSpy = jest.spyOn(process, 'exit').mockImplementation();
 const mockSlackAuth = jest.fn();
 jest.mock('@slack/web-api', () => ({
@@ -50,15 +51,29 @@ describe('app', () => {
     expect(processExitSpy).toBeCalledTimes(1);
   });
 
-  it('will not exit the process when Slack tokens are not provided and the NODE_ENV is "test"', async () => {
-    await initSlack();
-    expect(processExitSpy).not.toBeCalled();
+  it('will not exit the process when Slack tokens are not provided and the NODE_ENV is "test"', (done) => {
+    jest.isolateModules(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (env as any).nodeEnv = 'test';
+      // eslint-disable-next-line global-require
+      const isolatedInitSlack = require('../app').initSlack;
+      await isolatedInitSlack();
+      expect(processExitSpy).not.toBeCalled();
+      done();
+    });
   });
 
-  it('will initialize correctly when provided with a valid token', async () => {
-    mockSlackAuth.mockResolvedValueOnce('Valid Auth');
-    await initSlack();
-    expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Slack app initialized successfully');
+  it('will initialize correctly when provided with a valid token', (done) => {
+    jest.isolateModules(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (env as any).slackBotToken = '123';
+      mockSlackAuth.mockResolvedValueOnce('Valid Auth');
+      // eslint-disable-next-line global-require
+      const isolatedInitSlack = require('../app').initSlack;
+      await isolatedInitSlack();
+      expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Slack app initialized successfully');
+      done();
+    });
   });
 
   it('will not initialize Discord if missing the bot token', async () => {
@@ -66,12 +81,19 @@ describe('app', () => {
     expect(loggerInfoSpy.mock.calls[loggerInfoSpy.mock.calls.length - 1][0]).toEqual('Discord skipped (missing DISCORD_BOT_TOKEN)');
   });
 
-  it('will exit the process when Discord tokens are provided but setup fails, and NODE_ENV !== "test", because it cannot initialize Discord', async () => {
-    jest.resetModules();
-    jest.mock('../discord', () => ({
-      setupDiscord: (): Promise<Error> => Promise.reject(new Error()),
-    }));
-    await initDiscord();
-    expect(processExitSpy).toBeCalledTimes(1);
+  it('will exit the process when Discord tokens are provided but setup fails, and NODE_ENV !== "test", because it cannot initialize Discord', (done) => {
+    jest.isolateModules(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (env as any).discordBotToken = '123';
+      jest.resetModules();
+      jest.mock('../discord', () => ({
+        setupDiscord: (): Promise<Error> => Promise.reject(new Error()),
+      }));
+      // eslint-disable-next-line global-require
+      const isolatedInitDiscord = require('../app').initSlack;
+      await isolatedInitDiscord();
+      expect(processExitSpy).toBeCalledTimes(1);
+      done();
+    });
   });
 });

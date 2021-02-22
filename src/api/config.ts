@@ -1,7 +1,6 @@
 import express from 'express';
 import { Config } from '../entities/config';
 import logger from '../logger';
-import { env } from '../env';
 
 export const config = express.Router();
 
