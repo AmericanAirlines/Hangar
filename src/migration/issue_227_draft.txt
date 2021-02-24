@@ -1,0 +1,10 @@
+Steps necessary:
+    Delete all files in this folder.
+    Drop database(? Not 100% sure what this entails. Does this require me to empty the postgres database or to simply delete it?)
+    Re-create database (Presumably empty)
+    Run the following command:
+        'npm run typeorm migration:run'
+        'npm run typeorm migration:generate -- -n AllMigrationsInOne'
+    From my understanding, there is no need to change the actual .ts files in the /entities folder, as the databse itself is not supposed to change.
+
+Please let me know if any of these steps seem wrong!
