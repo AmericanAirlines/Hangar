@@ -10,3 +10,4 @@
 - Osman Findik (osmanfindik1@windowslive.com)
 - Maha Siddique (mxs151731@utdallas.edu)
 - Dhruv Tailor (dhruv6198@gmail.com)
+- Razvan Preotu (rnp170130@utdallas.edu)
