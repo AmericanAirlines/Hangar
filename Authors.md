@@ -13,3 +13,5 @@
 - Joseph Nalepka (jwn170030@utdallas.edu)
 - Tristen Even (tristengeven@gmail.com)
 - Tatum Hutton (tatumhutton@gmail.com)
+- Michael Nguyen (mkn170030@utdallas.edu)
+- Razvan Preotu (rnp170130@utdallas.edu)

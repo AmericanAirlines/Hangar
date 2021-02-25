@@ -66,7 +66,7 @@ async function initDatabase(): Promise<void> {
         ...options,
         url,
         entities: [path.join(__dirname, 'entities/*')],
-        migrations: [path.join(__dirname, 'migration/*')],
+        migrations: [path.join(__dirname, 'migrations/*')],
         migrationsRun: true,
       } as PostgresConnectionOptions);
     } catch (err) {
