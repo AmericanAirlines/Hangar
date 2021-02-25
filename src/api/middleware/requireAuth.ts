@@ -1,11 +1,9 @@
 import { Handler } from 'express';
 import logger from '../../logger';
-
-const adminSecret = process.env.ADMIN_SECRET;
-const supportSecret = process.env.SUPPORT_SECRET;
+import { env } from '../../env';
 
 export const requireAuth = (redirect = false): Handler => (req, res, next): void => {
-  if (req.signedCookies?.authed === 'yes' || req.headers.authorization === adminSecret || req.headers.authorization === supportSecret) {
+  if (req.signedCookies?.authed === 'yes' || req.headers.authorization === env.adminSecret || req.headers.authorization === env.supportSecret) {
     next();
   } else if (redirect) {
     res.redirect('/login');

@@ -10,13 +10,14 @@ import { apiApp } from './api';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
 import { getActivePlatform, SupportedPlatform } from './common';
+import { env } from './env';
 
 export const app = express();
 
 let appLoading = true;
 
 // DO NOT PUT THIS LINE IN THIS FILE `express.json()`
-app.use(cookieParser(process.env.ADMIN_SECRET)); // lgtm [js/missing-token-validation]
+app.use(cookieParser(env.adminSecret)); // lgtm [js/missing-token-validation]
 
 app.get(
   '/',
@@ -42,13 +43,13 @@ async function initDatabase(): Promise<void> {
     return;
   } catch (err) {} // eslint-disable-line no-empty
 
-  if (process.env.NODE_ENV !== 'test') {
+  if (env.nodeEnv !== 'test') {
     // Pull connection options from ormconfig.json
     let options: ConnectionOptions = await getConnectionOptions();
-    const url = process.env.DATABASE_URL || (options as PostgresConnectionOptions).url;
+    const url = env.databaseUrl || (options as PostgresConnectionOptions).url;
 
     // NOTE: This should only apply to apps hosted in Heroku with the Heroku Postgres add-on
-    if (process.env.DB_SSL_DISABLED === 'true') {
+    if (env.dbSSLDisabled === 'true') {
       logger.warning(
         'SSL validation for database connection is disabled. If SSL validation is available, modify the DB_SSL_DISABLED environment variable.',
       );
@@ -77,12 +78,19 @@ async function initDatabase(): Promise<void> {
 
 export async function initSlack(): Promise<void> {
   try {
-    await new WebClient(process.env.SLACK_BOT_TOKEN).auth.test();
-    initListeners();
-    app.use(slackApp);
-    logger.info('Slack app initialized successfully');
+    if (env.slackBotToken) {
+      await new WebClient(env.slackBotToken).auth.test();
+      initListeners();
+      app.use(slackApp);
+      logger.info('Slack app initialized successfully');
+      return;
+    }
+    logger.info('Slack skipped (missing SLACK_BOT_TOKEN)');
+    if (env.nodeEnv !== 'test') {
+      process.exit(1);
+    }
   } catch (err) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (env.nodeEnv !== 'test') {
       logger.error('Slack Bot Token is invalid: ', err);
       process.exit(1);
     }
@@ -91,10 +99,10 @@ export async function initSlack(): Promise<void> {
 
 export async function initDiscord(): Promise<void> {
   try {
-    if (process.env.DISCORD_BOT_TOKEN) {
+    if (env.discordBotToken) {
       const { setupDiscord } = await import('./discord');
 
-      await setupDiscord(process.env.DISCORD_BOT_TOKEN);
+      await setupDiscord(env.discordBotToken);
       logger.info('Discord connected and authenticated successfully');
 
       return;
@@ -102,7 +110,7 @@ export async function initDiscord(): Promise<void> {
 
     logger.info('Discord skipped (missing DISCORD_BOT_TOKEN)');
   } catch (err) {
-    if (process.env.NODE_ENV !== 'test') {
+    if (env.nodeEnv !== 'test') {
       logger.error('Discord token is invalid. ', err);
       process.exit(1);
     }
@@ -110,7 +118,7 @@ export async function initDiscord(): Promise<void> {
 }
 
 export async function initNext(): Promise<void> {
-  const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });
+  const nextApp = next({ dev: env.nodeEnv !== 'production' });
   const nextHandler = nextApp.getRequestHandler();
   await nextApp.prepare();
   app.get(['/'], requireAuth(true), (req, res) => nextHandler(req, res));
@@ -130,9 +138,9 @@ export const init = async (): Promise<void> => {
   }
   await Promise.all(promises);
 
-  if (process.env.NODE_ENV === 'production') {
+  if (env.nodeEnv === 'production') {
     await initNext();
-  } else if (process.env.NODE_ENV !== 'test') {
+  } else if (env.nodeEnv !== 'test') {
     initNext()
       .then(() => logger.info('Next app initialized successfully'))
       .catch((err) => {
