@@ -11,3 +11,4 @@
 - Maha Siddique (mxs151731@utdallas.edu)
 - Dhruv Tailor (dhruv6198@gmail.com)
 - Michael Nguyen (mkn170030@utdallas.edu)
+- Razvan Preotu (rnp170130@utdallas.edu)
