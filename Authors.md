@@ -11,3 +11,5 @@
 - Maha Siddique (mxs151731@utdallas.edu)
 - Dhruv Tailor (dhruv6198@gmail.com)
 - Joseph Nalepka (jwn170030@utdallas.edu)
+- Tristen Even (tristengeven@gmail.com)
+- Tatum Hutton (tatumhutton@gmail.com)
