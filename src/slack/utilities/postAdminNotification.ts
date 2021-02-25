@@ -1,7 +1,8 @@
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 import logger from '../../logger';
+import { env } from '../../env';
 
-const webhookUrl = process.env.SLACK_NOTIFICATIONS_WEBHOOK_URL;
+const webhookUrl = env.slackNotificationsWebhookURL;
 
 export default async function postAdminNotification(message: string | IncomingWebhookSendArguments): Promise<void> {
   if (webhookUrl) {

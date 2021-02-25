@@ -2,12 +2,13 @@ import 'reflect-metadata';
 import { Server } from 'http';
 import { app, init } from './app';
 import logger from './logger';
+import { env } from './env';
 
-export const port = process.env.PORT || '3000';
+export const port = env.port || '3000';
 async function start(): Promise<Server> {
   await init();
   return app.listen(port, () => {
-    logger.info(`Listening on port ${port}`);
+    logger.info(`Listening at http://localhost:${port}/`);
   });
 }
 

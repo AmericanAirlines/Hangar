@@ -2,9 +2,9 @@
   "type": "postgres",
   "url": "postgres://localhost:5432/hangar",
   "entities": ["src/entities/**/*.ts"],
-  "migrations": ["src/migration/**/*.ts"],
+  "migrations": ["src/migrations/**/*.ts"],
   "cli": {
     "entitiesDir": "src/entities",
-    "migrationsDir": "src/migration"
+    "migrationsDir": "src/migrations"
   }
 }

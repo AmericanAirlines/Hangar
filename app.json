@@ -10,12 +10,12 @@
     "SLACK_SIGNING_SECRET": {
       "description": "Your Slack App's signing secret",
       "value": "",
-      "required": true
+      "required": false
     },
     "SLACK_BOT_TOKEN": {
       "description": "Your Slack Bot's token",
       "value": "xoxb- ...",
-      "required": true
+      "required": false
     },
     "ADMIN_SECRET": {
       "description": "A secret you use for admin tasks",

@@ -1,9 +1,9 @@
 import { app } from '..';
 import logger from '../../logger';
-import getRequiredEnvVar from '../../utilities/getRequiredEnvVar';
 import { DmOpenResult } from '../types';
+import { env } from '../../env';
 
-const token = getRequiredEnvVar('SLACK_BOT_TOKEN');
+const token = env.slackBotToken;
 
 export default async function messageUsers(users: string[], message: string): Promise<void> {
   const errors: { [userId: string]: Error }[] = [];
