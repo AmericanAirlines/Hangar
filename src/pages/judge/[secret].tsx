@@ -1,6 +1,7 @@
 /* globals localStorage, fetch */
 
 import React from 'react';
+import { env } from '../../env';
 
 interface Team {
   id: number;
@@ -224,7 +225,7 @@ const judge = (): JSX.Element => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 judge.getInitialProps = async (ctx: any): Promise<any> => {
-  if (ctx.res && ctx.query.secret !== process.env.JUDGE_SECRET) {
+  if (ctx.res && ctx.query.secret !== env.judgeSecret) {
     ctx.res.statusCode = 404;
     ctx.res.end('Not found');
   }

@@ -1,11 +1,12 @@
 import express from 'express';
+import { env } from '../env';
 
 export const admin = express.Router();
 
 admin.use(express.json());
 
 admin.post('/login', (req, res): void => {
-  if (req.body.secret !== process.env.ADMIN_SECRET) {
+  if (req.body.secret !== env.adminSecret) {
     res.status(401).send('Incorrect secret');
     return;
   }

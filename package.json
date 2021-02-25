@@ -61,6 +61,7 @@
     "delay": "400"
   },
   "dependencies": {
+    "@americanairlines/simple-env": "^1.0.2",
     "@slack/bolt": "^2.3.0",
     "@slack/types": "^1.9.0",
     "@slack/web-api": "^5.12.0",

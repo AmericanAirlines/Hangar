@@ -6,6 +6,7 @@ import logger from '../../logger';
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
 jest.mock('../../discord');
+jest.mock('../../env');
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const teamFindSpy = jest.spyOn(Team, 'find');
