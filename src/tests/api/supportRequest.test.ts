@@ -11,7 +11,7 @@ import { stringDictionary } from '../../StringDictionary';
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
 jest.mock('../../discord');
-
+jest.mock('../../env');
 jest.spyOn(logger, 'info').mockImplementation();
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const sendMessageSpy = jest.spyOn(messageUsers, 'sendMessage').mockImplementation();

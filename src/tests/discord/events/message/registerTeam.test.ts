@@ -158,9 +158,7 @@ describe('registerTeam handler', () => {
     await regSubCommands.teamChannel(nameMsg, ctx);
     const [msg] = send.mock.calls[0];
     expect(msg.embed.title === '**You are signed up :partying_face:**').toBeTruthy();
-    expect(ctx.payload).toStrictEqual({ channel: 'Team-25' });
-    expect(ctx.currentCommand).toBe(undefined);
-    expect(ctx.nextStep).toBe(undefined);
+    expect(ctx.clear).toBeCalledTimes(1);
   });
 
   it('will let the user know that someone has already signed up for the table they entered', async () => {

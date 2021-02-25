@@ -3,6 +3,9 @@ import path from 'path';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 // import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
+/**
+ * @deprecated New tests should not use the in-memory database; instead they should mock necessary files/implementations
+ */
 export async function createDbConnection(): Promise<void> {
   await createConnection({
     type: 'sqlite',
@@ -22,6 +25,9 @@ export async function createDbConnection(): Promise<void> {
   // } as PostgresConnectionOptions);
 }
 
+/**
+ * @deprecated New tests should not use the in-memory database; instead they should mock necessary files/implementations
+ */
 export async function closeDbConnection(): Promise<void> {
   await getConnection().close();
 }

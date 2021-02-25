@@ -3,6 +3,7 @@
 /* eslint-disable quotes */
 import { SupportRequestType } from './types/supportRequest';
 import { StringDictionary } from './IStringDictionary';
+import { env } from './env';
 
 export const stringDictionary = {} as StringDictionary;
 
@@ -14,7 +15,7 @@ stringDictionary.supportRequestSuccess = (params) =>
   }, they should join the \`${params.name}\` voice channel soon!`;
 
 stringDictionary.jobChatSuccess = (params) =>
-  `:tada: We're almost ready for you! Please join our Zoom waiting room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\n**JOIN NOW: **${process.env.JOB_CHAT_URL}`;
+  `:tada: We're almost ready for you! Please join our Zoom waiting room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\n**JOIN NOW: **${env.jobChatUrl}`;
 
 stringDictionary.supportRequestComplete = (params) =>
   `${

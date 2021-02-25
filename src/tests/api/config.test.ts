@@ -2,10 +2,20 @@ import 'jest';
 import supertest from 'supertest';
 import { Config } from '../../entities/config';
 import { createDbConnection, closeDbConnection } from '../testdb';
-
-const adminSecret = 'Secrets are secretive';
+import { env } from '../../env';
 
 jest.mock('../../discord');
+jest.mock('../../env', () => {
+  const realEnv = jest.requireActual('../../env');
+  return {
+    env: {
+      ...realEnv,
+      adminSecret: 'Secrets are secretive',
+      slackBotToken: 'junk token',
+      slackSigningSecret: 'another junk token',
+    },
+  };
+});
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
@@ -16,10 +26,6 @@ describe('api/judging', () => {
 
   afterEach(async () => {
     await closeDbConnection();
-  });
-
-  beforeEach(() => {
-    process.env.ADMIN_SECRET = adminSecret;
   });
 
   it('is protected by admin middleware', (done) => {
@@ -46,7 +52,7 @@ describe('api/judging', () => {
     const result = await supertest(app)
       .get('/api/config')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 
@@ -64,7 +70,7 @@ describe('api/judging', () => {
     const result = await supertest(app)
       .post('/api/config')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .send({ configKey, configValue })
       .expect(200);
@@ -85,7 +91,7 @@ describe('api/judging', () => {
     const result = await supertest(app)
       .post('/api/config')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .send({ configKey, configValue: newConfigValue })
       .expect(200);
@@ -99,7 +105,7 @@ describe('api/judging', () => {
     supertest(app)
       .post('/api/config')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(400, done);
   });
