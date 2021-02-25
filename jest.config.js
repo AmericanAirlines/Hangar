@@ -14,7 +14,7 @@ module.exports = {
   preset: 'ts-jest',
   collectCoverageFrom: [
     './src/**/*.ts',
-    '!./src/migration/**',
+    '!./src/migrations/**',
     '!./src/tests/**',
     '!./src/index.ts',
     '!./src/slack/**',
