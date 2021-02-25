@@ -7,6 +7,7 @@ import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import { regSubCommands } from '../../../../discord/events/message/registerTeam';
 import logger from '../../../../logger';
 import * as botWasTagged from '../../../../discord/utilities/botWasTagged';
+import { env } from '../../../../env';
 
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
 const teamNameSpy = jest.spyOn(regSubCommands, 'teamName').mockImplementation();
@@ -14,6 +15,15 @@ const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const botWasTaggedSpy = jest.spyOn(botWasTagged, 'botWasTagged').mockReturnValue(false);
 const mockDiscordContext = new DiscordContext('1234', '', '');
 jest.mock('../../../../discord');
+jest.mock('../../../../env', () => {
+  const realEnv = jest.requireActual('../../../../env');
+  return {
+    env: {
+      ...realEnv,
+      discordChannelIds: '9423,  13189    ,  0123',
+    },
+  };
+});
 
 const discordContextFindOneMock = jest.fn().mockImplementation(async () => mockDiscordContext);
 jest.mock('../../../../entities/discordContext', () => {
@@ -128,7 +138,7 @@ describe('message handler', () => {
       },
       channel: {
         type: 'text',
-        id: '0123',
+        id: '456',
       },
     });
 
@@ -138,7 +148,6 @@ describe('message handler', () => {
 
   it('responds if notified of message in monitored channel and was tagged', async () => {
     botWasTaggedSpy.mockReturnValueOnce(true);
-    process.env.DISCORD_BOT_CHANNEL_IDS = '9423,  13189    ,  0123';
     const reply = jest.fn();
     const channelMessage = makeDiscordMessage({
       reply,
@@ -151,13 +160,11 @@ describe('message handler', () => {
         id: '0123',
       },
     });
-
     await message(channelMessage);
     expect(reply).toHaveBeenCalled();
   });
 
   it('does not respond if notified of message in monitored channel and was NOT tagged', async () => {
-    process.env.DISCORD_BOT_CHANNEL_IDS = '9423,  13189    ,  0123';
     const reply = jest.fn();
     const channelMessage = makeDiscordMessage({
       reply,
@@ -167,12 +174,36 @@ describe('message handler', () => {
       },
       channel: {
         type: 'text',
-        id: '0123',
+        id: '456',
       },
     });
 
     await message(channelMessage);
     expect(reply).not.toHaveBeenCalled();
+  });
+
+  it('does not respond if there are no set monitored channels', (done) => {
+    jest.isolateModules(async () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (env as any).discordChannelIds = undefined;
+      const reply = jest.fn();
+      const channelMessage = makeDiscordMessage({
+        reply,
+        content: 'In a channel',
+        author: {
+          id: 'someone',
+        },
+        channel: {
+          type: 'text',
+          id: '456',
+        },
+      });
+      // eslint-disable-next-line global-require
+      const isolatedMessage = require('../../../../discord/events/message/index').message;
+      await isolatedMessage(channelMessage);
+      expect(reply).not.toHaveBeenCalled();
+      done();
+    });
   });
 
   it('will invoke a subcommand if context has a currentCommand', async () => {

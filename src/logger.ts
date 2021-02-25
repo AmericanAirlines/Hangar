@@ -1,6 +1,7 @@
 import * as winston from 'winston';
+import { env } from './env';
 
-const level = process.env.LOG_LEVEL || 'debug';
+const level = env.logLevel || 'debug';
 
 // Winston Logging Levels
 // 0: emerg
