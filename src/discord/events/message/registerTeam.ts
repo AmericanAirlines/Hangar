@@ -121,10 +121,9 @@ export const regSubCommands: SubCommands = {
           ],
         },
       });
-      // ctx.currentCommand = undefined;
-      // ctx.nextStep = undefined;
+
       await ctx.save();
-      ctx.clear();
+      await ctx.clear();
     } catch (err) {
       // Check if duplicate key constraint error (Postgres error 23505 - unique_violation)
       if (err.code === '23505') {
