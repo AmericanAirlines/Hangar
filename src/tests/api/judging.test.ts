@@ -8,10 +8,20 @@ import { createDbConnection, closeDbConnection } from '../testdb';
 import { SupportRequest } from '../../entities/supportRequest';
 import { SupportRequestType, SupportRequestStatus } from '../../types/supportRequest';
 import { JudgingVote } from '../../entities/judgingVote';
-
-const adminSecret = 'Secrets are secretive';
+import { env } from '../../env';
 
 jest.mock('../../discord');
+jest.mock('../../env', () => {
+  const realEnv = jest.requireActual('../../env');
+  return {
+    env: {
+      ...realEnv,
+      adminSecret: 'Secrets are secretive',
+      slackBotToken: 'junk token',
+      slackSigningSecret: 'another junk token',
+    },
+  };
+});
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
@@ -28,12 +38,6 @@ describe('api/judging', () => {
 
   afterAll(async () => {
     await closeDbConnection();
-  });
-
-  beforeEach(() => {
-    process.env.SLACK_SIGNING_SECRET = 'A JUNK TOKEN';
-    process.env.SLACK_BOT_TOKEN = 'ANOTHER JUNK TOKEN';
-    process.env.ADMIN_SECRET = adminSecret;
   });
 
   it('is protected by admin middleware', (done) => {
@@ -59,7 +63,7 @@ describe('api/judging', () => {
     const response = await supertest(app)
       .get('/api/judging/results/')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 
@@ -80,7 +84,7 @@ describe('api/judging', () => {
     const response = await supertest(app)
       .get('/api/judging/results/')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 
@@ -102,7 +106,7 @@ describe('api/judging', () => {
     const response = await supertest(app)
       .get('/api/judging/results/')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 
@@ -126,7 +130,7 @@ describe('api/judging', () => {
     const response = await supertest(app)
       .get('/api/judging/results/')
       .set({
-        Authorization: adminSecret,
+        Authorization: env.adminSecret,
       })
       .expect(200);
 

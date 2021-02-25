@@ -2,8 +2,7 @@ import { KnownBlock } from '@slack/types';
 import { actionIds } from '../constants';
 import openSourceBlock from './openSourceFooter';
 import { stringDictionary } from '../../StringDictionary';
-
-const challengeUrl = process.env.CHALLENGE_URL;
+import { env } from '../../env';
 
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
@@ -41,7 +40,7 @@ const challengeBlock: KnownBlock = {
       type: 'plain_text',
       text: stringDictionary.challenge2,
     },
-    url: challengeUrl,
+    url: env.challengeUrl,
     action_id: actionIds.ignore,
   },
 };
@@ -106,7 +105,7 @@ export function dashboardBlocks(): KnownBlock[] {
   const blocks: KnownBlock[] = [headerBlock, introBlock, dividerBlock];
   const defaultBlocksLengh = blocks.length;
 
-  if (challengeUrl) {
+  if (env.challengeUrl) {
     blocks.push(challengeBlock);
   }
 

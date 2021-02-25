@@ -37,7 +37,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/migration/**/*.ts'],
+      files: ['src/migrations/**/*.ts'],
       rules: {
         'class-methods-use-this': 'off',
         '@typescript-eslint/no-explicit-any': 'off',

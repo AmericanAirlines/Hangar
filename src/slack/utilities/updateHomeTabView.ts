@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { app } from '..';
-import getRequiredEnvVar from '../../utilities/getRequiredEnvVar';
 import { dashboardBlocks } from '../blocks/dashboardBlocks';
+import { env } from '../../env';
 
-const token = getRequiredEnvVar('SLACK_BOT_TOKEN');
+const token = env.slackBotToken;
 
 export default async function updateHomeTabView(userId: string): Promise<void> {
   await app.client.views.publish({
