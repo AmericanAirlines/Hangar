@@ -121,8 +121,6 @@ export const regSubCommands: SubCommands = {
           ],
         },
       });
-
-      await ctx.save();
       await ctx.clear();
     } catch (err) {
       // Check if duplicate key constraint error (Postgres error 23505 - unique_violation)
