@@ -42,7 +42,7 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
     }
 
     const teamData: Team[] = await res.json();
-    const keys = Object.keys(teamData[0]).filter((key) => !['id', 'name', 'members', 'tableNumber', 'projectDescription'].includes(key)); //investigate support page error here
+    const keys = Object.keys(teamData[0]).filter((key) => !['id', 'name', 'members', 'tableNumber', 'projectDescription'].includes(key)); 
     teamData.forEach((team: Team) => {
       Object.keys(team).forEach((key) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
