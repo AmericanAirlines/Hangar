@@ -46,6 +46,20 @@ export const SupportQueueItem: React.FC<SupportQueueItemProps> = ({ secret, supp
     await refetch();
   };
 
+  const remindUser = (supportRequestId: number, movedToInProgressAt: string, voiceChannelName: string) => async (): Promise<void> => {
+    const relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
+    await fetch('/api/supportRequest/remindUser', {
+      method: 'POST',
+      body: JSON.stringify({ supportRequestId, relativeTimeElapsedString, voiceChannelName }),
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: secret,
+      },
+    });
+
+    await refetch();
+  };
+
   return (
     <div className={`card shadow mt-2 ${request.supportName === supportName ? 'bg-primary text-light' : 'bg-light'}`}>
       <div className="card-body">
@@ -63,6 +77,9 @@ export const SupportQueueItem: React.FC<SupportQueueItemProps> = ({ secret, supp
         </button>
         <button className="btn btn-success" onClick={closeRequest(request.id)}>
           Complete
+        </button>
+        <button className="btn btn-secondary mr-2" onClick={remindUser(request.id, request.movedToInProgressAt, request.name)}>
+          Remind
         </button>
       </div>
     </div>

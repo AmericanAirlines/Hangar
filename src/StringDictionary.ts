@@ -27,7 +27,7 @@ stringDictionary.supportRequestNoShow = (params) =>
 
 stringDictionary.remindUser = (params) =>
   // eslint-disable-next-line implicit-arrow-linebreak
-  `:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but we haven't heard from you at our booth. Please head over to our booth so that we can help you with your request!`;
+  `:exclamation: We messaged you about your support request ${params.relativeTimeElapsedString}, but you haven't joined ${params.voiceChannelName}. Please join ${params.voiceChannelName} so that we can help you with your request!`;
 /*----------------------------------*/
 
 /*----------------------------------*/

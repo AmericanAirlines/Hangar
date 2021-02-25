@@ -226,8 +226,8 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
 });
 
 supportRequestRoutes.post('/remindUser', async (req, res) => {
-  const { supportRequestId, relativeTimeElapsedString } = req.body;
-  if (!supportRequestId || !relativeTimeElapsedString) {
+  const { supportRequestId, relativeTimeElapsedString, voiceChannelName } = req.body;
+  if (!supportRequestId || !relativeTimeElapsedString || !voiceChannelName) {
     res.status(400).send('One or more of the required properties is missing');
     return;
   }
@@ -243,6 +243,7 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
       [supportRequest.slackId],
       stringDictionary.remindUser({
         relativeTimeElapsedString,
+        voiceChannelName,
       }),
     );
 

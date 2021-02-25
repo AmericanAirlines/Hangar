@@ -198,7 +198,7 @@ describe('api/supportRequest', () => {
       const { app } = require('../../app');
       await supertest(app)
         .post('/api/supportRequest/remindUser')
-        .send({ supportRequestId: 1e6, relativeTimeElapsedString: 'some time ago' })
+        .send({ supportRequestId: 1e6, relativeTimeElapsedString: 'some time ago', voiceChannelName: 'voice channel' })
         .set({
           'Content-Type': 'application/json',
         })
@@ -213,7 +213,7 @@ describe('api/supportRequest', () => {
       const { app } = require('../../app');
       await supertest(app)
         .post('/api/supportRequest/remindUser')
-        .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: 'some time ago' })
+        .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: 'some time ago', voiceChannelName: 'voice channel' })
         .set({
           'Content-Type': 'application/json',
         })
@@ -230,7 +230,7 @@ describe('api/supportRequest', () => {
       const { app } = require('../../app');
       await supertest(app)
         .post('/api/supportRequest/remindUser')
-        .send({ supportRequestId: 1, relativeTimeElapsedString: 'some time ago' })
+        .send({ supportRequestId: 1, relativeTimeElapsedString: 'some time ago', voiceChannelName: 'voice channel' })
         .set({
           'Content-Type': 'application/json',
         })
