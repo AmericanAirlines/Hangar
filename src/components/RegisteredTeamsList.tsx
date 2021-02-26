@@ -42,65 +42,66 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
     }
 
     const teamData: Team[] = await res.json();
-    const keys = Object.keys(teamData[0]).filter((key) => !['id', 'name', 'members', 'tableNumber', 'projectDescription'].includes(key));
-    teamData.forEach((team: Team) => {
-      Object.keys(team).forEach((key) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const val = (team as any)[key as keyof Team];
-        if (Array.isArray(val)) {
-          // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-explicit-any
-          ((team as unknown) as any)[key] = val.join(', ');
-        }
+    if (teamData.length != 0) {
+      const keys = Object.keys(teamData[0]).filter((key) => !['id', 'name', 'members', 'tableNumber', 'projectDescription'].includes(key));
+      teamData.forEach((team: Team) => {
+        Object.keys(team).forEach((key) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const val = (team as any)[key as keyof Team];
+          if (Array.isArray(val)) {
+            // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-explicit-any
+            ((team as unknown) as any)[key] = val.join(', ');
+          }
+        });
       });
-    });
 
-    columns = keys
-      .sort((a, b) => a.localeCompare(b))
-      .map((key) => ({
-        name: toTitleCase(key),
-        selector: key,
-        sortable: true,
-      })) as TableColumn[];
+      columns = keys
+        .sort((a, b) => a.localeCompare(b))
+        .map((key) => ({
+          name: toTitleCase(key),
+          selector: key,
+          sortable: true,
+        })) as TableColumn[];
 
-    columns = [
-      {
-        name: 'Name',
-        selector: 'name',
-        sortable: true,
-        grow: 2,
-        wrap: true,
-      },
-      {
-        name: 'Channel Name',
-        selector: 'channelName',
-        sortable: true,
-        grow: 2,
-        wrap: true,
-      },
-      {
-        name: 'Members',
-        selector: 'members',
-        sortable: false,
-        grow: 2,
-        wrap: true,
-      },
-      {
-        name: 'Table Number',
-        selector: 'tableNumber',
-        sortable: true,
-      },
-      {
-        name: 'Active Judge Count',
-        selector: 'activeJudgeCount',
-        sortable: true,
-      },
-      {
-        name: 'Judge Visits',
-        selector: 'judgeVisits',
-        sortable: true,
-      },
-    ];
-
+      columns = [
+        {
+          name: 'Name',
+          selector: 'name',
+          sortable: true,
+          grow: 2,
+          wrap: true,
+        },
+        {
+          name: 'Channel Name',
+          selector: 'channelName',
+          sortable: true,
+          grow: 2,
+          wrap: true,
+        },
+        {
+          name: 'Members',
+          selector: 'members',
+          sortable: false,
+          grow: 2,
+          wrap: true,
+        },
+        {
+          name: 'Table Number',
+          selector: 'tableNumber',
+          sortable: true,
+        },
+        {
+          name: 'Active Judge Count',
+          selector: 'activeJudgeCount',
+          sortable: true,
+        },
+        {
+          name: 'Judge Visits',
+          selector: 'judgeVisits',
+          sortable: true,
+        },
+      ];
+    }
     setTeams(teamData);
 
     timeoutRef.current = setTimeout(fetchValues, 60000);
@@ -127,8 +128,8 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
               {teams.length > 0 ? (
                 <DataTable columns={columns} data={teams} expandableRows expandableRowsComponent={<ExpandableRow />} />
               ) : (
-                'No teams registered yet... check back soon!'
-              )}
+                  'No teams registered yet... check back soon!'
+                )}
             </div>
           </div>
         </div>
