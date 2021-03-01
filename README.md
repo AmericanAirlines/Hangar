@@ -50,6 +50,77 @@ During the installation process (if you follow the steps on [postgresql.org](htt
 #### Viewing/Editing the DB
 If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
 
+## Environment Variables
+
+### NODE_ENV (NEED CLARIFICATION)
+- NODE_ENV="environment"
+
+  required, set to one of the following: development, test, or production
+
+### DB_SSL_DISABLED
+Environment variables needed if deploying the database to Heroku.
+
+- DB_SSL_DISABLED="true"
+
+### Slack
+Environment variables needed for the slack application after you've [created the slack application](#creating-a-slack-app). Note: only one platform's (slack/discord) environment variables are required.
+
+- SLACK_SIGNING_SECRET="XXXXXXXXXXXXXXXX"
+
+  required, from [slack](https://api.slack.com/apps), under App Credentials you can find Signing Secret
+
+- SLACK_BOT_TOKEN="xoxb-XXXXXXXXXXXXXXXX"
+  
+  required, from [slack](https://api.slack.com/apps), under Install App you can find Bot User OAuth Token
+
+- SLACK_NOTIFICATIONS_WEBHOOK_URL="https://hooks.slack.com/..."
+
+  required, from [slack](https://api.slack.com/apps), under Add Features & Functionality and Incoming Webhooks you can find the Webhook UR if created
+
+### Discord
+Environment variables needed for the discord application after you've created the discord application.  Note: only one platform's (slack/discord) environment variables are required.
+
+- DISCORD_BOT_TOKEN="***********************************************************"
+
+  required, from [discord](https://discord.com/developers/applications), under Bot you can copy the token number
+
+- DISCORD_BOT_CHANNEL_IDS="0123456789012345678,0123456789012345678"
+
+  required, comma separated channel IDs, to get the channel IDs: in The Discord application go to Settings > Appearance > Check developer mode. Right click the channel name and copy the channel ID (Copy ID).
+
+### Secrets
+Environment variables needed to set app secrets for user groups
+- JUDGE_SECRET="secret"
+
+  required, create your own secret
+
+- SUPPORT_SECRET="secret"
+
+  required, create your own secret
+
+- ADMIN_SECRET="secret"
+  
+  required, create your own secret
+
+- CHALLENGE_URL="https://your-sponsor-challenge.com"
+
+  optional, link to webpage with hackathon challenge info
+
+### Postgres
+Environment variables needed to connect to a password-protected [Postgres server](##Postgres).
+
+- PGUSER="postgres"
+
+  required, PGUSER="postgres"
+
+- PGPASSWORD="password"
+
+  required, password entered during server installation
+
+- DATABASE_URL="postgres://localhost:5432/hangar"
+
+  required only if database is on a different port or not called hangar, 
+
 ## Starting the App
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
 
