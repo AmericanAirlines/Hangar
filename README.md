@@ -52,7 +52,7 @@ If you'd like a visual way of viewing or editing your local database, try using 
 
 ## Environment Variables
 
-### NODE_ENV (NEED CLARIFICATION)
+### NODE_ENV
 - NODE_ENV="environment"
 
   required, set to one of the following: development, test, or production
@@ -107,19 +107,19 @@ Environment variables needed to set app secrets for user groups
   optional, link to webpage with hackathon challenge info
 
 ### Postgres
-Environment variables needed to connect to a password-protected [Postgres server](##Postgres).
+Environment variables needed to connect to a [Postgres server](##Postgres).
 
 - PGUSER="postgres"
 
-  required, PGUSER="postgres"
+  required if password-protected, PGUSER="postgres"
 
 - PGPASSWORD="password"
 
-  required, password entered during server installation
+  required if password-protected, password entered during server installation
 
 - DATABASE_URL="postgres://localhost:5432/hangar"
 
-  required only if database is on a different port or not called hangar, 
+  required if database is not on default port or called hangar 
 
 ## Starting the App
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
