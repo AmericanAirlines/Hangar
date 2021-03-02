@@ -15,3 +15,5 @@
 - Tatum Hutton (tatumhutton@gmail.com)
 - Michael Nguyen (mkn170030@utdallas.edu)
 - Razvan Preotu (rnp170130@utdallas.edu)
+- Evelio Sosa (evsosa@tamu.edu)
+- Yun Phelps (phelps.yun@tamu.edu)
