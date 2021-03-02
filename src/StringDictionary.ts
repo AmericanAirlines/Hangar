@@ -55,6 +55,7 @@ stringDictionary.supportRequestAlertModaltext = `:warning: Something went wrong.
 
 /*----------------------------------*/
 // src>slack>blocks>dashboardblocks.ts
+// src>discord>events>message>exit.ts
 stringDictionary.headerinfo = `Hello, Welcome to Hangar :wave:`;
 
 stringDictionary.intro = `Hey there! :wave: I'm a bot designed to provide you with resources for the hackathon!`;
@@ -174,4 +175,71 @@ Here's what went wrong, it may be helpful (but probably not):
 ${JSON.stringify(params.err, null, 2)}
 \`\`\`
 `;
+/*----------------------------------*/
+
+/*----------------------------------*/
+// src>discord>events>message>exit.ts
+stringDictionary.exitFlow = `You have been successfully exited out of any flows you were in!`;
+/*----------------------------------*/
+
+/*----------------------------------*/
+// src>discord>events>message>help.ts
+stringDictionary.prizeMessage = `**PRIZES** - Think your team has what it takes to win?\nCheck out our :sparkles:[**CHALLENGE AND PRIZES**](${env.challengeUrl}):sparkles:\n\n**SWAG** 
+- Want a free American Hacker shirt? Make sure to come chat with us about jobs, your idea, or get technical help using the options below!\n\n**BONUS PRIZES** 
+- Hacking on our challenge? Use \`!registerTeam\` below and you’ll be entered into a raffle to win prizes for your whole team!\n\n\n
+Listed below are various commands that you can use to interact with the bot!`;
+stringDictionary.appInfoMessage = `[Hangar](https://github.com/AmericanAirlines/Hangar) is an Open Source project created by American Airlines.`;
+stringDictionary.interactMessage = `Hey there! :wave:\nCheck your DMs for information on how to interact with me!`;
+/*----------------------------------*/
+
+/*----------------------------------*/
+// src>discord>events>message>index.ts
+stringDictionary.botTaggedMsg =
+  'Hi there! :wave: I can only help from within a Direct Message. Click my name and send the message `!help` to get started!';
+stringDictionary.botCantUnderstand = "That isn't a command I understand. Try replying with `!help` to see the full list of things I can help with!";
+stringDictionary.helpDescript = 'Lists commands the user can use to interact with the bot';
+stringDictionary.pingDescript = 'Replies with pong';
+stringDictionary.ideaDescript = 'Think you have a good idea? Join a queue to come pitch to our team!';
+stringDictionary.techDescript = 'Need help with your hack? Join our tech support queue so our team can help!';
+stringDictionary.jobDescript = 'Interested in joining our team? Come chat with us about Full Time and Internship opportunities!';
+stringDictionary.registerDescript = 'Let us know who you’re hacking with and what you’re hacking on! There may even be prizes involved :wink:';
+stringDictionary.exitDescript = 'Exits the user out of any flows they might be in (such as team registration)';
+/*----------------------------------*/
+
+/*----------------------------------*/
+// src>discord>events>message>registerTeam.ts
+stringDictionary.registerNotOpen = `:warning: Team registration is not open yet. Please check back later or wait for announcements!`;
+stringDictionary.registerTeamUserMessage = `Who are you hacking with? If you are hacking alone, simply write your name!\n**Be sure to input your name as well as your teammate's names in a comma-separated list (e.g. John Smith, Jane Doe, ...)!**`;
+stringDictionary.registerTeamTitle = `registerTeam`;
+stringDictionary.registerTeamJudingTitle = `*Register your team for judging* :mag:\n:warning: Only one person from each team should register`;
+stringDictionary.registerTeamDescription = `Answer each question the bot provides. Once you are done answering a question, DM the answer to the bot and it will reply prompting for the next answer!`;
+stringDictionary.registerTeamExit = `Exiting the flow`;
+stringDictionary.registerTeamExitValue = 'If you would like to exit the signup process at any time, either type `!exit` or any other command!';
+stringDictionary.AppNameMessage = `What's your team or app name?`;
+stringDictionary.AppDetailMessage = `What does your project do? How will it make a difference? What technologies are used?`;
+stringDictionary.AppChannelMessage = `What's your team's channel name? (e.g. Hacker Room 51)`;
+stringDictionary.teamChannel = `teamChannel`;
+stringDictionary.finalTeamTitle = `**You are signed up :partying_face:**`;
+stringDictionary.finalTeamDescription = `Here are the details for your team:`;
+stringDictionary.TeamNameTitle = `Team Name:`;
+stringDictionary.TeamMembersTitle = `Team Members:`;
+stringDictionary.TeamDescriptionTitle = `Team Description:`;
+stringDictionary.TeamChannelName = `Team Channel Name`;
+stringDictionary.DuplicateChannelCode = `23505`;
+stringDictionary.DuplicateChannel = `Oops, looks like someone already entered the channel name that you input! Please try again`;
+stringDictionary.FailedSavingTeamLogger = `Saving team failed: `;
+stringDictionary.FailedSavingTeam = `Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.`;
+/*----------------------------------*/
+
+/*----------------------------------*/
+// src>discord>events>message>index.ts
+stringDictionary.queueNotActive = "**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!";
+stringDictionary.requestAlreadyOpen =
+  "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.";
+stringDictionary.warningSomethingWrong = "**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.";
+stringDictionary.supportRequestErr = 'Something went wrong trying to create a support request';
+stringDictionary.addedToQueue =
+  ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.";
+stringDictionary.beforeAddToQueue = (params) => `Hey there! :wave: Before we add you to the queue, ${params.prompt}?`;
+stringDictionary.jobChatResponse = '\n\nPlease make sure to have your resume ready for our team!';
 /*----------------------------------*/
