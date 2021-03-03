@@ -50,7 +50,7 @@ export const SupportQueueItem: React.FC<SupportQueueItemProps> = ({ secret, supp
     const relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
     await fetch('/api/supportRequest/remindUser', {
       method: 'POST',
-      body: JSON.stringify({ supportRequestId, relativeTimeElapsedString, voiceChannelName }),
+      body: JSON.stringify({ supportRequestId, relativeTimeElapsedString }),
       headers: {
         'Content-Type': 'application/json',
         authorization: secret,
