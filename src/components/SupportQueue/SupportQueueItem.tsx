@@ -75,10 +75,10 @@ export const SupportQueueItem: React.FC<SupportQueueItemProps> = ({ secret, supp
         <button className="btn btn-danger mr-2" onClick={abandonRequest(request.id, request.movedToInProgressAt)}>
           No Show
         </button>
-        <button className="btn btn-success" onClick={closeRequest(request.id)}>
+        <button className="btn btn-success mr-2" onClick={closeRequest(request.id)}>
           Complete
         </button>
-        <button className="btn btn-secondary mr-2" onClick={remindUser(request.id, request.movedToInProgressAt)}>
+        <button className="btn btn-secondary" onClick={remindUser(request.id, request.movedToInProgressAt)}>
           Remind
         </button>
       </div>
