@@ -213,7 +213,7 @@ describe('api/supportRequest', () => {
       const { app } = require('../../app');
       await supertest(app)
         .post('/api/supportRequest/remindUser')
-        .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: 'some time ago', voiceChannelName: 'voice channel' })
+        .send({ supportRequestId: supportRequest.id, relativeTimeElapsedString: 'some time ago' })
         .set({
           'Content-Type': 'application/json',
         })
