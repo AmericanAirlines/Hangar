@@ -46,7 +46,7 @@ export const SupportQueueItem: React.FC<SupportQueueItemProps> = ({ secret, supp
     await refetch();
   };
 
-  const remindUser = (supportRequestId: number, movedToInProgressAt: string, voiceChannelName: string) => async (): Promise<void> => {
+  const remindUser = (supportRequestId: number, movedToInProgressAt: string) => async (): Promise<void> => {
     const relativeTimeElapsedString = DateTime.fromISO(movedToInProgressAt).toRelative();
     await fetch('/api/supportRequest/remindUser', {
       method: 'POST',
@@ -78,7 +78,7 @@ export const SupportQueueItem: React.FC<SupportQueueItemProps> = ({ secret, supp
         <button className="btn btn-success" onClick={closeRequest(request.id)}>
           Complete
         </button>
-        <button className="btn btn-secondary mr-2" onClick={remindUser(request.id, request.movedToInProgressAt, request.name)}>
+        <button className="btn btn-secondary mr-2" onClick={remindUser(request.id, request.movedToInProgressAt)}>
           Remind
         </button>
       </div>
