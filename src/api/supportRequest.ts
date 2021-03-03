@@ -243,7 +243,6 @@ supportRequestRoutes.post('/remindUser', async (req, res) => {
       [supportRequest.slackId],
       stringDictionary.remindUser({
         relativeTimeElapsedString,
-        voiceChannelName,
       }),
     );
 
