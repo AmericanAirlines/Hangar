@@ -226,7 +226,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
 });
 
 supportRequestRoutes.post('/remindUser', async (req, res) => {
-  const { supportRequestId, relativeTimeElapsedString, voiceChannelName } = req.body;
+  const { supportRequestId, relativeTimeElapsedString } = req.body;
   if (!supportRequestId || !relativeTimeElapsedString) {
     res.status(400).send('One or more of the required properties is missing');
     return;
