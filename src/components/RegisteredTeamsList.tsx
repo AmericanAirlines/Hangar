@@ -100,6 +100,7 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
         sortable: true,
       },
     ];
+
     setTeams(teamData);
 
     timeoutRef.current = setTimeout(fetchValues, 60000);
