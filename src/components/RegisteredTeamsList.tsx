@@ -42,7 +42,6 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
     }
 
     const teamData: Team[] = await res.json();
-   
     const keys = Object.keys(teamData[0] ?? {}).filter((key) => !['id', 'name', 'members', 'tableNumber', 'projectDescription'].includes(key));
     teamData.forEach((team: Team) => {
       Object.keys(team).forEach((key) => {
@@ -101,7 +100,6 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
         sortable: true,
       },
     ];
-    
     setTeams(teamData);
 
     timeoutRef.current = setTimeout(fetchValues, 60000);
@@ -128,8 +126,8 @@ export const RegisteredTeamsList: React.FC<RegisteredTeamsListProps> = ({ secret
               {teams.length > 0 ? (
                 <DataTable columns={columns} data={teams} expandableRows expandableRowsComponent={<ExpandableRow />} />
               ) : (
-                  'No teams registered yet... check back soon!'
-                )}
+                'No teams registered yet... check back soon!'
+              )}
             </div>
           </div>
         </div>
