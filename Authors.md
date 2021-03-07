@@ -16,3 +16,4 @@
 - Michael Nguyen (mkn170030@utdallas.edu)
 - Razvan Preotu (rnp170130@utdallas.edu)
 - Allyson King (allysonmking@tamu.edu)
+- Olin Zhou (olin@tamu.edu)
