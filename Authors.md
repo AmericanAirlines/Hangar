@@ -15,4 +15,5 @@
 - Tatum Hutton (tatumhutton@gmail.com)
 - Michael Nguyen (mkn170030@utdallas.edu)
 - Razvan Preotu (rnp170130@utdallas.edu)
-- Natalie Marintez (mart125074@tamu.edu)
+- Natalie Martinez (mart125074@tamu.edu)
+- Turner Levey (turnerlevey@tamu.edu)
