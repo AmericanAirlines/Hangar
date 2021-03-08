@@ -92,6 +92,63 @@ describe('message handler', () => {
     expect(messageArg).toEqual(pingMessage);
   });
 
+  it('successfully responds to !p requests', async () => {
+    const reply = jest.fn();
+    const pingMessage = makeDiscordMessage({
+      reply,
+      content: '!p',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(pingMessage);
+    expect(pingHandlerSpy).toBeCalledTimes(1);
+    const messageArg = pingHandlerSpy.mock.calls[0][0];
+    expect(messageArg).toEqual(pingMessage);
+  });
+
+  it('successfully responds to !Ping requests', async () => {
+    const reply = jest.fn();
+    const pingMessage = makeDiscordMessage({
+      reply,
+      content: '!Ping',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(pingMessage);
+    expect(pingHandlerSpy).toBeCalledTimes(1);
+    const messageArg = pingHandlerSpy.mock.calls[0][0];
+    expect(messageArg).toEqual(pingMessage);
+  });
+
+  it('successfully responds to !P requests', async () => {
+    const reply = jest.fn();
+    const pingMessage = makeDiscordMessage({
+      reply,
+      content: '!P',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(pingMessage);
+    expect(pingHandlerSpy).toBeCalledTimes(1);
+    const messageArg = pingHandlerSpy.mock.calls[0][0];
+    expect(messageArg).toEqual(pingMessage);
+  });
+
   it('logs an error if a handler throws', async () => {
     const reply = jest.fn();
     const pingMessage = makeDiscordMessage({

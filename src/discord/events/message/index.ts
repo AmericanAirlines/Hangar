@@ -15,8 +15,9 @@ type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<
 
 interface Command {
   handlerId: string;
-  trigger?: string;
+  trigger?: RegExp;
   description: string;
+  readTrigger: string;
   handler: HandlerFn;
   subCommands?: SubCommands;
 }
@@ -26,48 +27,55 @@ export type SubCommands = Record<string, HandlerFn>;
 export const commands: Command[] = [
   {
     handlerId: 'help',
-    trigger: '!help',
+    trigger: /^!(help|h)$/i,
     description: 'Lists commands the user can use to interact with the bot',
+    readTrigger: "!help or !h",
     handler: help,
   },
   {
     handlerId: 'ping',
-    trigger: '!ping',
+    trigger: /^!(ping|p)$/i,
     description: 'Replies with pong',
+    readTrigger: "!ping or !p",
     handler: ping,
   },
   {
     handlerId: 'ideaPitch',
-    trigger: '!ideaPitch',
+    trigger: /^!(ideaPitch|ip)$/i,
     description: 'Think you have a good idea? Join a queue to come pitch to our team!',
+    readTrigger: "!ideaPitch or !ip",
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'technicalSupport',
-    trigger: '!technicalSupport',
+    trigger: /^!(technicalSupport|ts)$/i,
     description: 'Need help with your hack? Join our tech support queue so our team can help!',
+    readTrigger: "!technicalSupport or !ts",
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'jobChat',
-    trigger: '!jobChat',
+    trigger: /^!(jobChat|jc)$/i,
     description: 'Interested in joining our team? Come chat with us about Full Time and Internship opportunities!',
+    readTrigger: "!jobChat or !jc",
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'registerTeam',
-    trigger: '!registerTeam',
+    trigger: /^!(registerTeam|rt)$/i,
     description: 'Let us know who you’re hacking with and what you’re hacking on! There may even be prizes involved :wink:',
+    readTrigger: "!registerTeam or !rt",
     handler: registerTeam,
     subCommands: regSubCommands,
   },
   {
     handlerId: 'exit',
-    trigger: '!exit',
+    trigger: /^!(exit|e)$/i,
     description: 'Exits the user out of any flows they might be in (such as team registration)',
+    readTrigger: "!exit or !e",
     handler: exit,
   },
 ];
@@ -97,7 +105,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   let handler: HandlerFn | undefined;
 
   // Find a command handler matching the raw message (e.g., '!help')
-  handler = commands.find((c) => c.trigger === msg.content)?.handler;
+  handler = commands.find((c) => msg.content.match(c.trigger))?.handler;
 
   // Check to see if the context has a current command
   if (!handler && context.currentCommand) {

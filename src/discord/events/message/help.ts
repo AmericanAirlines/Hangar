@@ -15,7 +15,7 @@ export async function help(msg: Discord.Message): Promise<void> {
         ...commands
           .filter((command) => !hiddenHandlers.includes(command.handlerId))
           .map((command) => ({
-            name: `**\n**\`${command.trigger}\``,
+            name: `**\n**\`${command.readTrigger}\``,
             value: command.description,
           })),
         { name: '**\n**', value: '[Hangar](https://github.com/AmericanAirlines/Hangar) is an Open Source project created by American Airlines.' },
