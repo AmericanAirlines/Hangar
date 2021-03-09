@@ -12,9 +12,11 @@ export class Config extends BaseEntity {
   @PrimaryColumn()
   key: string;
 
+  // TODO: change to 'simple-json' type
   @Column()
   value: string;
 
+  // TODO: prevent this from erring on null values
   static async findToggleForKey(key: string): Promise<boolean> {
     const toggle = await this.findOne({ key });
     if (toggle) {
@@ -25,4 +27,6 @@ export class Config extends BaseEntity {
     }
     return toggle ? toggle.value === 'true' : false;
   }
+
+  // TODO: create getValueAs method with all signature possibilities
 }
