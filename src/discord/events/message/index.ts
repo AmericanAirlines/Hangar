@@ -152,5 +152,5 @@ export async function message(msg: Discord.Message): Promise<void> {
     return;
   }
 
-  msg.reply("That isn't a command I understand. Try replying with `!help` to see the full list of things I can help with!");
+  msg.reply("That isn't a command I understand. Try replying with `!help` or `!h` to see the full list of things I can help with!");
 }
