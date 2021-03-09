@@ -70,7 +70,7 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith("That isn't a command I understand. Try replying with `!help` to see the full list of things I can help with!");
+    expect(reply).toBeCalledWith("That isn't a command I understand. Try replying with `!help` or `!h` to see the full list of things I can help with!");
   });
 
   it('successfully responds to !ping requests', async () => {
