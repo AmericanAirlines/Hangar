@@ -17,3 +17,5 @@
 - Razvan Preotu (rnp170130@utdallas.edu)
 - Evelio Sosa (evsosa@tamu.edu)
 - Yun Phelps (phelps.yun@tamu.edu)
+- Allyson King (allysonmking@tamu.edu)
+- Olin Zhou (olin@tamu.edu)
