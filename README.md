@@ -31,7 +31,9 @@ This app is still in the early stages of development and only some functionality
 # Local Development
 
 ## Node
-Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 12.x. If you decide to use another version of Node such as 13.x or 14.x, you may experience unexpected issues.
+Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 14.x.
+
+:warning: If you decide to use another version of Node, such as 13.x or 15.x, you may experience unexpected issues.
 
 ## Postgres
 Hangar uses Postgres 11, so you'll need to set it up on your machine. If you don't have Postgres installed already, see the [Installation and Use](#installation-and-use) section below. 
@@ -133,7 +135,7 @@ The best way to start the app and work on it is by using `npm run dev`, which wi
 After the app starts, it will be accessible on `localhost:3000` (unless the port was modified via `.env`).
 
 ## Handling App Events Locally
-In order to make your app accessible to platforms like Slack, you'll need to use an app like [`ngrok`](https://github.com/bubenshchykov/ngrok) to obtain a URL which can be used within your Slack app configuration. After running `npm i` to install dependencies, simply `npm run tunnel` to create the tunnel, then use the following URL output to route web traffic to your app.
+In order to make your app accessible to platforms like Slack, you'll need to use an app like [`ngrok`](https://ngrok.com/) to obtain a URL which can be used within your Slack app configuration. Install ngrok globally with `npm i ngrok -g` and then run `ngrok http 3000` to create the tunnel. After it starts, use the following URL output to route web traffic to your app.
 
 ![](./assets/Ngrok-Result.png)
 
