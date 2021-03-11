@@ -120,20 +120,20 @@ export interface StringDictionary {
   registerTeamDescription: string;
   registerTeamExit: string;
   registerTeamExitValue: string;
-  AppNameMessage: string;
-  AppDetailMessage: string;
-  AppChannelMessage: string;
+  appNameMessage: string;
+  appDetailMessage: string;
+  appChannelMessage: string;
   teamChannel: string;
   finalTeamTitle: string;
   finalTeamDescription: string;
-  TeamNameTitle: string;
-  TeamMembersTitle: string;
-  TeamDescriptionTitle: string;
-  TeamChannelName: string;
-  DuplicateChannelCode: string;
-  DuplicateChannel: string;
-  FailedSavingTeamLogger: string;
-  FailedSavingTeam: string;
+  teamNameTitle: string;
+  teamMembersTitle: string;
+  teamDescriptionTitle: string;
+  teamChannelName: string;
+  duplicateChannelCode: string;
+  duplicateChannel: string;
+  failedSavingTeamLogger: string;
+  failedSavingTeam: string;
   /*----------------------------------*/
 
   /*----------------------------------*/

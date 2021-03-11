@@ -64,7 +64,7 @@ export const regSubCommands: SubCommands = {
     ctx.payload = team;
     ctx.currentCommand = stringDictionary.registerTeamTitle;
     await ctx.save();
-    msg.author.send(stringDictionary.AppNameMessage);
+    msg.author.send(stringDictionary.appNameMessage);
   },
   teamName: async (msg, ctx) => {
     ctx.nextStep = RegistrationSteps.teamDescription;
@@ -73,7 +73,7 @@ export const regSubCommands: SubCommands = {
     ctx.payload = team;
     ctx.currentCommand = stringDictionary.registerTeamTitle;
     await ctx.save();
-    await msg.author.send(stringDictionary.AppDetailMessage);
+    await msg.author.send(stringDictionary.appDetailMessage);
   },
   teamDescription: async (msg, ctx) => {
     ctx.nextStep = RegistrationSteps.teamChannel;
@@ -82,7 +82,7 @@ export const regSubCommands: SubCommands = {
     ctx.payload = team;
     ctx.currentCommand = stringDictionary.registerTeamTitle;
     await ctx.save();
-    await msg.author.send(stringDictionary.AppChannelMessage);
+    await msg.author.send(stringDictionary.appChannelMessage);
   },
   teamChannel: async (msg, ctx) => {
     const team = ctx.payload as PartialTeamInfo;
@@ -101,19 +101,19 @@ export const regSubCommands: SubCommands = {
           description: stringDictionary.finalTeamDescription,
           fields: [
             {
-              name: stringDictionary.TeamNameTitle,
+              name: stringDictionary.teamNameTitle,
               value: (await finalTeam).name,
             },
             {
-              name: stringDictionary.TeamMembersTitle,
+              name: stringDictionary.teamMembersTitle,
               value: (await finalTeam).members,
             },
             {
-              name: stringDictionary.TeamDescriptionTitle,
+              name: stringDictionary.teamDescriptionTitle,
               value: (await finalTeam).projectDescription,
             },
             {
-              name: stringDictionary.TeamChannelName,
+              name: stringDictionary.teamChannelName,
               value: (await finalTeam).channelName,
             },
           ],
@@ -122,11 +122,11 @@ export const regSubCommands: SubCommands = {
       await ctx.clear();
     } catch (err) {
       // Check if duplicate key constraint error (Postgres error 23505 - unique_violation)
-      if (err.code === stringDictionary.DuplicateChannelCode) {
-        await msg.author.send(stringDictionary.DuplicateChannel);
+      if (err.code === stringDictionary.duplicateChannelCode) {
+        await msg.author.send(stringDictionary.duplicateChannel);
       } else {
-        logger.error(stringDictionary.FailedSavingTeamLogger, err);
-        await msg.author.send(stringDictionary.FailedSavingTeam);
+        logger.error(stringDictionary.failedSavingTeamLogger, err);
+        await msg.author.send(stringDictionary.failedSavingTeam);
       }
     }
   },

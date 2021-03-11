@@ -215,20 +215,20 @@ stringDictionary.registerTeamJudingTitle = `*Register your team for judging* :ma
 stringDictionary.registerTeamDescription = `Answer each question the bot provides. Once you are done answering a question, DM the answer to the bot and it will reply prompting for the next answer!`;
 stringDictionary.registerTeamExit = `Exiting the flow`;
 stringDictionary.registerTeamExitValue = 'If you would like to exit the signup process at any time, either type `!exit` or any other command!';
-stringDictionary.AppNameMessage = `What's your team or app name?`;
-stringDictionary.AppDetailMessage = `What does your project do? How will it make a difference? What technologies are used?`;
-stringDictionary.AppChannelMessage = `What's your team's channel name? (e.g. Hacker Room 51)`;
+stringDictionary.appNameMessage = `What's your team or app name?`;
+stringDictionary.appDetailMessage = `What does your project do? How will it make a difference? What technologies are used?`;
+stringDictionary.appChannelMessage = `What's your team's channel name? (e.g. Hacker Room 51)`;
 stringDictionary.teamChannel = `teamChannel`;
 stringDictionary.finalTeamTitle = `**You are signed up :partying_face:**`;
 stringDictionary.finalTeamDescription = `Here are the details for your team:`;
-stringDictionary.TeamNameTitle = `Team Name:`;
-stringDictionary.TeamMembersTitle = `Team Members:`;
-stringDictionary.TeamDescriptionTitle = `Team Description:`;
-stringDictionary.TeamChannelName = `Team Channel Name`;
-stringDictionary.DuplicateChannelCode = `23505`;
-stringDictionary.DuplicateChannel = `Oops, looks like someone already entered the channel name that you input! Please try again`;
-stringDictionary.FailedSavingTeamLogger = `Saving team failed: `;
-stringDictionary.FailedSavingTeam = `Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.`;
+stringDictionary.teamNameTitle = `Team Name:`;
+stringDictionary.teamMembersTitle = `Team Members:`;
+stringDictionary.teamDescriptionTitle = `Team Description:`;
+stringDictionary.teamChannelName = `Team Channel Name`;
+stringDictionary.duplicateChannelCode = `23505`;
+stringDictionary.duplicateChannel = `Oops, looks like someone already entered the channel name that you input! Please try again`;
+stringDictionary.failedSavingTeamLogger = `Saving team failed: `;
+stringDictionary.failedSavingTeam = `Oops, looks like something went wrong on our end! Come to our booth and we will try to sort things out.`;
 /*----------------------------------*/
 
 /*----------------------------------*/
