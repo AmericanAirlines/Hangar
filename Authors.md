@@ -19,3 +19,5 @@
 - Yun Phelps (phelps.yun@tamu.edu)
 - Allyson King (allysonmking@tamu.edu)
 - Olin Zhou (olin@tamu.edu)
+- Natalie Martinez (mart125074@tamu.edu)
+- Turner Levey (turnerlevey@tamu.edu)
