@@ -5,6 +5,7 @@ import logger from '../../../logger';
 import { Config } from '../../../entities/config';
 import { SubCommands } from '.';
 import { DiscordContext } from '../../../entities/discordContext';
+import { stringDictionary } from '../../../StringDictionary';
 
 /* eslint-disable no-param-reassign */
 
@@ -36,7 +37,7 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
       break;
   }
   if (!queueActive) {
-    msg.author.send("**Whoops...**\n:see_no_evil: Our team isn't available to help at the moment, check back with us soon!");
+    msg.author.send(stringDictionary.queueNotActive);
     return;
   }
   const commonConditions = { slackId: msg.author.id };
@@ -47,9 +48,7 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
     ])
     .getCount();
   if (userOpenRequestsCount > 0) {
-    await msg.author.send(
-      "**Whoops...**\n:warning: Looks like you're already waiting to get help from our team\nKeep an eye on your direct messages from this bot for updates. If you think this is an error, come chat with our team.",
-    );
+    await msg.author.send(stringDictionary.requestAlreadyOpen);
     await context.clear();
     return;
   }
@@ -64,7 +63,11 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
     payloadInfo.requestType === SupportRequestType.JobChat
       ? "what's your name"
       : "what's the name of your team's voice channel (e.g. Hacker Room 51)";
-  msg.author.send(`Hey there! :wave: Before we add you to the queue, ${prompt}?`);
+  msg.author.send(
+    stringDictionary.beforeAddToQueue({
+      prompt,
+    }),
+  );
   context.nextStep = Steps.inputName;
   context.currentCommand = cmdName;
   context.payload = info;
@@ -79,15 +82,14 @@ export const supportRequestSubCommands: SubCommands = {
     const userSupportRequest = new SupportRequest(info.id, info.username, info.requestType);
     try {
       await userSupportRequest.save();
-      let responseString =
-        ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.";
+      let responseString = stringDictionary.addedToQueue;
       if (info.requestType === SupportRequestType.JobChat) {
-        responseString += '\n\nPlease make sure to have your resume ready for our team!';
+        responseString += stringDictionary.jobChatResponse;
       }
       msg.author.send(responseString);
     } catch (err) {
-      await msg.author.send("**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.");
-      logger.error('Something went wrong trying to create a support request', err);
+      await msg.author.send(stringDictionary.warningSomethingWrong);
+      logger.error(stringDictionary.supportRequestErr, err);
     }
     await ctx.clear();
   },

@@ -27,6 +27,7 @@ export interface StringDictionary {
 
   /*----------------------------------*/
   // src>slack>blocks>dashboardblocks.ts
+  // src>discord>events>message>exit.ts
   headerinfo: string;
   intro: string;
   challenge: string;
@@ -82,5 +83,67 @@ export interface StringDictionary {
   registerTeamNotOpen: stringFunction;
   teamSubmittedAdminNotification: stringFunction;
   teamSubmittedpostMessage: stringFunction;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>discord>events>message>exit.ts
+  exitFlow: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>discord>events>message>help.ts
+  prizeMessage: string;
+  appInfoMessage: string;
+  interactMessage: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>discord>events>message>index.ts
+  botTaggedMsg: string;
+  botCantUnderstand: string;
+  genericErrorMessage: string;
+  helpDescript: string;
+  pingDescript: string;
+  ideaDescript: string;
+  techDescript: string;
+  jobDescript: string;
+  registerDescript: string;
+  exitDescript: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>discord>events>message>registerTeam.ts
+  registerNotOpen: string;
+  registerTeamUserMessage: string;
+  registerTeamTitle: string;
+  registerTeamJudingTitle: string;
+  registerTeamDescription: string;
+  registerTeamExit: string;
+  registerTeamExitValue: string;
+  appNameMessage: string;
+  appDetailMessage: string;
+  appChannelMessage: string;
+  teamChannel: string;
+  finalTeamTitle: string;
+  finalTeamDescription: string;
+  teamNameTitle: string;
+  teamMembersTitle: string;
+  teamDescriptionTitle: string;
+  teamChannelName: string;
+  duplicateChannelCode: string;
+  duplicateChannel: string;
+  failedSavingTeamLogger: string;
+  failedSavingTeam: string;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>discord>events>message>request.ts
+  queueNotActive: string;
+  requestAlreadyOpen: string;
+  warningSomethingWrong: string;
+  supportRequestErr: string;
+  addedToQueue: string;
+  beforeAddToQueue: stringFunction;
+  jobChatResponse: string;
   /*----------------------------------*/
 }

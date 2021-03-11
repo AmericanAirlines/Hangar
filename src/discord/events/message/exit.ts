@@ -1,5 +1,6 @@
 import Discord from 'discord.js';
+import { stringDictionary } from '../../../StringDictionary';
 
 export async function exit(msg: Discord.Message): Promise<void> {
-  await msg.author.send('You have been successfully exited out of any flows you were in!');
+  await msg.author.send(stringDictionary.exitFlow);
 }

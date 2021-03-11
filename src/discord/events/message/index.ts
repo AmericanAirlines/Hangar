@@ -9,6 +9,7 @@ import { registerTeam, regSubCommands } from './registerTeam';
 import { exit } from './exit';
 import { botWasTagged } from '../../utilities/botWasTagged';
 import { env } from '../../../env';
+import { stringDictionary } from '../../../StringDictionary';
 
 /* eslint-disable no-param-reassign */
 type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
@@ -27,47 +28,47 @@ export const commands: Command[] = [
   {
     handlerId: 'help',
     trigger: '!help',
-    description: 'Lists commands the user can use to interact with the bot',
+    description: stringDictionary.helpDescript,
     handler: help,
   },
   {
     handlerId: 'ping',
     trigger: '!ping',
-    description: 'Replies with pong',
+    description: stringDictionary.pingDescript,
     handler: ping,
   },
   {
     handlerId: 'ideaPitch',
     trigger: '!ideaPitch',
-    description: 'Think you have a good idea? Join a queue to come pitch to our team!',
+    description: stringDictionary.ideaDescript,
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'technicalSupport',
     trigger: '!technicalSupport',
-    description: 'Need help with your hack? Join our tech support queue so our team can help!',
+    description: stringDictionary.techDescript,
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'jobChat',
     trigger: '!jobChat',
-    description: 'Interested in joining our team? Come chat with us about Full Time and Internship opportunities!',
+    description: stringDictionary.jobDescript,
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'registerTeam',
     trigger: '!registerTeam',
-    description: 'Let us know who you’re hacking with and what you’re hacking on! There may even be prizes involved :wink:',
+    description: stringDictionary.registerDescript,
     handler: registerTeam,
     subCommands: regSubCommands,
   },
   {
     handlerId: 'exit',
     trigger: '!exit',
-    description: 'Exits the user out of any flows they might be in (such as team registration)',
+    description: stringDictionary.exitDescript,
     handler: exit,
   },
 ];
@@ -84,7 +85,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   if (msg.channel.type !== 'dm') {
     if (botChannelIds.includes(msg.channel.id) && botWasTagged(msg)) {
       // Bot was tagged in a channel it's listening to AND should respond in
-      msg.reply('Hi there! :wave: I can only help from within a Direct Message. Click my name and send the message `!help` to get started!');
+      msg.reply(stringDictionary.botTaggedMsg);
     }
     return;
   }
@@ -144,5 +145,5 @@ export async function message(msg: Discord.Message): Promise<void> {
     return;
   }
 
-  msg.reply("That isn't a command I understand. Try replying with `!help` to see the full list of things I can help with!");
+  msg.reply(stringDictionary.botCantUnderstand);
 }
