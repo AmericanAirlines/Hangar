@@ -1,6 +1,7 @@
 /* global fetch */
 import React from 'react';
 import { NextComponentType } from 'next';
+// TODO: Add debounce import for string and number onChange
 
 interface Result {
   name: string;
@@ -73,8 +74,8 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   }, [lastRefreshTimestamp]);
 
-  const handleChange = (configItem: Config) => async (): Promise<void> => {
-    const newValue = configItem.value === 'true' ? 'false' : 'true';
+  const handleChange = (configItem: Config) => async (): Promise<void> => { // TODO: Rename to something like handleBooleanChange bc only used for boolean button
+    const newValue = configItem.value === 'true' ? 'false' : 'true'; // TODO: Change to just flip real booleans instead of strings
 
     try {
       const res = await fetch('/api/config', {
@@ -128,15 +129,16 @@ const AdminPage: NextComponentType = () => {
                   </label>
                   <div style={{ display: 'flex' }}>
                     <input
-                      type="text"
+                      type="text" // TODO: Should check if it's a number first
                       style={{ flex: 1 }}
                       className="form-control"
                       id={configItem.key}
                       placeholder="Team name"
-                      value={configItem.value}
-                      disabled
+                      value={configItem.value} // TODO: Make sure to change the val to a string for display
+                      disabled // TODO: Only disable for booleans
+                      // TODO: make an onChange listener to save the changes for strings and numbers. Use debounce to delay instead of just using onBlur
                     />
-                    <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}>
+                    <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}> // Remove for strings and numbers
                       {configItem.value === 'true' ? 'Disable' : 'Enable'}
                     </button>
                   </div>
