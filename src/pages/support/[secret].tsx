@@ -6,6 +6,7 @@ import { NextPage } from 'next';
 import { SupportRequestType } from '../../types/supportRequest';
 import { SupportQueue } from '../../components/SupportQueue';
 import { RegisteredTeamsList } from '../../components/RegisteredTeamsList';
+import { SupportRequests } from '../../components/SupportRequests';
 import { env } from '../../env';
 
 interface Request {
@@ -60,7 +61,11 @@ const support: NextPage<{ secret: string }> = (props): JSX.Element => {
         </div>
       </div>
       <div className="row">
-        <div className="col-12 col-md-6 mt-2">
+        <div className="col-12 mt-2">
+          <SupportRequests secret={props.secret} />
+        </div>
+
+        {/* <div className="col-12 col-md-6 mt-2">
           <SupportQueue
             title="Support Queue"
             secret={props.secret}
@@ -70,16 +75,16 @@ const support: NextPage<{ secret: string }> = (props): JSX.Element => {
               { name: 'Technical', requestType: SupportRequestType.TechnicalSupport },
             ]}
           />
-        </div>
+        </div> */}
 
-        <div className="col-12 col-md-6 mt-2">
+        {/* <div className="col-12 col-md-6 mt-2">
           <SupportQueue
             title="Job Chat Queue"
             secret={props.secret}
             supportName={formik.values.supportName}
             options={[{ name: 'Job Chat', requestType: SupportRequestType.JobChat }]}
           />
-        </div>
+        </div> */}
 
         <div className="col-12 mt-2">
           <RegisteredTeamsList secret={props.secret} />
