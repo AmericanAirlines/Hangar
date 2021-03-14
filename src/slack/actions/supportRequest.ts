@@ -37,7 +37,7 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       const requestItem = new SupportRequest(
         slackId,
         slackName,
-        actionId === actionIds.joinIdeaPitchRequestQueue ? SupportRequestType.IdeaPitch : SupportRequestType.TechnicalSupport,
+        actionId === actionIds.joinIdeaPitchRequestQueue ? SupportRequestType.IdeaPitch : (actionId === actionIds.joinTechnicalRequestQueue ? SupportRequestType.TechnicalSupport : SupportRequestType.JobChat)
       );
       await requestItem.save();
       await openAlertModal(context.botToken, body.trigger_id, {
@@ -46,7 +46,7 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       });
 
       await postAdminNotification(
-        `<@${body.user.id}> has been added to the ${actionId === actionIds.joinIdeaPitchRequestQueue ? 'Idea Pitch' : 'Tech Support'} queue!`,
+        `<@${body.user.id}> has been added to the ${actionId === actionIds.joinIdeaPitchRequestQueue ? 'Idea Pitch' : (actionId === actionIds.joinTechnicalRequestQueue ? 'Tech Request' : 'Job Chat')} queue!`,
       );
     } catch (err) {
       if (err.name === SupportRequestErrors.ExistingActiveRequest) {

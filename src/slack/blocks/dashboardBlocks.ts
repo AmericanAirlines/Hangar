@@ -77,6 +77,22 @@ const technicalRequestBlock: KnownBlock = {
   },
 };
 
+const jobChatBlock: KnownBlock = {
+  type: 'section',
+  text: {
+    type: 'mrkdwn',
+    text: stringDictionary.jobChat, 
+  },
+  accessory: {
+    type: 'button',
+    text: {
+      type: 'plain_text',
+      text: stringDictionary.jobChat2, 
+    },
+    action_id: actionIds.joinJobChatQueue, 
+  },
+};
+
 const teamRegistrationBlock: KnownBlock = {
   type: 'section',
   text: {
@@ -111,6 +127,7 @@ export function dashboardBlocks(): KnownBlock[] {
 
   blocks.push(ideaPitchRequestBlock);
   blocks.push(technicalRequestBlock);
+  blocks.push(jobChatBlock);
 
   blocks.push(teamRegistrationBlock);
 
