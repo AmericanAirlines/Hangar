@@ -55,15 +55,15 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
     teamData.forEach((team: Team) => {
       Object.keys(team).forEach((key) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const val = key == 'createdAt' ? DateTime.fromISO((team as any)[key as keyof Team]).toRelative() : (team as any)[key as keyof Team];
-        // console.log(key);
-        // console.log(val);
-        // if (key == 'createdAt') {
-        //   console.log('HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLo');
-        //   // console.log(DateTime.fromISO((team as any)[key as keyof Team]).toRelative());
-        //   console.log((team as any)[key as keyof Team]);
-        //   val = DateTime.fromISO((team as any)[key as keyof Team]);
-        // }
+        var val = (team as any)[key as keyof Team];
+        console.log(key);
+        console.log(val);
+        if (key == 'createdAt') {
+          console.log('HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLo');
+          // console.log(DateTime.fromISO((team as any)[key as keyof Team]).toRelative());
+          console.log((team as any)[key as keyof Team]);
+          val = DateTime.fromISO((team as any)[key as keyof Team]);
+        }
         if (Array.isArray(val)) {
           // eslint-disable-next-line no-param-reassign, @typescript-eslint/no-explicit-any
           ((team as unknown) as any)[key] = val.join(', ');
