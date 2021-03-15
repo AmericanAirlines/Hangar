@@ -9,6 +9,7 @@ import { registerTeam, regSubCommands } from './registerTeam';
 import { exit } from './exit';
 import { botWasTagged } from '../../utilities/botWasTagged';
 import { env } from '../../../env';
+import { stringDictionary } from '../../../StringDictionary';
 
 /* eslint-disable no-param-reassign */
 type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
@@ -92,7 +93,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   if (msg.channel.type !== 'dm') {
     if (botChannelIds.includes(msg.channel.id) && botWasTagged(msg)) {
       // Bot was tagged in a channel it's listening to AND should respond in
-      msg.reply('Hi there! :wave: I can only help from within a Direct Message. Click my name and send the message `!help` to get started!');
+      msg.reply(stringDictionary.botTaggedMsg);
     }
     return;
   }
