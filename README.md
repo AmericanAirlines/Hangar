@@ -31,7 +31,9 @@ This app is still in the early stages of development and only some functionality
 # Local Development
 
 ## Node
-Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 12.x. If you decide to use another version of Node such as 13.x or 14.x, you may experience unexpected issues.
+Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 14.x.
+
+:warning: If you decide to use another version of Node, such as 13.x or 15.x, you may experience unexpected issues.
 
 ## Postgres
 Hangar uses Postgres 11, so you'll need to set it up on your machine. If you don't have Postgres installed already, see the [Installation and Use](#installation-and-use) section below. 
@@ -50,13 +52,90 @@ During the installation process (if you follow the steps on [postgresql.org](htt
 #### Viewing/Editing the DB
 If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
 
+## Environment Variables
+<details>
+  <summary>
+    For details on local environment variable configuration, expand this section.   
+  </summary>
+  <!-- Your content here -->
+  
+### Environment
+- `NODE_ENV="environment"`
+
+  required, set to one of the following: development, test, or production
+
+### Heroku Deployment
+Environment variables needed if deploying the database to Heroku.
+
+- `DB_SSL_DISABLED="true"`
+
+### Slack
+Environment variables needed for the slack application after you've [created the slack application](#creating-a-slack-app). Note: only one platform's (slack/discord) environment variables are required.
+
+- `SLACK_SIGNING_SECRET="XXXXXXXXXXXXXXXX"`
+
+  required, from [slack](https://api.slack.com/apps), under App Credentials you can find Signing Secret
+
+- `SLACK_BOT_TOKEN="xoxb-XXXXXXXXXXXXXXXX"`
+  
+  required, from [slack](https://api.slack.com/apps), under Install App you can find Bot User OAuth Token
+
+- `SLACK_NOTIFICATIONS_WEBHOOK_URL="https://hooks.slack.com/..."`
+
+  required, from [slack](https://api.slack.com/apps), under Add Features & Functionality and Incoming Webhooks you can find the Webhook UR if created
+
+### Discord
+Environment variables needed for the discord application after you've created the discord application.  Note: only one platform's (slack/discord) environment variables are required.
+
+- `DISCORD_BOT_TOKEN="***********************************************************"`
+
+  required, from [discord](https://discord.com/developers/applications), under Bot you can copy the token number
+
+- `DISCORD_BOT_CHANNEL_IDS="0123456789012345678,0123456789012345678"`
+
+  required, comma separated channel IDs, to get the channel IDs: in The Discord application go to Settings > Appearance > Check developer mode. Right click the channel name and copy the channel ID (Copy ID).
+
+### Secrets
+Environment variables needed to set app secrets for user groups
+- `JUDGE_SECRET="secret"`
+
+  required, create your own secret
+
+- `SUPPORT_SECRET="secret"`
+
+  required, create your own secret
+
+- `ADMIN_SECRET="secret"`
+  
+  required, create your own secret
+
+- `CHALLENGE_URL="https://your-sponsor-challenge.com"`
+
+  optional, link to webpage with hackathon challenge info
+
+### Postgres
+Environment variables needed to connect to a [Postgres server](##Postgres).
+
+- `PGUSER="postgres"`
+
+  required if password-protected, PGUSER="postgres"
+
+- `PGPASSWORD="password"`
+
+  required if password-protected, password entered during server installation
+
+- `DATABASE_URL="postgres://localhost:5432/hangar"`
+
+  required if database is not on default port or called hangar 
+</details>
+
 ## Starting the App
 The best way to start the app and work on it is by using `npm run dev`, which will start the app and then restart the app whenever a TypeScript file changes. After modifying a non-Typescript file, restart the app by typing `rs` into the same terminal you ran `npm run dev` from and then hitting return.
 
 After the app starts, it will be accessible on `localhost:3000` (unless the port was modified via `.env`).
 
 ## Handling App Events Locally
-In order to make your app accessible to platforms like Slack, you'll need to use an app like [`ngrok`](https://github.com/bubenshchykov/ngrok) to obtain a URL which can be used within your Slack app configuration. After running `npm i` to install dependencies, simply `npm run tunnel` to create the tunnel, then use the following URL output to route web traffic to your app.
+In order to make your app accessible to platforms like Slack, you'll need to use an app like [`ngrok`](https://ngrok.com/) to obtain a URL which can be used within your Slack app configuration. Install ngrok globally with `npm i ngrok -g` and then run `ngrok http 3000` to create the tunnel. After it starts, use the following URL output to route web traffic to your app.
 
 ![](./assets/Ngrok-Result.png)
 
