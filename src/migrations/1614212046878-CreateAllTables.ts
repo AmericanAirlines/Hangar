@@ -8,14 +8,6 @@ export class CreateAllTables1614212046878 implements MigrationInterface {
       'CREATE TABLE "configuration" ("key" character varying NOT NULL, "value" character varying NOT NULL, CONSTRAINT "PK_36aa5305bb4de9034d272f6a244" PRIMARY KEY ("key"))',
     );
     await queryRunner.query(
-      'INSERT INTO "configuration" ("key", "value") VALUES (\'ADMIN_SECRET\', \' \') ON CONFLICT DO NOTHING',
-      undefined,
-    );
-    await queryRunner.query(
-      'INSERT INTO "configuration" ("key", "value") VALUES (\'JUDGE_SECRET\', \' \') ON CONFLICT DO NOTHING',
-      undefined,
-    );
-    await queryRunner.query(
       'CREATE TABLE "discord_context" ("id" character varying NOT NULL, "currentCommand" character varying NOT NULL, "nextStep" character varying NOT NULL, "payload" text NOT NULL, CONSTRAINT "PK_0396a1aaa8138098a59f0ff4a8e" PRIMARY KEY ("id"))',
     );
     await queryRunner.query(
