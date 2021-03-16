@@ -1,6 +1,7 @@
 /* global fetch */
 import React from 'react';
 import { NextComponentType } from 'next';
+import ConfigComponent from '../components/ConfigComponent';
 // TODO: Add debounce import for string and number onChange
 
 interface Result {
@@ -37,22 +38,22 @@ const AdminPage: NextComponentType = () => {
   React.useEffect(() => {
     const promises: Promise<void>[] = [];
 
-    promises.push(
-      (async (): Promise<void> => {
-        const res = await fetch('/api/config');
+    // promises.push(
+    //   (async (): Promise<void> => {
+    //     const res = await fetch('/api/config');
 
-        if (!res.ok) {
-          setError(true);
-          return;
-        }
+    //     if (!res.ok) {
+    //       setError(true);
+    //       return;
+    //     }
 
-        try {
-          setConfigItems(await res.json());
-        } catch (err) {
-          setError(true);
-        }
-      })(),
-    );
+    //     try {
+    //       setConfigItems(await res.json());
+    //     } catch (err) {
+    //       setError(true);
+    //     }
+    //   })(),
+    // );
 
     promises.push(
       (async (): Promise<void> => {
@@ -74,35 +75,7 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   }, [lastRefreshTimestamp]);
 
-  const handleChange = (configItem: Config) => async (): Promise<void> => { // TODO: Rename to something like handleBooleanChange bc only used for boolean button
-    const newValue = configItem.value === 'true' ? 'false' : 'true'; // TODO: Change to just flip real booleans instead of strings
 
-    try {
-      const res = await fetch('/api/config', {
-        method: 'POST',
-        body: JSON.stringify({
-          configKey: configItem.key,
-          configValue: newValue,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!res.ok) {
-        throw new Error();
-      }
-
-      const newConfigItem: Config = await res.json();
-
-      const items = [...configItems];
-      const index = items.findIndex((i) => i.key === newConfigItem.key);
-      items[index] = newConfigItem;
-      setConfigItems(items);
-    } catch (err) {
-      setError(true);
-    }
-  };
 
   if (loading) return null;
 
@@ -116,37 +89,7 @@ const AdminPage: NextComponentType = () => {
         </div>
       </div>
       <div className="row">
-        <div className="col-12 col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <h2 className="font-weight-normal">Config Items</h2>
-              {configItems.length === 0 && <div className="alert alert-info mt-3">No config items to display 🤔</div>}
-
-              {configItems.map((configItem) => (
-                <div key={configItem.key} className="form-group mb-2">
-                  <label htmlFor={configItem.key} className="mr-3">
-                    {configItem.key}
-                  </label>
-                  <div style={{ display: 'flex' }}>
-                    <input
-                      type="text" // TODO: Should check if it's a number first
-                      style={{ flex: 1 }}
-                      className="form-control"
-                      id={configItem.key}
-                      placeholder="Team name"
-                      value={configItem.value} // TODO: Make sure to change the val to a string for display
-                      disabled // TODO: Only disable for booleans
-                      // TODO: make an onChange listener to save the changes for strings and numbers. Use debounce to delay instead of just using onBlur
-                    />
-                    <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}> // Remove for strings and numbers
-                      {configItem.value === 'true' ? 'Disable' : 'Enable'}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <ConfigComponent></ConfigComponent>
         <div className="col-12 col-md-6">
           <div className="card">
             <div className="card-body">

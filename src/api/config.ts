@@ -18,8 +18,9 @@ config.get('/', async (req, res) => {
 config.post('/', async (req, res) => {
   const { configKey, configValue } = req.body;
 
-  if (!configKey || !configKey.trim() || !configValue || !configValue.trim()) {
-    res.status(400).send("Property 'configKey' and 'configKey' are required");
+  if (!configKey || !configKey.trim()) {
+    // || !configValue || !configValue.trim()
+    res.status(400).send("Property 'configKey' and 'configKey' are required"); // I think the second configKey is meant to be a configValue but can be removed after issue 295&296?
     return;
   }
 
