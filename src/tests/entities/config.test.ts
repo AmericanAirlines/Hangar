@@ -1,17 +1,9 @@
 import 'jest';
 import { Config } from '../../entities/config';
-import { createDbConnection, closeDbConnection } from '../testdb';
 
 /* eslint-disable no-await-in-loop */
 
-describe('config', () => {
-  beforeEach(async () => {
-    await createDbConnection();
-  });
-
-  afterEach(async () => {
-    await closeDbConnection();
-  });
+xdescribe('config', () => {
 
   it('config items can be saved and retrieved', async () => {
     const item = new Config('something', 'something else');
