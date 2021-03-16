@@ -133,6 +133,26 @@ stringDictionary.registerTeamSummary = (
 /*----------------------------------*/
 
 /*----------------------------------*/
+// src>slack>blocks>joinSupportQueue.ts
+stringDictionary.joinSupportQueueblocks = `*Join our Tech Support Queue* :mag:
+\nOnly one person from each team should join`;
+
+stringDictionary.askPrimaryLanguage = `What's the primary language you're working with?`;
+
+stringDictionary.problemDescription = `What can we help you with?`;
+
+stringDictionary.problemInfoDesc = `Provide a brief summary of the issue you're having`;
+
+stringDictionary.joinSupportQueueSummary = (
+  params,
+) => `${params.userString} registered your team for sponsor judging. Our team will stop by during judging to see your hack. Best of luck and see you soon!
+
+*Team Name*: ${params.teamName}
+*Table Number*: ${params.tableNumber}
+*Project Description*: ${params.projectDescription}`;
+/*----------------------------------*/
+
+/*----------------------------------*/
 // src>slack>blocks>openSourceFooter.ts
 stringDictionary.openSource = (params) => `<${params.repoUrl} | _*Hangar*_> is an Open Source project created by American Airlines.`;
 /*----------------------------------*/

@@ -64,6 +64,17 @@ export interface StringDictionary {
   /*----------------------------------*/
 
   /*----------------------------------*/
+  // src>slack>blocks>joinSupportQueue.ts
+  joinSupportQueueblocks: string;
+  askPrimaryLanguage: string;
+  problemDescription: string;
+  problemInfoDesc: string;
+
+  supportQueueNotOpen: stringFunction;
+  joinSupportQueueSummary: stringFunction;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
   // src>slack>blocks>openSourceFooter.ts
   openSource: stringFunction;
   /*----------------------------------*/

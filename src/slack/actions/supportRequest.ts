@@ -9,6 +9,8 @@ import postAdminNotification from '../utilities/postAdminNotification';
 import { openAlertModal } from '../utilities/openAlertModal';
 import { stringDictionary } from '../../StringDictionary';
 
+import { joinSupportQueueView } from '../blocks/joinSupportQueue';
+
 // Ignore snake_case types from @slack/bolt
 /* eslint-disable @typescript-eslint/camelcase */
 
@@ -17,15 +19,17 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
   const actionId = action.action_id;
   const slackId = body.user.id;
 
-  const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
+  let slackName = 'Unknown (Check logs)';
 
-  if (!supportRequestQueueActive) {
-    await openAlertModal(context.botToken, body.trigger_id, {
-      title: stringDictionary.supportRequestWhoops,
-      text: stringDictionary.supportRequestNotOpentext,
-    });
-  } else {
-    let slackName = 'Unknown (Check logs)';
+  try {
+    const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
+    if (!supportRequestQueueActive) {
+      await openAlertModal(context.botToken, body.trigger_id, {
+        title: stringDictionary.supportRequestWhoops,
+        text: stringDictionary.supportRequestNotOpentext,
+      });
+      return;
+    }
     try {
       const result = await app.client.users.info({ user: slackId, token: context.botToken });
       slackName = (result?.user as { [key: string]: string })?.real_name as string;
@@ -33,43 +37,50 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       logger.error('Something went wrong retrieving Slack user details', err);
     }
 
-    try {
-      const requestItem = new SupportRequest(
-        slackId,
-        slackName,
-        actionId === actionIds.joinIdeaPitchRequestQueue ? SupportRequestType.IdeaPitch : SupportRequestType.TechnicalSupport,
-      );
-      await requestItem.save();
-      await openAlertModal(context.botToken, body.trigger_id, {
-        title: stringDictionary.supportRequestOpentitle,
-        text: stringDictionary.supportRequestOpentext,
-      });
+    await app.client.views.open({
+      token: context.botToken,
+      trigger_id: body.trigger_id,
+      view: joinSupportQueueView,
+    });
+  } catch (err) {
+    logger.error('Error opening modal: ', err);
+  }
+  try {
+    const requestItem = new SupportRequest(
+      slackId,
+      slackName,
+      actionId === actionIds.joinIdeaPitchRequestQueue ? SupportRequestType.IdeaPitch : SupportRequestType.TechnicalSupport,
+    );
+    await requestItem.save();
+    await openAlertModal(context.botToken, body.trigger_id, {
+      title: stringDictionary.supportRequestOpentitle,
+      text: stringDictionary.supportRequestOpentext,
+    });
 
-      await postAdminNotification(
-        `<@${body.user.id}> has been added to the ${actionId === actionIds.joinIdeaPitchRequestQueue ? 'Idea Pitch' : 'Tech Support'} queue!`,
-      );
-    } catch (err) {
-      if (err.name === SupportRequestErrors.ExistingActiveRequest) {
-        await openAlertModal(context.botToken, body.trigger_id, {
-          title: stringDictionary.supportRequestWhoops,
-          text: stringDictionary.supportRequestAlreadyInLinetext,
-          blocks: [
-            {
-              type: 'section',
-              text: {
-                type: 'plain_text',
-                text: stringDictionary.supportRequestExistingActiveRequest,
-              },
+    await postAdminNotification(
+      `<@${body.user.id}> has been added to the ${actionId === actionIds.joinIdeaPitchRequestQueue ? 'Idea Pitch' : 'Tech Support'} queue!`,
+    );
+  } catch (err) {
+    if (err.name === SupportRequestErrors.ExistingActiveRequest) {
+      await openAlertModal(context.botToken, body.trigger_id, {
+        title: stringDictionary.supportRequestWhoops,
+        text: stringDictionary.supportRequestAlreadyInLinetext,
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'plain_text',
+              text: stringDictionary.supportRequestExistingActiveRequest,
             },
-          ],
-        });
-      } else {
-        await openAlertModal(context.botToken, body.trigger_id, {
-          title: 'Whoops...',
-          text: stringDictionary.supportRequestAlertModaltext,
-        });
-        logger.error('Something went wrong trying to create a support request', err);
-      }
+          },
+        ],
+      });
+    } else {
+      await openAlertModal(context.botToken, body.trigger_id, {
+        title: 'Whoops...',
+        text: stringDictionary.supportRequestAlertModaltext,
+      });
+      logger.error('Something went wrong trying to create a support request', err);
     }
   }
 };
