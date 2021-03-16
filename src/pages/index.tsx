@@ -1,7 +1,7 @@
 /* global fetch */
 import React from 'react';
 import { NextComponentType } from 'next';
-import ConfigComponent from '../components/ConfigComponent';
+import { ConfigComponent } from '../components/ConfigComponent';
 // TODO: Add debounce import for string and number onChange
 
 interface Result {

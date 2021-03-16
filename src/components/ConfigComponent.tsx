@@ -149,5 +149,3 @@ export const ConfigComponent: React.FC<ConfigComponentProps> = () => { // Other 
     </div>
   );
 };
-
-export default ConfigComponent;
