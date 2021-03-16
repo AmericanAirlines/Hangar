@@ -1,7 +1,7 @@
 /* globals localStorage, fetch */
 
 import React from 'react';
-import { env } from '../../env';
+import { Config } from '../../entities/config';
 
 interface Team {
   id: number;
@@ -225,12 +225,15 @@ const judge = (): JSX.Element => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 judge.getInitialProps = async (ctx: any): Promise<any> => {
-  if (ctx.res && ctx.query.secret !== env.judgeSecret) {
+  const judgeSecret = await Config.findOneOrFail('judgeSecret');
+  if (ctx.res && ctx.query.secret !== judgeSecret.value) {
     ctx.res.statusCode = 404;
     ctx.res.end('Not found');
   }
 
-  return {};
+  return {
+    secret: judgeSecret.value,
+  };
 };
 
 export default judge;

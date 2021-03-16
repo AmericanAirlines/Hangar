@@ -1,12 +1,17 @@
 import express from 'express';
-import { env } from '../env';
+import { Config } from '../entities/config';
 
 export const admin = express.Router();
 
 admin.use(express.json());
 
-admin.post('/login', (req, res): void => {
-  if (req.body.secret !== env.adminSecret) {
+admin.post('/login', async (req, res): Promise <void> => {
+  const adminSecret = await Config.findOneOrFail('adminSecret');
+  if(adminSecret.value === ''){
+    res.status(401).send('Secret not initialized');
+    return;
+  }
+  else if (req.body.secret !== adminSecret.value) {
     res.status(401).send('Incorrect secret');
     return;
   }

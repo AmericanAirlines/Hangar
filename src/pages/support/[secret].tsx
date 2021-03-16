@@ -6,7 +6,7 @@ import { NextPage } from 'next';
 import { SupportRequestType } from '../../types/supportRequest';
 import { SupportQueue } from '../../components/SupportQueue';
 import { RegisteredTeamsList } from '../../components/RegisteredTeamsList';
-import { env } from '../../env';
+import { Config } from '../../entities/config';
 
 interface Request {
   id: number;
@@ -91,13 +91,14 @@ const support: NextPage<{ secret: string }> = (props): JSX.Element => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 support.getInitialProps = async (ctx: any): Promise<any> => {
-  if (ctx.res && ctx.query.secret !== env.supportSecret) {
+  const supportSecret = await Config.findOneOrFail('supportSecret');
+  if (ctx.res && ctx.query.secret !== supportSecret.value) {
     ctx.res.statusCode = 404;
     ctx.res.end('Not found');
   }
 
   return {
-    secret: env.supportSecret,
+    secret: supportSecret.value,
   };
 };
 
