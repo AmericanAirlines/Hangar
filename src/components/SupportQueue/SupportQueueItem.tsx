@@ -34,6 +34,7 @@ export const SupportQueueItem: React.FC<SupportQueueItemProps> = ({ secret, supp
   };
 
   const closeRequest = (supportRequestId: number) => async (): Promise<void> => {
+    console.log('HELLLO');
     await fetch('/api/supportRequest/closeRequest', {
       method: 'POST',
       body: JSON.stringify({ supportRequestId }),

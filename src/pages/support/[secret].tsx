@@ -75,9 +75,9 @@ const support: NextPage<{ secret: string }> = (props): JSX.Element => {
               { name: 'Technical', requestType: SupportRequestType.TechnicalSupport },
             ]}
           />
-        </div> */}
+        </div>
 
-        {/* <div className="col-12 col-md-6 mt-2">
+        <div className="col-12 col-md-6 mt-2">
           <SupportQueue
             title="Job Chat Queue"
             secret={props.secret}
