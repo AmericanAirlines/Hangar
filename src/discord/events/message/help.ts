@@ -15,7 +15,7 @@ export async function help(msg: Discord.Message): Promise<void> {
         ...commands
           .filter((command) => !hiddenHandlers.includes(command.handlerId))
           .map((command) => ({
-            name: `**\n**\`${command.readTrigger}\``,
+            name: `**\n**\`${command.displayTrigger}\``,
             value: command.description,
           })),
         { name: '**\n**', value: stringDictionary.appInfoMessage },

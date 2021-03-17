@@ -1,6 +1,10 @@
 /* eslint-disable implicit-arrow-linebreak, function-paren-newline */
 import 'jest';
 import * as ping from '../../../../discord/events/message/ping';
+import * as help from '../../../../discord/events/message/help';
+import * as support from '../../../../discord/events/message/supportRequest';
+import * as register from '../../../../discord/events/message/registerTeam';
+import * as exit from '../../../../discord/events/message/exit';
 import { DiscordContext } from '../../../../entities/discordContext';
 import { client } from '../../../../discord';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
@@ -8,8 +12,13 @@ import { regSubCommands } from '../../../../discord/events/message/registerTeam'
 import logger from '../../../../logger';
 import * as botWasTagged from '../../../../discord/utilities/botWasTagged';
 import { env } from '../../../../env';
+import { stringDictionary } from '../../../../StringDictionary';
 
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
+const helpHandlerSpy = jest.spyOn(help, 'help').mockImplementation();
+const supportHandlerSpy = jest.spyOn(support, 'supportRequest').mockImplementation();
+const registerHandlerSpy = jest.spyOn(register, 'registerTeam').mockImplementation();
+const exitHandlerSpy = jest.spyOn(exit, "exit").mockImplementation();
 const teamNameSpy = jest.spyOn(regSubCommands, 'teamName').mockImplementation();
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const botWasTaggedSpy = jest.spyOn(botWasTagged, 'botWasTagged').mockReturnValue(false);
@@ -70,9 +79,26 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith(
-      "That isn't a command I understand. Try replying with `!help` or `!h` to see the full list of things I can help with!",
-    );
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand,);
+  });
+
+  it('successfully responds to !H requests', async () => {
+    const reply = jest.fn();
+    const helpMessage = makeDiscordMessage({
+      reply,
+      content: '!H',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(helpMessage);
+    expect(helpHandlerSpy).toBeCalledTimes(1);
+    const messageArg = helpHandlerSpy.mock.calls[0][0];
+    expect(messageArg).toEqual(helpMessage);
   });
 
   it('successfully responds to !ping requests', async () => {
@@ -94,11 +120,29 @@ describe('message handler', () => {
     expect(messageArg).toEqual(pingMessage);
   });
 
-  it('successfully responds to !p requests', async () => {
+  it('will respond with generic info for !ideaPitchs', async () => {
     const reply = jest.fn();
-    const pingMessage = makeDiscordMessage({
+    const genericMessage = makeDiscordMessage({
       reply,
-      content: '!p',
+      content: '!ideaPitchs',
+      author: {
+        id: 'JaneSmith',
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(genericMessage);
+    expect(reply).toBeCalledTimes(1);
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand,);
+  });
+
+  it('successfully responds to !ts requests', async () => {
+    const reply = jest.fn();
+    const supportMessage = makeDiscordMessage({
+      reply,
+      content: '!ts',
       author: {
         id: mockDiscordContext.id,
       },
@@ -107,17 +151,17 @@ describe('message handler', () => {
       },
     });
 
-    await message(pingMessage);
-    expect(pingHandlerSpy).toBeCalledTimes(1);
-    const messageArg = pingHandlerSpy.mock.calls[0][0];
-    expect(messageArg).toEqual(pingMessage);
+    await message(supportMessage);
+    expect(supportHandlerSpy).toBeCalledTimes(1);
+    const messageArg = supportHandlerSpy.mock.calls[0][0];
+    expect(messageArg).toEqual(supportMessage);
   });
 
-  it('successfully responds to !PING requests', async () => {
+  it('successfully responds to !JOBchat requests', async () => {
     const reply = jest.fn();
-    const pingMessage = makeDiscordMessage({
+    const supportMessage = makeDiscordMessage({
       reply,
-      content: '!PING',
+      content: '!JOBchat',
       author: {
         id: mockDiscordContext.id,
       },
@@ -126,11 +170,48 @@ describe('message handler', () => {
       },
     });
 
-    await message(pingMessage);
-    expect(pingHandlerSpy).toBeCalledTimes(1);
-    const messageArg = pingHandlerSpy.mock.calls[0][0];
-    expect(messageArg).toEqual(pingMessage);
+    await message(supportMessage);
+    expect(supportHandlerSpy).toBeCalledTimes(1);
+    const messageArg = supportHandlerSpy.mock.calls[0][0];
+    expect(messageArg).toEqual(supportMessage);
   });
+
+  it('will respond with generic info for !RegisterTeams', async () => {
+    const reply = jest.fn();
+    const genericMessage = makeDiscordMessage({
+      reply,
+      content: '!RegisterTeams',
+      author: {
+        id: 'JaneSmith',
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(genericMessage);
+    expect(reply).toBeCalledTimes(1);
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand,);
+  });
+
+  it('successfully responds to !e requests', async () => {
+    const reply = jest.fn();
+    const exitMessage = makeDiscordMessage({
+      reply,
+      content: '!e',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(exitMessage);
+    expect(exitHandlerSpy).toBeCalledTimes(1);
+    const messageArg = exitHandlerSpy.mock.calls[0][0];
+    expect(messageArg).toEqual(exitMessage);
+  });  
 
   it('logs an error if a handler throws', async () => {
     const reply = jest.fn();
