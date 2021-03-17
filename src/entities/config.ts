@@ -35,13 +35,13 @@ export class Config extends BaseEntity {
 
   static async getValueAs(key: string, valueType: 'number', shouldThrow: true): Promise<number>;
 
-  static async getValueAs(key: string, valueType: 'string', shouldThrow: false): Promise<string> | null;
+  static async getValueAs(key: string, valueType: 'string', shouldThrow: false): Promise<string | null>;
 
-  static async getValueAs(key: string, valueType: 'boolean', shouldThrow: false): Promise<boolean> | null;
+  static async getValueAs(key: string, valueType: 'boolean', shouldThrow: false): Promise<boolean | null>;
 
-  static async getValueAs(key: string, valueType: 'number', shouldThrow: false): Promise<number> | null;
+  static async getValueAs(key: string, valueType: 'number', shouldThrow: false): Promise<number | null>;
 
-  static async getValueAs(key: string, valueType: 'string' | 'boolean' | 'number', shouldThrow: boolean): Promise<string | boolean | number> | null {
+  static async getValueAs(key: string, valueType: 'string' | 'boolean' | 'number', shouldThrow: boolean): Promise<string | boolean | number | null> {
     const something = await this.findOne({ key });
 
     if (something.value === null) {
