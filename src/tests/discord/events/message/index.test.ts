@@ -1,7 +1,7 @@
 /* eslint-disable implicit-arrow-linebreak, function-paren-newline */
 import 'jest';
 import * as ping from '../../../../discord/events/message/ping';
-import * as help from '../../../../discord/events/message/help';
+// import * as help from '../../../../discord/events/message/help';
 import * as support from '../../../../discord/events/message/supportRequest';
 import * as register from '../../../../discord/events/message/registerTeam';
 import * as exit from '../../../../discord/events/message/exit';
@@ -14,12 +14,14 @@ import * as botWasTagged from '../../../../discord/utilities/botWasTagged';
 import { env } from '../../../../env';
 import { stringDictionary } from '../../../../StringDictionary';
 
+// Mock all the handlers - we don't care about testing their implementation
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
-const helpHandlerSpy = jest.spyOn(help, 'help').mockImplementation();
+// const helpHandlerSpy = jest.spyOn(help, 'help').mockImplementation();
 const supportHandlerSpy = jest.spyOn(support, 'supportRequest').mockImplementation();
 const registerHandlerSpy = jest.spyOn(register, 'registerTeam').mockImplementation();
 const exitHandlerSpy = jest.spyOn(exit, "exit").mockImplementation();
 const teamNameSpy = jest.spyOn(regSubCommands, 'teamName').mockImplementation();
+
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const botWasTaggedSpy = jest.spyOn(botWasTagged, 'botWasTagged').mockReturnValue(false);
 const mockDiscordContext = new DiscordContext('1234', '', '');
@@ -34,7 +36,7 @@ jest.mock('../../../../env', () => {
   };
 });
 
-const discordContextFindOneMock = jest.fn().mockImplementation(async () => mockDiscordContext);
+const discordContextFindOneMock = jest.fn(async () => mockDiscordContext);
 jest.mock('../../../../entities/discordContext', () => {
   function MockedDiscordContext(id: string, currentCommand: string, nextStep: string): object {
     return {
@@ -46,7 +48,7 @@ jest.mock('../../../../entities/discordContext', () => {
     };
   }
 
-  MockedDiscordContext.findOne = jest.fn(() => discordContextFindOneMock);
+  MockedDiscordContext.findOne = jest.fn(async () => discordContextFindOneMock());
 
   return {
     DiscordContext: MockedDiscordContext,
@@ -61,7 +63,7 @@ import { message } from '../../../../discord/events/message';
 
 describe('message handler', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   it('will respond with generic info if a matching handler cannot be found', async () => {
@@ -82,24 +84,24 @@ describe('message handler', () => {
     expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand,);
   });
 
-  it('successfully responds to !H requests', async () => {
-    const reply = jest.fn();
-    const helpMessage = makeDiscordMessage({
-      reply,
-      content: '!H',
-      author: {
-        id: mockDiscordContext.id,
-      },
-      channel: {
-        type: 'dm',
-      },
-    });
+  // it('successfully responds to !H requests', async () => {
+  //   const reply = jest.fn();
+  //   const helpMessage = makeDiscordMessage({
+  //     reply,
+  //     content: '!help',
+  //     author: {
+  //       id: mockDiscordContext.id,
+  //     },
+  //     channel: {
+  //       type: 'dm',
+  //     },
+  //   });
 
-    await message(helpMessage);
-    expect(helpHandlerSpy).toBeCalledTimes(1);
-    const messageArg = helpHandlerSpy.mock.calls[0][0];
-    expect(messageArg).toEqual(helpMessage);
-  });
+  //   await message(helpMessage);
+  //   expect(helpHandlerSpy).toBeCalledTimes(1);
+  //   const messageArg = helpHandlerSpy.mock.calls[0][0];
+  //   expect(messageArg).toEqual(helpMessage);
+  // });
 
   it('successfully responds to !ping requests', async () => {
     const reply = jest.fn();

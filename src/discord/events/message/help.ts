@@ -6,6 +6,7 @@ import { stringDictionary } from '../../../StringDictionary';
 export const hiddenHandlers = ['ping'];
 
 export async function help(msg: Discord.Message): Promise<void> {
+  console.log("Calling help");
   await msg.author.send({
     embed: {
       color: colors.info,
