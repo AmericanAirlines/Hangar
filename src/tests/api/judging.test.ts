@@ -4,7 +4,6 @@ import { Team } from '../../entities/team';
 import { Judge } from '../../entities/judge';
 import { ExpandedTeamResult, bonusPointsForIdeaPitch } from '../../api/judging';
 import { createJudgeData, createTeamData, visitTeamsAndJudge } from '../utilities';
-import { createDbConnection, closeDbConnection } from '../testdb';
 import { SupportRequest } from '../../entities/supportRequest';
 import { SupportRequestType, SupportRequestStatus } from '../../types/supportRequest';
 import { JudgingVote } from '../../entities/judgingVote';
@@ -25,19 +24,14 @@ jest.mock('../../env', () => {
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
-describe('api/judging', () => {
+xdescribe('api/judging', () => {
   let teams: Team[];
   let judges: Judge[];
 
   beforeAll(async () => {
-    await createDbConnection();
     teams = await createTeamData(10);
     judges = await createJudgeData(10);
     await visitTeamsAndJudge(judges, teams, 1);
-  });
-
-  afterAll(async () => {
-    await closeDbConnection();
   });
 
   it('is protected by admin middleware', (done) => {
