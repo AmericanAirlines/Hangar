@@ -75,36 +75,6 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   }, [lastRefreshTimestamp]);
 
-  // const handleChange = (configItem: Config) => async (): Promise<void> => {
-  //   const newValue = configItem.value === 'true' ? 'false' : 'true';
-
-  //   try {
-  //     const res = await fetch('/api/config', {
-  //       method: 'POST',
-  //       body: JSON.stringify({
-  //         configKey: configItem.key,
-  //         configValue: newValue,
-  //       }),
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error();
-  //     }
-
-  //     const newConfigItem: Config = await res.json();
-
-  //     const items = [...configItems];
-  //     const index = items.findIndex((i) => i.key === newConfigItem.key);
-  //     items[index] = newConfigItem;
-  //     setConfigItems(items);
-  //   } catch (err) {
-  //     setError(true);
-  //   }
-  // };
-
   if (loading) return null;
 
   if (error) return <h4>Error loading, check the console</h4>;
