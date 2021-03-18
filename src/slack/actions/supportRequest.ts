@@ -36,12 +36,6 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
     } catch (err) {
       logger.error('Something went wrong retrieving Slack user details', err);
     }
-
-    await app.client.views.open({
-      token: context.botToken,
-      trigger_id: body.trigger_id,
-      view: joinSupportQueueView,
-    });
   } catch (err) {
     logger.error('Error opening modal: ', err);
   }
@@ -51,7 +45,17 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       slackName,
       actionId === actionIds.joinIdeaPitchRequestQueue ? SupportRequestType.IdeaPitch : SupportRequestType.TechnicalSupport,
     );
+
     await requestItem.save();
+
+    if (actionId === actionIds.joinTechnicalRequestQueue) {
+      await app.client.views.open({
+        token: context.botToken,
+        trigger_id: body.trigger_id,
+        view: joinSupportQueueView,
+      });
+    }
+
     await openAlertModal(context.botToken, body.trigger_id, {
       title: stringDictionary.supportRequestOpentitle,
       text: stringDictionary.supportRequestOpentext,

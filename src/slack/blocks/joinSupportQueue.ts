@@ -75,14 +75,13 @@ export const joinSupportQueueView: View = {
   blocks,
 };
 
-/* TODO: change to support queue version */
 export function joinedSupportQueueSummary(primaryLanguage: string, problemDescription: string): KnownBlock[] {
   return [
     {
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: stringDictionary.registerTeamSummary({
+        text: stringDictionary.joinSupportQueueSummary({
           primaryLanguage,
           problemDescription,
         }),

@@ -97,6 +97,13 @@ export interface StringDictionary {
   /*----------------------------------*/
 
   /*----------------------------------*/
+  // src>slack>views>joinSupportQueueSubmitted.ts
+  joinSupportQueueNotOpen: stringFunction;
+  joinedSupportQueueAdminNotification: stringFunction;
+  joinedSupportQueuepostMessage: stringFunction;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
   // src>discord>events>message>exit.ts
   exitFlow: string;
   /*----------------------------------*/
