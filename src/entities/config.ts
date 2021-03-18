@@ -14,12 +14,13 @@ export class Config extends BaseEntity {
   @PrimaryColumn()
   key: string;
 
-  @Column({ type: 'simple-json', nullable: true, default: null })
+  @Column({ type: 'jsonb', nullable: true, default: null })
   value: string | number | boolean | null;
 
   static async findToggleForKey(key: string): Promise<boolean> {
     const toggle = await this.findOne({ key });
     // QUESTION: I believe I should still check if toggle is null here?
+    // UPDATE: Seems like we could also replace this with the getValueAs method.
     if (toggle && typeof toggle.value === 'string') {
       toggle.value = toggle.value.toLowerCase();
       if (toggle.value !== 'false' && toggle.value !== 'true') {
