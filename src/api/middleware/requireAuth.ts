@@ -3,8 +3,8 @@ import logger from '../../logger';
 import { Config } from '../../entities/config';
 
 export const requireAuth = (redirect = false): Handler => async (req, res, next): Promise<void> => {
-  const adminSecret = await Config.findOneOrFail("adminSecret");
-  const supportSecret = await Config.findOneOrFail("supportSecret");
+  const adminSecret = await Config.findOne("adminSecret");
+  const supportSecret = await Config.findOne("supportSecret");
   if (req.signedCookies?.authed === 'yes' || req.headers.authorization === adminSecret.value || 
   (req.headers.authorization === supportSecret.value && supportSecret.value != '' && adminSecret.value != '')) {
     next();

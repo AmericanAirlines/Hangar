@@ -1,5 +1,4 @@
 import express from 'express';
-import cookieParser from 'cookie-parser';
 import next from 'next';
 import { createConnection, getConnectionOptions, getConnection, ConnectionOptions } from 'typeorm';
 import path from 'path';
@@ -17,7 +16,6 @@ export const app = express();
 let appLoading = true;
 
 // DO NOT PUT THIS LINE IN THIS FILE `express.json()`
-app.use(cookieParser(env.adminSecret)); // lgtm [js/missing-token-validation]
 
 app.get(
   '/',
@@ -32,8 +30,6 @@ app.get(
     res.send('👋 Loading');
   },
 );
-
-app.use('/api', apiApp);
 
 async function initDatabase(): Promise<void> {
   // This is needed for tests that are testing the initialization of the app.
