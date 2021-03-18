@@ -1,7 +1,6 @@
 /* eslint-disable implicit-arrow-linebreak, function-paren-newline */
 import 'jest';
 import * as ping from '../../../../discord/events/message/ping';
-// import * as help from '../../../../discord/events/message/help';
 import * as support from '../../../../discord/events/message/supportRequest';
 import * as register from '../../../../discord/events/message/registerTeam';
 import * as exit from '../../../../discord/events/message/exit';
@@ -16,9 +15,10 @@ import { stringDictionary } from '../../../../StringDictionary';
 
 // Mock all the handlers - we don't care about testing their implementation
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
-// const helpHandlerSpy = jest.spyOn(help, 'help').mockImplementation();
+const mockHelpHandler = jest.fn();
+jest.mock('../../../../discord/events/message/help', () => ({ help: jest.fn((...args) => mockHelpHandler(...args)) }));
 const supportHandlerSpy = jest.spyOn(support, 'supportRequest').mockImplementation();
-const registerHandlerSpy = jest.spyOn(register, 'registerTeam').mockImplementation();
+jest.spyOn(register, 'registerTeam').mockImplementation();
 const exitHandlerSpy = jest.spyOn(exit, "exit").mockImplementation();
 const teamNameSpy = jest.spyOn(regSubCommands, 'teamName').mockImplementation();
 
@@ -84,24 +84,24 @@ describe('message handler', () => {
     expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand,);
   });
 
-  // it('successfully responds to !H requests', async () => {
-  //   const reply = jest.fn();
-  //   const helpMessage = makeDiscordMessage({
-  //     reply,
-  //     content: '!help',
-  //     author: {
-  //       id: mockDiscordContext.id,
-  //     },
-  //     channel: {
-  //       type: 'dm',
-  //     },
-  //   });
+  it('successfully responds to !H requests', async () => {
+    const reply = jest.fn();
+    const helpMessage = makeDiscordMessage({
+      reply,
+      content: '!help',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
 
-  //   await message(helpMessage);
-  //   expect(helpHandlerSpy).toBeCalledTimes(1);
-  //   const messageArg = helpHandlerSpy.mock.calls[0][0];
-  //   expect(messageArg).toEqual(helpMessage);
-  // });
+    await message(helpMessage);
+    expect(mockHelpHandler).toBeCalledTimes(1);
+    const messageArg = mockHelpHandler.mock.calls[0][0];
+    expect(messageArg).toEqual(helpMessage);
+  });
 
   it('successfully responds to !ping requests', async () => {
     const reply = jest.fn();
