@@ -98,8 +98,6 @@ describe('message handler', () => {
 
     await message(helpMessage);
     expect(mockHelpHandler).toBeCalledTimes(1);
-    const messageArg = mockHelpHandler.mock.calls[0][0];
-    expect(messageArg).toEqual(helpMessage);
   });
 
   it('successfully responds to !ping requests', async () => {
@@ -117,8 +115,6 @@ describe('message handler', () => {
 
     await message(pingMessage);
     expect(pingHandlerSpy).toBeCalledTimes(1);
-    const messageArg = pingHandlerSpy.mock.calls[0][0];
-    expect(messageArg).toEqual(pingMessage);
   });
 
   it('will respond with generic info for !ideaPitchs', async () => {
@@ -154,8 +150,6 @@ describe('message handler', () => {
 
     await message(supportMessage);
     expect(supportHandlerSpy).toBeCalledTimes(1);
-    const messageArg = supportHandlerSpy.mock.calls[0][0];
-    expect(messageArg).toEqual(supportMessage);
   });
 
   it('successfully responds to !JOBchat requests', async () => {
@@ -173,8 +167,6 @@ describe('message handler', () => {
 
     await message(supportMessage);
     expect(supportHandlerSpy).toBeCalledTimes(1);
-    const messageArg = supportHandlerSpy.mock.calls[0][0];
-    expect(messageArg).toEqual(supportMessage);
   });
 
   it('will respond with generic info for !RegisterTeams', async () => {
@@ -210,8 +202,6 @@ describe('message handler', () => {
 
     await message(exitMessage);
     expect(exitHandlerSpy).toBeCalledTimes(1);
-    const messageArg = exitHandlerSpy.mock.calls[0][0];
-    expect(messageArg).toEqual(exitMessage);
   });
 
   it('logs an error if a handler throws', async () => {
