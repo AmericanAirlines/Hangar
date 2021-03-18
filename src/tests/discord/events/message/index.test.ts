@@ -434,7 +434,7 @@ describe('message handler', () => {
         content: '',
         author: { id: discordId },
         channel: {
-          type: 'text',
+          type: 'dm',
           id: '0123',
         },
       }),
