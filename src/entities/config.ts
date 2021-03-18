@@ -17,82 +17,59 @@ export class Config extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true, default: null })
   value: string | number | boolean | null;
 
+  /**
+   * @deprecated Use `Config.getValueAs(key, 'boolean', true)` instead
+   */
   static async findToggleForKey(key: string): Promise<boolean> {
-    const toggle = await this.findOne({ key });
-    // QUESTION: I believe I should still check if toggle is null here?
-    // UPDATE: Seems like we could also replace this with the getValueAs method.
-    if (toggle && typeof toggle.value === 'string') {
-      toggle.value = toggle.value.toLowerCase();
-      if (toggle.value !== 'false' && toggle.value !== 'true') {
-        throw new Error('Config item found but cannot be cast to boolean');
-      }
-    }
-    return toggle ? toggle.value === 'true' : false;
+    return Config.getValueAs(key, 'boolean', true);
   }
 
+  /**
+   * Get the value of a Config item that is a string, and throw an error if it's not
+   */
   static async getValueAs(key: string, valueType: 'string', shouldThrow: true): Promise<string>;
 
+  /**
+   * Get the value of a Config item that is a boolean, and throw an error if it's not
+   */
   static async getValueAs(key: string, valueType: 'boolean', shouldThrow: true): Promise<boolean>;
 
+  /**
+   * Get the value of a Config item that is a number, and throw an error if it's not
+   */
   static async getValueAs(key: string, valueType: 'number', shouldThrow: true): Promise<number>;
 
+  /**
+   * Get the value of a Config item that is a string, and return null if it's not
+   */
   static async getValueAs(key: string, valueType: 'string', shouldThrow: false): Promise<string | null>;
 
+  /**
+   * Get the value of a Config item that is a boolean, and return null if it's not
+   */
   static async getValueAs(key: string, valueType: 'boolean', shouldThrow: false): Promise<boolean | null>;
 
+  /**
+   * Get the value of a Config item that is a number, and return null if it's not
+   */
   static async getValueAs(key: string, valueType: 'number', shouldThrow: false): Promise<number | null>;
 
   static async getValueAs(key: string, valueType: 'string' | 'boolean' | 'number', shouldThrow: boolean): Promise<string | boolean | number | null> {
-    const something = await this.findOne({ key });
+    const item = await this.findOne({ key });
 
-    if (something.value === null) {
+    if (item.value === null && shouldThrow) {
+      throw new Error('Value was null');
+    }
+
+    // eslint-disable-next-line valid-typeof
+    if (typeof item.value !== valueType) {
       if (shouldThrow) {
-        throw new Error('Value was null');
+        throw new Error(`Value was of undesired type. Requested type was ${valueType} but found ${typeof item.value}.`);
       } else {
         return null;
       }
     }
 
-    switch (valueType) {
-      case 'string': {
-        const castValueAsString: string = something.value as string;
-        if (castValueAsString === null) {
-          if (shouldThrow) {
-            throw new Error('Value could not be cast to string');
-          } else {
-            return null;
-          }
-        } else {
-          return castValueAsString;
-        }
-      }
-      case 'boolean': {
-        const castValueAsBool: boolean = something.value as boolean;
-        if (castValueAsBool === null) {
-          if (shouldThrow) {
-            throw new Error('Value could not be cast to boolean');
-          } else {
-            return null;
-          }
-        } else {
-          return castValueAsBool;
-        }
-      }
-      case 'number': {
-        const castValueAsNumber: number = something.value as number;
-        if (castValueAsNumber === null) {
-          if (shouldThrow) {
-            throw new Error('Value could not be cast to boolean');
-          } else {
-            return null;
-          }
-        } else {
-          return castValueAsNumber;
-        }
-      }
-      default: {
-        throw new Error('no appropriate valueType detected');
-      }
-    }
+    return item.value;
   }
 }
