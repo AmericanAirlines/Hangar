@@ -1,6 +1,8 @@
+/* eslint-disable linebreak-style */
 /* global fetch */
 import React from 'react';
 import { NextComponentType } from 'next';
+import { ConfigComponent } from '../components/ConfigComponent';
 
 interface Result {
   name: string;
@@ -73,35 +75,35 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   }, [lastRefreshTimestamp]);
 
-  const handleChange = (configItem: Config) => async (): Promise<void> => {
-    const newValue = configItem.value === 'true' ? 'false' : 'true';
+  // const handleChange = (configItem: Config) => async (): Promise<void> => {
+  //   const newValue = configItem.value === 'true' ? 'false' : 'true';
 
-    try {
-      const res = await fetch('/api/config', {
-        method: 'POST',
-        body: JSON.stringify({
-          configKey: configItem.key,
-          configValue: newValue,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  //   try {
+  //     const res = await fetch('/api/config', {
+  //       method: 'POST',
+  //       body: JSON.stringify({
+  //         configKey: configItem.key,
+  //         configValue: newValue,
+  //       }),
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
 
-      if (!res.ok) {
-        throw new Error();
-      }
+  //     if (!res.ok) {
+  //       throw new Error();
+  //     }
 
-      const newConfigItem: Config = await res.json();
+  //     const newConfigItem: Config = await res.json();
 
-      const items = [...configItems];
-      const index = items.findIndex((i) => i.key === newConfigItem.key);
-      items[index] = newConfigItem;
-      setConfigItems(items);
-    } catch (err) {
-      setError(true);
-    }
-  };
+  //     const items = [...configItems];
+  //     const index = items.findIndex((i) => i.key === newConfigItem.key);
+  //     items[index] = newConfigItem;
+  //     setConfigItems(items);
+  //   } catch (err) {
+  //     setError(true);
+  //   }
+  // };
 
   if (loading) return null;
 
@@ -121,27 +123,7 @@ const AdminPage: NextComponentType = () => {
               <h2 className="font-weight-normal">Config Items</h2>
               {configItems.length === 0 && <div className="alert alert-info mt-3">No config items to display 🤔</div>}
 
-              {configItems.map((configItem) => (
-                <div key={configItem.key} className="form-group mb-2">
-                  <label htmlFor={configItem.key} className="mr-3">
-                    {configItem.key}
-                  </label>
-                  <div style={{ display: 'flex' }}>
-                    <input
-                      type="text"
-                      style={{ flex: 1 }}
-                      className="form-control"
-                      id={configItem.key}
-                      placeholder="Team name"
-                      value={configItem.value}
-                      disabled
-                    />
-                    <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}>
-                      {configItem.value === 'true' ? 'Disable' : 'Enable'}
-                    </button>
-                  </div>
-                </div>
-              ))}
+              {configItems.map((configItem) => <ConfigComponent key={configItem.key} secret={'testSecret'} configItem={configItem}/>)}
             </div>
           </div>
         </div>
