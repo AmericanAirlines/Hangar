@@ -7,7 +7,6 @@ import * as exit from '../../../../discord/events/message/exit';
 import { DiscordContext } from '../../../../entities/discordContext';
 import { client } from '../../../../discord';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
-import { regSubCommands } from '../../../../discord/events/message/registerTeam';
 import logger from '../../../../logger';
 import * as botWasTagged from '../../../../discord/utilities/botWasTagged';
 import { env } from '../../../../env';
@@ -19,8 +18,8 @@ const mockHelpHandler = jest.fn();
 jest.mock('../../../../discord/events/message/help', () => ({ help: jest.fn((...args) => mockHelpHandler(...args)) }));
 const supportHandlerSpy = jest.spyOn(support, 'supportRequest').mockImplementation();
 jest.spyOn(register, 'registerTeam').mockImplementation();
-const exitHandlerSpy = jest.spyOn(exit, "exit").mockImplementation();
-const teamNameSpy = jest.spyOn(regSubCommands, 'teamName').mockImplementation();
+const exitHandlerSpy = jest.spyOn(exit, 'exit').mockImplementation();
+const teamNameSpy = jest.spyOn(register.regSubCommands, 'teamName').mockImplementation();
 
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const botWasTaggedSpy = jest.spyOn(botWasTagged, 'botWasTagged').mockReturnValue(false);
@@ -81,14 +80,14 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand,);
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand);
   });
 
   it('successfully responds to !H requests', async () => {
     const reply = jest.fn();
     const helpMessage = makeDiscordMessage({
       reply,
-      content: '!help',
+      content: '!H',
       author: {
         id: mockDiscordContext.id,
       },
@@ -137,7 +136,7 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand,);
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand);
   });
 
   it('successfully responds to !ts requests', async () => {
@@ -193,7 +192,7 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand,);
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand);
   });
 
   it('successfully responds to !e requests', async () => {
@@ -213,7 +212,7 @@ describe('message handler', () => {
     expect(exitHandlerSpy).toBeCalledTimes(1);
     const messageArg = exitHandlerSpy.mock.calls[0][0];
     expect(messageArg).toEqual(exitMessage);
-  });  
+  });
 
   it('logs an error if a handler throws', async () => {
     const reply = jest.fn();
