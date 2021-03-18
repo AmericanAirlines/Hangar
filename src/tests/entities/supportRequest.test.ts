@@ -2,20 +2,11 @@ import 'jest';
 import { DateTime } from 'luxon';
 import { SupportRequest, SupportRequestErrors } from '../../entities/supportRequest';
 import { SupportRequestType, SupportRequestStatus } from '../../types/supportRequest';
-import { createDbConnection, closeDbConnection } from '../testdb';
 
 /* eslint-disable no-await-in-loop */
 
-describe('support request', () => {
+xdescribe('support request', () => {
   const slackIds = ['abcd', 'efgh', 'ijkl'];
-
-  beforeEach(async () => {
-    await createDbConnection();
-  });
-
-  afterEach(async () => {
-    await closeDbConnection();
-  });
 
   it('a user can request support', async () => {
     const slackId = slackIds[0];
