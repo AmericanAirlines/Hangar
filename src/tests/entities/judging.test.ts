@@ -140,7 +140,6 @@ xdescribe('judging logistics', () => {
 });
 
 xdescribe('score calculation', () => {
-
   it('if minimal data is provided, tabulation will throw an error', async () => {
     const numTeams = 7;
     const numJudges = 10;
@@ -202,7 +201,6 @@ xdescribe('score calculation', () => {
           testCount += 1;
           const numJudges = numJudgesSet[j];
 
-
           const teams = await createTeamData(numTeams);
           const judges = await createJudgeData(numJudges);
 
@@ -240,7 +238,6 @@ xdescribe('score calculation', () => {
           } else {
             logger.info(outputString);
           }
-
         }
       }
     }

@@ -4,7 +4,6 @@ import { Config } from '../../entities/config';
 /* eslint-disable no-await-in-loop */
 
 xdescribe('config', () => {
-
   it('config items can be saved and retrieved', async () => {
     const item = new Config('something', 'something else');
     await item.save();
