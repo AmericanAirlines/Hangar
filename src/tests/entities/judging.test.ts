@@ -201,7 +201,6 @@ xdescribe('score calculation', () => {
           testCount += 1;
           const numJudges = numJudgesSet[j];
 
-
           const teams = await createTeamData(numTeams);
           const judges = await createJudgeData(numJudges);
 
