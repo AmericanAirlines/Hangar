@@ -61,7 +61,7 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
   }
 
   try {
-    const requestItem = new SupportRequest(slackId, registeringUser, SupportRequestType.TechnicalSupport);
+    const requestItem = new SupportRequest(slackId, registeringUser, SupportRequestType.TechnicalSupport, primaryLanguage, problemDescription);
 
     await requestItem.save();
 
