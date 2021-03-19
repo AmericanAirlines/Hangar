@@ -2,6 +2,8 @@ import { ViewSubmitAction, ViewOutput, Middleware, SlackViewMiddlewareArgs } fro
 import { app } from '..';
 import { joinSupportQueueConstants } from '../constants';
 import { joinedSupportQueueSummary } from '../blocks/joinSupportQueue';
+import { SupportRequestType } from '../../types/supportRequest';
+import { SupportRequest } from '../../entities/supportRequest';
 import logger from '../../logger';
 import { ViewSubmitState, DmOpenResult, ViewSubmitInputFieldState } from '../types';
 import { Config } from '../../entities/config';
@@ -29,7 +31,7 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
 
   /* eslint-disable-next-line operator-linebreak */
   const primaryLanguage = retrieveViewValuesForField(view, joinSupportQueueConstants.fields.primaryLanguage, 'plainTextInput') as string;
-  const projectDescription = retrieveViewValuesForField(view, joinSupportQueueConstants.fields.problemDescription, 'plainTextInput') as string;
+  const problemDescription = retrieveViewValuesForField(view, joinSupportQueueConstants.fields.problemDescription, 'plainTextInput') as string;
 
   const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
   if (!supportRequestQueueActive) {
@@ -43,24 +45,31 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
       channel: dm.channel.id,
       text: stringDictionary.joinSupportQueueNotOpen({
         primaryLanguage,
-        projectDescription,
+        projectDescription: problemDescription,
       }),
     });
     return;
   }
 
   try {
+    const slackId = body.user.id;
+    const requestItem = new SupportRequest(slackId, registeringUser, SupportRequestType.TechnicalSupport);
+
+    await requestItem.save();
+
     const dm = (await app.client.conversations.open({
       token: context.botToken,
+      users: registeringUser,
     })) as DmOpenResult;
 
     await app.client.chat.postMessage({
       token: context.botToken,
       channel: dm.channel.id,
       text: '',
-      blocks: joinedSupportQueueSummary(primaryLanguage, projectDescription),
+      blocks: joinedSupportQueueSummary(primaryLanguage, problemDescription),
     });
 
+    // TODO: Use the open alert util to notify the user and check the messages
     await postAdminNotification(
       stringDictionary.joinedSupportQueueAdminNotification({
         primaryLanguage,
@@ -70,6 +79,7 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
   } catch (err) {
     // TODO: Determine a more appropriate error to share with the user
     logger.error('Error joining help queue: ', err);
+
     const dm = (await app.client.conversations.open({
       token: context.botToken,
       users: registeringUser,
@@ -80,7 +90,7 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
       channel: dm.channel.id,
       text: stringDictionary.joinedSupportQueuepostMessage({
         primaryLanguage,
-        projectDescription,
+        problemDescription,
         err,
       }),
     });

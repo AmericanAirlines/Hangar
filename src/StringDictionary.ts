@@ -143,7 +143,7 @@ stringDictionary.problemDescription = `What can we help you with?`;
 
 stringDictionary.problemInfoDesc = `Provide a brief summary of the issue you're having`;
 
-stringDictionary.joinSupportQueueSummary = (params) => `You have added yourself to the tech support queue! //${params.userString}
+stringDictionary.joinSupportQueueSummary = (params) => `You have been added to the tech support queue! Here is the informaion you provided us:
 
 *Primary Language*: ${params.primaryLanguage}
 *Problem Description*: ${params.problemDescription}`;

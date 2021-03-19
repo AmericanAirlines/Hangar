@@ -40,6 +40,14 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
     logger.error('Error opening modal: ', err);
   }
   try {
+    if (actionId === actionIds.joinTechnicalRequestQueue) {
+      await app.client.views.open({
+        token: context.botToken,
+        trigger_id: body.trigger_id,
+        view: joinSupportQueueView,
+      });
+      return;
+    }
     const requestItem = new SupportRequest(
       slackId,
       slackName,
@@ -47,14 +55,6 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
     );
 
     await requestItem.save();
-
-    if (actionId === actionIds.joinTechnicalRequestQueue) {
-      await app.client.views.open({
-        token: context.botToken,
-        trigger_id: body.trigger_id,
-        view: joinSupportQueueView,
-      });
-    }
 
     await openAlertModal(context.botToken, body.trigger_id, {
       title: stringDictionary.supportRequestOpentitle,
