@@ -38,6 +38,12 @@ export class SupportRequest extends BaseEntity {
   name: string;
 
   @Column({ nullable: true })
+  problemDescription: string;
+
+  @Column({ nullable: true })
+  primaryLanguage: string;
+
+  @Column({ nullable: true })
   supportName: string;
 
   @Column({ nullable: false, default: SupportRequestStatus.Pending, type: 'simple-enum', enum: SupportRequestStatus })
