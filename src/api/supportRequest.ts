@@ -4,6 +4,7 @@ import { SupportRequestStatus, SupportRequestType } from '../types/supportReques
 import logger from '../logger';
 import { sendMessage } from '../common/messageUsers';
 import { stringDictionary } from '../StringDictionary';
+import { genHash } from '../utilities/genHash';
 
 export const supportRequestRoutes = express.Router();
 
@@ -186,10 +187,14 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
     return;
   }
   try {
+    const newHash = genHash();
     await SupportRequest.createQueryBuilder('supportRequest')
       .update()
       .set({
         status: SupportRequestStatus.InProgress,
+        movedToInProgressAt: new Date(),
+        syncHash: newHash,
+        supportName,
       })
       .where({
         id: supportRequestId,
