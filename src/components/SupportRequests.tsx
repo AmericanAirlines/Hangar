@@ -8,6 +8,7 @@ import { SUPPORT_NAME_KEY } from '../pages/support/[secret]';
 export interface Team {
   id: number;
   createdAt: string;
+  created: string;
   updatedAt: Date;
   movedToInProgressAt: Date;
   slackId: string;
