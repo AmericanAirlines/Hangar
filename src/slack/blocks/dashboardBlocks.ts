@@ -81,15 +81,15 @@ const jobChatBlock: KnownBlock = {
   type: 'section',
   text: {
     type: 'mrkdwn',
-    text: stringDictionary.jobChat, 
+    text: stringDictionary.jobChat,
   },
   accessory: {
     type: 'button',
     text: {
       type: 'plain_text',
-      text: stringDictionary.jobChat2, 
+      text: stringDictionary.jobChat2,
     },
-    action_id: actionIds.joinJobChatQueue, 
+    action_id: actionIds.joinJobChatQueue,
   },
 };
 

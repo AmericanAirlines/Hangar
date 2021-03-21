@@ -33,21 +33,30 @@ export const supportRequest: Middleware<SlackActionMiddlewareArgs<BlockAction>> 
       logger.error('Something went wrong retrieving Slack user details', err);
     }
 
+    let requestType = null;
+    let requestTypeTitle = null;
+    switch (actionId) {
+      case actionIds.joinIdeaPitchRequestQueue:
+        requestType = SupportRequestType.IdeaPitch;
+        requestTypeTitle = 'Idea Pitch';
+        break;
+      case actionIds.joinTechnicalRequestQueue:
+        requestType = SupportRequestType.TechnicalSupport;
+        requestTypeTitle = 'Tech Request';
+        break;
+      default:
+        requestType = SupportRequestType.JobChat;
+        requestTypeTitle = 'Job Chat';
+    }
     try {
-      const requestItem = new SupportRequest(
-        slackId,
-        slackName,
-        actionId === actionIds.joinIdeaPitchRequestQueue ? SupportRequestType.IdeaPitch : (actionId === actionIds.joinTechnicalRequestQueue ? SupportRequestType.TechnicalSupport : SupportRequestType.JobChat)
-      );
+      const requestItem = new SupportRequest(slackId, slackName, requestType);
       await requestItem.save();
       await openAlertModal(context.botToken, body.trigger_id, {
         title: stringDictionary.supportRequestOpentitle,
         text: stringDictionary.supportRequestOpentext,
       });
 
-      await postAdminNotification(
-        `<@${body.user.id}> has been added to the ${actionId === actionIds.joinIdeaPitchRequestQueue ? 'Idea Pitch' : (actionId === actionIds.joinTechnicalRequestQueue ? 'Tech Request' : 'Job Chat')} queue!`,
-      );
+      await postAdminNotification(`<@${body.user.id}> has been added to the ${requestTypeTitle} queue!`);
     } catch (err) {
       if (err.name === SupportRequestErrors.ExistingActiveRequest) {
         await openAlertModal(context.botToken, body.trigger_id, {

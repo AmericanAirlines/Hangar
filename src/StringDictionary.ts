@@ -86,9 +86,9 @@ Having trouble with your app? Our team is here to help!`;
 stringDictionary.technicalRequest2 = `Join Tech Support Queue`;
 
 stringDictionary.jobChat = `*Interested in joining our team?*
-Come chat with us about Full Time and Internship opportunities!`; 
+Come chat with us about Full Time and Internship opportunities!`;
 
-stringDictionary.jobChat2 = `Join Job Chat Queue`; 
+stringDictionary.jobChat2 = `Join Job Chat Queue`;
 
 stringDictionary.teamRegistration = `*Register Your Team*
 Hacking with us this weekend? Make sure to register your team so we know to reach out before judging starts!`;

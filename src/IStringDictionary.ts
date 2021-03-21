@@ -40,8 +40,8 @@ export interface StringDictionary {
   ideaPitchRequest2: string;
   technicalRequest: string;
   technicalRequest2: string;
-  jobChat: string; 
-  jobChat2: string; 
+  jobChat: string;
+  jobChat2: string;
   teamRegistration: string;
   teamRegistration2: string;
   comingSoon: string;
