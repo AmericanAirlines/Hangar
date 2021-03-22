@@ -12,7 +12,6 @@ async function start(): Promise<Server> {
   await init();
 
   const adminSecret = await Config.findOne('adminSecret');
-  console.log(adminSecret);
   if (adminSecret) {
     app.use(cookieParser(adminSecret.value)); // lgtm [js/missing-token-validation]
   }
