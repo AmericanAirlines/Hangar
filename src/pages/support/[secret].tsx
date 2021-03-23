@@ -3,8 +3,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { NextPage } from 'next';
-import { SupportRequestType } from '../../types/supportRequest';
-import { SupportQueue } from '../../components/SupportQueue';
 import { RegisteredTeamsList } from '../../components/RegisteredTeamsList';
 import { SupportRequests } from '../../components/SupportRequests';
 import { env } from '../../env';
