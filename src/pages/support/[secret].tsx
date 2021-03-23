@@ -65,27 +65,6 @@ const support: NextPage<{ secret: string }> = (props): JSX.Element => {
           <SupportRequests secret={props.secret} />
         </div>
 
-        {/* <div className="col-12 col-md-6 mt-2">
-          <SupportQueue
-            title="Support Queue"
-            secret={props.secret}
-            supportName={formik.values.supportName}
-            options={[
-              { name: 'Idea Pitch', requestType: SupportRequestType.IdeaPitch },
-              { name: 'Technical', requestType: SupportRequestType.TechnicalSupport },
-            ]}
-          />
-        </div>
-
-        <div className="col-12 col-md-6 mt-2">
-          <SupportQueue
-            title="Job Chat Queue"
-            secret={props.secret}
-            supportName={formik.values.supportName}
-            options={[{ name: 'Job Chat', requestType: SupportRequestType.JobChat }]}
-          />
-        </div> */}
-
         <div className="col-12 mt-2">
           <RegisteredTeamsList secret={props.secret} />
         </div>
