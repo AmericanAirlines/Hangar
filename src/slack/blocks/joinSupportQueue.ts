@@ -25,7 +25,7 @@ export const blocks: KnownBlock[] = [
       type: 'plain_text_input',
       placeholder: {
         type: 'plain_text',
-        text: stringDictionary.nameNotFound,
+        text: stringDictionary.primaryLanguage,
       },
     },
     label: {

@@ -67,6 +67,7 @@ export interface StringDictionary {
   // src>slack>blocks>joinSupportQueue.ts
   joinSupportQueueblocks: string;
   askPrimaryLanguage: string;
+  primaryLanguage: string;
   problemDescription: string;
   problemInfoDesc: string;
 

@@ -25,7 +25,16 @@ function retrieveViewValuesForField(view: ViewOutput, actionId: string, type: 'p
 }
 
 export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmitAction>> = async ({ ack, context, view, body }) => {
-  const registeringUser = body.user.id;
+  const slackId = body.user.id;
+  let registeringUser = 'Unknown (Check logs)';
+
+  try {
+    const result = await app.client.users.info({ user: slackId, token: context.botToken });
+    registeringUser = (result?.user as { [key: string]: string })?.real_name as string;
+  } catch (err) {
+    logger.error('Something went wrong retrieving Slack user details', err);
+  }
+
   // Before doing additional work, let's tell Slack know we can take it from here (we have to respond in < 3 seconds)
   ack();
 
@@ -37,7 +46,7 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
   if (!supportRequestQueueActive) {
     const dm = (await app.client.conversations.open({
       token: context.botToken,
-      users: registeringUser,
+      users: slackId,
     })) as DmOpenResult;
 
     await app.client.chat.postMessage({
@@ -52,14 +61,13 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
   }
 
   try {
-    const slackId = body.user.id;
     const requestItem = new SupportRequest(slackId, registeringUser, SupportRequestType.TechnicalSupport);
 
     await requestItem.save();
 
     const dm = (await app.client.conversations.open({
       token: context.botToken,
-      users: registeringUser,
+      users: slackId,
     })) as DmOpenResult;
 
     await app.client.chat.postMessage({
@@ -73,7 +81,7 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
     await postAdminNotification(
       stringDictionary.joinedSupportQueueAdminNotification({
         primaryLanguage,
-        registeringUser,
+        slackId,
       }),
     );
   } catch (err) {
@@ -82,7 +90,7 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
 
     const dm = (await app.client.conversations.open({
       token: context.botToken,
-      users: registeringUser,
+      users: slackId,
     })) as DmOpenResult;
 
     await app.client.chat.postMessage({

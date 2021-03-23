@@ -139,6 +139,8 @@ stringDictionary.joinSupportQueueblocks = `*Join our Tech Support Queue* :mag:
 
 stringDictionary.askPrimaryLanguage = `What's the primary language you're working with?`;
 
+stringDictionary.primaryLanguage = `Primary Language`;
+
 stringDictionary.problemDescription = `What can we help you with?`;
 
 stringDictionary.problemInfoDesc = `Provide a brief summary of the issue you're having`;
