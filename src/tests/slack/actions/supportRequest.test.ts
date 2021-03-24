@@ -14,7 +14,6 @@ const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 let supportRequestQueueActive = false;
 
 const usersInfoSpy = jest.spyOn(app.client.users, 'info').mockImplementation();
-jest.spyOn(logger, 'error').mockImplementation();
 
 const saveSupportRequest = jest.fn();
 const countSupportRequest = jest.fn();
@@ -28,6 +27,8 @@ jest.mock('../../../entities/supportRequest', () => {
   return { SupportRequest: MockSupportRequest, SupportRequestType, SupportRequestStatus };
 });
 SupportRequest.count = countSupportRequest;
+
+jest.spyOn(logger, 'error').mockImplementation();
 
 const jobChatArgs: any = {
   ack: jest.fn(),
@@ -57,7 +58,13 @@ describe('supportRequest Handler', () => {
           return false;
       }
     });
+    countSupportRequest.mockResolvedValue(0);
     supportRequestQueueActive = false;
+  });
+
+  it('will let the user know the job chat queue is not active', async () => {
+    supportRequestQueueActive = false;
+    await supportRequest(jobChatArgs);
   });
 
   it('will add the user to the db for job chat command', async () => {
