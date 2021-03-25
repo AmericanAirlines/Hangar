@@ -7,6 +7,7 @@ import * as messageUsers from '../../common/messageUsers';
 import * as requireAuth from '../../api/middleware/requireAuth';
 import logger from '../../logger';
 import { stringDictionary } from '../../StringDictionary';
+import * as genHash from '../../utilities/genHash';
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
@@ -30,6 +31,9 @@ jest
 const supportRequestGetNextSupportRequestSpy = jest.spyOn(SupportRequest, 'getNextSupportRequest');
 
 jest.spyOn(requireAuth, 'requireAuth').mockImplementation(() => (req, res, next): void => next());
+
+jest.spyOn(global, 'Date').mockImplementation(() => '1616686417062');
+jest.spyOn(genHash, 'genHash').mockImplementation(() => '123');
 
 describe('api/supportRequest', () => {
   afterEach(() => {
@@ -416,7 +420,7 @@ describe('api/supportRequest', () => {
       supportRequest.movedToInProgressAt = new Date();
       supportRequest.supportName = 'Jimbo';
       supportRequestFindOneSpy.mockResolvedValueOnce(supportRequest);
-
+      const syncHash = genHash.genHash();
       const { app } = require('../../app');
       await supertest(app)
         .patch('/api/supportRequest/getSpecific')
@@ -426,13 +430,14 @@ describe('api/supportRequest', () => {
         })
         .expect(200);
 
-      // expect(mockQueryBuilder.set).toBeCalledWith({
-      //   status: SupportRequestStatus.InProgress,
-      //   supportName: supportRequest.supportName,
-      //   movedToInProgressAt: supportRequest.movedToInProgressAt,
-      // });
-      // expect(mockQueryBuilder.where).toBeCalledWith({ id: supportRequest.id, status: SupportRequestStatus.Pending });
-      // expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
+      expect(mockQueryBuilder.set).toBeCalledWith({
+        status: SupportRequestStatus.InProgress,
+        supportName: supportRequest.supportName,
+        movedToInProgressAt: supportRequest.movedToInProgressAt,
+        syncHash,
+      });
+      expect(mockQueryBuilder.where).toBeCalledWith({ id: supportRequest.id, status: SupportRequestStatus.Pending });
+      expect(sendMessageSpy.mock.calls[0][0]).toEqual([supportRequest.slackId]);
     });
 
     it('will throw a 500 if something goes wrong opening an request', async () => {
