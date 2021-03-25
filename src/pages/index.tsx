@@ -128,12 +128,12 @@ const AdminPage: NextComponentType = () => {
                   </label>
                   <div style={{ display: 'flex' }}>
                     <input
-                      type="text"
+                      type={typeof configItem.value === 'number' ? 'number' : 'text'}
                       style={{ flex: 1 }}
                       className="form-control"
                       id={configItem.key}
                       placeholder="Team name"
-                      value={configItem.value}
+                      value={configItem.value === null ? "value is null" : configItem.value.toString()}
                       disabled
                     />
                     <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}>
