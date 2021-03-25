@@ -11,5 +11,8 @@ export default function actions(bolt: App): void {
   // Register all action listeners
   bolt.action({ action_id: actionIds.ignore }, ignore);
   bolt.action({ action_id: actionIds.registerTeam }, registerTeam);
-  bolt.action({ action_id: RegExp(`${actionIds.joinIdeaPitchRequestQueue}|${actionIds.joinTechnicalRequestQueue}|${actionIds.joinJobChatQueue}`) }, supportRequest);
+  bolt.action(
+    { action_id: RegExp(`${actionIds.joinIdeaPitchRequestQueue}|${actionIds.joinTechnicalRequestQueue}|${actionIds.joinJobChatQueue}`) },
+    supportRequest,
+  );
 }
