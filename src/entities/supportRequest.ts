@@ -8,15 +8,25 @@ export enum SupportRequestErrors {
   ExistingActiveRequest = 'ExistingActiveRequest',
 }
 
+export interface SupportRequestExtraData {
+  problemDescription: string;
+}
+
 @Entity()
 export class SupportRequest extends BaseEntity {
-  constructor(slackIdId: string, name: string, type: SupportRequestType, primaryLanguage = '', problemDescription = '') {
+  constructor(
+    slackIdId: string,
+    name: string,
+    type: SupportRequestType,
+    primaryLanguage = '',
+    extraData: SupportRequestExtraData = { problemDescription: '' },
+  ) {
     super();
 
     this.slackId = slackIdId;
     this.name = name;
     this.primaryLanguage = primaryLanguage;
-    this.extraData = { problemDescription };
+    this.extraData = extraData;
     this.type = type;
     this.syncHash = genHash();
   }
@@ -42,8 +52,8 @@ export class SupportRequest extends BaseEntity {
   @Column({ nullable: true })
   primaryLanguage: string;
 
-  @Column('simple-json')
-  extraData: { problemDescription: string };
+  @Column({ type: 'jsonb', nullable: true })
+  extraData: SupportRequestExtraData;
 
   @Column({ nullable: true })
   supportName: string;
