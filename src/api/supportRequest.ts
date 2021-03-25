@@ -210,13 +210,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   let userNotified = false;
 
   try {
-    await sendMessage(
-      [request.slackId],
-      stringDictionary.supportRequestSuccess({
-        supportName,
-        type: requestType,
-      }),
-    );
+    await sendMessage([request.slackId], stringDictionary.supportRequestSuccess({ supportName, type: requestType, name: supportName }));
     userNotified = true;
   } catch (err) {
     logger.error("Unable to notify users they're support request has been served", err);

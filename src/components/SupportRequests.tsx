@@ -264,6 +264,7 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
     <div className="card">
       <div className="card-body">
         <h2 className="font-weight-normal">Support Requests</h2>
+        {message !== '' ? <div className="alert alert-info mt-3">{message}</div> : null}
         <div className="container px-0">
           <div className="row">
             <div className="col-12">
