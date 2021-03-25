@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { Server } from 'http';
+import cookieParser from 'cookie-parser';
 import { app, init } from './app';
 import logger from './logger';
 import { env } from './env';
 import { Config } from './entities/config';
-import cookieParser from 'cookie-parser';
 import { apiApp } from './api';
 
 export const port = env.port || '3000';
