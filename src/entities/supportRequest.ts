@@ -14,13 +14,7 @@ export interface SupportRequestExtraData {
 
 @Entity()
 export class SupportRequest extends BaseEntity {
-  constructor(
-    slackIdId: string,
-    name: string,
-    type: SupportRequestType,
-    primaryLanguage = '',
-    extraData: SupportRequestExtraData = { problemDescription: '' },
-  ) {
+  constructor(slackIdId: string, name: string, type: SupportRequestType, primaryLanguage = '', extraData: SupportRequestExtraData = null) {
     super();
 
     this.slackId = slackIdId;
@@ -53,7 +47,7 @@ export class SupportRequest extends BaseEntity {
   primaryLanguage: string;
 
   @Column({ type: 'jsonb', nullable: true })
-  extraData: SupportRequestExtraData;
+  extraData: SupportRequestExtraData | null;
 
   @Column({ nullable: true })
   supportName: string;
