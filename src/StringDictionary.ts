@@ -207,6 +207,38 @@ stringDictionary.exitDescript = 'Exits the user out of any flows they might be i
 /*----------------------------------*/
 
 /*----------------------------------*/
+// src>discord>views>joinSupportQueueSubmitted.ts
+stringDictionary.joinSupportQueueNotOpen = (
+  params,
+) => `:warning: Tech Help Queue isn't currently open, please try again later or come chat with our team if you think this is an error.
+Primary Language: ${params.primaryLanguage}
+Problem Description: ${params.supportQueueDesc}`;
+
+stringDictionary.joinedSupportQueueAdminNotification = (params) => `<@${params.registeringUser}> joined the tech help queue:
+Primary Langauge: ${params.primaryLanguage}
+Problem Description: ${params.supportQueueDesc}`;
+
+stringDictionary.joinedSupportQueuepostMessage = (
+  params,
+) => `:warning: Something went wrong while adding you to the tech help queue... come chat with our team for help.
+To help with resubmitting, here's the info you tried to submit:
+Primary Language: ${params.primaryLanguage}
+Problem Description: ${params.supportQueueDesc}
+Here's what went wrong, it may be helpful (but probably not):
+\`\`\`
+${JSON.stringify(params.err, null, 2)}
+\`\`\`
+`;
+
+/*----------------------------------*/
+// src>discord>events>message>supportRequest.ts
+stringDictionary.askPrimaryLanguage = `What's the primary language you're working with?`;
+stringDictionary.primaryLanguage = `Primary Language`;
+stringDictionary.problemDescription = `What can we help you with?`;
+stringDictionary.problemInfoDesc = `Provide a brief summary of the issue you're having`;
+/*----------------------------------*/
+
+/*----------------------------------*/
 // src>discord>events>message>registerTeam.ts
 stringDictionary.registerNotOpen = `:warning: Team registration is not open yet. Please check back later or wait for announcements!`;
 stringDictionary.registerTeamUserMessage = `Who are you hacking with? If you are hacking alone, simply write your name!\n**Be sure to input your name as well as your teammate's names in a comma-separated list (e.g. John Smith, Jane Doe, ...)!**`;

@@ -3,7 +3,7 @@ import 'jest';
 import { SelectQueryBuilder } from 'typeorm';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import { Config } from '../../../../entities/config';
-import { supportRequest, supportRequestSubCommands } from '../../../../discord/events/message/supportRequest';
+import { jobChatIdeaPitchSubCommands, supportRequest, supportRequestSubCommands } from '../../../../discord/events/message/supportRequest';
 import { DiscordContext } from '../../../../entities/discordContext';
 import logger from '../../../../logger';
 import { SupportRequest } from '../../../../entities/supportRequest';
@@ -120,12 +120,12 @@ describe('supportRequest handler', () => {
   });
 
   it('will add the user to the db for tech support command once a name is entered', async () => {
-    techMsg.content = 'John';
-    const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
+    techMsg.content = 'desc';
+    const ctx = new DiscordContext('1', 'supportRequest', 'description');
     ctx.payload = { id: '1', requestType: 'TechnicalSupport' };
-    await supportRequestSubCommands.inputName(techMsg, ctx);
+    await supportRequestSubCommands.description(techMsg, ctx);
     expect(ctx.currentCommand).toBe(undefined);
-    expect(ctx.nextStep).toBe(undefined);
+    expect(ctx.nextStep).toBe('description');
     expect(techMsg.author.send).toBeCalledTimes(1);
     expect(techMsg.author.send).toBeCalledWith(
       ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
@@ -144,12 +144,12 @@ describe('supportRequest handler', () => {
   });
 
   it('will notify the user that something went wrong adding them to the queue for tech support command', async () => {
-    techMsg.content = 'John';
-    const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
+    techMsg.content = 'desc';
+    const ctx = new DiscordContext('1', 'supportRequest', 'description');
     ctx.payload = { id: '1', requestType: 'TechnicalSupport' };
     const keyConstraintError = new Error('generic error');
     saveSupportRequest.mockRejectedValueOnce(keyConstraintError);
-    await supportRequestSubCommands.inputName(techMsg, ctx);
+    await supportRequestSubCommands.description(techMsg, ctx);
     expect(techMsg.author.send).toBeCalledWith("**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.");
     expect(ctx.clear).toBeCalledTimes(1);
   });
@@ -174,12 +174,12 @@ describe('supportRequest handler', () => {
   });
 
   it('will add the user to the db for idea pitch command once a name is entered', async () => {
-    ideaMsg.content = 'John';
+    ideaMsg.content = 'desc';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
     ctx.payload = { id: '1', requestType: 'IdeaPitch' };
-    await supportRequestSubCommands.inputName(ideaMsg, ctx);
+    await jobChatIdeaPitchSubCommands.inputName(ideaMsg, ctx);
     expect(ctx.currentCommand).toBe(undefined);
-    expect(ctx.nextStep).toBe(undefined);
+    expect(ctx.nextStep).toBe('inputName');
     expect(ideaMsg.author.send).toBeCalledTimes(1);
     expect(ideaMsg.author.send).toBeCalledWith(
       ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.",
@@ -198,12 +198,12 @@ describe('supportRequest handler', () => {
   });
 
   it('will notify the user that something went wrong adding them to the queue for idea pitch command', async () => {
-    ideaMsg.content = 'John';
+    ideaMsg.content = 'desc';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
     ctx.payload = { id: '1', requestType: 'IdeaPitch' };
     const keyConstraintError = new Error('generic error');
     saveSupportRequest.mockRejectedValueOnce(keyConstraintError);
-    await supportRequestSubCommands.inputName(ideaMsg, ctx);
+    await jobChatIdeaPitchSubCommands.inputName(ideaMsg, ctx);
     expect(ideaMsg.author.send).toBeCalledWith("**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.");
     expect(ctx.clear).toBeCalledTimes(1);
   });
@@ -226,12 +226,12 @@ describe('supportRequest handler', () => {
   });
 
   it('will add the user to the db for job chat command once a name is entered', async () => {
-    jobMsg.content = 'John';
+    jobMsg.content = 'desc';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
     ctx.payload = { id: '1', requestType: 'JobChat' };
-    await supportRequestSubCommands.inputName(jobMsg, ctx);
+    await jobChatIdeaPitchSubCommands.inputName(jobMsg, ctx);
     expect(ctx.currentCommand).toBe(undefined);
-    expect(ctx.nextStep).toBe(undefined);
+    expect(ctx.nextStep).toBe('inputName');
     expect(jobMsg.author.send).toBeCalledTimes(1);
     expect(jobMsg.author.send).toBeCalledWith(
       ":white_check_mark: You've been added to the queue! We'll send you a direct message from this bot when we're ready for you to come chat with our team.\n\nPlease make sure to have your resume ready for our team!",
@@ -250,12 +250,12 @@ describe('supportRequest handler', () => {
   });
 
   it('will notify the user that something went wrong adding them to the queue for job chat command', async () => {
-    jobMsg.content = 'John';
+    jobMsg.content = 'desc';
     const ctx = new DiscordContext('1', 'supportRequest', 'inputName');
     ctx.payload = { id: '1', requestType: 'JobChat' };
     const keyConstraintError = new Error('generic error');
     saveSupportRequest.mockRejectedValueOnce(keyConstraintError);
-    await supportRequestSubCommands.inputName(jobMsg, ctx);
+    await jobChatIdeaPitchSubCommands.inputName(jobMsg, ctx);
     expect(jobMsg.author.send).toBeCalledWith("**Whoops...**\n:warning: Something went wrong... come chat with our team and we'll help.");
     expect(ctx.clear).toBeCalledTimes(1);
   });

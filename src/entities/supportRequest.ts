@@ -10,11 +10,13 @@ export enum SupportRequestErrors {
 
 @Entity()
 export class SupportRequest extends BaseEntity {
-  constructor(slackIdId: string, name: string, type: SupportRequestType) {
+  constructor(slackIdId: string, name: string, type: SupportRequestType, primaryLanguage = '', problemDescription = '') {
     super();
 
     this.slackId = slackIdId;
     this.name = name;
+    this.primaryLanguage = primaryLanguage;
+    this.extraData = { problemDescription };
     this.type = type;
     this.syncHash = genHash();
   }
@@ -36,6 +38,12 @@ export class SupportRequest extends BaseEntity {
 
   @Column({ nullable: false })
   name: string;
+
+  @Column({ nullable: true })
+  primaryLanguage: string;
+
+  @Column('simple-json')
+  extraData: { problemDescription: string };
 
   @Column({ nullable: true })
   supportName: string;

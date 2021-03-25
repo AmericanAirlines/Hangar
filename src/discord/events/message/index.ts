@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import { DiscordContext } from '../../../entities/discordContext';
 import { ping } from './ping';
-import { supportRequest, supportRequestSubCommands } from './supportRequest';
+import { supportRequest, supportRequestSubCommands, jobChatIdeaPitchSubCommands } from './supportRequest';
 import { client } from '../..';
 import logger from '../../../logger';
 import { help } from './help';
@@ -42,7 +42,7 @@ export const commands: Command[] = [
     trigger: '!ideaPitch',
     description: stringDictionary.ideaDescript,
     handler: supportRequest,
-    subCommands: supportRequestSubCommands,
+    subCommands: jobChatIdeaPitchSubCommands,
   },
   {
     handlerId: 'technicalSupport',
@@ -56,7 +56,7 @@ export const commands: Command[] = [
     trigger: '!jobChat',
     description: stringDictionary.jobDescript,
     handler: supportRequest,
-    subCommands: supportRequestSubCommands,
+    subCommands: jobChatIdeaPitchSubCommands,
   },
   {
     handlerId: 'registerTeam',

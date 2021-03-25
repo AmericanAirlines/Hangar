@@ -14,10 +14,14 @@ interface PayloadInfo {
   id: string;
   requestType: SupportRequestType;
   username: string;
+  primaryLanguage: string;
+  problemDescription: string;
 }
 
 enum Steps {
   inputName = 'inputName',
+  primaryLanguage = 'primaryLanguage',
+  description = 'description',
 }
 
 const requestTypeMapping: { [id: string]: SupportRequestType } = {
@@ -56,6 +60,8 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
     id: msg.author.id,
     requestType: requestTypeMapping[msg.content],
     username: '',
+    primaryLanguage: '',
+    problemDescription: '',
   };
   const cmdName = msg.content.replace('!', '');
   const info = payloadInfo;
@@ -76,10 +82,47 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
 
 export const supportRequestSubCommands: SubCommands = {
   inputName: async (msg, ctx) => {
+    ctx.nextStep = Steps.primaryLanguage;
     const info = ctx.payload as PayloadInfo;
     info.username = msg.content;
     ctx.payload = info;
-    const userSupportRequest = new SupportRequest(info.id, info.username, info.requestType);
+    await ctx.save();
+    await msg.author.send(stringDictionary.askPrimaryLanguage);
+  },
+  primaryLanguage: async (msg, ctx) => {
+    ctx.nextStep = Steps.description;
+    const info = ctx.payload as PayloadInfo;
+    info.primaryLanguage = msg.content;
+    ctx.payload = info;
+    await ctx.save();
+    await msg.author.send(stringDictionary.problemInfoDesc);
+  },
+  description: async (msg, ctx) => {
+    ctx.nextStep = Steps.description;
+    const info = ctx.payload as PayloadInfo;
+    info.problemDescription = msg.content;
+    ctx.payload = info;
+    const userSupportRequest = new SupportRequest(info.id, info.username, info.requestType, info.primaryLanguage, info.problemDescription);
+    try {
+      await userSupportRequest.save();
+      const responseString = stringDictionary.addedToQueue;
+      msg.author.send(responseString);
+    } catch (err) {
+      await msg.author.send(stringDictionary.warningSomethingWrong);
+      logger.error(stringDictionary.supportRequestErr, err);
+    }
+    await ctx.clear();
+  },
+};
+
+export const jobChatIdeaPitchSubCommands: SubCommands = {
+  inputName: async (msg, ctx) => {
+    ctx.nextStep = Steps.inputName;
+    const info = ctx.payload as PayloadInfo;
+    info.username = msg.content;
+    ctx.payload = info;
+
+    const userSupportRequest = new SupportRequest(info.id, info.username, info.requestType, info.primaryLanguage, info.problemDescription);
     try {
       await userSupportRequest.save();
       let responseString = stringDictionary.addedToQueue;
