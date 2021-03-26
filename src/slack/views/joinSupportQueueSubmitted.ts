@@ -3,7 +3,7 @@ import { app } from '..';
 import { joinSupportQueueConstants } from '../constants';
 import { joinedSupportQueueSummary } from '../blocks/joinSupportQueue';
 import { SupportRequestType } from '../../types/supportRequest';
-import { SupportRequest } from '../../entities/supportRequest';
+import { SupportRequest, SupportRequestExtraData } from '../../entities/supportRequest';
 import logger from '../../logger';
 import { ViewSubmitState, DmOpenResult, ViewSubmitInputFieldState } from '../types';
 import { Config } from '../../entities/config';
@@ -41,6 +41,7 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
   /* eslint-disable-next-line operator-linebreak */
   const primaryLanguage = retrieveViewValuesForField(view, joinSupportQueueConstants.fields.primaryLanguage, 'plainTextInput') as string;
   const problemDescription = retrieveViewValuesForField(view, joinSupportQueueConstants.fields.problemDescription, 'plainTextInput') as string;
+  const extraData: SupportRequestExtraData = { problemDescription };
 
   const supportRequestQueueActive = await Config.findToggleForKey('supportRequestQueueActive');
   if (!supportRequestQueueActive) {
@@ -54,14 +55,14 @@ export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewS
       channel: dm.channel.id,
       text: stringDictionary.joinSupportQueueNotOpen({
         primaryLanguage,
-        projectDescription: problemDescription,
+        problemDescription,
       }),
     });
     return;
   }
 
   try {
-    const requestItem = new SupportRequest(slackId, registeringUser, SupportRequestType.TechnicalSupport, primaryLanguage, problemDescription);
+    const requestItem = new SupportRequest(slackId, registeringUser, SupportRequestType.TechnicalSupport, primaryLanguage, extraData);
 
     await requestItem.save();
 
