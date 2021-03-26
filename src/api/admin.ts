@@ -1,6 +1,5 @@
 import express from 'express';
 import { Config } from '../entities/config';
-import logger from '../logger';
 
 export const admin = express.Router();
 
@@ -12,7 +11,6 @@ admin.post(
     const adminSecret = await Config.findOne('adminSecret');
     if (!adminSecret.value) {
       res.status(500).send('Secret not initialized');
-      logger.crit;
       return;
     }
     if (req.body.secret !== adminSecret.value) {

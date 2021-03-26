@@ -5,7 +5,6 @@ import path from 'path';
 import { WebClient } from '@slack/web-api';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { slackApp, initListeners } from './slack';
-import { apiApp } from './api';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
 import { getActivePlatform, SupportedPlatform } from './common';
