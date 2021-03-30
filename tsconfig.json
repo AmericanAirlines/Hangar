@@ -9,9 +9,8 @@
     "strict": false,
     "noEmit": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve"
-  },
+    "isolatedModules": true
+    },
   "exclude": ["node_modules"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
 }
