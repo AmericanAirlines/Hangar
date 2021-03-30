@@ -10,7 +10,7 @@ import { createJudgeData, createTeamData, visitTeamsAndJudge } from '../utilitie
 // Bump Jest timeout to accomodate tabulation test matrix
 jest.setTimeout(15000);
 
-xdescribe('judging logistics', () => {
+describe('judging logistics', () => {
   it('the in-memory database works', async () => {
     const team = await new Team('Does this work?', 123, 'Databases are cool', ['123456']).save();
     Team.findOneOrFail(team.id);
@@ -139,7 +139,7 @@ xdescribe('judging logistics', () => {
   });
 });
 
-xdescribe('score calculation', () => {
+describe('score calculation', () => {
   it('if minimal data is provided, tabulation will throw an error', async () => {
     const numTeams = 7;
     const numJudges = 10;
