@@ -11,7 +11,7 @@
     "build:ts": "tsc -p src/ --pretty",
     "build:next": "next build",
     "build:watch": "npm run build:ts -- -w",
-    "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
+    "lint": "eslint 'src/**/*.{js,ts,tsx}' --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
     "lint:staged": "lint-staged",
     "checkstyle": "prettier -l \"src/**/*.ts\"",
@@ -57,7 +57,7 @@
     ]
   },
   "nodemonConfig": {
-    "delay": "400"
+    "delay": 400
   },
   "dependencies": {
     "@americanairlines/simple-env": "^1.0.2",
