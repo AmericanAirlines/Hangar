@@ -1,5 +1,4 @@
 import 'jest';
-import { BaseEntity, JoinTable } from 'typeorm';
 import { Team } from '../../entities/team';
 import { Judge } from '../../entities/judge';
 import { JudgingVote, insufficientVoteCountError } from '../../entities/judgingVote';
@@ -12,10 +11,8 @@ import { createJudgeData, createTeamData, visitTeamsAndJudge } from '../utilitie
 jest.setTimeout(15000);
 
 xdescribe('judging logistics', () => {
-  beforeAll(() => (Team.findOneOrFail = jest.fn()));
   it('the in-memory database works', async () => {
     const team = await new Team('Does this work?', 123, 'Databases are cool', ['123456']).save();
-
     Team.findOneOrFail(team.id);
   });
 
