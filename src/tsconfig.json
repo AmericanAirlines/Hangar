@@ -11,8 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["esnext", "esnext.asynciterable"],
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "jsx": "preserve",
+    "experimentalDecorators": true
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules", "./**/*.test.ts"]
