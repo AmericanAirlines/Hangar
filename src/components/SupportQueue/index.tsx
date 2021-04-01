@@ -129,7 +129,7 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, suppo
           <div className="row">
             {options.map((option, idx) => (
               <div key={option.requestType} className={getButtonWidth(idx, options.length)}>
-                <button className="btn btn-dark w-100 my-2" onClick={() => getNext(option.requestType)} disabled={counts[option.requestType] === 0}>
+                <button className="btn btn-dark w-100 my-2" onClick={(): Promise<void> => getNext(option.requestType)} disabled={counts[option.requestType] === 0}>
                   Get Next {option.name} ({counts[option.requestType]})
                 </button>
               </div>
@@ -139,7 +139,7 @@ export const SupportQueue: React.FC<SupportQueueProps> = ({ title, secret, suppo
         {message !== '' ? <div className="alert alert-info mt-3">{message}</div> : null}
         {loading ? <h4 className="font-weight-normal">Loading</h4> : null}
         {inProgress.length === 0 ? (
-          <div className="alert alert-info mt-3">None in progress, get started when you're ready ☝️</div>
+          <div className="alert alert-info mt-3">None in progress, get started when you&#39;re ready ☝️</div>
         ) : (
           inProgress
             .filter((request) => requestTypes.includes(request.type))
