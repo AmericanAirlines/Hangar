@@ -9,6 +9,7 @@ import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
 import { getActivePlatform, SupportedPlatform } from './common';
 import { env } from './env';
+import { apiApp } from './api';
 
 export const app = express();
 
@@ -29,6 +30,8 @@ app.get(
     res.send('👋 Loading');
   },
 );
+
+app.use('/api', apiApp)
 
 async function initDatabase(): Promise<void> {
   // This is needed for tests that are testing the initialization of the app.

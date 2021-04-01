@@ -15,7 +15,7 @@ describe('getAllTeams', () => {
     jest.clearAllMocks();
   });
 
-  it('will send back a list of all teams in the DB', async () => {
+  xit('will send back a list of all teams in the DB', async () => {
     teamFindSpy.mockResolvedValue([]);
     const { app } = require('../../app');
     await supertest(app)
@@ -29,7 +29,7 @@ describe('getAllTeams', () => {
     expect(teamFindSpy.mock.calls[0][0]).toBeUndefined();
   });
 
-  it('will throw a 500 if a DB error occurs', async () => {
+  xit('will throw a 500 if a DB error occurs', async () => {
     teamFindSpy.mockRejectedValueOnce('oh no :(');
     const { app } = require('../../app');
     await supertest(app)
