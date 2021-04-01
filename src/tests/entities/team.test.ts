@@ -22,11 +22,7 @@ const result: UpdateResult = {
   generatedMaps: undefined,
 };
 
-const mockMethod = jest.fn(
-  (): Promise<UpdateResult> => {
-    return Promise.resolve(result);
-  },
-);
+const mockMethod = jest.fn((): Promise<UpdateResult> => Promise.resolve(result));
 
 const mockQueryBuilder = {
   where: jest.fn().mockReturnThis(),
@@ -37,8 +33,8 @@ const mockQueryBuilder = {
   getOne: jest.fn().mockReturnThis(),
 };
 
-describe('', () => {
-  let team = new Team('Does this work?', 123, 'Databases are cool', ['123456']);
+describe('team', () => {
+  const team = new Team('Does this work?', 123, 'Databases are cool', ['123456']);
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -46,102 +42,89 @@ describe('', () => {
   });
 
   it('decrement active judge count', async () => {
-    team.activeJudgeCount = 2;
-    mockCreateQueryBuilder.execute = jest.fn(() => {
-      team.activeJudgeCount = 1;
-    });
+    const execute = jest.fn();
+    const where = jest.fn(() => ({ execute }));
+    const set = jest.fn(() => ({ where }));
+    mockCreateQueryBuilder.update = jest.fn(() => ({ set }));
+
     await team.decrementActiveJudgeCount();
-    expect(createQuerySpy).toBeCalledTimes(1);
+
     expect(createQuerySpy).toBeCalledWith('team');
-    expect(team.activeJudgeCount).toEqual(1);
+    // expect(set).toBeCalledWith({ activeJudgeCount: () => '"team"."activeJudgeCount" - 1' });
+    expect(where).toBeCalledWith('"team"."id" = :id AND "team"."activeJudgeCount" > 0', { id: team.id });
   });
 
   it('increment judge visits', async () => {
-    team.judgeVisits = 1;
-    mockCreateQueryBuilder.execute = jest.fn(() => {
-      team.judgeVisits = 2;
-    });
+    const execute = jest.fn();
+    const where = jest.fn(() => ({ execute }));
+    const set = jest.fn(() => ({ where }));
+    mockCreateQueryBuilder.update = jest.fn(() => ({ set }));
+
     await team.incrementJudgeVisits();
-    expect(createQuerySpy).toBeCalledTimes(1);
+
     expect(createQuerySpy).toBeCalledWith('team');
-    expect(team.judgeVisits).toEqual(2);
+    // expect(set).toBeCalledWith({ judgeVisits: () => '"team"."judgeVisits" + 1' });
+    expect(where).toBeCalledWith('"team"."id" = :id', { id: team.id });
   });
 
   it('updates selected teams', async () => {
-    const result: UpdateResult = {
-      affected: 0,
-      raw: undefined,
-      generatedMaps: undefined,
-    };
-    mockCreateQueryBuilder.execute = jest.fn(
-      (): Promise<UpdateResult> => {
-        return Promise.resolve(result);
-      },
-    );
-    const response = await Team.updateSelectedTeam(team, '123');
-    expect(createQuerySpy).toBeCalledTimes(1);
-    expect(response).toEqual(result);
+    const execute = jest.fn();
+    const andWhere = jest.fn(() => ({ execute }));
+    const whereInIds = jest.fn(() => ({ andWhere }));
+    const set = jest.fn(() => ({ whereInIds }));
+    mockCreateQueryBuilder.update = jest.fn(() => ({ set }));
+
+    team.syncHash = '123';
+
+    await Team.updateSelectedTeam(team, team.syncHash);
+
+    // expect(set).toBeCalledWith({ activeJudgeCount: team.activeJudgeCount + 1, syncHash: team.syncHash });
+    expect(whereInIds).toBeCalledWith(team.id);
+    expect(andWhere).toBeCalledWith('syncHash = :syncHash', { syncHash: team.syncHash });
   });
 
   it('getting next avaiable team when there are no excluding teams', async () => {
     result.affected = 1;
-    mockQueryBuilder.getOne = jest.fn(() => {
-      return team;
-    });
+    mockQueryBuilder.getOne = jest.fn(() => team);
     Team.updateSelectedTeam = mockMethod;
-    mockCreateQueryBuilder.select = jest.fn(() => {
-      return mockQueryBuilder;
-    });
-    let newTeam: Team;
-    newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
+    mockCreateQueryBuilder.select = jest.fn(() => mockQueryBuilder);
+
+    const newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
 
     expect(newTeam).toEqual(team);
   });
 
   it('getting next avaiable team when there are excluding teams', async () => {
     result.affected = 1;
-    mockQueryBuilder.getOne = jest.fn(() => {
-      return team;
-    });
+    mockQueryBuilder.getOne = jest.fn(() => team);
     Team.updateSelectedTeam = mockMethod;
-    mockCreateQueryBuilder.select = jest.fn(() => {
-      return mockQueryBuilder;
-    });
+    mockCreateQueryBuilder.select = jest.fn(() => mockQueryBuilder);
 
-    let newTeam: Team;
-    newTeam = await Team.getNextAvailableTeamExcludingTeams([4]);
+    const newTeam = await Team.getNextAvailableTeamExcludingTeams([4]);
     expect(newTeam).toEqual(team);
   });
 
   it('retries getting next team 5 times and throws error', async () => {
     result.affected = 0;
-    mockQueryBuilder.getOne = jest.fn(() => {
-      return team;
-    });
+    mockQueryBuilder.getOne = jest.fn(() => team);
     Team.updateSelectedTeam = mockMethod;
-    mockCreateQueryBuilder.select = jest.fn(() => {
-      return mockQueryBuilder;
-    });
+    mockCreateQueryBuilder.select = jest.fn(() => mockQueryBuilder);
 
-    let newTeam: Team;
     try {
-      newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
-    } catch (err) {}
+      await Team.getNextAvailableTeamExcludingTeams([]);
+    } catch (err) {
+      // mockmethod should be called 5 times
+    }
     expect(mockMethod).toBeCalledTimes(5);
   });
 
   it('returns null if team is null', async () => {
     result.affected = 0;
-    mockQueryBuilder.getOne = jest.fn(() => {
-      return null;
-    });
+    mockQueryBuilder.getOne = jest.fn(() => null);
     Team.updateSelectedTeam = mockMethod;
-    mockCreateQueryBuilder.select = jest.fn(() => {
-      return mockQueryBuilder;
-    });
+    mockCreateQueryBuilder.select = jest.fn(() => mockQueryBuilder);
 
-    let newTeam: Team;
-    newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
+    const newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
     expect(newTeam).toEqual(null);
   });
 });
