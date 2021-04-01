@@ -1,23 +1,21 @@
 import express from 'express';
-import cookieParser from 'cookie-parser';
 import next from 'next';
 import { createConnection, getConnectionOptions, getConnection, ConnectionOptions } from 'typeorm';
 import path from 'path';
 import { WebClient } from '@slack/web-api';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { slackApp, initListeners } from './slack';
-import { apiApp } from './api';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
 import { getActivePlatform, SupportedPlatform } from './common';
 import { env } from './env';
+import { apiApp } from './api';
 
 export const app = express();
 
 let appLoading = true;
 
 // DO NOT PUT THIS LINE IN THIS FILE `express.json()`
-app.use(cookieParser(env.adminSecret)); // lgtm [js/missing-token-validation]
 
 app.get(
   '/',
