@@ -31,7 +31,7 @@ app.get(
   },
 );
 
-app.use('/api', apiApp)
+app.use('/api', apiApp);
 
 async function initDatabase(): Promise<void> {
   // This is needed for tests that are testing the initialization of the app.
