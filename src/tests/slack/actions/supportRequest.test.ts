@@ -67,7 +67,7 @@ describe('supportRequest Handler', () => {
   it('will let the user know the job chat queue is not active', async () => {
     supportRequestQueueActive = false;
     await supportRequest(jobChatArgs);
-    expect(openAlertModal).toBeCalled();
+    expect(openAlertModalSpy).toBeCalled();
   });
 
   it('will add the user to the db for job chat command', async () => {
