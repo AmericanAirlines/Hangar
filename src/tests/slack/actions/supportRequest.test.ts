@@ -6,9 +6,11 @@ import { Config } from '../../../entities/config';
 import { app } from '../../../slack/index';
 import { SupportRequest } from '../../../entities/supportRequest';
 import logger from '../../../logger';
+import * as openAlertModal from '../../../slack/utilities/openAlertModal';
 
 jest.mock('../../../slack/utilities/postAdminNotification');
-jest.mock('../../../slack/utilities/openAlertModal');
+
+const openAlertModalSpy = jest.spyOn(openAlertModal, 'openAlertModal').mockImplementation();
 
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 let supportRequestQueueActive = false;
@@ -65,6 +67,7 @@ describe('supportRequest Handler', () => {
   it('will let the user know the job chat queue is not active', async () => {
     supportRequestQueueActive = false;
     await supportRequest(jobChatArgs);
+    expect(openAlertModal).toBeCalled();
   });
 
   it('will add the user to the db for job chat command', async () => {
