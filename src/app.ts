@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import next from 'next';
 import { createConnection, getConnectionOptions, getConnection, ConnectionOptions } from 'typeorm';
 import path from 'path';
@@ -14,6 +15,8 @@ import { apiApp } from './api';
 export const app = express();
 
 let appLoading = true;
+
+app.use(cookieParser('secret'));
 
 // DO NOT PUT THIS LINE IN THIS FILE `express.json()`
 
