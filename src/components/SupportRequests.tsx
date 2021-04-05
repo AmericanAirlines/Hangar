@@ -216,8 +216,7 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
       {
         name: 'Action',
         grow: 4,
-        cell: (row, index, column, id): ReactElement => {
-          return row.status === 'InProgress' && row.supportName === window.localStorage.getItem(SUPPORT_NAME_KEY) ? (
+        cell: (row, index, column, id): ReactElement => (row.status === 'InProgress' && row.supportName === window.localStorage.getItem(SUPPORT_NAME_KEY) ? (
             <div>
               <button
                 className="btn btn-danger my-1 w-100 btn-sm"
@@ -237,7 +236,7 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
                 Remind
               </button>
             </div>
-          ) : row.status === 'Pending' ? (
+        ) : row.status === 'Pending' ? (
             <button
               className="btn btn-dark w-100 my-1 btn-sm"
               style={{ display: 'inline-block', whiteSpace: 'nowrap' }}
@@ -245,10 +244,9 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
             >
               Assign to me
             </button>
-          ) : (
-            <></>
-          );
-        },
+        ) : (
+          <></>
+        )),
       },
     ];
 
