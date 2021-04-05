@@ -16,9 +16,8 @@ export const app = express();
 
 let appLoading = true;
 
-app.use(cookieParser('secret'));
-
 // DO NOT PUT THIS LINE IN THIS FILE `express.json()`
+app.use(cookieParser('secret')); // lgtm [js/missing-token-validation]
 
 app.get(
   '/',
