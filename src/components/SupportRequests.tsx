@@ -216,8 +216,8 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
       {
         name: 'Action',
         grow: 4,
-        cell: (row, index, column, id): ReactElement =>
-          row.status === 'InProgress' && row.supportName === window.localStorage.getItem(SUPPORT_NAME_KEY) ? (
+        cell: (row, index, column, id): ReactElement => {
+          return row.status === 'InProgress' && row.supportName === window.localStorage.getItem(SUPPORT_NAME_KEY) ? (
             <div>
               <button
                 className="btn btn-danger my-1 w-100 btn-sm"
@@ -247,7 +247,8 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
             </button>
           ) : (
             <></>
-          ),
+          );
+        },
       },
     ];
 
