@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import next from 'next';
 import { createConnection, getConnectionOptions, getConnection, ConnectionOptions } from 'typeorm';
 import path from 'path';
@@ -16,6 +17,7 @@ export const app = express();
 let appLoading = true;
 
 // DO NOT PUT THIS LINE IN THIS FILE `express.json()`
+app.use(cookieParser('secret')); // lgtm [js/missing-token-validation]
 
 app.get(
   '/',
