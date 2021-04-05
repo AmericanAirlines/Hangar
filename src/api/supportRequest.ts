@@ -4,6 +4,7 @@ import { SupportRequestStatus, SupportRequestType } from '../types/supportReques
 import logger from '../logger';
 import { sendMessage } from '../common/messageUsers';
 import { stringDictionary } from '../StringDictionary';
+import { genHash } from '../utilities/genHash';
 
 export const supportRequestRoutes = express.Router();
 
@@ -186,10 +187,14 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
     return;
   }
   try {
+    const newHash = genHash();
     await SupportRequest.createQueryBuilder('supportRequest')
       .update()
       .set({
         status: SupportRequestStatus.InProgress,
+        movedToInProgressAt: new Date(),
+        syncHash: newHash,
+        supportName,
       })
       .where({
         id: supportRequestId,
@@ -205,13 +210,7 @@ supportRequestRoutes.patch('/getSpecific', async (req, res) => {
   let userNotified = false;
 
   try {
-    await sendMessage(
-      [request.slackId],
-      stringDictionary.supportRequestSuccess({
-        supportName,
-        type: requestType,
-      }),
-    );
+    await sendMessage([request.slackId], stringDictionary.supportRequestSuccess({ supportName, type: requestType, name: supportName }));
     userNotified = true;
   } catch (err) {
     logger.error("Unable to notify users they're support request has been served", err);
