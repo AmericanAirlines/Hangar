@@ -148,7 +148,7 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
     );
 
     teamData.forEach((team: Team) => {
-      team.created = team.createdAt ? DateTime.fromISO(team.createdAt).toRelative() : '';
+      team['created'] = team['createdAt'] ? DateTime.fromISO(team['createdAt']).toRelative() : '';
       Object.keys(team).forEach((key) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const val = (team as any)[key as keyof Team];
@@ -160,7 +160,7 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
       });
     });
 
-    teamData.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    teamData.sort((a, b) => b['createdAt'].localeCompare(a['createdAt']));
 
     columns = keys
       .sort((a, b) => a.localeCompare(b))
@@ -236,7 +236,7 @@ export const SupportRequests: React.FC<SupportRequestsProps> = ({ secret }) => {
                 Remind
               </button>
             </div>
-        ) : row.status === 'Pending' ? (
+          ) : row['status'] === 'Pending' ? (
             <button
               className="btn btn-dark w-100 my-1 btn-sm"
               style={{ display: 'inline-block', whiteSpace: 'nowrap' }}
