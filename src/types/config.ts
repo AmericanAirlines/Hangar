@@ -1,4 +1,4 @@
-export enum ConfigList {
+export enum KnownConfig {
   AdminSecret = 'adminSecret',
   JobChatQueueActive = 'jobChatQueueActive',
   SupportRequestQueueActive = 'supportRequestQueueActive',
