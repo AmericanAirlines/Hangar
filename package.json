@@ -44,9 +44,6 @@
       "pre-commit": "run-s build:ts lint:staged test"
     }
   },
-  "eslintIgnore": [
-    "dist"
-  ],
   "lint-staged": {
     "linters": {
       "src/**/*.{js,ts}": [
