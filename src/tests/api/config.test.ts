@@ -1,7 +1,6 @@
 import 'jest';
 import supertest from 'supertest';
 import { Config } from '../../entities/config';
-import { createDbConnection, closeDbConnection } from '../testdb';
 import { env } from '../../env';
 
 jest.mock('../../discord');
@@ -19,15 +18,7 @@ jest.mock('../../env', () => {
 
 /* eslint-disable @typescript-eslint/no-var-requires, global-require */
 
-describe('api/judging', () => {
-  beforeEach(async () => {
-    await createDbConnection();
-  });
-
-  afterEach(async () => {
-    await closeDbConnection();
-  });
-
+xdescribe('api/judging', () => {
   it('is protected by admin middleware', (done) => {
     // Hide error output for unauth'd request
     jest.mock('../../logger');
