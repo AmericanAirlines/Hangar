@@ -10,7 +10,7 @@ config.get('/', async (req, res) => {
     const configItems: Config[] = await Config.find();
     Object.values(KnownConfig).forEach((knownConfigItem): void => {
       if (!configItems.find((configItem: Config) => configItem.key === knownConfigItem)) {
-        configItems.push(new Config(knownConfigItem, 'undefined'));
+        configItems.push(new Config(knownConfigItem, null));
       }
     });
     res.send(configItems.sort((a, b) => a.key.localeCompare(b.key)));
