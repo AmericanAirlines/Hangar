@@ -1,28 +1,15 @@
-import { ViewSubmitAction, ViewOutput, Middleware, SlackViewMiddlewareArgs } from '@slack/bolt';
+import { ViewSubmitAction, Middleware, SlackViewMiddlewareArgs } from '@slack/bolt';
 import { app } from '..';
 import { joinSupportQueueConstants } from '../constants';
 import { joinedSupportQueueSummary } from '../blocks/joinSupportQueue';
 import { SupportRequestType } from '../../types/supportRequest';
 import { SupportRequest } from '../../entities/supportRequest';
 import logger from '../../logger';
-import { ViewSubmitState, DmOpenResult, ViewSubmitInputFieldState } from '../types';
+import { DmOpenResult } from '../types';
 import { Config } from '../../entities/config';
 import postAdminNotification from '../utilities/postAdminNotification';
 import { stringDictionary } from '../../StringDictionary';
-
-function retrieveViewValuesForField(view: ViewOutput, actionId: string, type: 'plainTextInput', optional = false): string {
-  const { values } = view.state as ViewSubmitState;
-  let blockData: ViewSubmitInputFieldState;
-  try {
-    blockData = values[actionId][actionId];
-  } catch (err) {
-    if (optional) {
-      return null;
-    }
-    logger.error('Failed to parse field from view submission:', err);
-  }
-  return blockData.value;
-}
+import { retrieveViewValuesForField } from './registerTeamSubmitted';
 
 export const joinSupportQueueSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmitAction>> = async ({ ack, context, view, body }) => {
   const slackId = body.user.id;
