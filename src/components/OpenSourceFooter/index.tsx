@@ -1,8 +1,17 @@
+import { Grid } from '@material-ui/core';
 import React from 'react';
-import styles from './open-source-footer.module.scss';
 
 const OpenSourceFooter = (): JSX.Element => (
-  <div className={styles.footer}>
+  <div style={{
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    width: '100%',
+    padding: '12px 0',
+    color: '#4B4B4D',
+    backgroundColor: '#E1E2E6',
+    borderTop: '1px solid #B3B3B3',
+  }}>
     <div className='container d-flex justify-content-between align-items-center'>
       <div>
         Hangar is an open source project created by American Airlines.<br />
@@ -11,7 +20,7 @@ const OpenSourceFooter = (): JSX.Element => (
       </div>
       <div>
         <a href='https://github.com/AmericanAirlines/Hangar' target='_blank' rel='noreferrer'>
-          <img alt='GitHub Repo stars' width="125"
+          <img alt='GitHub Repo stars' width='125'
                src='https://img.shields.io/github/stars/AmericanAirlines/Hangar.svg?label=Github&style=social' />
         </a>
       </div>
