@@ -133,7 +133,7 @@ const AdminPage: NextComponentType = () => {
                       className="form-control"
                       id={configItem.key}
                       placeholder="Team name"
-                      value={configItem.value === null ? "value is null" : configItem.value.toString()}
+                      value={configItem.value === null ? 'value is null' : configItem.value.toString()}
                       disabled
                     />
                     <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}>
