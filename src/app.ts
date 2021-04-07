@@ -11,6 +11,7 @@ import { requireAuth } from './api/middleware/requireAuth';
 import { getActivePlatform, SupportedPlatform } from './common';
 import { env } from './env';
 import { apiApp } from './api';
+import { Config } from './entities/config';
 
 export const app = express();
 
@@ -98,16 +99,14 @@ export async function initSlack(): Promise<void> {
 }
 
 export async function initDiscord(): Promise<void> {
+  const discordBotToken = await Config.findOne('discordBotToken');
   try {
-    if (env.discordBotToken) {
+    if (discordBotToken?.value) {
       const { setupDiscord } = await import('./discord');
-
-      await setupDiscord(env.discordBotToken);
+      await setupDiscord(discordBotToken.value.toString());
       logger.info('Discord connected and authenticated successfully');
-
       return;
     }
-
     logger.info('Discord skipped (missing DISCORD_BOT_TOKEN)');
   } catch (err) {
     if (env.nodeEnv !== 'test') {
@@ -129,9 +128,10 @@ export const init = async (): Promise<void> => {
   // await Promise.all([initDatabase(), initSlack(), initDiscord()])
 
   const promises = [];
-  promises.push(initDatabase());
+  // promises.push(initDatabase());
+  await initDatabase();
 
-  if (getActivePlatform() === SupportedPlatform.slack) {
+  if ((await getActivePlatform()) === SupportedPlatform.slack) {
     promises.push(initSlack());
   } else {
     promises.push(initDiscord());
