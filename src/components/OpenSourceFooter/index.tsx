@@ -1,7 +1,7 @@
 import React from 'react';
 
 const OpenSourceFooter = (): JSX.Element => (
-  <div style={{
+  <footer style={{
     position: 'fixed',
     left: 0,
     bottom: 0,
@@ -24,7 +24,7 @@ const OpenSourceFooter = (): JSX.Element => (
         </a>
       </div>
     </div>
-  </div>
+  </footer>
 );
 
 export default OpenSourceFooter;

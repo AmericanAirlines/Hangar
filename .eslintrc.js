@@ -16,16 +16,6 @@ module.exports = {
     ecmaVersion: 2018,
   },
   rules: {
-    'import/extensions': [
-      'error',
-      'ignorePackages',
-      {
-        'js': 'never',
-        'jsx': 'never',
-        'ts': 'never',
-        'tsx': 'never',
-      },
-    ],
     'import/no-extraneous-dependencies': ['error', { devDependencies: ['**/*.test.ts'] }],
     'max-len': [0],
     'import/prefer-default-export': ['off'],

@@ -175,9 +175,7 @@ const AdminPage: NextComponentType = () => {
           </div>
         </div>
       </div>
-      <footer>
-        <OpenSourceFooter />
-      </footer>
+      <OpenSourceFooter />
     </div>
   );
 };
