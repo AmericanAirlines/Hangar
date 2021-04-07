@@ -1,6 +1,7 @@
 /* global fetch */
 import React from 'react';
 import { NextComponentType } from 'next';
+import OpenSourceFooter from '../components/OpenSourceFooter';
 
 interface Result {
   name: string;
@@ -174,6 +175,9 @@ const AdminPage: NextComponentType = () => {
           </div>
         </div>
       </div>
+      <footer>
+        <OpenSourceFooter />
+      </footer>
     </div>
   );
 };

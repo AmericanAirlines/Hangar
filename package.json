@@ -61,6 +61,7 @@
   },
   "dependencies": {
     "@americanairlines/simple-env": "^1.0.2",
+    "@material-ui/core": "^4.11.3",
     "@slack/bolt": "^2.3.0",
     "@slack/types": "^1.9.0",
     "@slack/web-api": "^5.12.0",
@@ -81,10 +82,11 @@
     "react-data-table-component": "^7.0.0-alpha-5",
     "react-dom": "^16.11.0",
     "reflect-metadata": "^0.1.13",
+    "sass": "^1.32.8",
     "shuffle-array": "^1.0.1",
     "styled-components": "^5.2.1",
     "typeorm": "^0.2.26",
-    "typescript": "^3.8.0",
+    "typescript": "^3.9.9",
     "winston": "^3.2.1"
   },
   "devDependencies": {
