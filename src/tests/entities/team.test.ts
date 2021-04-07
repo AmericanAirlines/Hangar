@@ -3,24 +3,6 @@ import 'jest';
 import { UpdateResult, FindOneOptions } from 'typeorm';
 import { Team } from '../../entities/team';
 
-// const mockCreateQueryBuilder = {
-//   where: jest.fn().mockReturnThis(),
-//   clone: jest.fn().mockReturnThis(),
-//   andWhere: jest.fn().mockReturnThis(),
-//   orderBy: jest.fn().mockReturnThis(),
-//   addOrderBy: jest.fn().mockReturnThis(),
-//   getOne: jest.fn().mockReturnThis(),
-//   set: jest.fn().mockReturnThis(),
-//   execute: jest.fn().mockReturnThis(),
-//   update: jest.fn().mockReturnThis(),
-//   whereInIds: jest.fn().mockReturnThis(),
-//   select: jest.fn().mockReturnThis(),
-// };
-
-// const createQuerySpy = jest
-//   .spyOn(Team, 'createQueryBuilder')
-//   .mockReturnValue((mockCreateQueryBuilder as Partial<SelectQueryBuilder<Team>>) as SelectQueryBuilder<Team>);
-
 const findOneSpy = jest.spyOn(Team, 'findOne').mockImplementation();
 const updateSelectedTeamSpy = jest.spyOn(Team, 'updateSelectedTeam').mockImplementation(async (team: Team, newHash: string) => {
   // eslint-disable-next-line no-param-reassign
