@@ -1,28 +1,33 @@
 import 'jest';
 import { Request, Response, NextFunction } from 'express';
 import logger from '../../../logger';
-import { env } from '../../../env';
-
-jest.mock('../../../env', () => {
-  const realEnv = jest.requireActual('../../../env');
-  return {
-    env: {
-      ...realEnv,
-      adminSecret: 'Secrets are secretive',
-      supportSecret: 'This secret is supportive!',
-    },
-  };
-});
-// eslint-disable-next-line import/first
 import { requireAuth } from '../../../api/middleware/requireAuth';
+import { Config } from '../../../entities/config';
+
+const adminSecret = 'this is admin secret';
+const supportSecret = 'this is support secret';
+
+jest.mock('../../../entities/config', () => ({
+  Config: {
+    findOne: jest.fn((key: string) => {
+      if (key === 'adminSecret') {
+        return { value: adminSecret };
+      }
+      if (key === 'supportSecret') {
+        return { value: supportSecret };
+      }
+      return undefined;
+    }),
+  },
+}));
 
 jest.spyOn(logger, 'error').mockImplementation();
 
-const getMockRequest = (): Request =>
+const getMockRequest = (authorization?: string): Request =>
   // eslint-disable-next-line implicit-arrow-linebreak
   (({
     headers: {
-      authorization: "AH AH AH... YOU DIDN'T SAY THE MAGIC WORD!",
+      authorization: authorization ?? "AH AH AH... YOU DIDN'T SAY THE MAGIC WORD!",
     },
   } as Partial<Request>) as Request);
 
@@ -35,46 +40,49 @@ const mockNext: NextFunction = jest.fn();
 
 describe('requireAuth middleware', () => {
   beforeEach(() => {
-    jest.resetModules();
+    // jest.resetModules();
+    jest.clearAllMocks();
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  it('rejects unauthorized traffic', () => {
+  it('rejects unauthorized traffic', async () => {
     const mockRequest = getMockRequest();
-    requireAuth()(mockRequest, mockRes, mockNext);
+    await requireAuth()(mockRequest, mockRes, mockNext);
     expect(mockNext).not.toBeCalled();
     expect(mockRes.sendStatus).toBeCalledWith(401);
     expect(logger.error).toBeCalled();
   });
 
-  it('redirects unauthorized traffic if needed', () => {
+  it('redirects unauthorized traffic if needed', async () => {
     const mockRequest = getMockRequest();
     const redirect = true;
-    requireAuth(redirect)(mockRequest, mockRes, mockNext);
+    await requireAuth(redirect)(mockRequest, mockRes, mockNext);
     expect(mockNext).not.toBeCalled();
     expect(mockRes.redirect).toBeCalledWith('/login');
   });
 
-  it('allow traffic with authed signedCookies', () => {
+  it('allow traffic with authed signedCookies', async () => {
     const mockRequest = ({ ...getMockRequest(), signedCookies: { authed: 'yes' } } as Partial<Request>) as Request;
-    requireAuth()(mockRequest, mockRes, mockNext);
+    await requireAuth()(mockRequest, mockRes, mockNext);
     expect(mockNext).toBeCalled();
   });
 
-  it('allow traffic with and ADMIN_SECRET auth header', () => {
-    const mockRequest = getMockRequest();
-    mockRequest.headers.authorization = env.adminSecret;
-    requireAuth()(mockRequest, mockRes, mockNext);
+  it('allow traffic with and ADMIN_SECRET auth header', async () => {
+    const mockRequest = getMockRequest(adminSecret);
+    await requireAuth()(mockRequest, mockRes, mockNext);
     expect(mockNext).toBeCalled();
   });
 
-  it('allow traffic with and SUPPORT_SECRET auth header', () => {
-    const mockRequest = getMockRequest();
-    mockRequest.headers.authorization = env.adminSecret;
-    requireAuth()(mockRequest, mockRes, mockNext);
+  it('allow traffic with and SUPPORT_SECRET auth header', async () => {
+    const mockRequest = getMockRequest(supportSecret);
+    await requireAuth()(mockRequest, mockRes, mockNext);
     expect(mockNext).toBeCalled();
+  });
+
+  it('sends 401 status when a secret is missing in database', async () => {
+    (Config.findOne as jest.Mock).mockResolvedValueOnce(undefined);
+    (Config.findOne as jest.Mock).mockResolvedValueOnce(undefined);
+    const mockRequest = getMockRequest(supportSecret);
+    await requireAuth()(mockRequest, mockRes, mockNext);
+    expect(mockRes.sendStatus).toBeCalled();
   });
 });
