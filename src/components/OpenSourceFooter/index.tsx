@@ -1,4 +1,3 @@
-import { Grid } from '@material-ui/core';
 import React from 'react';
 
 const OpenSourceFooter = (): JSX.Element => (
