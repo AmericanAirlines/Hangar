@@ -14,13 +14,6 @@ const updateSelectedTeamSpy = jest.spyOn(Team, 'updateSelectedTeam').mockImpleme
 
 let mockTeam: Team;
 
-describe('team entity', () => {
-  it('the constructor defaults to an empty array of members', () => {
-    const anEmptyTeam = new Team('A boring team', 12, 'They made a thing!');
-    expect(anEmptyTeam.members).toEqual([]);
-  });
-});
-
 describe('getNextAvailableTeamExcludingTeams util method', () => {
   beforeEach(() => {
     jest.clearAllMocks();
