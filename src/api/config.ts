@@ -1,18 +1,19 @@
 import express from 'express';
 import { Config } from '../entities/config';
 import logger from '../logger';
-import { KnownConfig } from '../types/config';
+import { defaultConfigValues } from '../types/config';
 
 export const config = express.Router();
 
 config.get('/', async (req, res) => {
   try {
     const configItems: Config[] = await Config.find();
-    Object.values(KnownConfig).forEach((knownConfigItem): void => {
-      if (!configItems.find((configItem: Config) => configItem.key === knownConfigItem)) {
-        configItems.push(new Config(knownConfigItem, null));
+
+    for (const defaultConfigItem of defaultConfigValues) {
+      if (!configItems.find((configItem: Config) => configItem.key === defaultConfigItem)) {
+        configItems.push(new Config(defaultConfigItem, null));
       }
-    });
+    }
     res.send(configItems.sort((a, b) => a.key.localeCompare(b.key)));
   } catch (err) {
     /* istanbul ignore next */
