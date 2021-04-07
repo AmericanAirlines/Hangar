@@ -54,7 +54,6 @@ export class Team extends BaseEntity {
 
     /* eslint-disable no-await-in-loop */
     do {
-      console.log('Retries: ', retries);
       team = await Team.findOne({
         where: {
           id: Not(In(excludedTeamIds)),
@@ -68,10 +67,9 @@ export class Team extends BaseEntity {
       if (team) {
         const newHash = genHash();
         const result = await Team.updateSelectedTeam(team, newHash);
-        console.log('IN METHOD:', result);
         await team.reload();
 
-        if (result.affected > 0 || team.syncHash === newHash) {
+        if (result.affected > 0) {
           // We found a team and assigned the judge correctly; return it
           return team;
         }
@@ -90,7 +88,7 @@ export class Team extends BaseEntity {
     throw new Error('Unable to retrieve a team due to concurrency issues');
   }
 
-  // TODO: Move to a util method outside of this file
+  /* istanbul ignore next */
   static async updateSelectedTeam(team: Team, hash: string): Promise<UpdateResult> {
     return Team.createQueryBuilder()
       .update()
@@ -100,6 +98,7 @@ export class Team extends BaseEntity {
       .execute();
   }
 
+  /* istanbul ignore next */
   async decrementActiveJudgeCount(): Promise<void> {
     await Team.createQueryBuilder('team')
       .update()
@@ -108,6 +107,7 @@ export class Team extends BaseEntity {
       .execute();
   }
 
+  /* istanbul ignore next */
   async incrementJudgeVisits(): Promise<void> {
     await Team.createQueryBuilder('team')
       .update()
