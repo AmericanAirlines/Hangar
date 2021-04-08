@@ -223,23 +223,8 @@ const judge = (): JSX.Element => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-judge.getInitialProps = async (ctx: any): Promise<any> => {
-  if (ctx.res) {
-    // const { Config } = require ('../../entities/config');
-    // const judgeSecret = await Config.findOne('judgeSecret')
-    // if (ctx.query.secret !== judgeSecret.value) {
-
-    //   ctx.res.statusCode = 404;
-    //   ctx.res.end('Not found');
-    // }
-
-    // return {
-    //   secret: judgeSecret.value
-    // };
-  }
-  return {
-    secret: ctx.query.secret,
-  };
-};
+judge.getInitialProps = async (ctx: any): Promise<any> => ({
+  secret: ctx.query.secret,
+});
 
 export default judge;
