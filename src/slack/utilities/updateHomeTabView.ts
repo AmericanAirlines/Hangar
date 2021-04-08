@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { app } from '..';
 import { dashboardBlocks } from '../blocks/dashboardBlocks';
-import { env } from '../../env';
+import { Config } from '../../entities/config';
 
-const token = env.slackBotToken;
+let token: string | null = null;
 
 export default async function updateHomeTabView(userId: string): Promise<void> {
+  token = token ?? await Config.getValueAs('slackBotToken', 'string', false);
   await app.client.views.publish({
     token,
     user_id: userId,
