@@ -15,10 +15,10 @@ const OpenSourceFooter = (): JSX.Element => (
       <div>
         Hangar is an open source project created by American Airlines.<br />
         <a href='https://github.com/AmericanAirlines/Hangar/issues/new/choose'
-           target='_blank' rel='noreferrer'>Suggest a feature or report a bug</a>
+           target='_blank' rel='noreferrer noopener'>Suggest a feature or report a bug</a>
       </div>
       <div>
-        <a href='https://github.com/AmericanAirlines/Hangar' target='_blank' rel='noreferrer'>
+        <a href='https://github.com/AmericanAirlines/Hangar' target='_blank' rel='noreferrer noopener'>
           <img alt='GitHub Repo stars' width='125'
                src='https://img.shields.io/github/stars/AmericanAirlines/Hangar.svg?label=Github&style=social' />
         </a>
