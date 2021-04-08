@@ -99,11 +99,11 @@ export async function initSlack(): Promise<void> {
 }
 
 export async function initDiscord(): Promise<void> {
-  const discordBotToken = await Config.findOne('discordBotToken');
+  const discordBotToken = await Config.getValueAs('discordBotToken', 'string', false);
   try {
-    if (discordBotToken?.value) {
+    if (discordBotToken) {
       const { setupDiscord } = await import('./discord');
-      await setupDiscord(discordBotToken.value.toString());
+      await setupDiscord(discordBotToken);
       logger.info('Discord connected and authenticated successfully');
       return;
     }
@@ -128,10 +128,11 @@ export const init = async (): Promise<void> => {
   // await Promise.all([initDatabase(), initSlack(), initDiscord()])
 
   const promises = [];
-  // promises.push(initDatabase());
   await initDatabase();
 
-  if ((await getActivePlatform()) === SupportedPlatform.slack) {
+  const activePlatform = await getActivePlatform();
+
+  if (activePlatform === SupportedPlatform.slack) {
     promises.push(initSlack());
   } else {
     promises.push(initDiscord());

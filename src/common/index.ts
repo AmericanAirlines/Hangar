@@ -9,12 +9,12 @@ export enum SupportedPlatform {
 // TODO: Proper casing for the SupportedPlatform enum and remove strings from the enum
 
 export const getActivePlatform = async (): Promise<SupportedPlatform> => {
-  const discordBotToken = await Config.findOne('discordBotToken');
-  if (!discordBotToken?.value && env.slackBotToken && env.slackSigningSecret) {
+  const discordBotToken = await Config.getValueAs('discordBotToken', 'string', false);
+  if (!discordBotToken && env.slackBotToken && env.slackSigningSecret) {
     return SupportedPlatform.slack;
   }
 
-  if (discordBotToken?.value && !(env.slackBotToken || env.slackSigningSecret)) {
+  if (discordBotToken && !(env.slackBotToken || env.slackSigningSecret)) {
     return SupportedPlatform.discord;
   }
 
