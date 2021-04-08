@@ -9,15 +9,8 @@ const supportSecret = 'this is support secret';
 
 jest.mock('../../../entities/config', () => ({
   Config: {
-    findOne: jest.fn((key: string) => {
-      if (key === 'adminSecret') {
-        return { value: adminSecret };
-      }
-      if (key === 'supportSecret') {
-        return { value: supportSecret };
-      }
-      return undefined;
-    }),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getValueAs: jest.fn((key: string) => (({ adminSecret, supportSecret } as any)[key] as string)),
   },
 }));
 
@@ -79,8 +72,8 @@ describe('requireAuth middleware', () => {
   });
 
   it('sends 401 status when a secret is missing in database', async () => {
-    (Config.findOne as jest.Mock).mockResolvedValueOnce(undefined);
-    (Config.findOne as jest.Mock).mockResolvedValueOnce(undefined);
+    (Config.getValueAs as jest.Mock).mockResolvedValueOnce(undefined);
+    (Config.getValueAs as jest.Mock).mockResolvedValueOnce(undefined);
     const mockRequest = getMockRequest(supportSecret);
     await requireAuth()(mockRequest, mockRes, mockNext);
     expect(mockRes.sendStatus).toBeCalled();
