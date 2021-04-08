@@ -11,6 +11,7 @@ export const actionIds = {
 // CALLBACK IDS
 export const callbackIds = {
   registerTeamSubmitted: 'registerTeamSubmitted',
+  joinSupportQueueSubmitted: 'joinSupportQueueSubmitted',
 };
 
 // VIEWS
@@ -22,5 +23,14 @@ export const registerTeamViewConstants = {
     teamName: 'teamName',
     tableNumber: 'tableNumber',
     projectDescription: 'projectDescription',
+  },
+};
+
+// Join Support Queue View
+export const joinSupportQueueConstants = {
+  viewId: callbackIds.joinSupportQueueSubmitted,
+  fields: {
+    primaryLanguage: 'primaryLanguage',
+    problemDescription: 'problemDescription',
   },
 };

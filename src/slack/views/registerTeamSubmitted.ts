@@ -9,7 +9,7 @@ import { Config } from '../../entities/config';
 import postAdminNotification from '../utilities/postAdminNotification';
 import { stringDictionary } from '../../StringDictionary';
 
-function retrieveViewValuesForField(
+export function retrieveViewValuesForField(
   view: ViewOutput,
   actionId: string,
   type: 'multiUsersSelect' | 'plainTextInput',

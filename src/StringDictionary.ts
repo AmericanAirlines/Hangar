@@ -133,6 +133,25 @@ stringDictionary.registerTeamSummary = (
 /*----------------------------------*/
 
 /*----------------------------------*/
+// src>slack>blocks>joinSupportQueue.ts
+stringDictionary.joinSupportQueueblocks = `*Join our Tech Support Queue* :mag:
+\nOnly one person from each team should join`;
+
+stringDictionary.askPrimaryLanguage = `What's the primary language you're working with?`;
+
+stringDictionary.primaryLanguage = `Primary Language`;
+
+stringDictionary.problemDescription = `What can we help you with?`;
+
+stringDictionary.problemInfoDesc = `Provide a brief summary of the issue you're having`;
+
+stringDictionary.joinSupportQueueSummary = (params) => `You have been added to the tech support queue! Here is the information you submitted:
+
+*Primary Language*: ${params.primaryLanguage}
+*Problem Description*: ${params.problemDescription}`;
+/*----------------------------------*/
+
+/*----------------------------------*/
 // src>slack>blocks>openSourceFooter.ts
 stringDictionary.openSource = (params) => `<${params.repoUrl} | _*Hangar*_> is an Open Source project created by American Airlines.`;
 /*----------------------------------*/
@@ -170,6 +189,31 @@ Team Name: ${params.teamName}
 TableNumber: ${params.tableNumber}
 Project Description: ${params.projectDescription}
 Team Members: ${params.formattedTeamMembers}
+Here's what went wrong, it may be helpful (but probably not):
+\`\`\`
+${JSON.stringify(params.err, null, 2)}
+\`\`\`
+`;
+/*----------------------------------*/
+
+/*----------------------------------*/
+// src>slack>views>joinSupportQueueSubmitted.ts
+stringDictionary.joinSupportQueueNotOpen = (
+  params,
+) => `:warning: The Tech Help Queue isn't open at the moment, please try again later or come chat with our team if you think this is an error.
+Primary Language: ${params.primaryLanguage}
+Problem Description: ${params.problemDescription}`;
+
+stringDictionary.joinedSupportQueueAdminNotification = (params) => `<@${params.registeringUser}> joined the tech help queue:
+Primary Langauge: ${params.primaryLanguage}
+Problem Description: ${params.problemDescription}`;
+
+stringDictionary.joinedSupportQueuepostMessage = (
+  params,
+) => `:warning: Something went wrong while adding you to the Tech Help Queue... come chat with our team for help.
+To help with resubmitting, here's the info you tried to submit:
+Primary Language: ${params.primaryLanguage}
+Problem Description: ${params.problemDescription}
 Here's what went wrong, it may be helpful (but probably not):
 \`\`\`
 ${JSON.stringify(params.err, null, 2)}
