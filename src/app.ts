@@ -20,6 +20,8 @@ let appLoading = true;
 // DO NOT PUT THIS LINE IN THIS FILE `express.json()`
 app.use(cookieParser('secret')); // lgtm [js/missing-token-validation]
 
+app.use('/api', apiApp);
+
 app.get(
   '/',
   (_req, _res, nextFn) => {
