@@ -5,6 +5,7 @@ import events from './events';
 import views from './views';
 import { env } from '../env';
 import { Config } from '../entities/config';
+import { Application } from 'express';
 
 export const receiver = new ExpressReceiver({ signingSecret: null });
 let authorizeResult: AuthorizeResult;
@@ -44,7 +45,7 @@ const authorize = (botToken: string) => async (): Promise<AuthorizeResult> => {
   return authorizeResult;
 };
 
-export const getSlackAppAndInitListeners = async (): Promise<Express.Application> => {
+export const getSlackAppAndInitListeners = async (): Promise<Application> => {
   const token = await Config.getValueAs('slackBotToken', 'string', false);
   // Create a new bolt app using the receiver instance and authorize method above
   const app = new App({

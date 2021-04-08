@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { Middleware, SlackEventMiddlewareArgs } from '@slack/bolt';
-import { app } from '..';
 import logger from '../../logger';
 import { stringDictionary } from '../../StringDictionary';
 
-export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = async ({ context, payload }) => {
+export const appMention: Middleware<SlackEventMiddlewareArgs<'app_mention'>> = async ({ payload, client }) => {
   try {
-    await app.client.chat.postMessage({
-      token: context.botToken,
+    await client.chat.postMessage({
       channel: payload.channel,
       thread_ts: payload.ts,
       text: stringDictionary.appMention,

@@ -1,23 +1,21 @@
-import { app } from '..';
+import { WebClient } from '@slack/web-api';
 import logger from '../../logger';
 import { DmOpenResult } from '../types';
 import { Config } from '../../entities/config';
 
 let token: string | null = null;
 
-export default async function messageUsers(users: string[], message: string): Promise<void> {
-  token = token ?? await Config.getValueAs('slackBotToken', 'string', false);
+export default async function messageUsers(client: WebClient, users: string[], message: string): Promise<void> {
+  token = token ?? (await Config.getValueAs('slackBotToken', 'string', false));
   const errors: { [userId: string]: Error }[] = [];
   for (let i = 0; i < users.length; i += 1) {
     const user = users[i];
     try {
-      const dm = (await app.client.conversations.open({
-        token,
+      const dm = (await client.conversations.open({
         users: users[i],
       })) as DmOpenResult;
 
-      await app.client.chat.postMessage({
-        token,
+      await client.chat.postMessage({
         channel: dm.channel.id,
         text: message,
       });

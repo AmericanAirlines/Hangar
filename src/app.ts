@@ -5,7 +5,7 @@ import { createConnection, getConnectionOptions, getConnection, ConnectionOption
 import path from 'path';
 import { WebClient } from '@slack/web-api';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { slackApp, initListeners } from './slack';
+import { getSlackAppAndInitListeners } from './slack';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
 import { getActivePlatform, SupportedPlatform } from './common';
@@ -84,7 +84,7 @@ export async function initSlack(): Promise<void> {
   try {
     if (slackBotToken) {
       await new WebClient(slackBotToken).auth.test();
-      initListeners();
+      const slackApp = await getSlackAppAndInitListeners();
       app.use(slackApp);
       logger.info('Slack app initialized successfully');
       return;
