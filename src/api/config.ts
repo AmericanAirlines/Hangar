@@ -18,8 +18,8 @@ config.get('/', async (req, res) => {
 config.post('/', async (req, res) => {
   const { configKey, configValue } = req.body;
 
-  if (!configKey || !configKey.trim() || !configValue || !configValue.trim()) {
-    res.status(400).send("Property 'configKey' and 'configKey' are required");
+  if (!configKey || !configKey.trim() || configValue === undefined) {
+    res.status(400).send("Property 'configKey' and 'configValue' are required");
     return;
   }
 
