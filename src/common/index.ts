@@ -1,4 +1,4 @@
-import { env } from '../env';
+import { Config } from '../entities/config';
 
 export enum SupportedPlatform {
   slack = 'slack',
@@ -7,13 +7,21 @@ export enum SupportedPlatform {
 
 // TODO: Proper casing for the SupportedPlatform enum and remove strings from the enum
 
-export const getActivePlatform = (): SupportedPlatform => {
-  if (!env.discordBotToken && env.slackBotToken && env.slackSigningSecret) {
+export const getActivePlatform = async (): Promise<SupportedPlatform | null> => {
+  const slackBotToken = await Config.getValueAs('slackBotToken', 'string', false);
+  const slackSigningSecret = await Config.getValueAs('slackSigningSecret', 'string', false);
+  const discordBotToken = await Config.getValueAs('discordBotToken', 'string', false);
+
+  if (!discordBotToken && slackBotToken && slackSigningSecret) {
     return SupportedPlatform.slack;
   }
 
-  if (env.discordBotToken && !(env.slackBotToken || env.slackSigningSecret)) {
+  if (discordBotToken && !(slackBotToken || slackSigningSecret)) {
     return SupportedPlatform.discord;
+  }
+
+  if (!discordBotToken && !slackBotToken && !slackSigningSecret) {
+    return null;
   }
 
   throw new Error(

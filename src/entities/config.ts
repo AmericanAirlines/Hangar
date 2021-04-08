@@ -57,12 +57,12 @@ export class Config extends BaseEntity {
   static async getValueAs(key: string, valueType: 'string' | 'boolean' | 'number', shouldThrow: boolean): Promise<string | boolean | number | null> {
     const item = await this.findOne({ key });
 
-    if (item.value === null && shouldThrow) {
+    if (item?.value === null && shouldThrow) {
       throw new Error('Value was null');
     }
 
     // eslint-disable-next-line valid-typeof
-    if (typeof item.value !== valueType) {
+    if (typeof item?.value !== valueType) {
       if (shouldThrow) {
         throw new Error(`Value was of undesired type. Requested type was ${valueType} but found ${typeof item.value}.`);
       } else {
@@ -70,6 +70,6 @@ export class Config extends BaseEntity {
       }
     }
 
-    return item.value;
+    return item?.value;
   }
 }
