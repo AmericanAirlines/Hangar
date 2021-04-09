@@ -64,6 +64,18 @@ export interface StringDictionary {
   /*----------------------------------*/
 
   /*----------------------------------*/
+  // src>slack>blocks>joinSupportQueue.ts
+  joinSupportQueueblocks: string;
+  askPrimaryLanguage: string;
+  primaryLanguage: string;
+  problemDescription: string;
+  problemInfoDesc: string;
+
+  supportQueueNotOpen: stringFunction;
+  joinSupportQueueSummary: stringFunction;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
   // src>slack>blocks>openSourceFooter.ts
   openSource: stringFunction;
   /*----------------------------------*/
@@ -83,6 +95,13 @@ export interface StringDictionary {
   registerTeamNotOpen: stringFunction;
   teamSubmittedAdminNotification: stringFunction;
   teamSubmittedpostMessage: stringFunction;
+  /*----------------------------------*/
+
+  /*----------------------------------*/
+  // src>slack>views>joinSupportQueueSubmitted.ts
+  joinSupportQueueNotOpen: stringFunction;
+  joinedSupportQueueAdminNotification: stringFunction;
+  joinedSupportQueuepostMessage: stringFunction;
   /*----------------------------------*/
 
   /*----------------------------------*/
