@@ -13,7 +13,6 @@ export const env = setEnv({
     port: 'PORT',
     logLevel: 'LOG_LEVEL',
     slackLogLevel: 'SLACK_LOG_LEVEL',
-    slackNotificationsWebhookURL: ' SLACK_NOTIFICATIONS_WEBHOOK_URL',
     challengeUrl: 'CHALLENGE_URL',
     jobChatUrl: 'JOB_CHAT_URL',
   },

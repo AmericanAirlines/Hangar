@@ -1,11 +1,11 @@
 import { App, Authorize, AuthorizeResult, ExpressReceiver, LogLevel } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
+import { Application } from 'express';
 import actions from './actions';
 import events from './events';
 import views from './views';
 import { env } from '../env';
 import { Config } from '../entities/config';
-import { Application } from 'express';
 
 export const receiver = new ExpressReceiver({ signingSecret: null });
 let authorizeResult: AuthorizeResult;

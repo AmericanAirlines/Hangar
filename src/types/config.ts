@@ -9,4 +9,10 @@ export const defaultConfigValues = [
 
 export type DefaultConfig = typeof defaultConfigValues[number];
 
-export type KnownConfig = 'discordBotToken' | 'slackBotToken' | 'discordChannelIds' | 'slackSigningSecret' | DefaultConfig;
+export type KnownConfig =
+  | 'discordBotToken'
+  | 'discordChannelIds'
+  | 'slackBotToken'
+  | 'slackSigningSecret'
+  | 'slackNotificationsWebhookURL'
+  | DefaultConfig;
