@@ -22,11 +22,7 @@
     "test:sync": "npm run test -- --runInBand",
     "clean": "rimraf dist .next",
     "typeorm": "ts-node --skip-project --compiler-options \"{\\\"experimentalDecorators\\\": true, \\\"emitDecoratorMetadata\\\": true, \\\"esModuleInterop\\\": true}\" ./node_modules/typeorm/cli.js",
-    "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
-    "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
-    "schema:drop": "ts-node ./node_modules/typeorm/cli.js schema:drop",
-    "schema:sync": "ts-node ./node_modules/typeorm/cli.js schema:sync",
-    "schema:reset": "npm run schema:drop && npm run schema:sync"
+    "seed": "ts-node src/seed.ts"
   },
   "repository": {
     "type": "git",
@@ -91,7 +87,6 @@
     "shuffle-array": "^1.0.1",
     "styled-components": "^5.2.1",
     "typeorm": "^0.2.26",
-    "typeorm-seeding": "^1.6.1",
     "typescript": "^3.8.0",
     "winston": "^3.2.1"
   },
