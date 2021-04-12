@@ -11,7 +11,7 @@ export class CreateAllTables1614212046878 implements MigrationInterface {
       'CREATE TABLE "discord_context" ("id" character varying NOT NULL, "currentCommand" character varying NOT NULL, "nextStep" character varying NOT NULL, "payload" text NOT NULL, CONSTRAINT "PK_0396a1aaa8138098a59f0ff4a8e" PRIMARY KEY ("id"))',
     );
     await queryRunner.query(
-      'CREATE TABLE "team" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "tableNumber" integer, "channelName" character varying, "projectDescription" character varying NOT NULL, "members" text NOT NULL, "judgeVisits" integer NOT NULL, "activeJudgeCount" integer NOT NULL, "syncHash" character varying NOT NULL, CONSTRAINT "UQ_ea8183ff4310b614ee09d44bfda" UNIQUE ("tableNumber"), CONSTRAINT "UQ_eaf0ef05c8c74f9302cd9807d84" UNIQUE ("channelName"), CONSTRAINT "PK_f57d8293406df4af348402e4b74" PRIMARY KEY ("id"))',
+      'CREATE TABLE "team" ("id" SERIAL NOT NULL, "name" character varying NOT NULL, "tableNumber" integer, "channelName" character varying, "projectDescription" character varying NOT NULL, "members" text NOT NULL, "judgeVisits" integer NOT NULL, "activeJudgeCount" integer NOT NULL, "qValue" float NOT NULL, "syncHash" character varying NOT NULL, CONSTRAINT "UQ_ea8183ff4310b614ee09d44bfda" UNIQUE ("tableNumber"), CONSTRAINT "UQ_eaf0ef05c8c74f9302cd9807d84" UNIQUE ("channelName"), CONSTRAINT "PK_f57d8293406df4af348402e4b74" PRIMARY KEY ("id"))',
     );
     await queryRunner.query(
       'CREATE TABLE "judging_vote" ("id" SERIAL NOT NULL, "previousTeam" integer NOT NULL, "currentTeam" integer NOT NULL, "currentTeamChosen" boolean NOT NULL, CONSTRAINT "PK_50f885edb5d4700705e40e27074" PRIMARY KEY ("id"))',
