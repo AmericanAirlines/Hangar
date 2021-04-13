@@ -1,63 +1,76 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import 'jest';
-import { UpdateResult } from 'typeorm';
+import { UpdateResult, FindOneOptions } from 'typeorm';
 import { Team } from '../../entities/team';
 
-/* eslint-disable no-await-in-loop */
+const findOneSpy = jest.spyOn(Team, 'findOne').mockImplementation();
+const updateSelectedTeamSpy = jest.spyOn(Team, 'updateSelectedTeam').mockImplementation(async (team: Team, newHash: string) => {
+  // eslint-disable-next-line no-param-reassign
+  team.syncHash = newHash;
+  return ({
+    affected: 1,
+  } as Partial<UpdateResult>) as UpdateResult;
+});
 
-xdescribe('judging', () => {
-  let team: Team;
+let mockTeam: Team;
 
-  it('decrement reduces activeJudgeCount by 1', async () => {
-    team.activeJudgeCount = 2;
-    await team.save();
-    await team.decrementActiveJudgeCount();
-    let updatedTeam = await Team.findOneOrFail(team.id);
-    expect(updatedTeam.activeJudgeCount).toEqual(1);
-
-    await team.decrementActiveJudgeCount();
-    updatedTeam = await Team.findOneOrFail(team.id);
-    expect(updatedTeam.activeJudgeCount).toEqual(0);
+describe('getNextAvailableTeamExcludingTeams util method', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockTeam = new Team('Does this work?', 123, 'Databases are cool', ['123456']);
+    mockTeam.reload = jest.fn();
   });
 
-  it('activeJudgeCount will never drop below 0', async () => {
-    team.activeJudgeCount = 0;
-    await team.decrementActiveJudgeCount();
-    const updatedTeam = await Team.findOneOrFail(team.id);
-    expect(updatedTeam.activeJudgeCount).toEqual(0);
+  it('should get the next available team when there are excluded teams', async () => {
+    findOneSpy.mockResolvedValueOnce(mockTeam);
+    const excludedTeamId = 1234;
+    const nextTeam = await Team.getNextAvailableTeamExcludingTeams([excludedTeamId]);
+
+    expect(findOneSpy).toBeCalledTimes(1);
+    expect(updateSelectedTeamSpy).toBeCalledTimes(1);
+    const findOneOptions = findOneSpy.mock.calls[0][0] as FindOneOptions<Team>;
+    // eslint-disable-next-line no-underscore-dangle
+    expect((findOneOptions.where as any).id._value._value).toEqual([excludedTeamId]);
+    expect(findOneOptions.order as any).toEqual({
+      activeJudgeCount: 'ASC',
+      judgeVisits: 'ASC',
+    });
+    expect(Object.keys(findOneOptions.order)).toEqual(['activeJudgeCount', 'judgeVisits']);
+    expect(nextTeam.id).toEqual(mockTeam.id);
   });
 
-  it('incrementJudgeVisits bumps judgeVisits by 1', async () => {
-    await team.incrementJudgeVisits();
-    let updatedTeam = await Team.findOneOrFail(team.id);
-    expect(updatedTeam.judgeVisits).toEqual(1);
+  it('should return the next available team when there are no excluded teams', async () => {
+    findOneSpy.mockResolvedValueOnce(mockTeam);
+    const nextTeam = await Team.getNextAvailableTeamExcludingTeams();
 
-    await team.incrementJudgeVisits();
-    updatedTeam = await Team.findOneOrFail(team.id);
-    expect(updatedTeam.judgeVisits).toEqual(2);
+    expect(findOneSpy).toBeCalledTimes(1);
+    expect(updateSelectedTeamSpy).toBeCalledTimes(1);
+    const findOneOptions = findOneSpy.mock.calls[0][0] as FindOneOptions<Team>;
+    // eslint-disable-next-line no-underscore-dangle
+    expect((findOneOptions.where as any).id._value._value).toEqual([]);
+    expect(nextTeam.id).toEqual(mockTeam.id);
   });
 
-  it('retrieving a team for judging will retry up to 5 times on collisions', async () => {
-    const mockMethod = jest.fn(
-      (): Promise<UpdateResult> => {
-        const result: UpdateResult = {
-          affected: 0,
-          raw: undefined,
-          generatedMaps: undefined,
-        };
-        return Promise.resolve(result);
-      },
-    );
+  it('retries getting next team 5 times and throws error', async () => {
+    const unaffectedUpdateResponse = ({
+      affected: 0,
+    } as Partial<UpdateResult>) as UpdateResult;
 
-    Team.updateSelectedTeam = mockMethod;
-
-    let newTeam: Team;
-    try {
-      newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
-      // FAILURE
-    } catch (err) {
-      // SUCCESS
+    const retries = 5;
+    for (let i = retries; i > 0; i -= 1) {
+      findOneSpy.mockResolvedValueOnce(mockTeam);
+      updateSelectedTeamSpy.mockResolvedValueOnce(unaffectedUpdateResponse);
     }
-    expect(newTeam).toBeUndefined();
-    expect(mockMethod.mock.calls.length).toBe(5);
+
+    await expect(Team.getNextAvailableTeamExcludingTeams()).rejects.toThrowError();
+
+    expect(findOneSpy).toBeCalledTimes(5);
+    expect(updateSelectedTeamSpy).toBeCalledTimes(5);
+  });
+
+  it('returns null if team is null', async () => {
+    findOneSpy.mockResolvedValueOnce(null);
+    const newTeam = await Team.getNextAvailableTeamExcludingTeams([]);
+    expect(newTeam).toEqual(null);
   });
 });
