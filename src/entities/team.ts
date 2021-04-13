@@ -1,17 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateResult } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateResult, Not, In } from 'typeorm';
 import { genHash } from '../utilities/genHash';
 
 // TODO: Enforce only one team registered per person
 @Entity()
 export class Team extends BaseEntity {
-  constructor(name: string, tableNumber: number, projectDescription: string, members?: string[], channelName?: string) {
+  constructor(name: string, tableNumber: number, projectDescription: string, members: string[], channelName?: string) {
     super();
 
     this.name = name;
     this.tableNumber = tableNumber || null;
     this.channelName = channelName || null;
     this.projectDescription = projectDescription;
-    this.members = members || [];
+    this.members = members;
     this.judgeVisits = 0;
     this.activeJudgeCount = 0;
     this.syncHash = genHash();
@@ -48,44 +48,37 @@ export class Team extends BaseEntity {
   @Column()
   syncHash: string;
 
-  static async getNextAvailableTeamExcludingTeams(excludedTeamIds: number[]): Promise<Team> {
+  static async getNextAvailableTeamExcludingTeams(excludedTeamIds: number[] = []): Promise<Team> {
     let team: Team = null;
     let retries = 5;
 
     /* eslint-disable no-await-in-loop */
     do {
-      const queryBuilder = Team.createQueryBuilder('team').select();
-
-      if (excludedTeamIds.length > 0) {
-        queryBuilder.where('id NOT IN (:...teams)', { teams: excludedTeamIds });
-      }
-
-      team = await queryBuilder
-        .clone()
-        .andWhere('"team"."activeJudgeCount" = 0')
-        .orderBy('"team"."judgeVisits"', 'ASC')
-        .getOne();
-
-      if (!team) {
-        team = await queryBuilder
-          .clone()
-          .orderBy('"team"."activeJudgeCount"', 'ASC')
-          .addOrderBy('"team"."judgeVisits"', 'ASC')
-          .getOne();
-      }
+      team = await Team.findOne({
+        where: {
+          id: Not(In(excludedTeamIds)),
+        },
+        order: {
+          activeJudgeCount: 'ASC',
+          judgeVisits: 'ASC',
+        },
+      });
 
       if (team) {
         const newHash = genHash();
         const result = await Team.updateSelectedTeam(team, newHash);
         await team.reload();
 
-        if (result.affected > 0 || team.syncHash === newHash) {
+        if (result.affected > 0) {
+          // We found a team and assigned the judge correctly; return it
           return team;
         }
       } else {
+        // No teams remaining
         return null;
       }
 
+      // We picked a team that we couldn't modify; wait briefly and then try again
       await new Promise((resolve) => setTimeout(resolve, Math.random() * 500));
 
       retries -= 1;
@@ -95,6 +88,7 @@ export class Team extends BaseEntity {
     throw new Error('Unable to retrieve a team due to concurrency issues');
   }
 
+  /* istanbul ignore next */
   static async updateSelectedTeam(team: Team, hash: string): Promise<UpdateResult> {
     return Team.createQueryBuilder()
       .update()
@@ -104,6 +98,7 @@ export class Team extends BaseEntity {
       .execute();
   }
 
+  /* istanbul ignore next */
   async decrementActiveJudgeCount(): Promise<void> {
     await Team.createQueryBuilder('team')
       .update()
@@ -112,6 +107,7 @@ export class Team extends BaseEntity {
       .execute();
   }
 
+  /* istanbul ignore next */
   async incrementJudgeVisits(): Promise<void> {
     await Team.createQueryBuilder('team')
       .update()

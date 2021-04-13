@@ -1,12 +1,20 @@
 import express from 'express';
 import { Config } from '../entities/config';
 import logger from '../logger';
+import { defaultConfigValues } from '../types/config';
 
 export const config = express.Router();
 
 config.get('/', async (req, res) => {
   try {
-    res.send(await Config.find({ order: { key: 'ASC' } }));
+    const configItems: Config[] = await Config.find();
+
+    for (const defaultConfigItem of defaultConfigValues) {
+      if (!configItems.find((configItem: Config) => configItem.key === defaultConfigItem)) {
+        configItems.push(new Config(defaultConfigItem, null));
+      }
+    }
+    res.send(configItems.sort((a, b) => a.key.localeCompare(b.key)));
   } catch (err) {
     /* istanbul ignore next */
     res.status(500).send('Something went wrong sending an update to users; check the logs for more details');

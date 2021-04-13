@@ -2,6 +2,7 @@ import 'jest';
 import supertest from 'supertest';
 import { Config } from '../../entities/config';
 import { env } from '../../env';
+import { KnownConfig } from '../../types/config';
 
 jest.mock('../../discord');
 jest.mock('../../env', () => {
@@ -36,7 +37,7 @@ xdescribe('api/judging', () => {
     const configKey = 'something';
     const configValue = 'somehow';
 
-    const item = new Config(configKey, configValue);
+    const item = new Config(configKey as KnownConfig, configValue);
     await item.save();
 
     const { app } = require('../../app');
@@ -76,7 +77,7 @@ xdescribe('api/judging', () => {
     const configValue = 'somehow';
     const newConfigValue = 'somewhere';
 
-    const item = new Config(configKey, configValue);
+    const item = new Config(configKey as KnownConfig, configValue);
     await item.save();
 
     const result = await supertest(app)
