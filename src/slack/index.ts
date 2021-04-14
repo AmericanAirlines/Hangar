@@ -7,7 +7,6 @@ import views from './views';
 import { env } from '../env';
 import { Config } from '../entities/config';
 
-// export const receiver = new ExpressReceiver({ signingSecret: '8a5aa316c01dbc7e507456e039710096' }); // Maybe should be Config.getValueAs('slackSigningSecret', 'string', false) ?
 let authorizeResult: AuthorizeResult;
 
 let logLevel: LogLevel;
