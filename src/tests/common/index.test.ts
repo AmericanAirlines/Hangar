@@ -8,7 +8,7 @@ const mockConfigValues: {[id: string]: string | undefined} = {
   slackSigningSecret: undefined,
 };
 
-jest.mock('../../entities/Config', () => ({
+jest.mock('../../entities/config', () => ({
   Config: {
     getValueAs: jest.fn(async (key: string) => mockConfigValues[key]),
   }

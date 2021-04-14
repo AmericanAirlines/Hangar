@@ -2,6 +2,7 @@ import 'jest';
 import supertest from 'supertest';
 import logger from '../logger';
 import { env } from '../env';
+import { Config } from '../entities/config'
 
 jest.spyOn(logger, 'error').mockImplementation();
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
@@ -20,6 +21,12 @@ jest.mock('../env', () => {
     },
   };
 });
+
+// jest.mock('../entities/config', () => ({
+//   Config: {
+//     getValueAs: jest.fn(async (key: string) => mockConfigValues[key]),
+//   }
+// }));
 
 const processExitSpy = jest.spyOn(process, 'exit').mockImplementation();
 const mockSlackAuth = jest.fn();

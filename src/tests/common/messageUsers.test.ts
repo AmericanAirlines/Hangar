@@ -12,7 +12,7 @@ const slackMessageUsersSpy = jest.spyOn(slackMessageUsers, 'default').mockImplem
 const discordMessageUsersSpy = jest.spyOn(discordMessageUsers, 'messageUsers').mockImplementation();
 
 const mockSlackBotToken = 'tokenTest';
-jest.mock('../../entities/Config', () => ({
+jest.mock('../../entities/config', () => ({
   Config: {
     getValueAs: jest.fn(async () => mockSlackBotToken),
   }

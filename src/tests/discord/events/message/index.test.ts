@@ -9,8 +9,8 @@ import { client } from '../../../../discord';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import logger from '../../../../logger';
 import * as botWasTagged from '../../../../discord/utilities/botWasTagged';
-import { env } from '../../../../env';
 import { stringDictionary } from '../../../../StringDictionary';
+import { Config } from '../../../../entities/config'
 
 // Mock all the handlers - we don't care about testing their implementation
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
@@ -25,15 +25,12 @@ const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const botWasTaggedSpy = jest.spyOn(botWasTagged, 'botWasTagged').mockReturnValue(false);
 const mockDiscordContext = new DiscordContext('1234', '', '');
 jest.mock('../../../../discord');
-jest.mock('../../../../env', () => {
-  const realEnv = jest.requireActual('../../../../env');
-  return {
-    env: {
-      ...realEnv,
-      discordChannelIds: '9423,  13189    ,  0123',
-    },
-  };
-});
+
+jest.mock('../../../../entities/config', () => ({
+  Config: {
+    getValueAs: jest.fn(async () => '9423,  13189    ,  0123'),
+  }
+}));
 
 const discordContextFindOneMock = jest.fn(async () => mockDiscordContext);
 jest.mock('../../../../entities/discordContext', () => {
@@ -296,8 +293,7 @@ describe('message handler', () => {
 
   it('does not respond if there are no set monitored channels', (done) => {
     jest.isolateModules(async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (env as any).discordChannelIds = undefined;
+      (Config.getValueAs as unknown as jest.Mock).mockResolvedValueOnce(undefined);
       const reply = jest.fn();
       const channelMessage = makeDiscordMessage({
         reply,
