@@ -65,6 +65,13 @@ export class Config extends BaseEntity {
   ): Promise<string | boolean | number | null> {
     const item = await this.findOne({ key });
 
+    if (!item) {
+      if (shouldThrow) {
+        throw new Error('No Config found for key');
+      }
+      return null;
+    }
+
     if (item.value === null && shouldThrow) {
       throw new Error('Value was null');
     }
