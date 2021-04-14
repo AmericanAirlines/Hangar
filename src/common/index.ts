@@ -25,6 +25,6 @@ export const getActivePlatform = async (): Promise<SupportedPlatform | null> => 
   }
 
   throw new Error(
-    'Error, must set a Slack token and signing secret OR a Discord token! (Unable to set neither or both sets of environment variables)',
+    'Error, must set a Slack token and signing secret OR a Discord token! (Unable to set both sets of environment variables)',
   );
 };

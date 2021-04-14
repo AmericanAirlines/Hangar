@@ -20,17 +20,17 @@ describe('common messageUsers', () => {
   it('calls slack messageUsers when activePlatform is Slack', async () => {
     const userIds = ['slackId'];
     const message = 'hello world';
-    getActivePlatformSpy.mockReturnValue(common.SupportedPlatform.slack);
+    getActivePlatformSpy.mockReturnValue(common.SupportedPlatform.slack as unknown as Promise<common.SupportedPlatform>);
 
     await sendMessage(userIds, message);
 
     expect(slackMessageUsersSpy).toHaveBeenCalledWith(userIds, message);
   });
 
-  it('calls slack messageUsers when activePlatform is Slack', async () => {
+  it('calls discord messageUsers when activePlatform is Discord', async () => {
     const userIds = ['discordId'];
     const message = 'hello world';
-    getActivePlatformSpy.mockReturnValue(common.SupportedPlatform.discord);
+    getActivePlatformSpy.mockReturnValue(common.SupportedPlatform.discord as unknown as Promise<common.SupportedPlatform>);
 
     await sendMessage(userIds, message);
 
