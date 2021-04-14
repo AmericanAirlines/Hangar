@@ -47,7 +47,7 @@ describe('getNextAvailableTeamExcludingTeams util method', () => {
     expect(updateSelectedTeamSpy).toBeCalledTimes(1);
     const findOneOptions = findOneSpy.mock.calls[0][0] as FindOneOptions<Team>;
     // eslint-disable-next-line no-underscore-dangle
-    expect((findOneOptions.where as any).id._value._value).toEqual([]);
+    expect(findOneOptions.where).toEqual({});
     expect(nextTeam.id).toEqual(mockTeam.id);
   });
 

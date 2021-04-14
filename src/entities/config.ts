@@ -21,6 +21,7 @@ export class Config extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true, default: null })
   value: ConfigValue;
 
+  /* istanbul ignore next */
   /**
    * @deprecated Use `Config.getValueAs(key, 'boolean', true)` instead
    */
@@ -65,12 +66,19 @@ export class Config extends BaseEntity {
   ): Promise<string | boolean | number | null> {
     const item = await this.findOne({ key });
 
-    if (item?.value === null && shouldThrow) {
+    if (!item) {
+      if (shouldThrow) {
+        throw new Error('No Config found for key');
+      }
+      return null;
+    }
+
+    if (item.value === null && shouldThrow) {
       throw new Error('Value was null');
     }
 
     // eslint-disable-next-line valid-typeof
-    if (typeof item?.value !== valueType) {
+    if (typeof item.value !== valueType) {
       if (shouldThrow) {
         throw new Error(`Value was of undesired type. Requested type was ${valueType} but found ${typeof item.value}.`);
       } else {
@@ -78,6 +86,6 @@ export class Config extends BaseEntity {
       }
     }
 
-    return item?.value;
+    return item.value;
   }
 }
