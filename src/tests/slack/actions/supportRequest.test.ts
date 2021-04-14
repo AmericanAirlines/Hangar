@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase, @typescript-eslint/no-explicit-any */
 import 'jest';
+import { WebClient } from '@slack/web-api';
 import { supportRequest } from '../../../slack/actions/supportRequest';
 import { actionIds } from '../../../slack/constants';
 import { Config } from '../../../entities/config';
-import { app } from '../../../slack/index';
 import { SupportRequest } from '../../../entities/supportRequest';
 import logger from '../../../logger';
 import * as openAlertModal from '../../../slack/utilities/openAlertModal';
@@ -15,7 +15,9 @@ const openAlertModalSpy = jest.spyOn(openAlertModal, 'openAlertModal').mockImple
 const configFindToggleForKeySpy = jest.spyOn(Config, 'findToggleForKey');
 let supportRequestQueueActive = false;
 
-const usersInfoSpy = jest.spyOn(app.client.users, 'info').mockImplementation();
+const mockClient = new WebClient();
+
+const usersInfoSpy = jest.spyOn(mockClient.users, 'info').mockImplementation();
 
 const saveSupportRequest = jest.fn();
 const countSupportRequest = jest.fn();
@@ -40,9 +42,7 @@ const jobChatArgs: any = {
     },
     trigger_id: 'XXX',
   },
-  context: {
-    botToken: 'XXX',
-  },
+  client: mockClient,
   action: {
     action_id: actionIds.joinJobChatQueue,
   },

@@ -1,9 +1,9 @@
 import 'jest';
+import { WebClient } from '@slack/web-api';
 import * as common from '../../common';
 import * as slackMessageUsers from '../../slack/utilities/messageUsers';
 import * as discordMessageUsers from '../../discord/utilities/messageUsers';
 import { Config } from '../../entities/config';
-import { WebClient } from '@slack/web-api';
 
 jest.mock('../../discord');
 
@@ -15,7 +15,7 @@ const mockSlackBotToken = 'tokenTest';
 jest.mock('../../entities/config', () => ({
   Config: {
     getValueAs: jest.fn(async () => mockSlackBotToken),
-  }
+  },
 }));
 
 jest.mock('@slack/web-api');
@@ -31,7 +31,7 @@ describe('common messageUsers', () => {
     getActivePlatformSpy.mockResolvedValueOnce(common.SupportedPlatform.slack);
 
     jest.isolateModules(async () => {
-      const {sendMessage} = require('../../common/messageUsers');
+      const { sendMessage } = require('../../common/messageUsers');
       await sendMessage(userIds, message);
       expect(discordMessageUsersSpy).not.toBeCalled();
       expect(slackMessageUsersSpy).toBeCalledWith((WebClient as unknown as jest.Mock).mock.instances[0], userIds, message);
@@ -47,7 +47,7 @@ describe('common messageUsers', () => {
     getActivePlatformSpy.mockResolvedValueOnce(common.SupportedPlatform.slack).mockResolvedValueOnce(common.SupportedPlatform.slack);
 
     jest.isolateModules(async () => {
-      const {sendMessage} = require('../../common/messageUsers');
+      const { sendMessage } = require('../../common/messageUsers');
       await sendMessage(userIds, message);
       await sendMessage(userIds, message);
       expect(WebClient).toBeCalledTimes(1);
@@ -61,11 +61,11 @@ describe('common messageUsers', () => {
     getActivePlatformSpy.mockResolvedValueOnce(common.SupportedPlatform.discord);
 
     jest.isolateModules(async () => {
-      const {sendMessage} = require('../../common/messageUsers');
-        await sendMessage(userIds, message);
-        expect(discordMessageUsersSpy).toBeCalledWith(userIds, message);
-        expect(discordMessageUsersSpy).toBeCalledTimes(1);
-        expect(slackMessageUsersSpy).not.toBeCalled();
+      const { sendMessage } = require('../../common/messageUsers');
+      await sendMessage(userIds, message);
+      expect(discordMessageUsersSpy).toBeCalledWith(userIds, message);
+      expect(discordMessageUsersSpy).toBeCalledTimes(1);
+      expect(slackMessageUsersSpy).not.toBeCalled();
     });
   });
 });

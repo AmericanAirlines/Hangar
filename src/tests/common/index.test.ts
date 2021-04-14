@@ -11,7 +11,7 @@ const mockConfigValues: {[id: string]: string | undefined} = {
 jest.mock('../../entities/config', () => ({
   Config: {
     getValueAs: jest.fn(async (key: string) => mockConfigValues[key]),
-  }
+  },
 }));
 
 const mockConfigGetValueAs = Config.getValueAs as unknown as jest.Mock;
@@ -23,7 +23,7 @@ describe('common getActivePlatform', () => {
     mockConfigValues.slackBotToken = undefined;
     mockConfigValues.slackSigningSecret = undefined;
   });
-  it('returns Slack as the active platform when both slack vars are present in Config', async() => {
+  it('returns Slack as the active platform when both slack vars are present in Config', async () => {
     mockConfigValues.slackBotToken = 'sometoken';
     mockConfigValues.slackSigningSecret = 'somesigningsecret';
     await expect(getActivePlatform()).resolves.toEqual(SupportedPlatform.slack);
@@ -44,7 +44,7 @@ describe('common getActivePlatform', () => {
     mockConfigValues.slackSigningSecret = 'somesigning';
     await expect(getActivePlatform()).rejects.toThrowError(
       'Error, must set a Slack token and signing secret OR a Discord token! (Unable to set both sets of environment variables)',
-      );
+    );
   });
 
   xit('throws an error when only the token is set for Slack', async () => {

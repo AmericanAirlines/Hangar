@@ -10,7 +10,7 @@ import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
 import logger from '../../../../logger';
 import * as botWasTagged from '../../../../discord/utilities/botWasTagged';
 import { stringDictionary } from '../../../../StringDictionary';
-import { Config } from '../../../../entities/config'
+import { Config } from '../../../../entities/config';
 
 // Mock all the handlers - we don't care about testing their implementation
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
@@ -29,7 +29,7 @@ jest.mock('../../../../discord');
 jest.mock('../../../../entities/config', () => ({
   Config: {
     getValueAs: jest.fn(async () => '9423,  13189    ,  0123'),
-  }
+  },
 }));
 
 const discordContextFindOneMock = jest.fn(async () => mockDiscordContext);
