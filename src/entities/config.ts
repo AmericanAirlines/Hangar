@@ -21,10 +21,10 @@ export class Config extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true, default: null })
   value: ConfigValue;
 
+  /* istanbul ignore next */
   /**
    * @deprecated Use `Config.getValueAs(key, 'boolean', true)` instead
    */
-  /* istanbul ignore next */
   static async findToggleForKey(key: KnownConfig): Promise<boolean> {
     return Config.getValueAs(key, 'boolean', true);
   }
