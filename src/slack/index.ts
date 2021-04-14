@@ -1,4 +1,4 @@
-import { App, Authorize, AuthorizeResult, ExpressReceiver, LogLevel } from '@slack/bolt';
+import { App, AuthorizeResult, ExpressReceiver, LogLevel } from '@slack/bolt';
 import { WebClient } from '@slack/web-api';
 import { Application } from 'express';
 import actions from './actions';
@@ -7,7 +7,7 @@ import views from './views';
 import { env } from '../env';
 import { Config } from '../entities/config';
 
-export const receiver = new ExpressReceiver({ signingSecret: null });
+// export const receiver = new ExpressReceiver({ signingSecret: '8a5aa316c01dbc7e507456e039710096' }); // Maybe should be Config.getValueAs('slackSigningSecret', 'string', false) ?
 let authorizeResult: AuthorizeResult;
 
 let logLevel: LogLevel;
@@ -47,6 +47,9 @@ const authorize = (botToken: string) => async (): Promise<AuthorizeResult> => {
 
 export const getSlackAppAndInitListeners = async (): Promise<Application> => {
   const token = await Config.getValueAs('slackBotToken', 'string', false);
+
+  const receiver = new ExpressReceiver({ signingSecret: await Config.getValueAs('slackSigningSecret', 'string', false) });
+
   // Create a new bolt app using the receiver instance and authorize method above
   const app = new App({
     receiver,

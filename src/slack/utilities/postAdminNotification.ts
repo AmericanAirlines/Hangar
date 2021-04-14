@@ -3,8 +3,6 @@ import logger from '../../logger';
 import { env } from '../../env';
 import { Config } from '../../entities/config';
 
-// const webhookUrl = env.slackNotificationsWebhookURL;
-
 export default async function postAdminNotification(message: string | IncomingWebhookSendArguments): Promise<void> {
   const webhookUrl = await Config.getValueAs('slackNotificationsWebhookURL', 'string', false);
   if (webhookUrl) {
