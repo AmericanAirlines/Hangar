@@ -55,9 +55,7 @@ export class Team extends BaseEntity {
     /* eslint-disable no-await-in-loop */
     do {
       team = await Team.findOne({
-        where: {
-          id: Not(In(excludedTeamIds)),
-        },
+        where: excludedTeamIds.length ? { id: Not(In(excludedTeamIds)) } : {},
         order: {
           activeJudgeCount: 'ASC',
           judgeVisits: 'ASC',
