@@ -1,32 +1,41 @@
 import 'jest';
 import { Config } from '../../entities/config';
-import { KnownConfig } from '../../types/config';
 
-/* eslint-disable no-await-in-loop */
+const configFindOneSpy = jest.spyOn(Config, 'findOne');
 
-xdescribe('config', () => {
-  it('config items can be saved and retrieved', async () => {
-    const item = new Config('something' as KnownConfig, 'something else');
-    await item.save();
-    const foundItem = await Config.findOneOrFail({ key: item.key });
-    expect(foundItem).toEqual(item);
+describe('config findToggleForKey util', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('a config item with a boolean value can be retrieved as a boolean', async () => {
-    const item = new Config('thisIsCool' as KnownConfig, 'true');
-    await item.save();
-    const toggleValue = await Config.findToggleForKey(item.key);
-    expect(toggleValue).toEqual(true);
+  it('will throw an error for an item that cannot be found if throw is enabled', async () => {
+    configFindOneSpy.mockResolvedValueOnce(null);
+    await expect(Config.getValueAs('adminSecret', 'string', true)).rejects.toThrow();
   });
 
-  it('a non-existent toggle will be false', async () => {
-    const toggleValue = await Config.findToggleForKey('non-existent toggle key' as KnownConfig);
-    expect(toggleValue).toEqual(false);
+  it('will return null for an item that cannot be found if throw is disabled', async () => {
+    configFindOneSpy.mockResolvedValueOnce(null);
+    expect(await Config.getValueAs('adminSecret', 'string', false)).toEqual(null);
   });
 
-  it('retrieving a non-boolean toggle as a toggle will throw an error', async () => {
-    const item = new Config('the meaning of life' as KnownConfig, '42');
-    await item.save();
-    await expect(Config.findToggleForKey(item.key)).rejects.toThrow();
+  it('will throw an error for an item with a null value if throw is enabled', async () => {
+    const mockConfig = new Config('adminSecret', null);
+    configFindOneSpy.mockResolvedValueOnce(mockConfig);
+    await expect(Config.getValueAs('adminSecret', 'string', true)).rejects.toThrow();
+  });
+  it('will throw an error for an item with an incorrect valueType if throw is enabled', async () => {
+    const mockConfig = new Config('adminSecret', 123);
+    configFindOneSpy.mockResolvedValueOnce(mockConfig);
+    await expect(Config.getValueAs('adminSecret', 'string', true)).rejects.toThrow();
+  });
+  it('will return null for an item with an incorrect valueType if throw is disabled', async () => {
+    const mockConfig = new Config('adminSecret', 123);
+    configFindOneSpy.mockResolvedValueOnce(mockConfig);
+    expect(await Config.getValueAs('adminSecret', 'string', false)).toEqual(null);
+  });
+  it('will return the value for an item if te valueType is correct', async () => {
+    const mockConfig = new Config('adminSecret', 123);
+    configFindOneSpy.mockResolvedValueOnce(mockConfig);
+    expect(await Config.getValueAs('adminSecret', 'number', true)).toEqual(mockConfig.value);
   });
 });

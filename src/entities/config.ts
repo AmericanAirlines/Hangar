@@ -24,6 +24,7 @@ export class Config extends BaseEntity {
   /**
    * @deprecated Use `Config.getValueAs(key, 'boolean', true)` instead
    */
+  /* istanbul ignore next */
   static async findToggleForKey(key: KnownConfig): Promise<boolean> {
     return Config.getValueAs(key, 'boolean', true);
   }
