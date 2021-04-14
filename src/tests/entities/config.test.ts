@@ -23,16 +23,19 @@ describe('config findToggleForKey util', () => {
     configFindOneSpy.mockResolvedValueOnce(mockConfig);
     await expect(Config.getValueAs('adminSecret', 'string', true)).rejects.toThrow();
   });
+
   it('will throw an error for an item with an incorrect valueType if throw is enabled', async () => {
     const mockConfig = new Config('adminSecret', 123);
     configFindOneSpy.mockResolvedValueOnce(mockConfig);
     await expect(Config.getValueAs('adminSecret', 'string', true)).rejects.toThrow();
   });
+
   it('will return null for an item with an incorrect valueType if throw is disabled', async () => {
     const mockConfig = new Config('adminSecret', 123);
     configFindOneSpy.mockResolvedValueOnce(mockConfig);
     await expect(Config.getValueAs('adminSecret', 'string', false)).resolves.toEqual(null);
   });
+
   it('will return the value for an item if te valueType is correct', async () => {
     const mockConfig = new Config('adminSecret', 123);
     configFindOneSpy.mockResolvedValueOnce(mockConfig);
