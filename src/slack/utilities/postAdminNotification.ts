@@ -1,6 +1,5 @@
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 import logger from '../../logger';
-import { env } from '../../env';
 import { Config } from '../../entities/config';
 
 export default async function postAdminNotification(message: string | IncomingWebhookSendArguments): Promise<void> {

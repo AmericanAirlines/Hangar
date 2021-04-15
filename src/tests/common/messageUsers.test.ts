@@ -1,3 +1,4 @@
+/* eslint-disable global-require, @typescript-eslint/no-var-requires */
 import 'jest';
 import { WebClient } from '@slack/web-api';
 import * as common from '../../common';
@@ -32,9 +33,10 @@ describe('common messageUsers', () => {
 
     jest.isolateModules(async () => {
       const { sendMessage } = require('../../common/messageUsers');
+
       await sendMessage(userIds, message);
       expect(discordMessageUsersSpy).not.toBeCalled();
-      expect(slackMessageUsersSpy).toBeCalledWith((WebClient as unknown as jest.Mock).mock.instances[0], userIds, message);
+      expect(slackMessageUsersSpy).toBeCalledWith(((WebClient as unknown) as jest.Mock).mock.instances[0], userIds, message);
       expect(slackMessageUsersSpy).toBeCalledTimes(1);
       expect(Config.getValueAs).toBeCalledWith('slackBotToken', 'string', true);
       expect(WebClient).toBeCalledWith(mockSlackBotToken);

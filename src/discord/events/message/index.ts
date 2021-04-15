@@ -8,7 +8,6 @@ import { help } from './help';
 import { registerTeam, regSubCommands } from './registerTeam';
 import { exit } from './exit';
 import { botWasTagged } from '../../utilities/botWasTagged';
-import { env } from '../../../env';
 import { stringDictionary } from '../../../StringDictionary';
 import { Config } from '../../../entities/config';
 

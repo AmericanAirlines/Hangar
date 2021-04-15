@@ -21,7 +21,6 @@ jest.mock('../env', () => {
   };
 });
 
-
 jest.mock('../entities/config', () => ({
   Config: {
     getValueAs: jest.fn(),
@@ -73,7 +72,7 @@ describe('app', () => {
   it('will initialize correctly when provided with a valid token', (done) => {
     jest.isolateModules(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (Config.getValueAs as unknown as jest.Mock).mockResolvedValueOnce('somesigning');
+      ((Config.getValueAs as unknown) as jest.Mock).mockResolvedValueOnce('somesigning');
       mockSlackAuth.mockResolvedValueOnce('Valid Auth');
       // eslint-disable-next-line global-require
       const isolatedInitSlack = require('../app').initSlack;
@@ -91,7 +90,7 @@ describe('app', () => {
   it('will exit the process when Discord tokens are provided but setup fails, and NODE_ENV !== "test", because it cannot initialize Discord', (done) => {
     jest.isolateModules(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (Config.getValueAs as unknown as jest.Mock).mockResolvedValueOnce('123');
+      ((Config.getValueAs as unknown) as jest.Mock).mockResolvedValueOnce('123');
       jest.resetModules();
       jest.mock('../discord', () => ({
         setupDiscord: (): Promise<Error> => Promise.reject(new Error()),

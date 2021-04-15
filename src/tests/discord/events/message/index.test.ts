@@ -293,7 +293,7 @@ describe('message handler', () => {
 
   it('does not respond if there are no set monitored channels', (done) => {
     jest.isolateModules(async () => {
-      (Config.getValueAs as unknown as jest.Mock).mockResolvedValueOnce(undefined);
+      ((Config.getValueAs as unknown) as jest.Mock).mockResolvedValueOnce(undefined);
       const reply = jest.fn();
       const channelMessage = makeDiscordMessage({
         reply,
