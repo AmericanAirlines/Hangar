@@ -2,6 +2,7 @@ import 'jest';
 import supertest from 'supertest';
 import logger from '../logger';
 import { env } from '../env';
+import { Config } from '../entities/config';
 
 jest.spyOn(logger, 'error').mockImplementation();
 const loggerInfoSpy = jest.spyOn(logger, 'info').mockImplementation();
@@ -15,11 +16,16 @@ jest.mock('../env', () => {
   return {
     env: {
       ...realEnv,
-      adminSecret: 'iAdmin',
       nodeEnv: 'development',
     },
   };
 });
+
+jest.mock('../entities/config', () => ({
+  Config: {
+    getValueAs: jest.fn(),
+  },
+}));
 
 const processExitSpy = jest.spyOn(process, 'exit').mockImplementation();
 const mockSlackAuth = jest.fn();
@@ -66,7 +72,7 @@ describe('app', () => {
   it('will initialize correctly when provided with a valid token', (done) => {
     jest.isolateModules(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (env as any).slackBotToken = '123';
+      ((Config.getValueAs as unknown) as jest.Mock).mockResolvedValueOnce('somesigning');
       mockSlackAuth.mockResolvedValueOnce('Valid Auth');
       // eslint-disable-next-line global-require
       const isolatedInitSlack = require('../app').initSlack;
@@ -84,7 +90,7 @@ describe('app', () => {
   it('will exit the process when Discord tokens are provided but setup fails, and NODE_ENV !== "test", because it cannot initialize Discord', (done) => {
     jest.isolateModules(async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (env as any).discordBotToken = '123';
+      ((Config.getValueAs as unknown) as jest.Mock).mockResolvedValueOnce('123');
       jest.resetModules();
       jest.mock('../discord', () => ({
         setupDiscord: (): Promise<Error> => Promise.reject(new Error()),

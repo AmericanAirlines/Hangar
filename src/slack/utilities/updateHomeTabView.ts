@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { app } from '..';
+import { WebClient } from '@slack/web-api';
 import { dashboardBlocks } from '../blocks/dashboardBlocks';
-import { env } from '../../env';
 
-const token = env.slackBotToken;
-
-export default async function updateHomeTabView(userId: string): Promise<void> {
-  await app.client.views.publish({
-    token,
+export default async function updateHomeTabView(client: WebClient, userId: string): Promise<void> {
+  await client.views.publish({
     user_id: userId,
     view: {
       type: 'home',
