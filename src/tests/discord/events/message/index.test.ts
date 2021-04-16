@@ -1,31 +1,38 @@
 /* eslint-disable implicit-arrow-linebreak, function-paren-newline */
 import 'jest';
 import * as ping from '../../../../discord/events/message/ping';
+import * as support from '../../../../discord/events/message/supportRequest';
+import * as register from '../../../../discord/events/message/registerTeam';
+import * as exit from '../../../../discord/events/message/exit';
 import { DiscordContext } from '../../../../entities/discordContext';
 import { client } from '../../../../discord';
 import { makeDiscordMessage } from '../../../utilities/makeDiscordMessage';
-import { regSubCommands } from '../../../../discord/events/message/registerTeam';
 import logger from '../../../../logger';
 import * as botWasTagged from '../../../../discord/utilities/botWasTagged';
-import { env } from '../../../../env';
+import { stringDictionary } from '../../../../StringDictionary';
+import { Config } from '../../../../entities/config';
 
+// Mock all the handlers - we don't care about testing their implementation
 const pingHandlerSpy = jest.spyOn(ping, 'ping').mockImplementation();
-const teamNameSpy = jest.spyOn(regSubCommands, 'teamName').mockImplementation();
+const mockHelpHandler = jest.fn();
+jest.mock('../../../../discord/events/message/help', () => ({ help: jest.fn((...args) => mockHelpHandler(...args)) }));
+const supportHandlerSpy = jest.spyOn(support, 'supportRequest').mockImplementation();
+jest.spyOn(register, 'registerTeam').mockImplementation();
+const exitHandlerSpy = jest.spyOn(exit, 'exit').mockImplementation();
+const teamNameSpy = jest.spyOn(register.regSubCommands, 'teamName').mockImplementation();
+
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 const botWasTaggedSpy = jest.spyOn(botWasTagged, 'botWasTagged').mockReturnValue(false);
 const mockDiscordContext = new DiscordContext('1234', '', '');
 jest.mock('../../../../discord');
-jest.mock('../../../../env', () => {
-  const realEnv = jest.requireActual('../../../../env');
-  return {
-    env: {
-      ...realEnv,
-      discordChannelIds: '9423,  13189    ,  0123',
-    },
-  };
-});
 
-const discordContextFindOneMock = jest.fn().mockImplementation(async () => mockDiscordContext);
+jest.mock('../../../../entities/config', () => ({
+  Config: {
+    getValueAs: jest.fn(async () => '9423,  13189    ,  0123'),
+  },
+}));
+
+const discordContextFindOneMock = jest.fn(async () => mockDiscordContext);
 jest.mock('../../../../entities/discordContext', () => {
   function MockedDiscordContext(id: string, currentCommand: string, nextStep: string): object {
     return {
@@ -37,7 +44,7 @@ jest.mock('../../../../entities/discordContext', () => {
     };
   }
 
-  MockedDiscordContext.findOne = jest.fn(() => discordContextFindOneMock);
+  MockedDiscordContext.findOne = jest.fn(async () => discordContextFindOneMock());
 
   return {
     DiscordContext: MockedDiscordContext,
@@ -52,7 +59,7 @@ import { message } from '../../../../discord/events/message';
 
 describe('message handler', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   it('will respond with generic info if a matching handler cannot be found', async () => {
@@ -70,7 +77,24 @@ describe('message handler', () => {
 
     await message(genericMessage);
     expect(reply).toBeCalledTimes(1);
-    expect(reply).toBeCalledWith("That isn't a command I understand. Try replying with `!help` to see the full list of things I can help with!");
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand);
+  });
+
+  it('successfully responds to !H requests', async () => {
+    const reply = jest.fn();
+    const helpMessage = makeDiscordMessage({
+      reply,
+      content: '!H',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(helpMessage);
+    expect(mockHelpHandler).toBeCalledTimes(1);
   });
 
   it('successfully responds to !ping requests', async () => {
@@ -88,8 +112,93 @@ describe('message handler', () => {
 
     await message(pingMessage);
     expect(pingHandlerSpy).toBeCalledTimes(1);
-    const messageArg = pingHandlerSpy.mock.calls[0][0];
-    expect(messageArg).toEqual(pingMessage);
+  });
+
+  it('will respond with generic info for !ideaPitchs', async () => {
+    const reply = jest.fn();
+    const genericMessage = makeDiscordMessage({
+      reply,
+      content: '!ideaPitchs',
+      author: {
+        id: 'JaneSmith',
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(genericMessage);
+    expect(reply).toBeCalledTimes(1);
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand);
+  });
+
+  it('successfully responds to !ts requests', async () => {
+    const reply = jest.fn();
+    const supportMessage = makeDiscordMessage({
+      reply,
+      content: '!ts',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(supportMessage);
+    expect(supportHandlerSpy).toBeCalledTimes(1);
+  });
+
+  it('successfully responds to !JOBchat requests', async () => {
+    const reply = jest.fn();
+    const supportMessage = makeDiscordMessage({
+      reply,
+      content: '!JOBchat',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(supportMessage);
+    expect(supportHandlerSpy).toBeCalledTimes(1);
+  });
+
+  it('will respond with generic info for !RegisterTeams', async () => {
+    const reply = jest.fn();
+    const genericMessage = makeDiscordMessage({
+      reply,
+      content: '!RegisterTeams',
+      author: {
+        id: 'JaneSmith',
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(genericMessage);
+    expect(reply).toBeCalledTimes(1);
+    expect(reply).toBeCalledWith(stringDictionary.botCantUnderstand);
+  });
+
+  it('successfully responds to !e requests', async () => {
+    const reply = jest.fn();
+    const exitMessage = makeDiscordMessage({
+      reply,
+      content: '!e',
+      author: {
+        id: mockDiscordContext.id,
+      },
+      channel: {
+        type: 'dm',
+      },
+    });
+
+    await message(exitMessage);
+    expect(exitHandlerSpy).toBeCalledTimes(1);
   });
 
   it('logs an error if a handler throws', async () => {
@@ -184,8 +293,7 @@ describe('message handler', () => {
 
   it('does not respond if there are no set monitored channels', (done) => {
     jest.isolateModules(async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (env as any).discordChannelIds = undefined;
+      ((Config.getValueAs as unknown) as jest.Mock).mockResolvedValueOnce(undefined);
       const reply = jest.fn();
       const channelMessage = makeDiscordMessage({
         reply,
@@ -322,7 +430,7 @@ describe('message handler', () => {
         content: '',
         author: { id: discordId },
         channel: {
-          type: 'text',
+          type: 'dm',
           id: '0123',
         },
       }),

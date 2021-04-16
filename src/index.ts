@@ -7,6 +7,7 @@ import { env } from './env';
 export const port = env.port || '3000';
 async function start(): Promise<Server> {
   await init();
+
   return app.listen(port, () => {
     logger.info(`Listening at http://localhost:${port}/`);
   });

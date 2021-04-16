@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from 'express';
 import 'jest';
 import supertest from 'supertest';
 import { Team } from '../../entities/team';
@@ -7,6 +8,12 @@ import logger from '../../logger';
 
 jest.mock('../../discord');
 jest.mock('../../env');
+const requireAuthMock = jest.fn((_req: Request, _res: Response, next: NextFunction) => next());
+jest.mock('../../api/middleware/requireAuth', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  requireAuth: jest.fn(() => (_req: Request, _res: Response, next: NextFunction): any => requireAuthMock(_req, _res, next)),
+}));
+
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 const teamFindSpy = jest.spyOn(Team, 'find');

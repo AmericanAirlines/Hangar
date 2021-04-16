@@ -2,6 +2,7 @@
 import React from 'react';
 import { NextComponentType } from 'next';
 import { ConfigItem, Config } from '../components/ConfigItem';
+import OpenSourceFooter from '../components/OpenSourceFooter';
 
 interface Result {
   name: string;
@@ -150,6 +151,7 @@ const AdminPage: NextComponentType = () => {
           </div>
         </div>
       </div>
+      <OpenSourceFooter />
     </div>
   );
 };

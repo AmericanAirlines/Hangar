@@ -8,16 +8,17 @@ import { help } from './help';
 import { registerTeam, regSubCommands } from './registerTeam';
 import { exit } from './exit';
 import { botWasTagged } from '../../utilities/botWasTagged';
-import { env } from '../../../env';
 import { stringDictionary } from '../../../StringDictionary';
+import { Config } from '../../../entities/config';
 
 /* eslint-disable no-param-reassign */
 type HandlerFn = (message: Discord.Message, context: DiscordContext) => Promise<void>;
 
 interface Command {
   handlerId: string;
-  trigger?: string;
+  trigger?: RegExp;
   description: string;
+  displayTrigger: string;
   handler: HandlerFn;
   subCommands?: SubCommands;
 }
@@ -27,48 +28,55 @@ export type SubCommands = Record<string, HandlerFn>;
 export const commands: Command[] = [
   {
     handlerId: 'help',
-    trigger: '!help',
+    trigger: /^!(help|h)$/i,
     description: stringDictionary.helpDescript,
+    displayTrigger: '!help or !h',
     handler: help,
   },
   {
     handlerId: 'ping',
-    trigger: '!ping',
+    trigger: /^!(ping|p)$/i,
     description: stringDictionary.pingDescript,
+    displayTrigger: '!ping or !p',
     handler: ping,
   },
   {
     handlerId: 'ideaPitch',
-    trigger: '!ideaPitch',
+    trigger: /^!(ideaPitch|ip)$/i,
     description: stringDictionary.ideaDescript,
+    displayTrigger: '!ideaPitch or !ip',
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'technicalSupport',
-    trigger: '!technicalSupport',
+    trigger: /^!(technicalSupport|ts)$/i,
     description: stringDictionary.techDescript,
+    displayTrigger: '!technicalSupport or !ts',
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'jobChat',
-    trigger: '!jobChat',
+    trigger: /^!(jobChat|jc)$/i,
     description: stringDictionary.jobDescript,
+    displayTrigger: '!jobChat or !jc',
     handler: supportRequest,
     subCommands: supportRequestSubCommands,
   },
   {
     handlerId: 'registerTeam',
-    trigger: '!registerTeam',
+    trigger: /^!(registerTeam|rt)$/i,
     description: stringDictionary.registerDescript,
+    displayTrigger: '!registerTeam or !rt',
     handler: registerTeam,
     subCommands: regSubCommands,
   },
   {
     handlerId: 'exit',
-    trigger: '!exit',
+    trigger: /^!(exit|e)$/i,
     description: stringDictionary.exitDescript,
+    displayTrigger: '!exit or !e',
     handler: exit,
   },
 ];
@@ -81,7 +89,8 @@ export async function message(msg: Discord.Message): Promise<void> {
   if (msg.author.id === client.user.id) return;
 
   // If not in a DM, check to make sure it's in one of the approved channels
-  const botChannelIds = (env.discordChannelIds ?? '').split(',').map((id) => id.trim());
+  const discordChannelIds = await Config.getValueAs('discordChannelIds', 'string', false);
+  const botChannelIds = (discordChannelIds ?? '').split(',').map((id) => id.trim());
   if (msg.channel.type !== 'dm') {
     if (botChannelIds.includes(msg.channel.id) && botWasTagged(msg)) {
       // Bot was tagged in a channel it's listening to AND should respond in
@@ -98,7 +107,7 @@ export async function message(msg: Discord.Message): Promise<void> {
   let handler: HandlerFn | undefined;
 
   // Find a command handler matching the raw message (e.g., '!help')
-  handler = commands.find((c) => c.trigger === msg.content)?.handler;
+  handler = commands.find((c) => msg.content.match(c.trigger))?.handler;
 
   // Check to see if the context has a current command
   if (!handler && context.currentCommand) {

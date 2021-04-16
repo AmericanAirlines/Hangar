@@ -1,9 +1,15 @@
 import { Handler } from 'express';
 import logger from '../../logger';
-import { env } from '../../env';
+import { Config } from '../../entities/config';
 
-export const requireAuth = (redirect = false): Handler => (req, res, next): void => {
-  if (req.signedCookies?.authed === 'yes' || req.headers.authorization === env.adminSecret || req.headers.authorization === env.supportSecret) {
+export const requireAuth = (redirect = false): Handler => async (req, res, next): Promise<void> => {
+  const adminSecret = await Config.getValueAs('adminSecret', 'string', false);
+  const supportSecret = await Config.getValueAs('supportSecret', 'string', false);
+  if (
+    req.signedCookies?.authed === 'yes' ||
+    (adminSecret && req.headers.authorization === adminSecret) ||
+    (supportSecret && req.headers.authorization === supportSecret)
+  ) {
     next();
   } else if (redirect) {
     res.redirect('/login');
