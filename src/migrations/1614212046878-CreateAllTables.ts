@@ -22,7 +22,7 @@ export class CreateAllTables1614212046878 implements MigrationInterface {
     await queryRunner.query("CREATE TYPE \"support_request_status_enum\" AS ENUM('Pending', 'InProgress', 'Complete', 'Abandoned')");
     await queryRunner.query("CREATE TYPE \"support_request_type_enum\" AS ENUM('IdeaPitch', 'TechnicalSupport', 'JobChat')");
     await queryRunner.query(
-      'CREATE TABLE "support_request" ("id" SERIAL NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "movedToInProgressAt" TIMESTAMP, "slackId" character varying NOT NULL, "name" character varying NOT NULL, "supportName" character varying, "status" "support_request_status_enum" NOT NULL DEFAULT \'Pending\', "type" "support_request_type_enum" NOT NULL, "syncHash" character varying NOT NULL, CONSTRAINT "PK_76db9b511f3ac27bf3237432acc" PRIMARY KEY ("id"))',
+      'CREATE TABLE "support_request" ("id" SERIAL NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "movedToInProgressAt" TIMESTAMP, "slackId" character varying NOT NULL, "name" character varying NOT NULL, "primaryLanguage" character varying, "extraData" JSON, "supportName" character varying, "status" "support_request_status_enum" NOT NULL DEFAULT \'Pending\', "type" "support_request_type_enum" NOT NULL, "syncHash" character varying NOT NULL, CONSTRAINT "PK_76db9b511f3ac27bf3237432acc" PRIMARY KEY ("id"))',
     );
   }
 
