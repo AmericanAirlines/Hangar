@@ -57,6 +57,10 @@ export const ConfigItem: React.FC<ConfigItemProps> = ({ item, onChange }) => {
           onBlur={(): void => {
             let newValue: string | number = inputValue;
 
+            if (newValue === item.value) {
+              return;
+            }
+
             if (typeof item.value === 'number') {
               newValue = parseFloat(newValue);
               if (Number.isNaN(newValue)) {
