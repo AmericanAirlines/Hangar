@@ -68,9 +68,10 @@ export class Team extends BaseEntity {
     // prepare paratmeters for eGreedy and ucb
     let nextTeamId: number;
     const c = 0.9; // epsilon
+    const egreedy = true;
 
     // call eGreedy or ucb, returns id of the next team a judge should see
-    nextTeamId = this.eGreedy(scores, teams.length, prevTeamId, c);
+    egreedy ? (nextTeamId = this.eGreedy(scores, teams.length, prevTeamId, c)) : await this.ucb(scores, teamVisits, prevTeamId, c);
     // nextTeamId = await this.ucb(scores, teamVisits, prevTeamId, c);
 
     // retrieve team object from table that matches id, return team
@@ -136,11 +137,9 @@ export class Team extends BaseEntity {
   */
 
   static eGreedy(Q: TeamResult[], teams: number, prev: number, epsilon: number) {
-    const random = Math.random();
-
     let curr = 0;
     // console.log(`random is ${random} compared to epsilon ${epsilon}`);
-    if (random > epsilon) {
+    if (Math.random() > epsilon) {
       Q.sort((a, b) => b.score - a.score);
       curr = Q[0].id;
 
@@ -180,22 +179,9 @@ export class Team extends BaseEntity {
       }
     });
 
-    // console.log(prev);
-    ucb_scores.sort((a, b) => a.id - b.id);
-    var max = ucb_scores[0].score;
+    ucb_scores.sort((a, b) => b.score - a.score);
     var curr = ucb_scores[0].id;
-    for (var i = 0; i < ucb_scores.length; i++) {
-      if (ucb_scores[i].score > max) {
-        // console.log(`${ucb_scores[i].id} IS BIGGER`);
-        max = ucb_scores[i].score;
-        curr = ucb_scores[i].id;
-      }
-    }
-
-    if (curr == prev) {
-      ucb_scores.sort((a, b) => (b.score == a.score ? a.id - b.id : a.score - b.score));
-      curr = ucb_scores[ucb_scores.length - 2].id;
-    }
+    if (curr == prev) curr = ucb_scores[1] ? ucb_scores[1].id : null;
 
     // console.log(curr);
     return curr;

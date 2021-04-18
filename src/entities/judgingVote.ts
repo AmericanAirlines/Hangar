@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
-import shuffle from 'shuffle-array';
 import { Team } from './team';
 
 export const insufficientVoteCountError = 'InsufficientVoteCount';
