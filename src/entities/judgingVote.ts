@@ -88,24 +88,13 @@ export class JudgingVote extends BaseEntity {
     var curr_Q = Q.get(curr);
     var prev_Q = Q.get(prev);
 
-    // if (N.get(curr) == 1) curr_Q = 0;
-    // if (N.get(prev) == 1) prev_Q = 0;
-
-    // console.log(`setting ${curr} to ${curr_Q + (1 / N.get(curr)) * (reward - curr_Q)}`);
-    // console.log(`${prev_Q} ${1.0 / N.get(prev)} ${reward == 1 ? 0 : 1 - prev_Q}`);
     Q.set(curr, curr_Q + (1.0 / N.get(curr)) * (reward - curr_Q));
     Q.set(prev, prev_Q + (1.0 / N.get(prev)) * ((reward == 1 ? 0 : 1) - prev_Q));
 
     const minVisit = [...N.values()].sort((a, b) => a - b)[0];
-    const topNTeams = [...N.values()].sort((a, b) => a - b)[N.size - 3];
-    // console.log('Q values');
-    // console.log(Q);
+    const topNTeams = Math.max(0, [...N.values()].sort((a, b) => a - b)[N.size - 5]);
 
-    // console.log('Q');
-    // console.log(Q);
-    // console.log('N');
-    // console.log(N);
-    if (Math.abs(Q.get(curr) - curr_Q) < converge_threshold && Math.abs(Q.get(prev) - prev_Q) < converge_threshold && minVisit > 0 && topNTeams > 3) {
+    if (Math.abs(Q.get(curr) - curr_Q) < converge_threshold && Math.abs(Q.get(prev) - prev_Q) < converge_threshold && minVisit > 2 && topNTeams > 4) {
       return true;
     }
     return false;

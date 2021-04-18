@@ -1,4 +1,5 @@
 import 'jest';
+import { createDbConnection, closeDbConnection } from '../testdb';
 import { Team } from '../../entities/team';
 import { Judge } from '../../entities/judge';
 import { JudgingVote, insufficientVoteCountError } from '../../entities/judgingVote';
@@ -10,7 +11,15 @@ import { createJudgeData, createTeamData, visitTeamsAndJudge } from '../utilitie
 // Bump Jest timeout to accomodate tabulation test matrix
 jest.setTimeout(15000);
 
-xdescribe('judging logistics', () => {
+describe('judging logistics', () => {
+  beforeEach(async () => {
+    await createDbConnection();
+  });
+
+  afterEach(async () => {
+    await closeDbConnection();
+  });
+
   it('the in-memory database works', async () => {
     const team = await new Team('Does this work?', 123, 'Databases are cool', ['123456']).save();
     Team.findOneOrFail(team.id);
@@ -106,7 +115,15 @@ xdescribe('judging logistics', () => {
   // });
 });
 
-xdescribe('score calculation', () => {
+describe('score calculation', () => {
+  beforeEach(async () => {
+    await createDbConnection();
+  });
+
+  afterEach(async () => {
+    await closeDbConnection();
+  });
+
   it('if minimal data is provided, tabulation will throw an error', async () => {
     const numTeams = 7;
     const numJudges = 10;
@@ -160,6 +177,7 @@ xdescribe('score calculation', () => {
     let accuracySum = 0;
     const errors: string[] = [];
 
+    await closeDbConnection();
     for (let k = 0; k < visitationSet.length; k += 1) {
       const visitation = visitationSet[k];
       for (let i = 0; i < numTeamsSet.length; i += 1) {
@@ -167,6 +185,8 @@ xdescribe('score calculation', () => {
         for (let j = 0; j < numJudgesSet.length; j += 1) {
           testCount += 1;
           const numJudges = numJudgesSet[j];
+
+          await createDbConnection();
 
           const teams = await createTeamData(numTeams);
           const judges = await createJudgeData(numJudges);
@@ -205,9 +225,13 @@ xdescribe('score calculation', () => {
           } else {
             logger.info(outputString);
           }
+
+          await closeDbConnection();
         }
       }
     }
+
+    await createDbConnection();
 
     const overallAverageAccuracy = accuracySum / testCount;
 

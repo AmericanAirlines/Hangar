@@ -51,14 +51,11 @@ export class Team extends BaseEntity {
 
   // TODO: communicate e-greedy and ucb to substitute getting next available team
   static async getNextAvailableTeamExcludingTeams(prevTeamId: number): Promise<Team> {
-    // console.log(prevTeamId);
     // pull an array of teams from the table
     let teams: Team[] = null;
     let retries = 5;
 
     /* eslint-disable no-await-in-loop */
-    // do {
-    const queryBuilder = Team.createQueryBuilder('team').select();
 
     teams = await Team.find();
     const [scores, teamVisits] = await JudgingVote.updateScoresAndVisits();
@@ -67,7 +64,7 @@ export class Team extends BaseEntity {
 
     // prepare paratmeters for eGreedy and ucb
     let nextTeamId: number;
-    const c = 0.9; // epsilon
+    const c = 0.75; // epsilon
     const egreedy = true;
 
     // call eGreedy or ucb, returns id of the next team a judge should see
@@ -79,8 +76,6 @@ export class Team extends BaseEntity {
     let retries2 = 5;
     /* eslint-disable no-await-in-loop */
     do {
-      const queryBuilder = Team.createQueryBuilder('team').select();
-
       nextTeam = await Team.findOne({ where: { id: nextTeamId } });
 
       if (nextTeam) {
