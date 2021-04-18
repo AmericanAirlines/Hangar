@@ -54,7 +54,6 @@ export class Team extends BaseEntity {
 
     /* eslint-disable no-await-in-loop */
     do {
-<<<<<<< HEAD
       team = await Team.findOne({
         where: excludedTeamIds.length ? { id: Not(In(excludedTeamIds)) } : {},
         order: {
@@ -62,26 +61,6 @@ export class Team extends BaseEntity {
           judgeVisits: 'ASC',
         },
       });
-=======
-      if (excludedTeamIds.length == 0) {
-        team = await Team.findOne({
-          order: {
-            activeJudgeCount: 'ASC',
-            judgeVisits: 'ASC',
-          },
-        });
-      } else {
-        team = await Team.findOne({
-          where: {
-            id: Not(In(excludedTeamIds)),
-          },
-          order: {
-            activeJudgeCount: 'ASC',
-            judgeVisits: 'ASC',
-          },
-        });
-      }
->>>>>>> fix bug
 
       if (team) {
         const newHash = genHash();
