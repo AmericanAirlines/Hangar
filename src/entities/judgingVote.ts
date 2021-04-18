@@ -56,10 +56,8 @@ export class JudgingVote extends BaseEntity {
       teamVisits.set(team.id, 0);
     });
 
-    var count = 0;
     this.converged = false;
     allVotes.forEach((vote) => {
-      count++;
       this.converged = this.updateScores(scores, teamVisits, vote.currentTeam, vote.previousTeam, vote.currentTeamChosen);
     });
 
