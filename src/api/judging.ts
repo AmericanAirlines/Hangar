@@ -32,7 +32,7 @@ judging.get('/results', async (req, res) => {
         (request) => request.type === SupportRequestType.TechnicalSupport && matchingTeam.members.includes(request.slackId),
       );
       const bonusPointsAwarded = ideaPitches.length > 0 ? bonusPointsForIdeaPitch : 0;
-
+      teamResult.score *= 100;
       expandedResults.push({
         numberOfIdeaPitches: ideaPitches.length,
         numberOfTechSupportSessions: techtHelpSessions.length,
