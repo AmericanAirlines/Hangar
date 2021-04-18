@@ -16,7 +16,7 @@ describe('judging', () => {
 
   // Test in-memory db by using config as an example
   it('the in-memory test db works', async () => {
-    const item = new Config('something', 'something else');
+    const item = new Config('discordBotToken', 'something else');
     await item.save();
     const foundItem = await Config.findOneOrFail({ key: item.key });
     expect(foundItem).toEqual(item);

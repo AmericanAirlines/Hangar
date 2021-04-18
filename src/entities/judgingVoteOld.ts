@@ -13,7 +13,6 @@ export interface TeamResult extends TeamScore {
   name: string;
 }
 
-/**
 @Entity()
 export class JudgingVote extends BaseEntity {
   constructor(previousTeam: number, currentTeam: number, currentTeamChosen: boolean) {
@@ -232,4 +231,3 @@ export class JudgingVote extends BaseEntity {
     return scores;
   }
 }
-* */

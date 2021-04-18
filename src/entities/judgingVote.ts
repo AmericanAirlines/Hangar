@@ -4,7 +4,7 @@ import { Team } from './team';
 
 export const insufficientVoteCountError = 'InsufficientVoteCount';
 
-interface TeamScore {
+export interface TeamScore {
   id: number;
   score: number;
 }
@@ -35,72 +35,106 @@ export class JudgingVote extends BaseEntity {
   @Column()
   currentTeamChosen: boolean;
 
+  static converged = false;
+
   static async tabulate(): Promise<TeamResult[]> {
     const allVotes = await JudgingVote.find();
     const teams = await Team.find();
     const numTeams = teams.length;
 
-    // Initalize score keeping
-    const initialScores: { [id: string]: TeamScore } = {};
+    // maps team id to team score
+    const scores = new Map() as Map<number, number>;
+    const teamVisits = new Map() as Map<number, number>;
 
-    const scores: { [id: string]: number } = {};
+    //intialize scores
+    teams.forEach((team) => {
+      scores.set(team.id, 0);
+      teamVisits.set(team.id, 0);
+    });
 
-    // Object.values(initialScores).forEach((scores) => {
-    //   Object.values(scores).forEach((teamScore) => {
-    //     scores[id] = initialScores[teamScore.id] ? [initialScores[teamScore.id], teamScore.score] : [teamScore.score];
-    //   });
-    // });
+    var count = 0;
+    this.converged = false;
+    allVotes.forEach((vote) => {
+      count++;
+      this.converged = this.updateScores(scores, teamVisits, vote.currentTeam, vote.previousTeam, vote.currentTeamChosen);
+    });
 
-    // const sortedScores = initalScores[teamId].sort();
-
-    // // Sort results by score, match scored team with team, return results
-    // const orderedTeams = teams.sort((a: Team, b: Team) => (scores[a.id] > scores[b.id] ? -1 : 1));
     const teamResults: TeamResult[] = [];
 
-    // orderedTeams.forEach((scoredTeam) => {
-    //   const matchingTeam = teams.find((team) => team.id === scoredTeam.id);
-    //   teamResults.push({
-    //     id: matchingTeam.id,
-    //     name: matchingTeam.name,
-    //     score: orderedTeams[scoredTeam.id],
-    //   });
-    // });
+    for (var i = 0; i < numTeams; i++) {
+      const team_id = teams[i].id;
+      teamResults.push({ id: team_id, name: teams[i].name, score: scores.get(team_id) });
+    }
 
     return teamResults;
   }
 
-  /*
-  upsateScores inputs:
-    array of team scores (Q), array of team visits (N), current team (curr),
-    previous team q index (prev), winner(winner)
-  Returns: True if done converging, False otherwise
-  */
-  static async updateScores(Q: [number], N: [number], curr: number, prev: number, winner: number) {
+  static async test(): Promise<[TeamResult[], Map<number, number>]> {
+    const allVotes = await JudgingVote.find();
+    const teams = await Team.find();
+    const numTeams = teams.length;
+
+    // maps team id to team score
+    const scores = new Map() as Map<number, number>;
+    const teamVisits = new Map() as Map<number, number>;
+
+    //intialize scores
+    teams.forEach((team) => {
+      scores.set(team.id, 0);
+      teamVisits.set(team.id, 0);
+    });
+
+    var count = 0;
+    this.converged = false;
+    allVotes.forEach((vote) => {
+      count++;
+      this.converged = this.updateScores(scores, teamVisits, vote.currentTeam, vote.previousTeam, vote.currentTeamChosen);
+    });
+
+    const teamResults: TeamResult[] = [];
+
+    for (var i = 0; i < numTeams; i++) {
+      const team_id = teams[i].id;
+      teamResults.push({ id: team_id, name: teams[i].name, score: scores.get(team_id) });
+    }
+
+    return [teamResults, teamVisits];
+  }
+
+  static updateScores(Q: Map<number, number>, N: Map<number, number>, curr: number, prev: number, currentTeamChosen: boolean) {
     // visit teams curr and prev
     let reward;
-    const converge_threshold = 0.001;
+    const converge_threshold = 0.01;
 
-    N[curr] += 1;
-    N[prev] += 1;
+    N.set(curr, N.get(curr) + 1);
+    N.set(prev, N.get(prev) + 1);
 
-    if (winner == curr) {
+    if (currentTeamChosen) {
       reward = 1;
     } else {
       reward = 0;
     }
 
-    const curr_Q = Q[curr];
-    const prev_Q = Q[prev];
+    var curr_Q = Q.get(curr);
+    var prev_Q = Q.get(prev);
 
-    // incremental average
-    Q[curr] = Q[curr] + (1 / N[curr]) * (reward - Q[curr]);
-    if (reward == 0) {
-      Q[prev] = Q[prev] + (1 / N[prev]) * (1 - Q[prev]);
-    } else {
-      Q[prev] = Q[prev] + (1 / N[prev]) * (0 - Q[prev]);
-    }
+    // if (N.get(curr) == 1) curr_Q = 0;
+    // if (N.get(prev) == 1) prev_Q = 0;
 
-    if (Math.abs(Q[curr] - curr_Q) < converge_threshold) {
+    // console.log(`setting ${curr} to ${curr_Q + (1 / N.get(curr)) * (reward - curr_Q)}`);
+    // console.log(`${prev_Q} ${1.0 / N.get(prev)} ${reward == 1 ? 0 : 1 - prev_Q}`);
+    Q.set(curr, curr_Q + (1.0 / N.get(curr)) * (reward - curr_Q));
+    Q.set(prev, prev_Q + (1.0 / N.get(prev)) * ((reward == 1 ? 0 : 1) - prev_Q));
+
+    const minVisit = [...N.values()].sort((a, b) => a - b)[0];
+    // console.log('Q values');
+    // console.log(Q);
+
+    // console.log('Q');
+    // console.log(Q);
+    // console.log('N');
+    // console.log(N);
+    if (Math.abs(Q.get(curr) - curr_Q) < converge_threshold && Math.abs(Q.get(prev) - prev_Q) < converge_threshold && minVisit > 0) {
       return true;
     }
     return false;
