@@ -24,6 +24,7 @@ module.exports = {
     'no-await-in-loop': ['off'],
     'operator-linebreak': ['off'],
     'react/prop-types': 'off',
+    'import/extensions': ['error', 'always', { js: 'never', ts: 'never', jsx: 'never', tsx: 'never' }],
     'no-restricted-syntax': [
       'error',
       {

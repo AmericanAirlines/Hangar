@@ -21,6 +21,7 @@ export class Config extends BaseEntity {
   @Column({ type: 'jsonb', nullable: true, default: null })
   value: ConfigValue;
 
+  /* istanbul ignore next */
   /**
    * @deprecated Use `Config.getValueAs(key, 'boolean', true)` instead
    */
@@ -64,6 +65,13 @@ export class Config extends BaseEntity {
     shouldThrow: boolean,
   ): Promise<string | boolean | number | null> {
     const item = await this.findOne({ key });
+
+    if (!item) {
+      if (shouldThrow) {
+        throw new Error('No Config found for key');
+      }
+      return null;
+    }
 
     if (item.value === null && shouldThrow) {
       throw new Error('Value was null');

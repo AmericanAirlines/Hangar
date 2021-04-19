@@ -1,5 +1,4 @@
 import { ViewSubmitAction, ViewOutput, Middleware, SlackViewMiddlewareArgs } from '@slack/bolt';
-import { app } from '..';
 import { registerTeamViewConstants } from '../constants';
 import { registeredTeamSummary } from '../blocks/registerTeam';
 import logger from '../../logger';
@@ -36,7 +35,7 @@ function retrieveViewValuesForField(
   }
 }
 
-export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmitAction>> = async ({ ack, context, view, body }) => {
+export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmitAction>> = async ({ ack, view, body, client }) => {
   const registeringUser = body.user.id;
   const tableNumber = parseInt(retrieveViewValuesForField(view, registerTeamViewConstants.fields.tableNumber, 'plainTextInput') as string, 10);
 
@@ -66,13 +65,11 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
 
   const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
   if (!teamRegistrationActive) {
-    const dm = (await app.client.conversations.open({
-      token: context.botToken,
+    const dm = (await client.conversations.open({
       users: registeringUser,
     })) as DmOpenResult;
 
-    await app.client.chat.postMessage({
-      token: context.botToken,
+    await client.chat.postMessage({
       channel: dm.channel.id,
       text: stringDictionary.registerTeamNotOpen({
         teamName,
@@ -88,13 +85,11 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
     const team = new Team(teamName, tableNumber, projectDescription, allTeamMembers);
     await team.save();
 
-    const dm = (await app.client.conversations.open({
-      token: context.botToken,
+    const dm = (await client.conversations.open({
       users: allTeamMembers.join(','),
     })) as DmOpenResult;
 
-    await app.client.chat.postMessage({
-      token: context.botToken,
+    await client.chat.postMessage({
       channel: dm.channel.id,
       text: '',
       blocks: registeredTeamSummary(registeringUser, allTeamMembers, teamName, tableNumber, projectDescription),
@@ -110,13 +105,11 @@ export const registerTeamSubmitted: Middleware<SlackViewMiddlewareArgs<ViewSubmi
   } catch (err) {
     // TODO: Determine a more appropriate error to share with the user
     logger.error('Error registering team: ', err);
-    const dm = (await app.client.conversations.open({
-      token: context.botToken,
+    const dm = (await client.conversations.open({
       users: registeringUser,
     })) as DmOpenResult;
 
-    await app.client.chat.postMessage({
-      token: context.botToken,
+    await client.chat.postMessage({
       channel: dm.channel.id,
       text: stringDictionary.teamSubmittedpostMessage({
         teamName,

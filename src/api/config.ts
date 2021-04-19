@@ -1,7 +1,7 @@
 import express from 'express';
 import { Config } from '../entities/config';
 import logger from '../logger';
-import { defaultConfigValues } from '../types/config';
+import { DefaultConfigKeys, DefaultConfigValues, defaultConfig } from '../types/config';
 
 export const config = express.Router();
 
@@ -9,9 +9,10 @@ config.get('/', async (req, res) => {
   try {
     const configItems: Config[] = await Config.find();
 
-    for (const defaultConfigItem of defaultConfigValues) {
-      if (!configItems.find((configItem: Config) => configItem.key === defaultConfigItem)) {
-        configItems.push(new Config(defaultConfigItem, null));
+    type DefaultConfigTuples = Array<[DefaultConfigKeys, DefaultConfigValues]>;
+    for (const [key, value] of Object.entries(defaultConfig) as DefaultConfigTuples) {
+      if (!configItems.find((configItem: Config) => configItem.key === key)) {
+        configItems.push(new Config(key, value));
       }
     }
     res.send(configItems.sort((a, b) => a.key.localeCompare(b.key)));
@@ -26,8 +27,8 @@ config.get('/', async (req, res) => {
 config.post('/', async (req, res) => {
   const { configKey, configValue } = req.body;
 
-  if (!configKey || !configKey.trim() || !configValue || !configValue.trim()) {
-    res.status(400).send("Property 'configKey' and 'configKey' are required");
+  if (!configKey || !configKey.trim() || configValue === undefined) {
+    res.status(400).send("Property 'configKey' and 'configValue' are required");
     return;
   }
 
