@@ -53,7 +53,6 @@ export class Team extends BaseEntity {
   static async getNextAvailableTeamExcludingTeams(prevTeamId: number): Promise<Team> {
     // pull an array of teams from the table
     let teams: Team[] = null;
-    let retries = 5;
 
     /* eslint-disable no-await-in-loop */
 
@@ -64,11 +63,11 @@ export class Team extends BaseEntity {
 
     // prepare paratmeters for eGreedy and ucb
     let nextTeamId: number;
-    const c = 0.75; // epsilon
+    const c = 0.5; // epsilon
     const egreedy = true;
 
     // call eGreedy or ucb, returns id of the next team a judge should see
-    egreedy ? (nextTeamId = this.eGreedy(scores, teams.length, prevTeamId, c)) : await this.ucb(scores, teamVisits, prevTeamId, c);
+    nextTeamId = egreedy ? this.eGreedy(scores, teams.length, prevTeamId, c) : await this.ucb(scores, teamVisits, prevTeamId, c);
     // nextTeamId = await this.ucb(scores, teamVisits, prevTeamId, c);
 
     // retrieve team object from table that matches id, return team
@@ -135,13 +134,26 @@ export class Team extends BaseEntity {
     let curr = 0;
     // console.log(`random is ${random} compared to epsilon ${epsilon}`);
     if (Math.random() > epsilon) {
-      Q.sort((a, b) => b.score - a.score);
-      curr = Q[0].id;
+      var maxScore = Number.NEGATIVE_INFINITY;
+      const scoreDistribution = new Map() as Map<number, number[]>;
+      Q.forEach((score) => {
+        if (score.id != prev) {
+          if (!scoreDistribution.has(score.score)) scoreDistribution.set(score.score, new Array());
+          scoreDistribution.get(score.score).push(score.id);
+          maxScore = Math.max(maxScore, score.score);
+        }
+      });
 
-      if (curr == prev) {
-        if (teams == 1) return null;
-        curr = Q[1].id;
-      }
+      const highScoreIds = scoreDistribution.get(maxScore);
+      curr = highScoreIds[Math.floor(Math.random() * highScoreIds.length)];
+
+      // Q.sort((a, b) => b.score - a.score);
+      // curr = Q[0].id;
+
+      // if (curr == prev) {
+      //   if (teams == 1) return null;
+      //   curr = Q[1].id;
+      // }
     } else {
       curr = Q[Math.floor(Math.random() * Q.length)].id;
       while (curr == prev) {
@@ -174,11 +186,24 @@ export class Team extends BaseEntity {
       }
     });
 
-    ucb_scores.sort((a, b) => b.score - a.score);
-    var curr = ucb_scores[0].id;
-    if (curr == prev) curr = ucb_scores[1] ? ucb_scores[1].id : null;
+    var maxScore = Number.NEGATIVE_INFINITY;
+    const scoreDistribution = new Map() as Map<number, number[]>;
+    ucb_scores.forEach((score) => {
+      if (score.id != prev) {
+        if (!scoreDistribution.has(score.score)) scoreDistribution.set(score.score, new Array());
+        scoreDistribution.get(score.score).push(score.id);
+        maxScore = Math.max(maxScore, score.score);
+      }
+    });
 
-    // console.log(curr);
-    return curr;
+    const highScoreIds = scoreDistribution.get(maxScore);
+    return highScoreIds[Math.floor(Math.random() * highScoreIds.length)];
+
+    // ucb_scores.sort((a, b) => b.score - a.score);
+    // var curr = ucb_scores[0].id;
+    // if (curr == prev) curr = ucb_scores[1] ? ucb_scores[1].id : null;
+
+    // // console.log(curr);
+    // return curr;
   }
 }
