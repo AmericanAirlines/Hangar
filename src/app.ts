@@ -1,21 +1,26 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import next from 'next';
 import { createConnection, getConnectionOptions, getConnection, ConnectionOptions } from 'typeorm';
 import path from 'path';
 import { WebClient } from '@slack/web-api';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { slackApp, initListeners } from './slack';
+import { getSlackAppAndInitListeners } from './slack';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
 import { getActivePlatform, SupportedPlatform } from './common';
 import { env } from './env';
 import { apiApp } from './api';
+import { Config } from './entities/config';
 
 export const app = express();
 
 let appLoading = true;
 
 // DO NOT PUT THIS LINE IN THIS FILE `express.json()`
+app.use(cookieParser('secret')); // lgtm [js/missing-token-validation] lgtm [js/hardcoded-credentials]
+
+app.use('/api', apiApp);
 
 app.get(
   '/',
@@ -75,10 +80,11 @@ async function initDatabase(): Promise<void> {
 }
 
 export async function initSlack(): Promise<void> {
+  const slackBotToken = await Config.getValueAs('slackBotToken', 'string', false);
   try {
-    if (env.slackBotToken) {
-      await new WebClient(env.slackBotToken).auth.test();
-      initListeners();
+    if (slackBotToken) {
+      await new WebClient(slackBotToken).auth.test();
+      const slackApp = await getSlackAppAndInitListeners();
       app.use(slackApp);
       logger.info('Slack app initialized successfully');
       return;
@@ -96,11 +102,12 @@ export async function initSlack(): Promise<void> {
 }
 
 export async function initDiscord(): Promise<void> {
+  const discordBotToken = await Config.getValueAs('discordBotToken', 'string', false);
   try {
-    if (env.discordBotToken) {
+    if (discordBotToken) {
       const { setupDiscord } = await import('./discord');
 
-      await setupDiscord(env.discordBotToken);
+      await setupDiscord(discordBotToken);
       logger.info('Discord connected and authenticated successfully');
 
       return;
@@ -127,9 +134,10 @@ export const init = async (): Promise<void> => {
   // await Promise.all([initDatabase(), initSlack(), initDiscord()])
 
   const promises = [];
-  promises.push(initDatabase());
+  await initDatabase();
+  const activePlatform = await getActivePlatform();
 
-  if (getActivePlatform() === SupportedPlatform.slack) {
+  if (activePlatform === SupportedPlatform.slack) {
     promises.push(initSlack());
   } else {
     promises.push(initDiscord());

@@ -1,6 +1,8 @@
 /* global fetch */
 import React from 'react';
 import { NextComponentType } from 'next';
+import { ConfigItem, Config } from '../components/ConfigItem';
+import OpenSourceFooter from '../components/OpenSourceFooter';
 
 interface Result {
   name: string;
@@ -9,11 +11,6 @@ interface Result {
   score: number;
   bonusPointsAwarded: number;
   finalScore: number;
-}
-
-interface Config {
-  key: string;
-  value: string;
 }
 
 const AdminPage: NextComponentType = () => {
@@ -73,15 +70,13 @@ const AdminPage: NextComponentType = () => {
     Promise.all(promises).then(() => setLoading(false));
   }, [lastRefreshTimestamp]);
 
-  const handleChange = (configItem: Config) => async (): Promise<void> => {
-    const newValue = configItem.value === 'true' ? 'false' : 'true';
-
+  const handleChange = async (configItem: Config): Promise<void> => {
     try {
       const res = await fetch('/api/config', {
         method: 'POST',
         body: JSON.stringify({
           configKey: configItem.key,
-          configValue: newValue,
+          configValue: configItem.value,
         }),
         headers: {
           'Content-Type': 'application/json',
@@ -121,26 +116,8 @@ const AdminPage: NextComponentType = () => {
               <h2 className="font-weight-normal">Config Items</h2>
               {configItems.length === 0 && <div className="alert alert-info mt-3">No config items to display 🤔</div>}
 
-              {configItems.map((configItem) => (
-                <div key={configItem.key} className="form-group mb-2">
-                  <label htmlFor={configItem.key} className="mr-3">
-                    {configItem.key}
-                  </label>
-                  <div style={{ display: 'flex' }}>
-                    <input
-                      type={typeof configItem.value === 'number' ? 'number' : 'text'}
-                      style={{ flex: 1 }}
-                      className="form-control"
-                      id={configItem.key}
-                      placeholder="Team name"
-                      value={configItem.value === null ? 'value is null' : configItem.value.toString()}
-                      disabled
-                    />
-                    <button type="button" style={{ flex: 0 }} className="btn btn-primary ml-2" onClick={handleChange(configItem)}>
-                      {configItem.value === 'true' ? 'Disable' : 'Enable'}
-                    </button>
-                  </div>
-                </div>
+              {configItems.map((item) => (
+                <ConfigItem key={item.key} item={item} onChange={handleChange} />
               ))}
             </div>
           </div>
@@ -174,6 +151,7 @@ const AdminPage: NextComponentType = () => {
           </div>
         </div>
       </div>
+      <OpenSourceFooter />
     </div>
   );
 };

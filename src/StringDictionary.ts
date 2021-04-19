@@ -15,7 +15,7 @@ stringDictionary.supportRequestSuccess = (params) =>
   }, they should join the \`${params.name}\` voice channel soon!`;
 
 stringDictionary.jobChatSuccess = (params) =>
-  `:tada: We're almost ready for you! Please join our Zoom waiting room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\n**JOIN NOW: **${env.jobChatUrl}`;
+  `:tada: We're almost ready for you! Please join our Zoom waiting room and ${params.supportName} will admit you when they are ready! (There may be a brief wait before we admit you)\n\nJOIN NOW: ${env.jobChatUrl}`;
 
 stringDictionary.supportRequestComplete = (params) =>
   `${
@@ -84,6 +84,11 @@ stringDictionary.technicalRequest = `*Need technical help?*
 Having trouble with your app? Our team is here to help!`;
 
 stringDictionary.technicalRequest2 = `Join Tech Support Queue`;
+
+stringDictionary.jobChat = `*Interested in joining our team?*
+Come chat with us about Full Time and Internship opportunities!`;
+
+stringDictionary.jobChat2 = `Join Job Chat Queue`;
 
 stringDictionary.teamRegistration = `*Register Your Team*
 Hacking with us this weekend? Make sure to register your team so we know to reach out before judging starts!`;

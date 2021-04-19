@@ -6,6 +6,7 @@ export const actionIds = {
   unsubscribe: 'unsubscribe',
   joinIdeaPitchRequestQueue: 'joinIdeaPitchRequestQueue',
   joinTechnicalRequestQueue: 'joinTechnicalRequestQueue',
+  joinJobChatQueue: 'joinJobChatQueue',
 };
 
 // CALLBACK IDS

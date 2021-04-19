@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { KnownBlock } from '@slack/bolt';
-import { app } from '..';
+import { WebClient } from '@slack/web-api';
 
 interface ModalOptions {
   title?: string;
@@ -8,7 +8,7 @@ interface ModalOptions {
   blocks?: KnownBlock[];
 }
 
-export async function openAlertModal(token: string, trigger_id: string, options: ModalOptions): Promise<void> {
+export async function openAlertModal(client: WebClient, trigger_id: string, options: ModalOptions): Promise<void> {
   if (options?.title.length > 25) {
     throw new Error('Title must be 25 characters or less');
   }
@@ -28,8 +28,7 @@ export async function openAlertModal(token: string, trigger_id: string, options:
     ];
   }
 
-  await app.client.views.open({
-    token,
+  await client.views.open({
     trigger_id,
     view: {
       type: 'modal',
