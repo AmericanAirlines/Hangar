@@ -1,6 +1,7 @@
 import { JudgingVote, TeamResult, TeamScore } from './judgingVote';
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateResult } from 'typeorm';
 import { genHash } from '../utilities/genHash';
+import { Judge } from './judge';
 
 // TODO: Enforce only one team registered per person
 @Entity()
@@ -63,12 +64,23 @@ export class Team extends BaseEntity {
 
     // prepare paratmeters for eGreedy and ucb
     let nextTeamId: number;
-    const c = 0.5; // epsilon
-    const egreedy = true;
+    const c = 0.8; // epsilon: 0.5 for egreedy, 0.8 for ucb
+    const egreedy = false;
+
+    const judges = await Judge.find();
+    const allVisitedTeams: number[] = [];
+    judges.forEach((judge) => {
+      judge.visitedTeams.forEach((t) => {
+        if (!allVisitedTeams.includes(t)) {
+          allVisitedTeams.push(t);
+        }
+      });
+    });
 
     // call eGreedy or ucb, returns id of the next team a judge should see
-    nextTeamId = egreedy ? this.eGreedy(scores, teams.length, prevTeamId, c) : await this.ucb(scores, teamVisits, prevTeamId, c);
-    // nextTeamId = await this.ucb(scores, teamVisits, prevTeamId, c);
+    do {
+      nextTeamId = egreedy ? this.eGreedy(scores, teams.length, prevTeamId, c) : await this.ucb(scores, teamVisits, prevTeamId, c);
+    } while (teams.length !== allVisitedTeams.length && allVisitedTeams.includes(nextTeamId));
 
     // retrieve team object from table that matches id, return team
     let nextTeam: Team = null;
