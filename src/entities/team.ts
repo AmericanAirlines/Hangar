@@ -64,8 +64,8 @@ export class Team extends BaseEntity {
 
     // prepare paratmeters for eGreedy and ucb
     let nextTeamId: number;
-    const c = 0.8; // epsilon: 0.5 for egreedy, 0.8 for ucb
-    const egreedy = false;
+    const c = 0.5; // epsilon: 0.5 for egreedy, 0.8 for ucb
+    const egreedy = true;
 
     const judges = await Judge.find();
     const allVisitedTeams: number[] = [];
