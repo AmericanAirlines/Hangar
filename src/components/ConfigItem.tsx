@@ -29,6 +29,7 @@ export const ConfigItem: React.FC<ConfigItemProps> = ({ item, onChange }) => {
             style={{ flex: 1 }}
             className="btn btn-primary"
             onClick={(): void => {
+              // question: how does this onChange ensure that the value is updated in the database (and not just in local memory)?
               onChange({
                 key: item.key,
                 value: !item.value,
