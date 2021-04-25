@@ -6,7 +6,6 @@ import { config } from '../api/config';
 const SetupPage: React.FC = () => {
   const formik = useFormik({
     initialValues: {
-      secret: '',
       adminSecret: '',
       discordChannelIds: '',
       discordBotToken: '',
@@ -15,8 +14,30 @@ const SetupPage: React.FC = () => {
     },
     async onSubmit(values) {
       // TODO: Update all values in the database, and redirect to admin page
-      // QUESTION: Should I bundle the form data into multiple POST requests to the config api, or should I connect this entity directly to the database similarly to the ConfigItem?
-      // console.log(values);
+      // TODO: this button currently refreshes and redirects to the admin page. Razvan's redirect changes should cover this to redirect to login
+      const res = await fetch('/api/config/bulk', {
+        method: 'POST',
+        body: JSON.stringify({
+          configKeys: [
+            'adminSecret',
+            'discordChannelIds',
+            'discordBotToken',
+            'slackBotToken',
+            'slackSigningSecret',
+          ],
+          configValues: [
+            values.adminSecret,
+            values.discordChannelIds,
+            values.discordBotToken,
+            values.slackBotToken,
+            values.slackSigningSecret,
+          ],
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      // window.location.href = '/';
     },
   });
 
@@ -75,9 +96,8 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-
               {/* QUESTION: What is this below? */}
-              {/* <div className="invalid-feedback">{formik.errors.secret}</div> */}
+              {/* <div className="invalid-feedback">{formik.errors.adminSecret}</div> */}
             </div>
             <button type="submit" className="btn btn-dark float-right">
               Submit
