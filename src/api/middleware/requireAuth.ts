@@ -12,7 +12,11 @@ export const requireAuth = (redirect = false): Handler => async (req, res, next)
   ) {
     next();
   } else if (redirect) {
-    res.redirect('/login');
+    if (!adminSecret) {
+      res.redirect('/setup');
+    } else {
+      res.redirect('/login');
+    }
   } else {
     res.sendStatus(401);
     logger.error(

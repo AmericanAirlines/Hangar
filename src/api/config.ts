@@ -55,6 +55,8 @@ config.post('/bulk', async (req, res) => {
   // TODO: find a way to disable requireAuth() on the setup pages
   // QUESTION: should I instead just zip the two arrays back into an object for simpler filtering?
   // this solutions poses issues if two values are the same, but this is unlikely to occur in reality
+  const finalConfigItems: Config[] = [];
+
   configValues
     .filter((x: string) => x !== '')
     .forEach(async (currentValue: string) => {
@@ -68,12 +70,13 @@ config.post('/bulk', async (req, res) => {
         }
 
         await configItem.save();
-        res.send(configItem);
+        finalConfigItems.push(configItem);
       } catch (err) {
         /* istanbul ignore next */
         res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
         /* istanbul ignore next */
         logger.error(err);
       }
+      res.send(finalConfigItems);
     });
 });
