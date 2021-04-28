@@ -1,15 +1,13 @@
-/* global window, fetch */
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { config } from '../api/config';
 
 const SetupPage: React.FC = () => {
   const SignupSchema = Yup.object().shape({
     adminSecret: Yup.string()
       .min(6, 'Too Short!')
       .max(20, 'Too Long!')
-      .required('Required'),
+      .required('Admin Secret Required'),
     discordChannelIds: Yup.string(),
     discordBotToken: Yup.string(),
     slackBotToken: Yup.string(),
@@ -29,6 +27,7 @@ const SetupPage: React.FC = () => {
       // TODO: Update all values in the database, and redirect to admin page
       // QUESTION: Should I bundle the form data into multiple POST requests to the config api, or should I connect this entity directly to the database similarly to the ConfigItem?
       // console.log(values);
+      formik.setErrors({ discordChannelIds: 'Only choose Discord or Slack', discordBotToken: 'Only choose Discord or Slack', slackBotToken: 'Only choose Discord or Slack', slackSigningSecret: 'Only choose Discord or Slack' });
     },
   });
 
@@ -38,7 +37,8 @@ const SetupPage: React.FC = () => {
         <div className="col-md-6 offset-md-3">
           <h1 className="display-2 text-center">Setup</h1>
           <h4 className="display-6 text-center font-weight-light">Enter your respective values for the configuration items below, then press submit. </h4>
-          <h4 className="display-6 text-center">If using Slack, leave Discord fields blank. If using Discord, leave Slack fields blank. </h4>
+          <h4 className="display-6 text-center">If using Slack, leave Discord fields blank. </h4>
+          <h4 className="display-6 text-center">If using Discord, leave Slack fields blank. </h4>
           <form onSubmit={formik.handleSubmit}>
             <div className="form-group mt-3">
               <label htmlFor="adminSecret">Enter the Admin Secret. Must be between 6-20 characters</label>
@@ -51,6 +51,7 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
+              <p className="text-danger">{formik.errors.adminSecret}</p>
             </div>
             <div className="form-group">
               <label htmlFor="discordChannelIds">Discord: Enter Discord Channel ID. If multiple IDs, separate with a comma.</label>
@@ -62,6 +63,7 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
+              <p className="text-danger">{formik.errors.discordChannelIds}</p>
             </div>
             <div className="form-group">
               <label htmlFor="discordBotToken">Discord: Enter the Discord Bot Token</label>
@@ -73,6 +75,7 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
+              <p className="text-danger">{formik.errors.discordBotToken}</p>
             </div>
             <div className="form-group">
               <label htmlFor="slackBotToken">Slack: Enter the Slack Bot Token</label>
@@ -84,6 +87,7 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
+              <p className="text-danger">{formik.errors.slackBotToken}</p>
             </div>
             <div className="form-group">
               <label htmlFor="slackSigningSecret">Slack: Enter the Slack Signing Secret</label>
@@ -95,6 +99,7 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
+              <p className="text-danger">{formik.errors.slackSigningSecret}</p>
             </div>
             <button type="submit" className="btn btn-primary btn-block mb-5">
               Submit
