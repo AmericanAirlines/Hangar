@@ -1,9 +1,19 @@
 /* global window, fetch */
 import React from 'react';
 import { useFormik } from 'formik';
-import { config } from '../api/config';
+import * as Yup from 'yup';
 
 const SetupPage: React.FC = () => {
+  const SignupSchema = Yup.object().shape({
+    adminSecret: Yup.string()
+      .min(6, 'Too Short!')
+      .max(20, 'Too Long!')
+      .required('Admin Secret Required'),
+    discordChannelIds: Yup.string(),
+    discordBotToken: Yup.string(),
+    slackBotToken: Yup.string(),
+    slackSigningSecret: Yup.string(),
+  });
   const formik = useFormik({
     initialValues: {
       adminSecret: '',
@@ -12,55 +22,47 @@ const SetupPage: React.FC = () => {
       slackBotToken: '',
       slackSigningSecret: '',
     },
+    validationSchema: SignupSchema,
     async onSubmit(values) {
-      // TODO: Update all values in the database, and redirect to admin page
-      // TODO: this button currently refreshes and redirects to the admin page. Razvan's redirect changes should cover this to redirect to login
-      const res = await fetch('/api/config/bulk', {
-        method: 'POST',
-        body: JSON.stringify({
-          configKeys: [
-            'adminSecret',
-            'discordChannelIds',
-            'discordBotToken',
-            'slackBotToken',
-            'slackSigningSecret',
-          ],
-          configValues: [
-            values.adminSecret,
-            values.discordChannelIds,
-            values.discordBotToken,
-            values.slackBotToken,
-            values.slackSigningSecret,
-          ],
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      // window.location.href = '/';
+      if ((values.discordBotToken || values.discordChannelIds) && (values.slackBotToken || values.slackSigningSecret)) {
+        formik.setErrors({ discordChannelIds: 'Only choose Discord or Slack', discordBotToken: 'Only choose Discord or Slack', slackBotToken: 'Only choose Discord or Slack', slackSigningSecret: 'Only choose Discord or Slack' });
+      } else {
+        const res = await fetch('/api/config/bulk', {
+          method: 'POST',
+          body: JSON.stringify(values),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+          // window.location.href = '/';
+      }
     },
   });
 
   return (
     <div className="container mt-4">
       <div className="row">
-        <div className="col-md-4 offset-md-4">
+        <div className="col-md-6 offset-md-3">
           <h1 className="display-2 text-center">Setup</h1>
-          <h4 className="display-6 text-center">Enter your respective values for the configuration items below, then press submit.</h4>
+          <h4 className="display-6 text-center font-weight-light">Enter your respective values for the configuration items below, then press submit. </h4>
+          <h4 className="display-6 text-center">If using Slack, leave Discord fields blank. </h4>
+          <h4 className="display-6 text-center">If using Discord, leave Slack fields blank. </h4>
           <form onSubmit={formik.handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="secret">adminSecret</label>
+            <div className="form-group mt-3">
+              <label htmlFor="adminSecret">Enter the Admin Secret. Must be between 6-20 characters</label>
               <input
                 id="adminSecret"
                 type="password"
-                placeholder="Shhh..."
+                placeholder="enter value..."
                 className={`form-control ${formik.errors.adminSecret ? 'is-invalid' : ''}`}
                 value={formik.values.adminSecret}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-              {/* QUESTION: what is the 'htmlFor' below? Should I change these to match their respective content? */}
-              <label htmlFor="discordChannelIds">discordChannelIds</label>
+              <p className="text-danger">{formik.errors.adminSecret}</p>
+            </div>
+            <div className="form-group">
+              <label htmlFor="discordChannelIds">Discord: Enter Discord Channel ID. If multiple IDs, separate with a comma.</label>
               <input
                 id="discordChannelIds"
                 placeholder="id1, id2, id3"
@@ -69,7 +71,10 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-              <label htmlFor="secret">discordBotToken</label>
+              <p className="text-danger">{formik.errors.discordChannelIds}</p>
+            </div>
+            <div className="form-group">
+              <label htmlFor="discordBotToken">Discord: Enter the Discord Bot Token</label>
               <input
                 id="discordBotToken"
                 placeholder="enter value..."
@@ -78,7 +83,10 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-              <label htmlFor="secret">slackBotToken</label>
+              <p className="text-danger">{formik.errors.discordBotToken}</p>
+            </div>
+            <div className="form-group">
+              <label htmlFor="slackBotToken">Slack: Enter the Slack Bot Token</label>
               <input
                 id="slackBotToken"
                 placeholder="enter value..."
@@ -87,7 +95,10 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-              <label htmlFor="secret">slackSigningSecret</label>
+              <p className="text-danger">{formik.errors.slackBotToken}</p>
+            </div>
+            <div className="form-group">
+              <label htmlFor="slackSigningSecret">Slack: Enter the Slack Signing Secret</label>
               <input
                 id="slackSigningSecret"
                 placeholder="enter value..."
@@ -96,10 +107,9 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-              {/* QUESTION: What is this below? */}
-              {/* <div className="invalid-feedback">{formik.errors.adminSecret}</div> */}
+              <p className="text-danger">{formik.errors.slackSigningSecret}</p>
             </div>
-            <button type="submit" className="btn btn-dark float-right">
+            <button type="submit" className="btn btn-primary btn-block mb-5">
               Submit
             </button>
           </form>

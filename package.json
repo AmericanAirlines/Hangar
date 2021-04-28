@@ -85,7 +85,8 @@
     "styled-components": "^5.2.1",
     "typeorm": "^0.2.26",
     "typescript": "^3.8.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
