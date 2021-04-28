@@ -29,7 +29,9 @@ const SetupPage: React.FC = () => {
       } else {
         const res = await fetch('/api/config/bulk', {
           method: 'POST',
-          body: JSON.stringify(values),
+          body: JSON.stringify({
+            inputConfig: values,
+          }),
           headers: {
             'Content-Type': 'application/json',
           },
