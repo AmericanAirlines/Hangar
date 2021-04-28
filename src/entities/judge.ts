@@ -24,7 +24,7 @@ export class Judge extends BaseEntity {
   previousTeam?: number;
 
   async getNextTeam(): Promise<Team> {
-    const newTeam = await Team.getNextAvailableTeamExcludingTeams(this.visitedTeams);
+    const newTeam = await Team.getNextAvailableTeamExcludingTeams(this.previousTeam);
     this.currentTeam = newTeam ? newTeam.id : null;
     await this.save();
     return newTeam;

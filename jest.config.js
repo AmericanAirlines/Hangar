@@ -24,6 +24,7 @@ module.exports = {
     '!./src/StringDictionary.ts',
     '!./src/api/admin.ts',
     '!./src/api/index.ts',
+    '!./src/seed.ts',
   ],
   coverageDirectory: './coverage',
   coverageThreshold: {

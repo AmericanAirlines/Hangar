@@ -21,7 +21,8 @@
     "test:changed": "jest -o",
     "test:sync": "npm run test -- --runInBand",
     "clean": "rimraf dist .next",
-    "typeorm": "ts-node --skip-project --compiler-options \"{\\\"experimentalDecorators\\\": true, \\\"emitDecoratorMetadata\\\": true, \\\"esModuleInterop\\\": true}\" ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node --skip-project --compiler-options \"{\\\"experimentalDecorators\\\": true, \\\"emitDecoratorMetadata\\\": true, \\\"esModuleInterop\\\": true}\" ./node_modules/typeorm/cli.js",
+    "seed": "ts-node src/seed.ts"
   },
   "repository": {
     "type": "git",

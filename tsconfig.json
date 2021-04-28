@@ -1,7 +1,7 @@
 {
   "extends": "./src/tsconfig.json",
   "compilerOptions": {
-    "module": "esnext",
+    "module": "commonjs",
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
