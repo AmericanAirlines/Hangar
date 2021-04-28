@@ -41,7 +41,7 @@ const SetupPage: React.FC = () => {
           <h4 className="display-6 text-center">If using Slack, leave Discord fields blank. If using Discord, leave Slack fields blank. </h4>
           <form onSubmit={formik.handleSubmit}>
             <div className="form-group mt-3">
-              <label htmlFor="secret">Enter the Admin Secret. Must be between 6-20 characters</label>
+              <label htmlFor="adminSecret">Enter the Admin Secret. Must be between 6-20 characters</label>
               <input
                 id="adminSecret"
                 type="password"
@@ -52,7 +52,6 @@ const SetupPage: React.FC = () => {
                 onBlur={formik.handleBlur}
               />
             </div>
-              {/* QUESTION: what is the 'htmlFor' below? Should I change these to match their respective content? */}
             <div className="form-group">
               <label htmlFor="discordChannelIds">Discord: Enter Discord Channel ID. If multiple IDs, separate with a comma.</label>
               <input
@@ -65,7 +64,7 @@ const SetupPage: React.FC = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="secret">Discord: Enter the Discord Bot Token</label>
+              <label htmlFor="discordBotToken">Discord: Enter the Discord Bot Token</label>
               <input
                 id="discordBotToken"
                 placeholder="enter value..."
@@ -76,7 +75,7 @@ const SetupPage: React.FC = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="secret">Slack: Enter the Slack Bot Token</label>
+              <label htmlFor="slackBotToken">Slack: Enter the Slack Bot Token</label>
               <input
                 id="slackBotToken"
                 placeholder="enter value..."
@@ -87,7 +86,7 @@ const SetupPage: React.FC = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="secret">Slack: Enter the Slack Signing Secret</label>
+              <label htmlFor="slackSigningSecret">Slack: Enter the Slack Signing Secret</label>
               <input
                 id="slackSigningSecret"
                 placeholder="enter value..."
@@ -96,9 +95,6 @@ const SetupPage: React.FC = () => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
-
-              {/* QUESTION: What is this below? */}
-              {/* <div className="invalid-feedback">{formik.errors.secret}</div> */}
             </div>
             <button type="submit" className="btn btn-primary btn-block mb-5">
               Submit
