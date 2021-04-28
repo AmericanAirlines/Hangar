@@ -1,5 +1,5 @@
-import { JudgingVote, TeamResult, TeamScore } from './judgingVote';
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, UpdateResult } from 'typeorm';
+import { JudgingVote, TeamResult, TeamScore } from './judgingVote';
 import { genHash } from '../utilities/genHash';
 import { Judge } from './judge';
 
@@ -142,15 +142,16 @@ export class Team extends BaseEntity {
   Returns: a team to visit
   */
 
-  static eGreedy(Q: TeamResult[], teams: number, prev: number, epsilon: number) {
+  static eGreedy(Q: TeamResult[], teams: number, prev: number, epsilon: number): number {
     let curr = 0;
-    // console.log(`random is ${random} compared to epsilon ${epsilon}`);
     if (Math.random() > epsilon) {
-      var maxScore = Number.NEGATIVE_INFINITY;
+      let maxScore = Q[0] ? Q[0].score : 0;
       const scoreDistribution = new Map() as Map<number, number[]>;
+
+      // return random team from the list of teams with highest score
       Q.forEach((score) => {
-        if (score.id != prev) {
-          if (!scoreDistribution.has(score.score)) scoreDistribution.set(score.score, new Array());
+        if (score.id !== prev) {
+          if (!scoreDistribution.has(score.score)) scoreDistribution.set(score.score, []);
           scoreDistribution.get(score.score).push(score.id);
           maxScore = Math.max(maxScore, score.score);
         }
@@ -158,18 +159,10 @@ export class Team extends BaseEntity {
 
       const highScoreIds = scoreDistribution.get(maxScore);
       curr = highScoreIds[Math.floor(Math.random() * highScoreIds.length)];
-
-      // Q.sort((a, b) => b.score - a.score);
-      // curr = Q[0].id;
-
-      // if (curr == prev) {
-      //   if (teams == 1) return null;
-      //   curr = Q[1].id;
-      // }
     } else {
       curr = Q[Math.floor(Math.random() * Q.length)].id;
-      while (curr == prev) {
-        if (teams == 1) return null;
+      while (curr === prev) {
+        if (teams === 1) return null;
         curr = Q[Math.floor(Math.random() * Q.length)].id;
       }
     }
@@ -182,27 +175,26 @@ export class Team extends BaseEntity {
     exploration parameter (c), time (t)
   Returns: a team to visit
   */
-  static async ucb(Q: TeamResult[], teamVisits: Map<number, number>, prev: number, c: number) {
-    const ucb_scores: TeamScore[] = [];
+  static async ucb(Q: TeamResult[], teamVisits: Map<number, number>, prev: number, c: number): Promise<number> {
+    const ucbScores: TeamScore[] = [];
     const allVotes = await JudgingVote.find();
     const time = allVotes.length;
 
+    // return random team from the list of teams with highest score
     teamVisits.forEach((visits, id) => {
-      // console.log(`visits ${visits} id ${id}`);
-      var teamScore = Q.find((score) => score.id == id).score;
-      if (visits == 0) ucb_scores.push({ id: id, score: Number.POSITIVE_INFINITY });
+      let teamScore = Q.find((score) => score.id === id).score;
+      if (visits === 0) ucbScores.push({ id, score: Number.POSITIVE_INFINITY });
       else {
-        // console.log('NOT INFINITE');
         teamScore += c * Math.sqrt(Math.log(2 * time) / visits);
-        ucb_scores.push({ id: id, score: teamScore });
+        ucbScores.push({ id, score: teamScore });
       }
     });
 
-    var maxScore = Number.NEGATIVE_INFINITY;
+    let maxScore = Number.NEGATIVE_INFINITY;
     const scoreDistribution = new Map() as Map<number, number[]>;
-    ucb_scores.forEach((score) => {
-      if (score.id != prev) {
-        if (!scoreDistribution.has(score.score)) scoreDistribution.set(score.score, new Array());
+    ucbScores.forEach((score) => {
+      if (score.id !== prev) {
+        if (!scoreDistribution.has(score.score)) scoreDistribution.set(score.score, []);
         scoreDistribution.get(score.score).push(score.id);
         maxScore = Math.max(maxScore, score.score);
       }
@@ -210,12 +202,5 @@ export class Team extends BaseEntity {
 
     const highScoreIds = scoreDistribution.get(maxScore);
     return highScoreIds[Math.floor(Math.random() * highScoreIds.length)];
-
-    // ucb_scores.sort((a, b) => b.score - a.score);
-    // var curr = ucb_scores[0].id;
-    // if (curr == prev) curr = ucb_scores[1] ? ucb_scores[1].id : null;
-
-    // // console.log(curr);
-    // return curr;
   }
 }

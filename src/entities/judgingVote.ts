@@ -37,8 +37,8 @@ export class JudgingVote extends BaseEntity {
   static converged = false;
 
   static async tabulate(): Promise<TeamResult[]> {
-    const [teamResult, teamVists] = await this.updateScoresAndVisits();
-    return teamResult;
+    const teamResult = await this.updateScoresAndVisits();
+    return teamResult[0];
   }
 
   static async updateScoresAndVisits(): Promise<[TeamResult[], Map<number, number>]> {
@@ -50,7 +50,7 @@ export class JudgingVote extends BaseEntity {
     const scores = new Map() as Map<number, number>;
     const teamVisits = new Map() as Map<number, number>;
 
-    //intialize scores
+    // intialize scores
     teams.forEach((team) => {
       scores.set(team.id, 0);
       teamVisits.set(team.id, 0);
@@ -63,18 +63,17 @@ export class JudgingVote extends BaseEntity {
 
     const teamResults: TeamResult[] = [];
 
-    for (var i = 0; i < numTeams; i++) {
-      const team_id = teams[i].id;
-      teamResults.push({ id: team_id, name: teams[i].name, score: scores.get(team_id) });
+    for (let i = 0; i < numTeams; i += 1) {
+      const teamID = teams[i].id;
+      teamResults.push({ id: teamID, name: teams[i].name, score: scores.get(teamID) });
     }
 
     return [teamResults, teamVisits];
   }
 
-  static updateScores(Q: Map<number, number>, N: Map<number, number>, curr: number, prev: number, currentTeamChosen: boolean) {
-    // visit teams curr and prev
+  static updateScores(Q: Map<number, number>, N: Map<number, number>, curr: number, prev: number, currentTeamChosen: boolean): boolean {
     let reward;
-    const converge_threshold = 0.01;
+    const convThreshold = 0.01;
 
     N.set(curr, N.get(curr) + 1);
     N.set(prev, N.get(prev) + 1);
@@ -85,16 +84,17 @@ export class JudgingVote extends BaseEntity {
       reward = 0;
     }
 
-    var curr_Q = Q.get(curr);
-    var prev_Q = Q.get(prev);
+    const currQ = Q.get(curr);
+    const prevQ = Q.get(prev);
 
-    Q.set(curr, curr_Q + (1.0 / N.get(curr)) * (reward - curr_Q));
-    Q.set(prev, prev_Q + (1.0 / N.get(prev)) * ((reward == 1 ? 0 : 1) - prev_Q));
+    Q.set(curr, currQ + (1.0 / N.get(curr)) * (reward - currQ));
+    Q.set(prev, prevQ + (1.0 / N.get(prev)) * ((reward === 1 ? 0 : 1) - prevQ));
 
     const minVisit = [...N.values()].sort((a, b) => a - b)[0];
+    // top 5 teams have at least 'topNTeams' visits
     const topNTeams = Math.max(0, [...N.values()].sort((a, b) => a - b)[N.size - 5]);
 
-    if (Math.abs(Q.get(curr) - curr_Q) < converge_threshold && Math.abs(Q.get(prev) - prev_Q) < converge_threshold && minVisit > 2 && topNTeams > 4) {
+    if (Math.abs(Q.get(curr) - currQ) < convThreshold && Math.abs(Q.get(prev) - prevQ) < convThreshold && minVisit > 2 && topNTeams > 4) {
       return true;
     }
     return false;

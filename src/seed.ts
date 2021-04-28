@@ -63,18 +63,18 @@ async function clearJudges(): Promise<void> {
   const numTeams = myArgs[0] || 10;
   const numJudges = myArgs[1] || 5;
 
-  console.log('Initializing database');
+  console.log('Initializing database'); // eslint-disable-line no-console
   await initDatabase();
   await clearTeams();
-  //   await clearJudges();
+  await clearJudges();
 
-  console.log(`Creating ${numTeams} teams`);
+  console.log(`Creating ${numTeams} teams`); // eslint-disable-line no-console
   await createTeamData(+numTeams);
 
-  //   console.log(`Creating ${numJudges} judges`);
-  //   await createJudgeData(+numJudges);
+  console.log(`Creating ${numJudges} judges`); // eslint-disable-line no-console
+  await createJudgeData(+numJudges);
 
-  console.log('Done!');
+  console.log('Done!'); // eslint-disable-line no-console
 
   process.exit(0);
 })();
