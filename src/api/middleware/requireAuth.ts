@@ -11,8 +11,10 @@ export const requireAuth = (redirect = false): Handler => async (req, res, next)
   logger.info(redirect.toString());
 
   if (!adminSecret || activePlatform === null) {
-    logger.info('Redirected user to validateUser.ts page');
-    next();
+    // logger.info('Redirected to validateUser.ts');
+    // next();
+    logger.info('Redirected user to the setup page');
+    res.redirect('/setup');
   } else if (
     req.signedCookies?.authed === 'yes' ||
     (adminSecret && req.headers.authorization === adminSecret) ||

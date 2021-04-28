@@ -10,7 +10,7 @@ export const validateUser = (redirect = false): Handler => async (req, res, next
   logger.info(redirect.toString());
 
   if ((!adminSecret || activePlatform === null) && redirect) {
-    logger.info('Redirected user to setup page');
+    logger.info('Redirected user to the setup page');
     res.redirect('/setup');
   } else {
     logger.info('validateUser calling next');

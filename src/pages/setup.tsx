@@ -38,10 +38,15 @@ const SetupPage: React.FC = () => {
         },
       });
 
-      if (res.ok) {
-        // eslint-disable-next-line no-console
-        console.log(res);
-      }
+      // if (res.ok) {
+      //   window.location.href = '/';
+      //   // eslint-disable-next-line no-console
+      //   console.log('received response');
+      // } else {
+      //   // eslint-disable-next-line no-console
+      //   console.log('did not receive response');
+      // }
+
       // window.location.href = '/';
     },
   });

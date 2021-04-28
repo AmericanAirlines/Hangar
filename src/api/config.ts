@@ -70,6 +70,7 @@ config.post('/bulk', async (req, res) => {
         }
 
         await configItem.save();
+        logger.info(configItem.toString());
         finalConfigItems.push(configItem);
       } catch (err) {
         /* istanbul ignore next */
@@ -78,6 +79,8 @@ config.post('/bulk', async (req, res) => {
         logger.error(err);
       }
     });
+
+  logger.info('config/bulk is finished');
   res.send(finalConfigItems);
 });
 
