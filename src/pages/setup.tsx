@@ -36,7 +36,11 @@ const SetupPage: React.FC = () => {
             'Content-Type': 'application/json',
           },
         });
-          // window.location.href = '/';
+        window.location.href = '/';
+
+        if (!res.ok) {
+          throw new Error();
+        }
       }
     },
   });
