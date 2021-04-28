@@ -8,6 +8,7 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 import { getSlackAppAndInitListeners } from './slack';
 import logger from './logger';
 import { requireAuth } from './api/middleware/requireAuth';
+import { validateUser } from './api/middleware/validateUser';
 import { getActivePlatform, SupportedPlatform } from './common';
 import { env } from './env';
 import { apiApp } from './api';
@@ -126,6 +127,7 @@ export async function initNext(): Promise<void> {
   const nextApp = next({ dev: env.nodeEnv !== 'production' });
   const nextHandler = nextApp.getRequestHandler();
   await nextApp.prepare();
+  app.get(['/'], validateUser(true), (req, res) => nextHandler(req, res));
   app.get(['/'], requireAuth(true), (req, res) => nextHandler(req, res));
   app.get('*', (req, res) => nextHandler(req, res));
 }

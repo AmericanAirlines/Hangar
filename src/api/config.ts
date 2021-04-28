@@ -49,3 +49,73 @@ config.post('/', async (req, res) => {
     logger.error(err);
   }
 });
+
+config.post('/bulk', async (req, res) => {
+  const { configKeys, configValues } = req.body;
+  // TODO: find a way to disable requireAuth() on the setup pages
+  // QUESTION: should I instead just zip the two arrays back into an object for simpler filtering?
+  // this solutions poses issues if two values are the same, but this is unlikely to occur in reality
+  const finalConfigItems: Config[] = [];
+
+  configValues
+    .filter((x: string) => x !== '')
+    .forEach(async (currentValue: string) => {
+      const currentKey = configKeys[configValues.indexOf(currentValue)];
+      try {
+        let configItem = await Config.findOne({ key: currentKey });
+        if (!configItem) {
+          configItem = new Config(currentKey, currentValue);
+        } else {
+          configItem.value = currentValue;
+        }
+
+        await configItem.save();
+        finalConfigItems.push(configItem);
+      } catch (err) {
+        /* istanbul ignore next */
+        res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
+        /* istanbul ignore next */
+        logger.error(err);
+      }
+    });
+  res.send(finalConfigItems);
+});
+
+// config.post('/bulk', async (req, res) => {
+//   // TODO: find a way to disable requireAuth() on the setup pages
+//   // QUESTION: should I instead just zip the two arrays back into an object for simpler filtering?
+//   // this solutions poses issues if two values are the same, but this is unlikely to occur in reality
+//   const keys = req.body.configKeys;
+//   const values = req.body.configValues;
+
+//   const finalConfigItems: Config[] = [];
+
+//   for (let i = 0; i < req.body.configKeys; i += 1) {
+
+//     const configKey = keys[i];
+//     const configValue = values[i];
+
+//     if (!configKey || !configKey.trim() || configValue === undefined) {
+//       res.status(400).send("Property 'configKey' and 'configValue' are required");
+//       return;
+//     }
+
+//     try {
+//       let configItem = await Config.findOne({ key: configKey });
+//       if (!configItem) {
+//         configItem = new Config(configKey, configValue);
+//       } else {
+//         configItem.value = configValue;
+//         finalConfigItems.push(configValue);
+//       }
+
+//       await configItem.save();
+//     } catch (err) {
+//       /* istanbul ignore next */
+//       res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
+//       /* istanbul ignore next */
+//       logger.error(err);
+//     }
+//   }
+//   res.send(finalConfigItems);
+// });

@@ -25,7 +25,7 @@ interface PartialTeamInfo {
 }
 
 export async function registerTeam(msg: Discord.Message, context: DiscordContext): Promise<void> {
-  const teamRegistrationActive = await Config.findToggleForKey('teamRegistrationActive');
+  const teamRegistrationActive = await Config.getValueAs('teamRegistrationActive', 'boolean', false);
   if (!teamRegistrationActive) {
     await msg.author.send(stringDictionary.registerNotOpen);
     return;

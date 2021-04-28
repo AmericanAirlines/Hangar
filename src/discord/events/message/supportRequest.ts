@@ -30,10 +30,10 @@ export async function supportRequest(msg: Discord.Message, context: DiscordConte
   let queueActive = false;
   switch (msg.content) {
     case '!jobChat':
-      queueActive = await Config.findToggleForKey('jobChatQueueActive');
+      queueActive = await Config.getValueAs('jobChatQueueActive', 'boolean', false);
       break;
     default:
-      queueActive = await Config.findToggleForKey('supportRequestQueueActive');
+      queueActive = await Config.getValueAs('supportRequestQueueActive', 'boolean', false);
       break;
   }
   if (!queueActive) {
