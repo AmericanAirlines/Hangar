@@ -36,11 +36,12 @@ const SetupPage: React.FC = () => {
             'Content-Type': 'application/json',
           },
         });
-        window.location.href = '/';
-
         if (!res.ok) {
+          alert('There was an error saving the config values');
           throw new Error();
         }
+        
+        window.location.href = '/';
       }
     },
   });
