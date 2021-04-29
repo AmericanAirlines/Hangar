@@ -37,6 +37,7 @@ const SetupPage: React.FC = () => {
           },
         });
         if (!res.ok) {
+          window.alert('There was an error saving the config values'); // eslint-disable-line no-alert
           throw new Error();
         }
         window.location.href = '/';
