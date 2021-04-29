@@ -3,23 +3,20 @@ import logger from '../../logger';
 import { Config } from '../../entities/config';
 import { getActivePlatform } from '../../common/index';
 
-import url = require('url');
-
 export const requireAuth = (redirect = false): Handler => async (req, res, next): Promise<void> => {
   const adminSecret = await Config.getValueAs('adminSecret', 'string', false);
   const supportSecret = await Config.getValueAs('supportSecret', 'string', false);
 
   const activePlatform = await getActivePlatform();
   const appSetupComplete = adminSecret && activePlatform !== null;
-  const path = url.parse(req.url).pathname;
 
-  if (path === '/setup') {
+  if (req.url === '/setup') {
     if (appSetupComplete) {
       res.redirect('/');
     } else {
       next();
     }
-  } else if (path === '/bulk') {
+  } else if (req.url === '/bulk') {
     if (!appSetupComplete) {
       next();
     } else {
