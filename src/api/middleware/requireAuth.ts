@@ -10,18 +10,14 @@ export const requireAuth = (redirect = false): Handler => async (req, res, next)
   const activePlatform = await getActivePlatform();
   const appSetupComplete = adminSecret && activePlatform !== null;
 
-  if (req.url === '/setup') {
+  if (req.path === '/setup') {
     if (appSetupComplete) {
       res.redirect('/');
     } else {
       next();
     }
-  } else if (req.url === '/bulk') {
-    if (!appSetupComplete) {
-      next();
-    } else {
-      res.end();
-    }
+  } else if (req.path === '/api/config/bulk' && !appSetupComplete) {
+    next();
   } else if (!appSetupComplete) {
     res.redirect('/setup');
   } else if (
