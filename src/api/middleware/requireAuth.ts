@@ -1,11 +1,26 @@
 import { Handler } from 'express';
 import logger from '../../logger';
 import { Config } from '../../entities/config';
+import { getActivePlatform } from '../../common/index';
 
 export const requireAuth = (redirect = false): Handler => async (req, res, next): Promise<void> => {
   const adminSecret = await Config.getValueAs('adminSecret', 'string', false);
   const supportSecret = await Config.getValueAs('supportSecret', 'string', false);
-  if (
+
+  const activePlatform = await getActivePlatform();
+  const appSetupComplete = adminSecret && activePlatform !== null;
+
+  if (req.path === '/setup') {
+    if (appSetupComplete) {
+      res.redirect('/');
+    } else {
+      next();
+    }
+  } else if (req.path === '/api/config/bulk' && !appSetupComplete) {
+    next();
+  } else if (!appSetupComplete) {
+    res.redirect('/setup');
+  } else if (
     req.signedCookies?.authed === 'yes' ||
     (adminSecret && req.headers.authorization === adminSecret) ||
     (supportSecret && req.headers.authorization === supportSecret)

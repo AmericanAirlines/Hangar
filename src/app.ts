@@ -127,6 +127,7 @@ export async function initNext(): Promise<void> {
   const nextHandler = nextApp.getRequestHandler();
   await nextApp.prepare();
   app.get(['/'], requireAuth(true), (req, res) => nextHandler(req, res));
+  app.get(['/setup'], requireAuth(true), (req, res) => nextHandler(req, res));
   app.get('*', (req, res) => nextHandler(req, res));
 }
 
