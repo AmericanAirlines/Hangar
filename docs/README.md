@@ -10,6 +10,12 @@ If you need insipiration for challenges, check out some of [our past challenges]
 #### Work in Progress
 This app is still in the early stages of development and only some functionality is currently avaiable. If you want to help expedite our development, [become a contributor](https://github.com/AmericanAirlines/Hangar/blob/main/.github/CONTRIBUTING.md)!
 
+<br/><br/>
+
+# Hangar Setup (Technical)
+If you're more comfortable with technical documentation, you can find the original README [here](https://github.com/AmericanAirlines/Hangar/blob/main/README.md).
+<br/><br/>
+
 # Hangar Setup for Dummies
 You don't need to be technical to create your own instance of Hangar. This guide is designed to walk you through every step necessary to set things up, and includes a visual element to help along anyone who is uncomfortable with technology.
 
@@ -160,8 +166,20 @@ With the Slack API setup done, you'll need to grab an app called `ngrok`. Go bac
 
 The important bit is the URL highlighted with the red box. Keep this terminal window open so that ngrok doesn't close, and we'll get back to this in a bit.
 
-#### Setting Up and Running Hangar
-Not 100% sure yet, but this section should talk about plugging signing secret/bot token into the DB. Needs to talk about running the app via `npm run dev` and getting to the new setup page. Also should note that the app can't be closed before the ngrok URL is set. Talk about the judge, admin, and support secrets while they're here.
+#### Running and Setting Up Hangar
+To start up Hangar, go back to your command line and find the Hangar folder again. Type in the command `npm run dev` and it should start spitting out a bunch of text, like so:
+
+![npm run dev](./assets/dummies-setup-commandline.png)</br>
+
+This text is information for more technical users, so don't worry if it reads like a bunch of gibberish to you. Also, you may see it restart once, so let it run for a moment and wait until the text stops popping out. It should end on a line that says: `[start:watch] info: Next app initialized successfully`. 
+
+The next step is to open up your web browser of choice (Chrome, Firefox, Edge, Safari, etc.) and to type in `localhost:3000` into the search bar, hitting Enter when you finish. It should bring up this page:
+
+![setup page for slack](./assets/dummies-setup-slack.png)</br>
+
+Enter a password into the Admin Secret Field. This is going to be your password to keep people out of the important parts, so make sure it's something you can remember, but nothing too obvious, like "password123". To set up Slack, you'll need to find the Slack Bot Token and Slack Signing Secret that we stashed away earlier and put them into the corresponding fields.
+
+Make sure to keep the app running as we continue on to the next section.
 
 #### Finishing Off with Slack API
 Now that you have both ngrok and Hangar up and running, you'll be using the ngrok URL that we mentioned earlier on the Slack API Site ([link again if you've closed it](https://api.slack.com/apps)).
@@ -194,34 +212,40 @@ To confirm that Hangar is up and running, from Slack send a direct message to th
 #### Discord Application
 You'll need to set up a handful of things through [Discord's website](https://discord.com/developers/applications) before you can get your bot working. On the site, click the "New Application" button in the top right, and input a name for your bot, like so:
 
-![disc create app](./assets/dummies-disc-website1.png)</br>
+![disc create app](./assets/dummies-discord-website1.png)</br>
 
 Look at the sidebar on the left and find the "Bot" tab. There, click the "Copy" button to copy your bot's secret token to your clipboard.
 
-![disc bot token](./assets/dummies-disc-website2.png)</br>
+![disc bot token](./assets/dummies-discord-website2.png)</br>
 
 Put this away in a safe location. You'll need it later, but it's important that you don't let it become public.
 
 Next, open up the Discord app itself. Go into the settings and navigate to the "Advanced" tab under "App Settings" and enable "Developer Mode".
 
-![disc settings](./assets/dummies-disc-settings.png)</br>
+![disc settings](./assets/dummies-discord-settings.png)</br>
 
 Finally, head over to the Discord server that you want to use your bot on. Right click a text channel and select the option that says "Copy ID".
 
-![disc channelid](./assets/dummies-disc-channelid.png)</br>
+![disc channelid](./assets/dummies-discord-channelid.png)</br>
 
 Do this for as many channels as you'd like, and keep them all on hand for later.
 
-#### Setting Up and Running Hangar
-Not 100% sure yet, but this section should talk about plugging bot token/channel ids into the DB. Needs to talk about running the app via `npm run dev` and getting to the new setup page. Talk about the judge, admin, and support secrets while they're here.
+#### Running and Setting Up Hangar
+To start up Hangar, go back to your command line and find the Hangar folder again. Type in the command `npm run dev` and it should start spitting out a bunch of text, like so:
+
+![npm run dev](./assets/dummies-setup-commandline.png)</br>
+
+This text is information for more technical users, so don't worry if it reads like a bunch of gibberish to you. Also, you may see it restart once, so let it run for a moment and wait until the text stops popping out. It should end on a line that says: `[start:watch] info: Next app initialized successfully`. 
+
+The next step is to open up your web browser of choice (Chrome, Firefox, Edge, Safari, etc.) and to type in `localhost:3000` into the search bar, hitting Enter when you finish. It should bring up this page:
+
+![setup page for slack](./assets/dummies-setup-discord.png)</br>
+
+Enter a password into the Admin Secret Field. This is going to be your password to keep people out of the important parts, so make sure it's something you can remember, but nothing too obvious, like "password123". To set up Discord, you'll need to find the Discrod Channel ID(s) and Discord Bot Token that we stashed away earlier and put them into the corresponding fields.
 
 #### Smoke Test
 To confirm that Hangar is up and running, from Discord send a direct message to the Bot. You're up and running if you get a response!
 
-![disc done](./assets/dummies-disc-final.png)</br>
+![disc done](./assets/dummies-discord-final.png)</br>
 
 </details>
-<br/><br/>
-
-# Hangar Setup (Technical)
-TODO: Go steal the Readme from `src/` and slap it here with maybe some polishing up
