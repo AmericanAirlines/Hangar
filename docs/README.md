@@ -45,9 +45,11 @@ Go to [this website](https://nodejs.org/en/download/) and download whatever LTS 
 Once you have it downloaded, go ahead and install it!
 
 #### Installing Node
-If you follow along the installation wizard that you downloaded, the process itself should be fairly simple. When you get to the "Custom Setup" page, double check to make sure that the "Add to PATH" section is going to be installed. It should be included by default, so just make sure it looks something like this. This screenshot is from a Windows machine, so you may see something slightly different on macOS.
+If you follow along the installation wizard that you downloaded, the process itself should be fairly simple. When you get to the "Custom Setup" page, double check to make sure that the "Add to PATH" section is going to be installed. It should be included by default, so just make sure it looks something like this.
 
 ![Node Install](./assets/dummies-node-installwizard.PNG)</br>
+
+(Note: This screenshot is from a Windows machine, so you may see something slightly different on macOS.)
 
 #### Finishing Node Setup
 Now, you should be all set with Node. To make sure that everything's working, open up a terminal window and type in the commands `node -v` and `npm -v`. You'll need to press the Enter key after each individual command, like so:
@@ -74,7 +76,7 @@ From here, all you have to do is type in `npm i` and hit Enter. Make sure the la
 
 ![npm i](./assets/dummies-node-npmi.png)</br>
 
-You'll get a bunch of technical output, and might get a handful of warnings, but as long as nothing went wrong up to this point, this will install a bunch of the dependcies you'll need.
+You'll get a bunch of technical output, and might get a handful of warnings, but as long as nothing went wrong up to this point, this will install a bunch of the dependencies you'll need.
 
 ### Postgres
 Hangar uses Postgres 11 for its database, so we'll need to grab this before we can begin as well.
@@ -90,7 +92,7 @@ You can use all the default settings through the installation wizard, but make s
 ![Postgres install 1](./assets/dummies-postgres-install1.png)
 ![Postgres install 2](./assets/dummies-postgres-install2.png)</br>
 
-Make sure to remember the password you choose, as well as the port number (which, by default, is 5432).
+Make sure to remember the **password** you choose, as well as the **port number** (which, by default, is 5432).
 
 #### Setting up a Postgres Database
 Now that Postgres is installed onto your machine, we'll need to create a database to use with Hangar. To do so, we'll be using psql, which came with the Postgres installation. You can find the program by hitting the Windows key (Windows) or Command + Space (Mac) and then typing `psql` to search for it.
@@ -104,7 +106,7 @@ It won't show up as you're typing, so be careful with your keystrokes. After you
 #### Connecting the Database to the App
 Now that we've got the Postgres database ready, let's make sure that Hangar knows where to look for the database. There is a `.env.sample` file directly inside the Hangar folder that we're going to use as a template for our own `.env` file. If you'd like, you can just copy and paste the file and delete the `.sample` portion from the name of your new copy.
 
-If you've got a code editor like Visual Studio Code, that's perfect for editing the `.env` file. If not, you can still open the file with a simple text editor like Notepad.exe or TextEdit, but you may need to right click and hit "Open with" in order to do so. Here's an example of this being done on Windows:
+If you have a code editor like Visual Studio Code, that's perfect for editing the `.env` file. If not, you can still open the file with a simple text editor like Notepad.exe or TextEdit, but you may need to right click and hit "Open with" in order to do so. Here's an example of this being done on Windows:
 
 ![opening env](./assets/dummies-postgres-envdemo.gif)</br>
 
@@ -249,3 +251,18 @@ To confirm that Hangar is up and running, from Discord send a direct message to 
 ![disc done](./assets/dummies-discord-final.png)</br>
 
 </details>
+
+</br></br>
+
+## Wrapping Up
+By following this guide, you did the following:
+1. Grabbed the source files
+1. Downloaded and installed Node
+1. Ran `npm i` in a terminal window
+1. Downloaded and installed Postgres
+1. Set up a Postgres database and connected it to the app
+1. Chose Slack or Discord and retrieved information from the corresponding website
+1. (Slack) Installed and ran ngrok
+1. Ran and set up Hangar
+
+Now, you should be good to begin using Hangar. After completing this process, typing `localhost:3000` into your browser's address bar will now take you to the sign-in page where you can input the admin secret you chose at the very end to unlock the admin dashboard, where you can oversee all the inner workings of your hackathon. Good luck with your event!
