@@ -4,12 +4,12 @@
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/AmericanAirlines/Hangar.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Hangar/alerts/)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/AmericanAirlines/Hangar.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AmericanAirlines/Hangar/context:javascript)
 
-<img src="./assets/Logo.png" width="300"/>
+<img src="./docs/assets/Logo.png" width="300"/>
 Sponsoring a student hackathon? You've come to the right place! American Airlines loves to help students learn new tech and we're passionate about being a big part of hackathons.
 
 Whether you need help with judging which hack did the best job of tackling your challenge, you want to connect with students who need help, or you want to recruit students and capture resumes, *_Hangar_* will make your experience easy and enjoyable for everyone.
 
-![](./assets/Dashboard.png)
+![](./docs/assets/Dashboard.png)
 
 If you need insipiration for challenges, check out some of [our past challenges](https://github.com/AmericanAirlines/Flight-Engine/wiki).
 
@@ -137,7 +137,7 @@ After the app starts, it will be accessible on `localhost:3000` (unless the port
 ## Handling App Events Locally
 In order to make your app accessible to platforms like Slack, you'll need to use an app like [`ngrok`](https://ngrok.com/) to obtain a URL which can be used within your Slack app configuration. Install ngrok globally with `npm i ngrok -g` and then run `ngrok http 3000` to create the tunnel. After it starts, use the following URL output to route web traffic to your app.
 
-![](./assets/Ngrok-Result.png)
+![](./docs/assets/Ngrok-Result.png)
 
 ## Creating a Slack App
 Before you can use Hangar, you'll need to create a Slack app. Follow our [instructions for creating an app](./src/slack/README.md#initial-setup). Once you're done with the first section, continue below.
