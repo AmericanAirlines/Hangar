@@ -1,7 +1,7 @@
 import express from 'express';
-import { Config } from '../entities/config';
+import { Config, ConfigValue } from '../entities/config';
 import logger from '../logger';
-import { DefaultConfigKeys, DefaultConfigValues, defaultConfig } from '../types/config';
+import { DefaultConfigKeys, DefaultConfigValues, defaultConfig, KnownConfig } from '../types/config';
 
 export const config = express.Router();
 
@@ -47,5 +47,22 @@ config.post('/', async (req, res) => {
     res.status(500).send('Something went wrong sending an update to users; check the logs for more details');
     /* istanbul ignore next */
     logger.error(err);
+  }
+});
+
+config.post('/bulk', async (req, res) => {
+  const { inputConfig } = req.body;
+  try {
+    await Promise.all(
+      Object.entries(inputConfig).map(([key, value]) => {
+        const configToSave = new Config(key as KnownConfig, value as ConfigValue);
+        return configToSave.save();
+      }),
+    );
+
+    res.sendStatus(200);
+  } catch (err) {
+    logger.error(err);
+    res.status(500).send('Some items were not inserted, check logs for more information');
   }
 });

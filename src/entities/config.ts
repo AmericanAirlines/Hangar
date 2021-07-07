@@ -3,7 +3,7 @@
 import { Entity, PrimaryColumn, Column, BaseEntity } from 'typeorm';
 import { KnownConfig } from '../types/config';
 
-type ConfigValue = string | number | boolean | null;
+export type ConfigValue = string | number | boolean | null;
 
 // TODO: Consider fixing the table name to match the class name
 @Entity('configuration')
