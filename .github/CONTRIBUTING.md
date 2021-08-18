@@ -1,6 +1,9 @@
 # Hey there 👋
 First off, thanks for stopping by! At American, we're passionate about building products that improve the experience of our customers through technology.
 
+## Code of Conduct
+Before getting started, please take a minute to read through our [Open Source Code of Conduct](https://github.com/AmericanAirlines/Code-of-Conduct/blob/main/Code-of-Conduct.md).
+
 ## Bugs & Feature Requests
 Whether you found something that isn't working right, something that could be improved, or you'd like to suggest a feature, please start with the tasks below.
 
