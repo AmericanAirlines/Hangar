@@ -7,14 +7,18 @@
 <img src="./assets/Logo.png" width="300"/>
 Sponsoring a student hackathon? You've come to the right place! American Airlines loves to help students learn new tech and we're passionate about being a big part of hackathons.
 
+## :warning: `v2.x` is in Development!
+We've decided to take Hangar in a new direction and are working on the next generation of the platform. Check out the [`v2`](../../tree/v2) branch if you're interested!
+
+---
+
+## Hangar `v1.x`
+
 Whether you need help with judging which hack did the best job of tackling your challenge, you want to connect with students who need help, or you want to recruit students and capture resumes, *_Hangar_* will make your experience easy and enjoyable for everyone.
 
 ![](./assets/Dashboard.png)
 
 If you need insipiration for challenges, check out some of [our past challenges](https://github.com/AmericanAirlines/Flight-Engine/wiki).
-
-#### :warning: Work in Progress
-This app is still in the early stages of development and only some functionality is currently available. If you want to help expedite our development, [become a contributor](./.github/CONTRIBUTING.md)!
 
 <!-- TODO: Add section here to redirect to the pages site if they're interested in using this for an event -->
 
