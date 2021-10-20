@@ -48,9 +48,9 @@ If you are seeing something like this, then make sure the path to copy the `pack
 
 ```bash
  > [ 6/10] RUN yarn install --frozen-lockfile:
-#9 1.570 error Couldn't find package "@x/something@*" required by "@x/api@0.1.0" on the "npm" registry.
+#9 1.570 error Couldn't find package "@hangar/something@*" required by "@hangar/api@0.1.0" on the "npm" registry.
 #9 1.570 info Visit https://yarnpkg.com/en/docs/cli/install for documentation about this command.
-#9 1.572 Error: Couldn't find package "@x/something@*" required by "@x/web@0.1.0" on the "npm" registry.
+#9 1.572 Error: Couldn't find package "@hangar/something@*" required by "@hangar/web@0.1.0" on the "npm" registry.
 #9 1.572     at MessageError.ExtendableBuiltin (/opt/yarn-v1.22.5/lib/cli.js:721:66)
 #9 1.572     at new MessageError (/opt/yarn-v1.22.5/lib/cli.js:750:123)
 #9 1.572     at PackageRequest.<anonymous> (/opt/yarn-v1.22.5/lib/cli.js:36539:17)

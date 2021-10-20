@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import express from 'express';
-import { web } from '@x/web';
+import { web } from '@hangar/web';
 import { env } from './env';
 import { api } from './api';
 import { initDatabase } from './database';
