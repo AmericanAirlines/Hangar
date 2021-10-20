@@ -1,3 +1,2 @@
-# Add 'migration needed' to any changes within 'migrations' folder or any subfolders
 migration may be needed:
-  - src/entities/**/*
+  - packages/api/src/entities/**/*

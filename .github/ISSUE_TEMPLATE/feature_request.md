@@ -1,10 +1,11 @@
 ---
-name: Feature request
+name: 🚀 Feature request
 about: Suggest an idea for this project.
 labels: new feature, needs investigation
 ---
 
-### Pre-requisites:
+### Pre-requisites
+<!-- Replace the [ ] with [x] (lowercase x) to check the box -->
 - [ ] I looked through both [open and closed issues](../issues?utf8=✓&q=is%3Aissue) and did not find another request for the same or similar feature.
 
 ## Description

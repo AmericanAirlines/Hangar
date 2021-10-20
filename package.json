@@ -1,28 +1,11 @@
 {
   "name": "hangar",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "One stop for all the tools hackathon sponsors need",
-  "main": "index.js",
-  "scripts": {
-    "dev": "npm-run-all -l clean build:ts -p build:watch start:watch",
-    "start": "node -r dotenv/config dist/index.js",
-    "start:watch": "nodemon -w dist -w .env -e js -r dotenv/config dist/index.js",
-    "build": "run-s build:ts build:next",
-    "build:ts": "tsc -p src/ --pretty",
-    "build:next": "next build",
-    "build:watch": "npm run build:ts -- -w",
-    "lint": "eslint \"src/**/*.{js,ts,tsx}\" --max-warnings 0",
-    "lint:fix": "npm run lint -- --fix",
-    "lint:staged": "lint-staged",
-    "checkstyle": "prettier -l \"src/**/*.ts\"",
-    "checkstyle:fix": "npm run checkstyle -- --write",
-    "test": "jest",
-    "test:coverage": "npm run test -- --coverage",
-    "test:changed": "jest -o",
-    "test:sync": "npm run test -- --runInBand",
-    "clean": "rimraf dist .next",
-    "typeorm": "ts-node --skip-project --compiler-options \"{\\\"experimentalDecorators\\\": true, \\\"emitDecoratorMetadata\\\": true, \\\"esModuleInterop\\\": true}\" ./node_modules/typeorm/cli.js"
-  },
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AmericanAirlines/Hangar.git"
@@ -36,90 +19,28 @@
     "url": "https://github.com/AmericanAirlines/Hangar/issues"
   },
   "homepage": "https://github.com/AmericanAirlines/Hangar#readme",
-  "engines": {
-    "node": "12.x"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "run-s build:ts lint:staged test"
-    }
-  },
-  "lint-staged": {
-    "linters": {
-      "src/**/*.{js,ts}": [
-        "npm run checkstyle:fix",
-        "npm run lint:fix",
-        "git add"
-      ]
-    },
-    "ignore": [
-      "**/*.test.ts"
-    ]
-  },
-  "nodemonConfig": {
-    "delay": 400
+  "scripts": {
+    "setup": "yarn workspace @x/web build:server",
+    "dev": "yarn workspace @x/api dev",
+    "start": "yarn workspace @x/api start",
+    "build": "lerna run build --stream",
+    "migrate": "lerna run migrate --stream",
+    "typecheck": "lerna run typecheck --concurrency=1 --stream --no-bail",
+    "lint": "lerna run lint --concurrency=1 --stream --no-bail",
+    "lint:fix": "lerna run lint:fix --concurrency=1 --stream --no-bail",
+    "prettier": "prettier -cu \"**/*\"",
+    "prettier:fix": "yarn prettier --write",
+    "test": "lerna run test --concurrency=1 --stream --no-bail",
+    "test:coverage": "lerna run test:coverage --concurrency=1 --stream --no-bail",
+    "postinstall": "patch-package"
   },
   "dependencies": {
-    "@americanairlines/simple-env": "^1.0.2",
-    "@slack/bolt": "^2.3.0",
-    "@slack/types": "^1.9.0",
-    "@slack/web-api": "^5.12.0",
-    "@slack/webhook": "^5.0.2",
-    "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.4",
-    "cors": "^2.8.5",
-    "discord.js": "^12.4.1",
-    "docsify-cli": "^4.4.1",
-    "dotenv": "^6.2.0",
-    "express": "4.16.4",
-    "formik": "^2.1.2",
-    "luxon": "^1.21.3",
-    "next": "^9.5.4",
-    "npm-run-all": "^4.1.5",
-    "pg": "^8.3.3",
-    "react": "^16.11.0",
-    "react-data-table-component": "^7.0.0-alpha-5",
-    "react-dom": "^16.11.0",
-    "reflect-metadata": "^0.1.13",
-    "shuffle-array": "^1.0.1",
-    "styled-components": "^5.2.1",
-    "typeorm": "^0.2.26",
-    "typescript": "^3.8.0",
-    "winston": "^3.3.3",
-    "yup": "^0.32.9"
+    "patch-package": "^6.4.7"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.2",
-    "@types/cors": "^2.8.6",
-    "@types/dotenv": "^6.1.0",
-    "@types/express": "4.17.1",
-    "@types/jest": "^24.0.20",
-    "@types/luxon": "^1.21.0",
-    "@types/node": "^11.15.0",
-    "@types/react": "^16.9.35",
-    "@types/react-dom": "^16.9.3",
-    "@types/shuffle-array": "0.0.28",
-    "@types/sqlite3": "^3.1.5",
-    "@types/supertest": "^2.0.8",
-    "@types/webpack": "^4.41.22",
-    "@types/winston": "^2.4.4",
-    "@types/ws": "^7.2.9",
-    "@typescript-eslint/eslint-plugin": "^2.17.0",
-    "@typescript-eslint/parser": "^2.17.0",
-    "eslint": "^6.6.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "2.18.2",
-    "eslint-plugin-jest": "^22.21.0",
-    "eslint-plugin-react": "^7.17.0",
-    "husky": "^1.3.1",
-    "jest": "^26.6.3",
-    "lint-staged": "^8.1.4",
-    "nodemon": "^2.0.7",
-    "prettier": "^1.19.1",
-    "rimraf": "^3.0.0",
-    "sqlite3": "^4.2.0",
-    "supertest": "^4.0.2",
-    "ts-jest": "^26.5.3",
-    "ts-node": "^8.4.1"
+    "lerna": "^4.0.0",
+    "postinstall-postinstall": "^2.1.0",
+    "prettier": "^2.4.0",
+    "pretty-quick": "^3.1.1"
   }
 }
