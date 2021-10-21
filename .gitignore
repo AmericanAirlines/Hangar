@@ -4,4 +4,3 @@ node_modules
 # dotenv environment variables file (only local)
 env.local
 env.*.local
-packages/api/.env
