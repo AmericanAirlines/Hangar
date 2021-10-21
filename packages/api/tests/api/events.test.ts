@@ -44,14 +44,14 @@ describe('/events', () => {
         expect.objectContaining({
           description: 'the first event',
           name: 'Event 1',
-          start: expect.any(String),
-          end: expect.any(String),
+          start: mockEvents[0].start.toISOString(),
+          end: mockEvents[0].end.toISOString(),
         }),
         expect.objectContaining({
           description: 'the second event',
           name: 'Event 2',
-          start: expect.any(String),
-          end: expect.any(String),
+          start: mockEvents[1].start.toISOString(),
+          end: mockEvents[1].end.toISOString(),
         }),
       ]),
     );
