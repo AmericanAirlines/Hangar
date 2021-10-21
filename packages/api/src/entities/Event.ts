@@ -10,16 +10,16 @@ export class Event extends Node<Event> {
   @Property({ columnType: 'text' })
   name: string;
 
-  @Property({ columnType: 'datetime' })
+  @Property({ columnType: 'timestamptz' })
   start: Date;
 
-  @Property({ columnType: 'datetime' })
+  @Property({ columnType: 'timestamptz' })
   end: Date;
 
   @Property({ columnType: 'text', nullable: true })
   description?: string;
 
-  constructor({ name, start, end, description,...extraValues }: EventConstructorValues) {
+  constructor({ name, start, end, description, ...extraValues }: EventConstructorValues) {
     super(extraValues);
 
     this.name = name;
