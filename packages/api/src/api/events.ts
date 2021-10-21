@@ -9,11 +9,6 @@ events.get('/', async (req, res) => {
   try {
     const availableEvents = await req.entityManager.find(Event, {}, {}, { start: QueryOrder.ASC });
 
-    if (!availableEvents || availableEvents.length === 0) {
-      res.sendStatus(404);
-      return;
-    }
-
     res.status(200).send(availableEvents);
   } catch (error) {
     logger.error(`There was an issue getting events`, error);

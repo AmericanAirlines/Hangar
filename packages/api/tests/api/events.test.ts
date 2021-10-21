@@ -62,14 +62,6 @@ describe('/events', () => {
       { start: QueryOrder.ASC },
     );
   });
-
-  it('non-existant events returns 404', async () => {
-    const handler = testHandler(events);
-    handler.entityManager.find.mockResolvedValueOnce([]);
-
-    await handler.get('/').expect(404);
-  });
-
   it('returns 500 error', async () => {
     const handler = testHandler(events);
     handler.entityManager.find.mockRejectedValueOnce(new Error('Error has occurred'));
