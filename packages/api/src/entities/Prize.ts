@@ -16,7 +16,7 @@ export class Prize extends Node<Prize> {
   description?: string;
 
   @Property({ columnType: 'boolean' })
-  isBonus: boolean;
+  isBonus: boolean = false;
 
   constructor({ name, sortOrder, isBonus, ...extraValues }: PrizeConstructorValues) {
     super(extraValues);
