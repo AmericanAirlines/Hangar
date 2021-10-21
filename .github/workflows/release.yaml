@@ -2,7 +2,7 @@ name: Release to Production
 
 on:
   push:
-    branches: [main]
+    branches: [main, v2]
 
 env:
   DOCKER_REGISTRY: ghcr.io
