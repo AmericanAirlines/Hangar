@@ -7,10 +7,10 @@ export const events = Router();
 
 events.get('/', async (req, res) => {
   try {
-    const availableEvents = await req.entityManager.find(Event, { start: QueryOrder.ASC });
+    const availableEvents = await req.entityManager.find(Event, {}, {}, { start: QueryOrder.ASC });
 
     // Check if user exists
-    if (!availableEvents) {
+    if (!availableEvents || availableEvents.length === 0) {
       res.sendStatus(404);
       return;
     }
