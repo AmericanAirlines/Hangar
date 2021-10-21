@@ -21,7 +21,7 @@
   "homepage": "https://github.com/AmericanAirlines/Hangar#readme",
   "scripts": {
     "setup": "lerna run --scope=@hangar/web build:server",
-    "dev": "lerna run --scope=@hangar/api dev",
+    "dev": "lerna run --scope=@hangar/api dev --stream",
     "start": "lerna run --scope=@hangar/api start",
     "build": "lerna run build --stream",
     "migrate": "lerna run migrate --stream",
