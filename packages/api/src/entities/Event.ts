@@ -10,10 +10,10 @@ export class Event extends Node<Event> {
   @Property({ columnType: 'text' })
   name: string;
 
-  @Property({ columnType: 'date' })
+  @Property({ columnType: 'datetime' })
   start: Date;
 
-  @Property({ columnType: 'date' })
+  @Property({ columnType: 'datetime' })
   end: Date;
 
   @Property({ columnType: 'text', nullable: true })
