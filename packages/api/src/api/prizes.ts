@@ -11,7 +11,7 @@ prizes.get('/', async (req, res) => {
     res.status(200).send(allPrizes);
   } catch (error) {
     const errorMsg = 'Uh oh, looks like there was an issue fetching the list of prizes!';
-    logger.error(errorMsg + ': ', error);
+    logger.error(`${errorMsg  }: `, error);
     res.status(500).send(errorMsg);
   }
 });
