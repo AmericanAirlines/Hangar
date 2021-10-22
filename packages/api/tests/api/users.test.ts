@@ -4,15 +4,15 @@ import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
 interface MockPartialUser {
+  authId: string;
   name: string;
-  pronouns: string;
-  schoolName: string;
+  subscribed: boolean;
 }
 
 const sampleUser: MockPartialUser = {
   name: 'Bill Nye',
-  pronouns: 'he/him',
-  schoolName: 'Science School',
+  authId: '112',
+  subscribed: false,
 };
 
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
