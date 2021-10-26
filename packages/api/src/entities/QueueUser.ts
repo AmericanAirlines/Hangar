@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { Entity, Enum, OneToOne, IdentifiedReference, Index } from '@mikro-orm/core';
+import { Entity, Enum, OneToOne, IdentifiedReference } from '@mikro-orm/core';
 import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 import { User } from './User';
