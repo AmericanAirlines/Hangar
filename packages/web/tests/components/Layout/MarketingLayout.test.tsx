@@ -18,6 +18,6 @@ describe('MarketingLayout', () => {
   it('renders button', async () => {
     render(<MarketingLayout />);
 
-    expect(screen.getByText('Login with GitHub')).toBeVisible();
+    expect(screen.getByText('Hangar')).toBeVisible();
   });
 });

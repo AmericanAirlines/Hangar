@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heading, HStack, Spacer, useTheme, VStack, Text, Box } from '@chakra-ui/react';
+import { Text, Box } from '@chakra-ui/react';
 
 export interface UserProfileProps {
   name: string;
