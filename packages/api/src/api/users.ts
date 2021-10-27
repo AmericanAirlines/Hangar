@@ -16,7 +16,7 @@ users.get('/:userId', async (req, res) => {
   try {
     // Check if userId is in correct format
     if (Number.isNaN(Number(userId))) {
-      res.status(400).send(`Please enter a valid user id, it must be a number.`);
+      res.status(400).send('The user id must be a number');
       return;
     }
 
