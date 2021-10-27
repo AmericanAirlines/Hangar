@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, HStack, Spacer, useColorModeValue } from '@chakra-ui/react';
+import { HStack, Spacer, useColorModeValue } from '@chakra-ui/react';
 import { NavLink } from './NavLink';
 import { NavProfileMenu } from './NavProfileMenu';
 
