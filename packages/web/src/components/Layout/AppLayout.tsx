@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTheme, VStack } from '@chakra-ui/react';
-import { Global } from '@emotion/react';
 import { NavBar } from '../NavBar';
 
 export const AppLayout: React.FC = ({ children }) => {
