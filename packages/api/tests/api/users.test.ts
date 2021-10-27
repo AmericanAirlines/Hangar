@@ -26,7 +26,7 @@ describe('/users', () => {
     const handler = testHandler(users);
 
     const { text } = await handler.get('/abc').expect(400);
-    expect(text).toEqual('"abc" is not a valid id, it must be a number.');
+    expect(text).toEqual('The user id must be a number');
   });
 
   it('successfully returns a user', async () => {
@@ -51,7 +51,7 @@ describe('/users', () => {
     handler.entityManager.findOne.mockRejectedValueOnce(new Error('Error has occurred'));
 
     const { text } = await handler.get('/0').expect(500);
-    expect(text).toEqual('There was an issue getting user "0"');
+    expect(text).toEqual('There was an issue getting user');
 
     expect(loggerSpy).toBeCalledTimes(1);
   });

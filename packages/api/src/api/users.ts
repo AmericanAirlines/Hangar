@@ -10,7 +10,7 @@ users.get('/:userId', async (req, res) => {
   try {
     // Check if userId is in correct format
     if (Number.isNaN(Number(userId))) {
-      res.status(400).send(`"${userId}" is not a valid id, it must be a number.`);
+      res.status(400).send('The user id must be a number');
       return;
     }
 
@@ -26,6 +26,6 @@ users.get('/:userId', async (req, res) => {
     res.status(200).send(user);
   } catch (error) {
     logger.error(`There was an issue getting user "${userId}"`, error);
-    res.status(500).send(`There was an issue getting user "${userId}"`);
+    res.status(500).send('There was an issue getting user');
   }
 });
