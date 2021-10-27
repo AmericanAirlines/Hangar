@@ -32,6 +32,6 @@ users.get('/:userId', async (req, res) => {
     res.status(200).send(stripSensitiveFields(user));
   } catch (error) {
     logger.error(`There was an issue getting user "${userId}"`, error);
-    res.status(500).send(`There was an issue getting user`);
+    res.status(500).send('There was an issue getting user');
   }
 });
