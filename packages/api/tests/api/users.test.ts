@@ -26,7 +26,7 @@ describe('/users', () => {
     const handler = testHandler(users);
 
     const { text } = await handler.get('/abc').expect(400);
-    expect(text).toEqual('Please enter a valid user id, it must be a number.');
+    expect(text).toEqual('The user id must be a number');
   });
 
   it('successfully returns a user', async () => {
