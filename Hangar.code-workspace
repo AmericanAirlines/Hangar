@@ -27,6 +27,9 @@
       "**/CVS": true,
       "**/.DS_Store": true,
       "packages/*/*": true
-    }
+    },
+    "jest.disabledWorkspaceFolders": ["root"],
+    "liveServer.settings.multiRootWorkspaceName": "root",
+    "typescript.tsdk": "root/node_modules/typescript/lib"
   }
 }
