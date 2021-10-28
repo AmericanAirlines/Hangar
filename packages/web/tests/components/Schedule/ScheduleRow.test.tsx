@@ -12,6 +12,14 @@ const mockEvents: Event = {
   description: 'A day with lots of candy',
 };
 
+const mockInvalidEvent: Event = {
+  id: 'thanksgivingId',
+  name: 'thanksgiving',
+  start: new Date().toLocaleString(),
+  end: 'Invalid End Date',
+  description: 'Something about a turkey?',
+};
+
 describe('Schedule', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -30,5 +38,21 @@ describe('Schedule', () => {
 
     expect(screen.getByText('Halloween')).toBeInTheDocument();
     expect(screen.getByText('A day with lots of candy')).toBeInTheDocument();
+  });
+
+  it('does not render an invalid date', async () => {
+    expect(() =>
+      render(
+        <Table>
+          <Tbody>
+            <ScheduleRow event={mockInvalidEvent} />
+          </Tbody>
+        </Table>,
+      ),
+    ).not.toThrowError();
+
+    expect(screen.getByText('thanksgiving')).toBeInTheDocument();
+    expect(screen.getByText('Something about a turkey?')).toBeInTheDocument();
+    expect(screen.getAllByText('Invalid DateTime')[0]).toBeInTheDocument();
   });
 });

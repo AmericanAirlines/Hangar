@@ -10,7 +10,6 @@ export interface ScheduleProps {
 export const Schedule: React.FC<ScheduleProps> = ({ events }) => {
   return events.length > 0 ? (
     <Table variant="simple">
-      <TableCaption>Upcoming Events</TableCaption>
       <Thead>
         <Tr>
           <Th>Title</Th>
