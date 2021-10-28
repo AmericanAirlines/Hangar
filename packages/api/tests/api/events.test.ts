@@ -1,4 +1,3 @@
-import { QueryOrder } from '@mikro-orm/core';
 import { events } from '../../src/api/events';
 import { Event } from '../../src/entities/Event';
 import logger from '../../src/logger';
@@ -7,14 +6,10 @@ import { testHandler } from '../testUtils/testHandler';
 const mockEvents: Partial<Event>[] = [
   {
     name: 'Event 1',
-    start: new Date(),
-    end: new Date(),
     description: 'the first event',
   },
   {
     name: 'Event 2',
-    start: new Date(),
-    end: new Date(),
     description: 'the second event',
   },
 ];
@@ -36,8 +31,7 @@ describe('/events', () => {
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       Event,
       {},
-      {},
-      { start: QueryOrder.ASC },
+      { orderBy: { start: 'ASC' } },
     );
   });
 
