@@ -11,7 +11,7 @@ interface MockEvent {
   description?: string;
 }
 
-const mockEvents: MockEvent[] = [
+const mockEvents: Partial<Event>[] = [
   {
     name: 'Event 1',
     start: new Date(),
@@ -62,7 +62,8 @@ describe('/events', () => {
       { start: QueryOrder.ASC },
     );
   });
-  it('returns 500 error', async () => {
+
+  it('returns 500 error when the db request fails', async () => {
     const handler = testHandler(events);
     handler.entityManager.find.mockRejectedValueOnce(new Error('Error has occurred'));
 

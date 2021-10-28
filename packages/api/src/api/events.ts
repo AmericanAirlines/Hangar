@@ -11,7 +11,8 @@ events.get('/', async (req, res) => {
 
     res.status(200).send(availableEvents);
   } catch (error) {
-    logger.error(`There was an issue getting events`, error);
-    res.status(500).send(`There was an issue getting events`);
+    const errorText = 'There was an issue getting events';
+    logger.error(errorText, error);
+    res.status(500).send(errorText);
   }
 });
