@@ -13,16 +13,18 @@ export const Schedule: React.FC<ScheduleProps> = ({ events }) => {
       <TableCaption>Upcoming Events</TableCaption>
       <Thead>
         <Tr>
-          <Th>name</Th>
-          <Th>start date</Th>
-          <Th>end date</Th>
-          <Th>description</Th>
+          <Th>Title</Th>
+          <Th>Start Date</Th>
+          <Th>End Date</Th>
+          <Th>Description</Th>
         </Tr>
       </Thead>
       <Tbody>
-        {events.map((scheduledEvent: Event) => (
+        {events.length ? events.map((scheduledEvent: Event) => (
           <ScheduleRow event={scheduledEvent} key={scheduledEvent.id} />
-        ))}
+        )) : 
+        <Box>We don&apos;t have anything planned at the moment 😬 Please check back later!</Box>
+        }
       </Tbody>
     </Table>
   );

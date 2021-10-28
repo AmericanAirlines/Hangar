@@ -38,5 +38,7 @@ describe('Schedule', () => {
     expect(() => render(<Schedule events={[]} />)).not.toThrowError();
 
     expect(ScheduleRow).toBeCalledTimes(0);
+    expect(screen.getByText('A Title')).not.toBeInTheDocument();
+    // TODO: Add expectation for the new `check back later` message
   });
 });
