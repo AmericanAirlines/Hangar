@@ -24,10 +24,6 @@ const mockPrizes: Partial<Prize>[] = [
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
 
 describe('/prizes', () => {
-  beforeEach(async () => {
-    jest.clearAllMocks();
-  });
-
   it('successfully returns all prizes sorted by the sortOrder', async () => {
     const handler = testHandler(prizes);
     handler.entityManager.find.mockResolvedValueOnce(mockPrizes);
