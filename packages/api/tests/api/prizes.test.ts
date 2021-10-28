@@ -1,4 +1,3 @@
-import { QueryOrder } from '@mikro-orm/core';
 import { prizes } from '../../src/api/prizes';
 import { Prize } from '../../src/entities/Prize';
 import logger from '../../src/logger';
@@ -56,8 +55,7 @@ describe('/prizes', () => {
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       Prize,
       {},
-      {},
-      { sortOrder: QueryOrder.ASC },
+      { orderBy: { sortOrder: 'ASC' }},
     );
   });
 
