@@ -21,7 +21,7 @@ export enum QueueStatus {
 
 @Entity()
 export class QueueUser extends Node<QueueUser> {
-  @OneToOne((_type) => User)
+  @OneToOne({ wrappedReference: true })
   userId: IdentifiedReference<User>;
 
   @Enum({ columnType: 'text' })
