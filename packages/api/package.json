@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "@americanairlines/simple-env": "^1.0.4",
+    "@hangar/web": "*",
     "@mikro-orm/core": "^4.5.9",
     "@mikro-orm/postgresql": "^4.5.9",
-    "@hangar/web": "*",
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
     "readline-sync": "^1.4.10",
