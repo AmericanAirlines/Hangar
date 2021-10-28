@@ -29,25 +29,7 @@ describe('/prizes', () => {
     handler.entityManager.find.mockResolvedValueOnce(mockPrizes);
     const { body } = await handler.get('/').expect(200);
 
-    expect(body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          name: 'First prize',
-          sortOrder: 1,
-          isBonus: false,
-        }),
-        expect.objectContaining({
-          name: 'Second prize',
-          sortOrder: 2,
-          isBonus: false,
-        }),
-        expect.objectContaining({
-          name: 'Third prize',
-          sortOrder: 3,
-          isBonus: true,
-        }),
-      ]),
-    );
+    expect(body).toEqual(mockPrizes);
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       Prize,
       {},
