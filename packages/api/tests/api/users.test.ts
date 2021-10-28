@@ -3,16 +3,10 @@ import { User } from '../../src/entities/User';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
-interface MockPartialUser {
-  name: string;
-  pronouns: string;
-  schoolName: string;
-}
-
-const sampleUser: MockPartialUser = {
+const sampleUser: Partial<User> = {
   name: 'Bill Nye',
-  pronouns: 'he/him',
-  schoolName: 'Science School',
+  authId: '112',
+  subscribed: false,
 };
 
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
