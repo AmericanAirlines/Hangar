@@ -22,7 +22,6 @@ users.get('/:userId', async (req, res) => {
       return;
     }
 
-    // Return stripped user information
     res.status(200).send(user);
   } catch (error) {
     logger.error(`There was an issue getting user "${userId}"`, error);

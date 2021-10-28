@@ -7,7 +7,7 @@ export type UserConstructorValues = ConstructorValues<User>;
 
 @Entity()
 export class User extends Node<User> {
-  @Property({ columnType: 'text' })
+  @Property({ columnType: 'text', unique: true })
   authId: string;
 
   @Property({ columnType: 'text' })
