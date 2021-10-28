@@ -3,13 +3,7 @@ import { User } from '../../src/entities/User';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
-interface MockPartialUser {
-  authId: string;
-  name: string;
-  subscribed: boolean;
-}
-
-const sampleUser: MockPartialUser = {
+const sampleUser: Partial<User> = {
   name: 'Bill Nye',
   authId: '112',
   subscribed: false,
