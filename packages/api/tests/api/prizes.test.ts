@@ -3,7 +3,7 @@ import { Prize } from '../../src/entities/Prize';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
-const mockEvents: Partial<Prize>[] = [
+const mockPrizes: Partial<Prize>[] = [
   {
     name: 'First prize',
     sortOrder: 1,
@@ -30,7 +30,7 @@ describe('/prizes', () => {
 
   it('successfully returns all prizes sorted by the sortOrder', async () => {
     const handler = testHandler(prizes);
-    handler.entityManager.find.mockResolvedValueOnce(mockEvents);
+    handler.entityManager.find.mockResolvedValueOnce(mockPrizes);
     const { body } = await handler.get('/').expect(200);
 
     expect(body).toEqual(
