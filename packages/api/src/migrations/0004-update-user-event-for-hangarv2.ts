@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20211022152911 extends Migration {
+export class Migration20211028164509 extends Migration {
   async up(): Promise<void> {
     this.addSql('alter table "user" rename column "purpose" to "authId";');
 
@@ -13,8 +13,12 @@ export class Migration20211022152911 extends Migration {
     this.addSql('alter table "user" drop column "schoolName";');
     this.addSql('alter table "user" drop column "major";');
     this.addSql('alter table "user" drop column "graduationDate";');
+
+    this.addSql('alter table "user" add constraint "user_authId_unique" unique ("authId");');
   }
+
   async down(): Promise<void> {
+    this.addSql('alter table "user" drop constraint "user_authId_unique";');
     this.addSql('alter table "user" drop column "metadata", rename column "email" to "pronouns", rename column "subscribed" to "hireable", rename column "authId" to "purpose", add column "location" text null, add column "schoolName" text null, add column "major" text null, add column "graduationDate" Date null;');
   }
 }
