@@ -55,7 +55,7 @@ describe('/prizes', () => {
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       Prize,
       {},
-      { orderBy: { sortOrder: 'ASC' }},
+      { orderBy: { sortOrder: 'ASC' } },
     );
   });
 
