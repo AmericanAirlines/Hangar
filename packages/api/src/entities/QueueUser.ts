@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { Entity, Enum, OneToOne, IdentifiedReference } from '@mikro-orm/core';
+import { Entity, Enum, IdentifiedReference, ManyToOne } from '@mikro-orm/core';
 import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 import { User } from './User';
@@ -14,15 +14,15 @@ export enum QueueType {
 
 export enum QueueStatus {
   Pending = 'Pending',
-  InProgress = 'InProgress',
+  InProgress = 'In Progress',
   Abandoned = 'Abandoned',
   Completed = 'Completed',
 }
 
 @Entity()
 export class QueueUser extends Node<QueueUser> {
-  @OneToOne({ wrappedReference: true })
-  userId: IdentifiedReference<User>;
+  @ManyToOne(() => User)
+  user: IdentifiedReference<User>;
 
   @Enum({ columnType: 'text' })
   type: QueueType;
@@ -30,11 +30,10 @@ export class QueueUser extends Node<QueueUser> {
   @Enum({ columnType: 'text' })
   status: QueueStatus = QueueStatus.Pending;
 
-  constructor({ userId, type, status, ...extraValues }: QueueUserConstructorValues) {
+  constructor({ user, type, ...extraValues }: QueueUserConstructorValues) {
     super(extraValues);
 
-    this.userId = userId;
+    this.user = user;
     this.type = type;
-    this.status = status;
   }
 }
