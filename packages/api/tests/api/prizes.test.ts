@@ -32,7 +32,6 @@ describe('/prizes', () => {
   it('successfully returns all prizes sorted by the sortOrder', async () => {
     const handler = testHandler(prizes);
     handler.entityManager.find.mockResolvedValueOnce(mockEvents);
-
     const { body } = await handler.get('/').expect(200);
 
     expect(body).toEqual(
