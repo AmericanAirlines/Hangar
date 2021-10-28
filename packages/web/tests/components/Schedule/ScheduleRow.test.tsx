@@ -7,8 +7,8 @@ import { Table, Tbody } from '@chakra-ui/table';
 const mockEvents: Event = {
   id: 'halloweenId',
   name: 'Halloween',
-  start: new Date(),
-  end: new Date(),
+  start: new Date().toLocaleString(),
+  end: new Date().toLocaleString(),
   description: 'A day with lots of candy',
 };
 

@@ -1,4 +1,4 @@
-import { Table, Th, Tbody, Thead, TableCaption, Tr } from '@chakra-ui/react';
+import { Table, Th, Tbody, Thead, TableCaption, Tr, Box, Center } from '@chakra-ui/react';
 import React from 'react';
 import { ScheduleRow } from './ScheduleRow';
 import { Event } from './ScheduleRow';
@@ -8,7 +8,7 @@ export interface ScheduleProps {
 }
 
 export const Schedule: React.FC<ScheduleProps> = ({ events }) => {
-  return (
+  return events.length > 0 ? (
     <Table variant="simple">
       <TableCaption>Upcoming Events</TableCaption>
       <Thead>
@@ -20,12 +20,14 @@ export const Schedule: React.FC<ScheduleProps> = ({ events }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {events.length ? events.map((scheduledEvent: Event) => (
-          <ScheduleRow event={scheduledEvent} key={scheduledEvent.id} />
-        )) : 
-        <Box>We don&apos;t have anything planned at the moment 😬 Please check back later!</Box>
-        }
+        {events.map((scheduledEvent: Event) => (
+          <ScheduleRow event={scheduledEvent} key={scheduledEvent.name} />
+        ))}
       </Tbody>
     </Table>
+  ) : (
+    <Center>
+      <Box>We don&apos;t have anything planned at the moment 😬 Please check back later!</Box>
+    </Center>
   );
 };

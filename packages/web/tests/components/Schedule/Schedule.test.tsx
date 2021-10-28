@@ -16,8 +16,8 @@ const mockEvents: ScheduleProps['events'] = [
   {
     id: 'halloweenId',
     name: 'Halloween',
-    start: new Date(),
-    end: new Date(),
+    start: new Date().toLocaleString(),
+    end: new Date().toLocaleString(),
     description: 'A day with lots of candy',
   },
 ];
@@ -36,9 +36,8 @@ describe('Schedule', () => {
 
   it('does not create a row if events are not present', async () => {
     expect(() => render(<Schedule events={[]} />)).not.toThrowError();
-
+    const errorMessage = "We don't have anything planned at the moment 😬 Please check back later!";
     expect(ScheduleRow).toBeCalledTimes(0);
-    expect(screen.getByText('A Title')).not.toBeInTheDocument();
-    // TODO: Add expectation for the new `check back later` message
+    expect(screen.getByText(errorMessage)).toBeInTheDocument();
   });
 });
