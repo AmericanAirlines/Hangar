@@ -4,13 +4,7 @@ import { Prize } from '../../src/entities/Prize';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
-interface MockPrize {
-  name: string;
-  sortOrder: number;
-  isBonus: boolean;
-}
-
-const mockEvents: MockPrize[] = [
+const mockEvents: Partial<Prize>[] = [
   {
     name: 'First prize',
     sortOrder: 1,
@@ -67,7 +61,8 @@ describe('/prizes', () => {
       { sortOrder: QueryOrder.ASC },
     );
   });
-  it('returns a 500', async () => {
+
+  it('returns a 500 when there was an issue fetching the prizes', async () => {
     const handler = testHandler(prizes);
     handler.entityManager.find.mockRejectedValueOnce(new Error('Error has occurred'));
     const { text } = await handler.get('/').expect(500);
