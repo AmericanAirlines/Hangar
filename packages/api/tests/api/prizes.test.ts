@@ -43,24 +43,29 @@ describe('/prizes', () => {
 
     expect(body).toEqual(
       expect.arrayContaining([
-        expect.objectContaining( {
+        expect.objectContaining({
           name: 'First prize',
           sortOrder: 1,
           isBonus: false,
         }),
-        expect.objectContaining(  {
+        expect.objectContaining({
           name: 'Second prize',
           sortOrder: 2,
           isBonus: false,
         }),
-        expect.objectContaining( {
+        expect.objectContaining({
           name: 'Third prize',
           sortOrder: 3,
           isBonus: true,
         }),
       ]),
     );
-    expect(handler.entityManager.find).toHaveBeenCalledWith( Prize, {}, {}, { sortOrder: QueryOrder.ASC }, );
+    expect(handler.entityManager.find).toHaveBeenCalledWith(
+      Prize,
+      {},
+      {},
+      { sortOrder: QueryOrder.ASC },
+    );
   });
   it('returns a 500', async () => {
     const handler = testHandler(prizes);
