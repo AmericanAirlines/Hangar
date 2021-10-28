@@ -4,13 +4,6 @@ import { Event } from '../../src/entities/Event';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
-interface MockEvent {
-  name: string;
-  start: Date;
-  end: Date;
-  description?: string;
-}
-
 const mockEvents: Partial<Event>[] = [
   {
     name: 'Event 1',
@@ -39,22 +32,7 @@ describe('/events', () => {
 
     const { body } = await handler.get('/').expect(200);
 
-    expect(body).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          description: 'the first event',
-          name: 'Event 1',
-          start: mockEvents[0].start.toISOString(),
-          end: mockEvents[0].end.toISOString(),
-        }),
-        expect.objectContaining({
-          description: 'the second event',
-          name: 'Event 2',
-          start: mockEvents[1].start.toISOString(),
-          end: mockEvents[1].end.toISOString(),
-        }),
-      ]),
-    );
+    expect(body).toEqual(mockEvents);
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       Event,
       {},
