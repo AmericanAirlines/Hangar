@@ -3,7 +3,7 @@ import { Entity, Property } from '@mikro-orm/core';
 import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 
-export type UserConstructorValues = ConstructorValues<User>;
+export type UserConstructorValues = ConstructorValues<User, never, 'subscribed'>;
 
 @Entity()
 export class User extends Node<User> {
@@ -14,7 +14,7 @@ export class User extends Node<User> {
   name: string;
 
   @Property({ columnType: 'boolean' })
-  subscribed: boolean;
+  subscribed: boolean = false;
 
   @Property({ columnType: 'text', nullable: true })
   email?: string;
@@ -22,11 +22,10 @@ export class User extends Node<User> {
   @Property({ columnType: 'jsonb', nullable: true })
   metadata?: string;
 
-  constructor({ name, authId, subscribed, ...extraValues }: UserConstructorValues) {
+  constructor({ name, authId, ...extraValues }: UserConstructorValues) {
     super(extraValues);
 
     this.authId = authId;
     this.name = name;
-    this.subscribed = subscribed;
   }
 }

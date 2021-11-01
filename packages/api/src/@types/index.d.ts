@@ -6,5 +6,10 @@ declare global {
     export interface Request {
       entityManager: EntityManager<PostgreSqlDriver>;
     }
+    export interface User {
+      accessToken: string;
+      refreshToken: string;
+      profile: { id: string };
+    }
   }
 }
