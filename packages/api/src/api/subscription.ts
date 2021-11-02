@@ -4,7 +4,7 @@ import { User } from '../entities/User';
 
 export const subscription = Router();
 
-subscription.get('/subscribe', async (req, res) => {
+subscription.post('/subscribe', async (req, res) => {
   try {
     const user = await req.entityManager.findOne(User, { authId: req.user!.profile.id });
     if (user) {
@@ -21,7 +21,7 @@ subscription.get('/subscribe', async (req, res) => {
   }
 });
 
-subscription.get('/unsubscribe', async (req, res) => {
+subscription.post('/unsubscribe', async (req, res) => {
   try {
     const user = await req.entityManager.findOne(User, { authId: req.user!.profile.id });
     if (user) {
