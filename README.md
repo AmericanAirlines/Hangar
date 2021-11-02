@@ -139,7 +139,13 @@ When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var w
 - In `.env.local`:
   - Under Client Information, copy your `CLIENT ID` and add it to `DISCORD_CLIENT_ID`
   - Under Client Information, copy your `CLIENT SECRET` and add it to `DISCORD_CLIENT_SECRET`
-
+- On your discord server
+  - In the sidebar menu, click on the gear icon next to your profile card at the bottom of the side bar
+  - In the user settings sidebar menu, scroll to and click on `Advanced` then enable `Developer Mode`.
+  - Press the escape button in the top right corner and navigate to your event server
+  - Right click on the `General` drop-down section and click `Copy ID`
+  - Add the copied id to `DISCORD_GUILD_ID` in `.env.local`
+  
 To learn more about Next.js, take a look at the following resources:
 
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
