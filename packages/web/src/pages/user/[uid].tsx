@@ -1,9 +1,9 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { MarketingLayout } from '../../components/Layout';
 import { useRouter } from 'next/router';
+import { Alert, AlertIcon } from '@chakra-ui/react';
+import { MarketingLayout } from '../../components/Layout';
 import { UserProfile } from '../../components/userprofile/UserProfile';
-import { Alert, AlertIcon } from '@chakra-ui/alert';
 
 export interface User {
   name: string;
@@ -34,27 +34,21 @@ const UserProfilePage: NextPage = () => {
       }
     };
 
-    fetchUser();
+    void fetchUser();
   }, [uid]);
 
-  if (user === undefined) {
-    if (errorMessage == '') return null;
-    else
-      return (
-        <MarketingLayout>
-          <Alert status="error">
-            <AlertIcon />
-            {errorMessage}
-          </Alert>
-        </MarketingLayout>
-      );
-  } else {
-    return (
-      <MarketingLayout>
-        <UserProfile {...user} />
-      </MarketingLayout>
-    );
-  }
+  return (
+    <MarketingLayout>
+      {!errorMessage && user ? (
+        <UserProfile user={user} />
+      ) : (
+        <Alert status="error">
+          <AlertIcon />
+          {errorMessage}
+        </Alert>
+      )}
+    </MarketingLayout>
+  );
 };
 
 export default UserProfilePage;
