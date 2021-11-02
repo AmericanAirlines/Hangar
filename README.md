@@ -134,7 +134,7 @@ When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var w
 - Go to the [Discord Developer Portal](https://discord.com/developers/applications) and log in.
 - Click the `New Application` button in the top right corner, gave your application a name and, click create.
 - In the side bar, click on OAuth2
-- Under Redirects enter `http://localhost:3000/api/auth/discord/callback` as your redirect url for local development
+- Under Redirects enter `http://localhost:3000/auth/discord/callback` as your redirect url for local development
 - Click `Save Changes` at the bottom of the page
 - In `.env.local`:
   - Under Client Information, copy your `CLIENT ID` and add it to `DISCORD_CLIENT_ID`
