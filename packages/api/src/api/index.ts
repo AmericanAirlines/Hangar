@@ -14,4 +14,4 @@ api.use('/users', users);
 api.use('/auth', auth);
 api.use('/event', events);
 api.use('/prizes', prizes);
-api.use('/subscription', subscription);
+api.use('/subscription', populateUser, subscription);
