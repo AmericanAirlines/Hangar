@@ -15,6 +15,7 @@ export const env = setEnv({
     appUrl: 'APP_URL',
   },
   optional: {
+    discordGuildId: 'DISCORD_GUILD_ID',
     databaseUser: 'DATABASE_USER',
   },
 });

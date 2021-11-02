@@ -38,7 +38,13 @@ void (async () => {
           await entityManager.persistAndFlush(newUser);
         }
 
-        done(null, { profile, accessToken, refreshToken });
+        const guildIds = profile.guilds?.filter((guild) => guild.id === env.discordGuildId) ?? [];
+
+        if (guildIds.length > 0) {
+          done(null, { profile, accessToken, refreshToken });
+        } else {
+          done(new Error('Please make sure your are about of the event discord server'));
+        }
       },
     ),
   );
