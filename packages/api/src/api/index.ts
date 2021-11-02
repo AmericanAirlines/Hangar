@@ -5,6 +5,7 @@ import { health } from './health';
 import { users } from './users';
 import { prizes } from './prizes';
 import { subscription } from './subscription';
+import { populateUser } from '../middleware/populateUser';
 
 export const api = Router();
 

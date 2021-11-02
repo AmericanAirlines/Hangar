@@ -1,5 +1,6 @@
 import { Handler, Router } from 'express';
 import logger from '../logger';
+import { populateUser } from '../middleware/populateUser';
 
 export const subscription = Router();
 subscription.use(populateUser);
@@ -15,7 +16,7 @@ const subscriptionHandler =
 
       res.send(user);
     } catch (error) {
-      const errorMsg = 'Uh oh, something went wrong while trying to enable your subscription!';
+      const errorMsg = 'Uh oh, something went wrong while trying to update your subscription!';
       logger.error(`${errorMsg}: `, error);
       res.status(500).send(errorMsg);
     }
