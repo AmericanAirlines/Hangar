@@ -38,9 +38,9 @@ void (async () => {
           await entityManager.persistAndFlush(newUser);
         }
 
-        const guildIds = profile.guilds?.filter((guild) => guild.id === env.discordGuildId) ?? [];
+        const isMemberOfEventGuild = (profile.guilds ?? []).map((guild) => guild.id).includes(env.discordGuildId);
 
-        if (guildIds.length > 0) {
+        if (guildIds.length) {
           done(null, { profile, accessToken, refreshToken });
         } else {
           done(
