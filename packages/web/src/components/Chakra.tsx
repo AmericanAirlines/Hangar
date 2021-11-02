@@ -24,10 +24,8 @@ export const Chakra: React.FC<ChakraProps> = ({ cookies, children }) => (
  */
 export const getServerSideProps: GetServerSideProps = async ({
   req,
-}): Promise<GetServerSidePropsResult<ChakraProps>> => {
-  return {
-    props: {
-      cookies: req.headers.cookie ?? '',
-    },
-  };
-};
+}): Promise<GetServerSidePropsResult<ChakraProps>> => ({
+  props: {
+    cookies: req.headers.cookie ?? '',
+  },
+});

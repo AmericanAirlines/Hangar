@@ -1,13 +1,13 @@
 import React from 'react';
+import fetchMock from 'fetch-mock-jest';
 import { render, screen, act } from '../../../testUtils/testTools';
 import UserProfilePage from '../../../../src/pages/user/[uid]';
-import fetchMock from 'fetch-mock-jest';
 import { UserProfile, UserProfileProps } from '../../../../src/components/userprofile/UserProfile';
 import { getMock } from '../../../testUtils/getMock';
 
 jest.mock('../../../../src/components/userprofile/UserProfile');
 getMock(UserProfile).mockImplementation(({ ...UserProfileData }) => (
-  <div>{UserProfileData.name}</div>
+  <div>{UserProfileData.user.name}</div>
 ));
 
 jest.mock('next/router', () => ({
@@ -20,7 +20,7 @@ jest.mock('next/router', () => ({
 
 const useRouter = jest.spyOn(require('next/router'), 'useRouter');
 
-const sampleUser: UserProfileProps = {
+const sampleUser: UserProfileProps['user'] = {
   name: 'Steve Job',
   pronouns: 'he/him',
   schoolName: 'Apple University',
