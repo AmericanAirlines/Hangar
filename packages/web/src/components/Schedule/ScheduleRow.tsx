@@ -1,5 +1,5 @@
-import { Tr, Td, VStack, Text } from '@chakra-ui/react';
 import React from 'react';
+import { Tr, Td, VStack, Text } from '@chakra-ui/react';
 import { DateTime } from 'luxon';
 
 interface ScheduleRowProps {
@@ -14,22 +14,11 @@ export interface Event {
   description: string;
 }
 
-export const ScheduleRow: React.FC<ScheduleRowProps> = ({ event }) => {
-  return (
-    <Tr>
-      <Td>{event.name}</Td>
-      <Td>{formatDate(event.start)}</Td>
-      <Td>{formatDate(event.end)}</Td>
-      <Td>{event.description}</Td>
-    </Tr>
-  );
-};
-
 const formatDate = (isoDate: string) => {
   const luxonDate = DateTime.fromISO(isoDate);
   const localDate = luxonDate.toFormat('ccc, LLL d, t'); // '2019/10/10'
   const relativeDate = luxonDate.toRelative() ?? ' '; // 'in 2 days'
-  // console.log(isoDate, luxonDate.toRelative());
+
   return (
     <VStack alignItems="flex-start">
       <Text>{localDate}</Text>
@@ -40,3 +29,12 @@ const formatDate = (isoDate: string) => {
     </VStack>
   );
 };
+
+export const ScheduleRow: React.FC<ScheduleRowProps> = ({ event }) => (
+  <Tr>
+    <Td>{event.name}</Td>
+    <Td>{formatDate(event.start)}</Td>
+    <Td>{formatDate(event.end)}</Td>
+    <Td>{event.description}</Td>
+  </Tr>
+);

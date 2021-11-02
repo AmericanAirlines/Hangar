@@ -1,5 +1,8 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb", "airbnb-typescript", "prettier"],
+  "extends": ["next/core-web-vitals", "airbnb-base", "airbnb-typescript/base", "prettier"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
     "@typescript-eslint/no-floating-promises": ["error"],
     "no-void": ["error", { "allowAsStatement": true }],
@@ -8,7 +11,7 @@
     "object-curly-newline": ["off"],
     "no-await-in-loop": ["off"],
     "operator-linebreak": ["off"],
-    "import/extensions": ["error", "ignorePackages", { "js": "never", "ts": "never" }],
+    "import/extensions": ["error", "ignorePackages", { "ts": "never", "tsx": "never" }],
     "import/no-cycle": ["off"],
     "quotes": ["error", "single"],
     "no-restricted-syntax": [
