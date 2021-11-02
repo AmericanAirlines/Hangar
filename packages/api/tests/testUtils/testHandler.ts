@@ -7,20 +7,24 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 type TestRequestHandler = RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>;
 
-type MockEntityManager = jest.Mocked<Pick<EntityManager<PostgreSqlDriver>, 'find' | 'findOne'>>;
+type MockEntityManager = jest.Mocked<
+  Pick<EntityManager<PostgreSqlDriver>, 'find' | 'findOne' | 'flush'>
+>;
 
 type SuperTestWithEntityManager = SuperTest<Test> & { entityManager: MockEntityManager };
 
-const createTestApp = (handler: TestRequestHandler) => {
+const createTestApp = (handler: TestRequestHandler, user?: Express.User | undefined) => {
   // If additional methods are needed, add them here and to the `MockEntityManager` type
   const entityManager: MockEntityManager = {
     find: jest.fn(),
     findOne: jest.fn(),
+    flush: jest.fn(),
   };
 
   const app = express();
   app.use((req, _res, next) => {
     req.entityManager = entityManager as unknown as EntityManager<PostgreSqlDriver>;
+    req.user = user;
     next();
   });
   app.use(handler);
@@ -28,8 +32,11 @@ const createTestApp = (handler: TestRequestHandler) => {
   return { app, entityManager };
 };
 
-export const testHandler = (handler: TestRequestHandler): SuperTestWithEntityManager => {
-  const { app, entityManager } = createTestApp(handler);
+export const testHandler = (
+  handler: TestRequestHandler,
+  user?: Express.User | undefined,
+): SuperTestWithEntityManager => {
+  const { app, entityManager } = createTestApp(handler, user);
   const handlerInstance = supertest(app) as SuperTestWithEntityManager;
   handlerInstance.entityManager = entityManager;
   return handlerInstance;
