@@ -6,6 +6,10 @@ declare global {
   namespace Express {
     export interface Request {
       entityManager: EntityManager<PostgreSqlDriver>;
+      /**
+       * This will ONLY be defined if you have the `populateUser`
+       * middleware used before this handler
+       */
       userEntity: UserEntity;
     }
     export interface User {
