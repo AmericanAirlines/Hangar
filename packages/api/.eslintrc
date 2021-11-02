@@ -45,5 +45,13 @@
     ]
   },
   "settings": { "import/resolver": { "node": { "extensions": [".js", ".ts"] } } },
-  "overrides": [{ "files": ["**/*.test.ts"], "rules": { "global-require": "off" } }]
+  "overrides": [
+    {
+      "files": ["**/tests/**/*"],
+      "rules": {
+        "global-require": "off",
+        "import/no-extraneous-dependencies": "off"
+      }
+    }
+  ]
 }
