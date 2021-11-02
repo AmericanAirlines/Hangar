@@ -16,6 +16,7 @@ declare global {
       accessToken: string;
       refreshToken: string;
       profile: { id: string };
+      onboardingComplete?: boolean;
     }
   }
 }

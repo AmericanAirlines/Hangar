@@ -9,6 +9,7 @@ import { api } from './api';
 import { initDatabase } from './database';
 import logger from './logger';
 import { User } from './entities/User';
+import { ensureUserRecord } from './middleware/ensureUserRecord';
 
 const app = express();
 const port = Number(env.port ?? '') || 3000;
@@ -38,7 +39,7 @@ void (async () => {
           await entityManager.persistAndFlush(newUser);
         }
 
-        done(null, { profile, accessToken, refreshToken });
+        done(null, { profile, accessToken, refreshToken, onboardingComplete: true });
       },
     ),
   );
@@ -90,6 +91,10 @@ void (async () => {
         res.redirect('/auth/discord');
       }
     },
+    ensureUserRecord({
+      entityManager: orm.em.fork(),
+      redirectUrl: '/app/onboarding',
+    }),
     webHandler,
   );
   app.all('*', webHandler);
