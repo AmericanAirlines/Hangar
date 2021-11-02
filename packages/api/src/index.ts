@@ -43,7 +43,7 @@ void (async () => {
         if (guildIds.length > 0) {
           done(null, { profile, accessToken, refreshToken });
         } else {
-          done(new Error('Please make sure your are about of the event discord server'));
+          done(new Error('Please make sure your are a member of the Discord server for this event'));
         }
       },
     ),
