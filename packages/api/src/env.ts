@@ -12,10 +12,10 @@ export const env = setEnv({
     sessionSecret: 'SESSION_SECRET',
     discordClientId: 'DISCORD_CLIENT_ID',
     discordClientSecret: 'DISCORD_CLIENT_SECRET',
+    discordGuildId: 'DISCORD_GUILD_ID',
     appUrl: 'APP_URL',
   },
   optional: {
-    discordGuildId: 'DISCORD_GUILD_ID',
     databaseUser: 'DATABASE_USER',
   },
 });
