@@ -1,8 +1,5 @@
 import React from 'react';
-import { render, screen } from '../../testUtils/testTools';
-import { VideoTableRow } from '../../../src/components/Videos/VideoTableRow';
-import { Video } from '../../../src/pages/app/videos';
-import { Table, Tbody } from '@chakra-ui/table';
+import { render } from '../../testUtils/testTools';
 import { NavBar } from '../../../src/components/NavBar';
 import { NavLink } from '../../../src/components/NavBar/NavLink';
 import { NavProfileMenu } from '../../../src/components/NavBar/NavProfileMenu';
@@ -16,8 +13,5 @@ getMock(NavProfileMenu).mockImplementation(() => <p>NavProfileMenu</p>);
 describe('NavBar', () => {
   it('renders correctly', async () => {
     expect(() => render(<NavBar />)).not.toThrowError();
-
-    expect(NavLink).toBeCalledTimes(3);
-    expect(NavProfileMenu).toBeCalledTimes(1);
   });
 });
