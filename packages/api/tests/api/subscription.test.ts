@@ -1,21 +1,17 @@
 import { subscription } from '../../src/api/subscription';
 import { User } from '../../src/entities/User';
 import logger from '../../src/logger';
+import { getMock } from '../testUtils/getMock';
 import { testHandler } from '../testUtils/testHandler';
 
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
+jest.mock('');
+const mockUser: Partial<User> = {};
 
-const mockUser = {
-  authId: 'testAuthId',
-};
-
-const mockSession = {
-  profile: {
-    id: mockUser.authId,
-  },
-  accessToken: 'accessToken',
-  refreshToken: 'refreshToken',
-};
+const populateUserMock = getMock(populateUser).mockImplementation((req, res, next) => {
+  req.userEntity = mockUser;
+  next();
+});
 
 describe('/subscriptions', () => {
   beforeEach(async () => {
@@ -23,61 +19,26 @@ describe('/subscriptions', () => {
   });
 
   it('successfully subscribes a user', async () => {
-    const handler = testHandler(subscription, (req, _res, next) => {
-      req.user = mockSession;
-      next();
-    });
-    handler.entityManager.findOne.mockResolvedValueOnce(mockUser);
+    const handler = testHandler(subscription);
+    populateUserMock.mockResolvedValueOnce(mockUser);
+    await handler.post('/subscribe').expect(200);
 
-    const { body } = await handler.post('/subscribe').expect(200);
-
-    expect(body).toEqual(mockUser);
+    expect(mockUser.subscribed).toEqual(true);
     expect(handler.entityManager.findOne).toHaveBeenCalledWith(User, { authId: 'testAuthId' });
   });
 
   it('successfully unsubscribes a user', async () => {
-    const handler = testHandler(subscription, (req, _res, next) => {
-      req.user = mockSession;
-      next();
-    });
-    handler.entityManager.findOne.mockResolvedValueOnce(mockUser);
-
+    const handler = testHandler(subscription);
+    populateUserMock.mockResolvedValueOnce(mockUser);
     const { body } = await handler.post('/unsubscribe').expect(200);
 
     expect(body).toEqual(mockUser);
     expect(handler.entityManager.findOne).toHaveBeenCalledWith(User, { authId: 'testAuthId' });
   });
 
-  it('throws a 404 if user can not be found in db when subscribing', async () => {
-    const handler = testHandler(subscription, (req, _res, next) => {
-      req.user = mockSession;
-      next();
-    });
-    handler.entityManager.findOne.mockResolvedValueOnce(null);
-
-    await handler.post('/subscribe').expect(404);
-
-    expect(handler.entityManager.findOne).toHaveBeenCalledWith(User, { authId: 'testAuthId' });
-  });
-
-  it('throws a 404 if user can not be found in db when unsubscribing', async () => {
-    const handler = testHandler(subscription, (req, _res, next) => {
-      req.user = mockSession;
-      next();
-    });
-    handler.entityManager.findOne.mockResolvedValueOnce(null);
-
-    await handler.post('/unsubscribe').expect(404);
-
-    expect(handler.entityManager.findOne).toHaveBeenCalledWith(User, { authId: 'testAuthId' });
-  });
-
   it('returns 500 error when the db request fails during subscription', async () => {
-    const handler = testHandler(subscription, (req, _res, next) => {
-      req.user = mockSession;
-      next();
-    });
-    handler.entityManager.findOne.mockRejectedValueOnce(new Error('Error has occurred'));
+    const handler = testHandler(subscription);
+    populateUserMock.mockResolvedValueOnce(mockUser);
     const errorMsg = 'Uh oh, something went wrong while trying to enable your subscription!';
 
     const { text } = await handler.post('/subscribe').expect(500);
@@ -87,11 +48,8 @@ describe('/subscriptions', () => {
   });
 
   it('returns 500 error when the db request fails during unsubscribing', async () => {
-    const handler = testHandler(subscription, (req, _res, next) => {
-      req.user = mockSession;
-      next();
-    });
-    handler.entityManager.findOne.mockRejectedValueOnce(new Error('Error has occurred'));
+    const handler = testHandler(subscription);
+    populateUserMock.mockResolvedValueOnce(mockUser);
     const errorMsg = 'Uh oh, something went wrong while trying to disable your subscription!';
 
     const { text } = await handler.post('/unsubscribe').expect(500);
