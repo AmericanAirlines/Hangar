@@ -33,6 +33,13 @@ export const Prizes: React.FC<PrizeProps> = ({ prizes }) => {
       </Table>
       {bonusPrizes.length > 0 ? (
         <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Bonus Prizes</Th>
+              <Th>Description</Th>
+              <Th>Variant</Th>
+            </Tr>
+        </Thead>
           <Tbody>
             {bonusPrizes.map((prize: Prize) => (
               <PrizeRow prize={prize} key={prize.name} />
