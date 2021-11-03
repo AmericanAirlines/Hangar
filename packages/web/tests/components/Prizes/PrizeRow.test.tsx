@@ -38,7 +38,7 @@ describe('Prize Row testing', () => {
     expect(screen.getByText('primary')).toBeInTheDocument();
   });
 
-  it('renders a normal prize correctly', async () => {
+  it('renders a bonus prize correctly', async () => {
     expect(() =>
       render(
         <Table>

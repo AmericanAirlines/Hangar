@@ -12,12 +12,10 @@ export interface Prize {
   isBonus: boolean;
 }
 
-export const PrizeRow: React.FC<PrizeRowProps> = ({ prize }) => {
-  return (
-    <Tr>
-      <Td>{prize.name}</Td>
-      <Td>{prize.description}</Td>
-      <Td>{prize.isBonus ? 'secondary' : 'primary'}</Td>
-    </Tr>
-  );
-};
+export const PrizeRow: React.FC<PrizeRowProps> = ({ prize }) => (
+  <Tr>
+    <Td>{prize.name}</Td>
+    <Td>{prize.description}</Td>
+    <Td>{prize.isBonus ? 'secondary' : 'primary'}</Td>
+  </Tr>
+);

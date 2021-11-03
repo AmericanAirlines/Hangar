@@ -1,15 +1,13 @@
 import { Table, Th, Tbody, Thead, Tr, Box, Center, VStack } from '@chakra-ui/react';
 import React from 'react';
-import { PrizeRow } from './PrizeRow';
-import { Prize } from './PrizeRow';
-
+import { PrizeRow, Prize } from './PrizeRow';
 export interface PrizeProps {
   prizes: Prize[];
 }
 
 export const Prizes: React.FC<PrizeProps> = ({ prizes }) => {
-  let normalPrizes: Prize[] = [];
-  let bonusPrizes: Prize[] = [];
+  const normalPrizes: Prize[] = [];
+  const bonusPrizes: Prize[] = [];
 
   for (let i = 0; i < prizes.length; i += 1) {
     prizes[i].isBonus ? bonusPrizes.push(prizes[i]) : normalPrizes.push(prizes[i]);
