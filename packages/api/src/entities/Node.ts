@@ -36,7 +36,7 @@ export abstract class Node<T extends AnyEntity> extends BaseEntity<T, 'id'> {
   }
 
   toSafeJSON() {
-    const json = super.toJSON();
+    const json = this.toJSON();
 
     for (const [key, val] of Object.entries(this) as Array<
       [keyof Node<T>, Node<T>[keyof Node<T>] | IdentifiedReference<AnyNode>]
@@ -46,6 +46,14 @@ export abstract class Node<T extends AnyEntity> extends BaseEntity<T, 'id'> {
       }
     }
 
-    return json;
+    const safeJson: Record<string, any> = {};
+
+    for (const [key, val] of Object.entries(json)) {
+      if (this.SAFE_KEYS.includes(key)) {
+        safeJson[key] = val;
+      }
+    }
+
+    return safeJson;
   }
 }
