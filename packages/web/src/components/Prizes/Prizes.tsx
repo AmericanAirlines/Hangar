@@ -11,10 +11,10 @@ export const Prizes: React.FC<PrizeProps> = ({ prizes }) => {
   const bonusPrizes: Prize[] = [];
 
   for (let i = 0; i < prizes.length; i += 1) {
-    if(prizes[i].isBonus) {
-      bonusPrizes.push(prizes[i])
+    if (prizes[i].isBonus) {
+      bonusPrizes.push(prizes[i]);
     } else {
-      normalPrizes.push(prizes[i])
+      normalPrizes.push(prizes[i]);
     }
   }
 

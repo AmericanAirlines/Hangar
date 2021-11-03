@@ -9,7 +9,7 @@ jest.mock('../../../src/components/Prizes/PrizeRow.tsx');
 
 getMock(PrizeRow).mockImplementation(() => (
   <Tr>
-    <Td>{'text'}</Td>
+    <Td>text</Td>
   </Tr>
 ));
 
@@ -34,7 +34,8 @@ describe('Prize component testing', () => {
   it('renders both regular prizes and bonus prizes correctly', async () => {
     expect(() => render(<Prizes prizes={[mockPrize, mockBonusPrize]} />)).not.toThrowError();
     expect(PrizeRow).toBeCalledTimes(2);
-    expect(screen.getByText('text')).toBeInTheDocument();
+    expect(screen.getAllByText('text')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('text')[1]).toBeInTheDocument();
   });
 
   it('renders only bonus prizes if there are only bonus prizes', async () => {
@@ -43,7 +44,7 @@ describe('Prize component testing', () => {
     expect(screen.getByText('text')).toBeInTheDocument();
   });
 
-  it('renders only bonus prizes if there are only normal prizes', async () => {
+  it('renders only normal prizes if there are only normal prizes', async () => {
     expect(() => render(<Prizes prizes={[mockPrize]} />)).not.toThrowError();
     expect(PrizeRow).toBeCalledTimes(1);
     expect(screen.getByText('text')).toBeInTheDocument();
