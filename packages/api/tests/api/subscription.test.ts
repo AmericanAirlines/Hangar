@@ -48,7 +48,7 @@ describe('/subscriptions', () => {
   it('returns 500 error when the database fails during unsubscribing', async () => {
     const handler = testHandler(subscription);
     handler.entityManager.persistAndFlush.mockRejectedValueOnce(new Error());
-    
+
     const errorMsg = 'Uh oh, something went wrong while trying to update your subscription!';
 
     const { text } = await handler.post('/unsubscribe').expect(500);
