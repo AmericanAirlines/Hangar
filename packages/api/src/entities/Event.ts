@@ -4,9 +4,12 @@ import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 
 export type EventConstructorValues = ConstructorValues<Event>;
+type EventPropertyKeys = keyof EventConstructorValues;
 
 @Entity()
 export class Event extends Node<Event> {
+  SAFE_KEYS: EventPropertyKeys[] = ['name', 'start', 'end', 'description'];
+
   @Property({ columnType: 'text' })
   name: string;
 

@@ -4,9 +4,12 @@ import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 
 export type UserConstructorValues = ConstructorValues<User, never, 'subscribed'>;
+type UserPropertyKeys = keyof UserConstructorValues;
 
 @Entity()
 export class User extends Node<User> {
+  SAFE_KEYS: UserPropertyKeys[] = ['name', 'subscribed'];
+
   @Property({ columnType: 'text', unique: true })
   authId: string;
 

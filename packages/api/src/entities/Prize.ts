@@ -4,9 +4,12 @@ import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 
 export type PrizeConstructorValues = ConstructorValues<Prize>;
+type PrizePropertyKeys = keyof PrizeConstructorValues;
 
 @Entity()
 export class Prize extends Node<Prize> {
+  SAFE_KEYS: PrizePropertyKeys[] = ['name', 'description', 'isBonus'];
+
   @Property({ columnType: 'text' })
   name: string;
 
