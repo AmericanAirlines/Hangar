@@ -11,8 +11,8 @@ export const Prizes: React.FC<PrizeProps> = ({ prizes }) =>
     <Table variant="simple">
       <Thead>
         <Tr>
-          <Th>Prize Placement</Th>
-          <Th>Prizes</Th>
+          <Th>Placement</Th>
+          <Th>Prize</Th>
           <Th>Description</Th>
         </Tr>
       </Thead>
