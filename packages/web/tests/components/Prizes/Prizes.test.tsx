@@ -13,20 +13,18 @@ getMock(PrizeRow).mockImplementation(() => (
   </Tr>
 ));
 
-const mockPrize: Prize =
-  {
-    id: '1',
-    name: 'first prize',
-    description: 'the very first one',
-    isBonus: true,
-  };
+const mockPrize: Prize = {
+  id: '1',
+  name: 'first prize',
+  description: 'the very first one',
+  isBonus: true,
+};
 
-const mockBonusPrize: Prize =
-  {
-    id: '2',
-    name: 'second prize',
-    isBonus: false,
-  };
+const mockBonusPrize: Prize = {
+  id: '2',
+  name: 'second prize',
+  isBonus: false,
+};
 
 describe('Prize component testing', () => {
   beforeEach(async () => {

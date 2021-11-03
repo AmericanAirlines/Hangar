@@ -32,13 +32,13 @@ export const Prizes: React.FC<PrizeProps> = ({ prizes }) => {
         </Tbody>
       </Table>
       {bonusPrizes.length > 0 ? (
-          <Table variant="simple">
-            <Tbody>
-              {bonusPrizes.map((prize: Prize) => (
-                <PrizeRow prize={prize} key={prize.name} />
-              ))}
-            </Tbody>
-          </Table>
+        <Table variant="simple">
+          <Tbody>
+            {bonusPrizes.map((prize: Prize) => (
+              <PrizeRow prize={prize} key={prize.name} />
+            ))}
+          </Tbody>
+        </Table>
       ) : (
         <div style={{ display: 'none' }}></div>
       )}

@@ -11,11 +11,11 @@ const mockPrize: Prize = {
 };
 
 const mockBonusPrize: Prize = {
-    id: '1',
-    name: 'first prize',
-    description: 'a thing',
-    isBonus: true,
-  };
+  id: '1',
+  name: 'first prize',
+  description: 'a thing',
+  isBonus: true,
+};
 
 describe('Prize Row testing', () => {
   beforeEach(async () => {
