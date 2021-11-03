@@ -11,9 +11,9 @@ const mockPrize: Prize = {
 };
 
 const mockBonusPrize: Prize = {
-  id: '1',
-  name: 'first prize',
-  description: 'a thing',
+  id: '2',
+  name: 'second prize',
+  description: 'another thing',
   isBonus: true,
 };
 
@@ -27,7 +27,11 @@ describe('Prize Row testing', () => {
       render(
         <Table>
           <Tbody>
-            <PrizeRow prize={mockPrize} />
+            <PrizeRow
+              variant={mockPrize.isBonus ? 'secondary' : 'primary'}
+              place={1}
+              prize={mockPrize}
+            />
           </Tbody>
         </Table>,
       ),
@@ -35,7 +39,7 @@ describe('Prize Row testing', () => {
 
     expect(screen.getByText('first prize')).toBeInTheDocument();
     expect(screen.getByText('a thing')).toBeInTheDocument();
-    expect(screen.getByText('primary')).toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
   });
 
   it('renders a bonus prize correctly', async () => {
@@ -43,14 +47,17 @@ describe('Prize Row testing', () => {
       render(
         <Table>
           <Tbody>
-            <PrizeRow prize={mockBonusPrize} />
+            <PrizeRow
+              variant={mockBonusPrize.isBonus ? 'secondary' : 'primary'}
+              place={1}
+              prize={mockBonusPrize}
+            />
           </Tbody>
         </Table>,
       ),
     ).not.toThrowError();
 
-    expect(screen.getByText('first prize')).toBeInTheDocument();
-    expect(screen.getByText('a thing')).toBeInTheDocument();
-    expect(screen.getByText('secondary')).toBeInTheDocument();
+    expect(screen.getByText('second prize')).toBeInTheDocument();
+    expect(screen.getByText('another thing')).toBeInTheDocument();
   });
 });

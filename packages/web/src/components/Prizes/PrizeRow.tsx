@@ -3,6 +3,8 @@ import React from 'react';
 
 interface PrizeRowProps {
   prize: Prize;
+  variant: string;
+  place: number;
 }
 
 export interface Prize {
@@ -12,10 +14,10 @@ export interface Prize {
   isBonus: boolean;
 }
 
-export const PrizeRow: React.FC<PrizeRowProps> = ({ prize }) => (
+export const PrizeRow: React.FC<PrizeRowProps> = ({ prize, variant, place }) => (
   <Tr>
+    <Td>{variant === 'primary' ? place : ''}</Td>
     <Td>{prize.name}</Td>
     <Td>{prize.description}</Td>
-    <Td>{prize.isBonus ? 'secondary' : 'primary'}</Td>
   </Tr>
 );
