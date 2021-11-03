@@ -3,7 +3,7 @@ import React from 'react';
 
 interface PrizeRowProps {
   prize: Prize;
-  variant:'primary' | 'secondary';
+  variant: 'primary' | 'secondary';
   place: number;
 }
 
