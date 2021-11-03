@@ -5,6 +5,7 @@ import { Node } from './Node';
 import { User } from './User';
 
 export type QueueUserConstructorValues = ConstructorValues<QueueUser>;
+type QueueUserPropertyKeys = keyof QueueUserConstructorValues;
 
 export enum QueueType {
   Idea = 'Idea',
@@ -21,6 +22,8 @@ export enum QueueStatus {
 
 @Entity()
 export class QueueUser extends Node<QueueUser> {
+  SAFE_KEYS: QueueUserPropertyKeys[] = ['user', 'type', 'status'];
+
   @ManyToOne(() => User)
   user: IdentifiedReference<User>;
 

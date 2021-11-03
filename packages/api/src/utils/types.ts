@@ -12,4 +12,7 @@ export type ConstructorValues<
   Entity extends AnyNode,
   RemovedKeys extends keyof OmitMethods<Omit<Entity, keyof Node<Entity>>> = never,
   OptionalKeys extends keyof OmitMethods<Omit<Entity, keyof Node<Entity> | RemovedKeys>> = never,
-> = SetOptional<OmitMethods<Omit<Entity, keyof Node<Entity> | RemovedKeys>>, OptionalKeys>;
+> = SetOptional<
+  OmitMethods<Omit<Entity, keyof Node<Entity> | RemovedKeys | 'SAFE_KEYS'>>,
+  OptionalKeys
+>;

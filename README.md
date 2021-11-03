@@ -129,7 +129,22 @@ When the app is deployed to a cloud environment, the `DATABASE_URL` `.env` var w
 
 1.  Start developing
 
-## Learn More
+### Discord OAuth Setup
+
+- Go to the [Discord Developer Portal](https://discord.com/developers/applications) and log in.
+- Click the `New Application` button in the top right corner, gave your application a name and, click create.
+- In the side bar, click on OAuth2
+- Under Redirects enter `http://localhost:3000/auth/discord/callback` as your redirect url for local development
+- Click `Save Changes` at the bottom of the page
+- In `.env.local`:
+  - Under Client Information, copy your `CLIENT ID` and add it to `DISCORD_CLIENT_ID`
+  - Under Client Information, copy your `CLIENT SECRET` and add it to `DISCORD_CLIENT_SECRET`
+- On your discord server
+  - In the sidebar menu, click on the gear icon next to your profile card at the bottom of the side bar
+  - In the user settings sidebar menu, scroll to and click on `Advanced` then enable `Developer Mode`.
+  - Press the escape button in the top right corner and navigate to your event server
+  - Right click on the `General` drop-down section and click `Copy ID`
+  - Add the copied id to `DISCORD_GUILD_ID` in `.env.local`
 
 To learn more about Next.js, take a look at the following resources:
 
