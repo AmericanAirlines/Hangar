@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import express from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import { web } from '@hangar/web';
 import passport from 'passport';
 import { Strategy as DiscordStrategy } from 'passport-discord';
@@ -9,6 +9,8 @@ import { api } from './api';
 import { initDatabase } from './database';
 import logger from './logger';
 import { User } from './entities/User';
+
+export class PassportVerifyError extends Error {}
 
 const app = express();
 const port = Number(env.port ?? '') || 3000;
@@ -46,7 +48,9 @@ void (async () => {
           done(null, { profile, accessToken, refreshToken });
         } else {
           done(
-            new Error('Please make sure your are a member of the Discord server for this event'),
+            new PassportVerifyError(
+              'Please make sure your are a member of the Discord server for this event',
+            ),
           );
         }
       },
@@ -90,6 +94,15 @@ void (async () => {
   );
 
   const webHandler = await web({ dev });
+
+  app.use(((err, req, res, next) => {
+    if (err instanceof PassportVerifyError) {
+      res.status(403).send(err.message);
+      return;
+    }
+
+    next(err);
+  }) as ErrorRequestHandler);
 
   app.all(
     '/app',
