@@ -39,7 +39,7 @@ export const Prizes: React.FC<PrizeProps> = ({ prizes }) => {
               <Th>Description</Th>
               <Th>Variant</Th>
             </Tr>
-        </Thead>
+          </Thead>
           <Tbody>
             {bonusPrizes.map((prize: Prize) => (
               <PrizeRow prize={prize} key={prize.name} />
