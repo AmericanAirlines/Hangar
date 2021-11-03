@@ -26,6 +26,8 @@
     "no-await-in-loop": ["off"],
     "operator-linebreak": ["off"],
     "import/extensions": ["error", "ignorePackages", { "js": "never", "ts": "never" }],
+    "import/no-cycle": ["off"],
+    "quotes": ["error", "single", { "avoidEscape": true }],
     "no-restricted-syntax": [
       "error",
       {
@@ -40,9 +42,16 @@
         "selector": "WithStatement",
         "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
       }
-    ],
-    "import/no-cycle": ["off"]
+    ]
   },
   "settings": { "import/resolver": { "node": { "extensions": [".js", ".ts"] } } },
-  "overrides": [{ "files": ["**/*.test.ts"], "rules": { "global-require": "off" } }]
+  "overrides": [
+    {
+      "files": ["**/tests/**/*"],
+      "rules": {
+        "global-require": "off",
+        "import/no-extraneous-dependencies": "off"
+      }
+    }
+  ]
 }
