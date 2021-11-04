@@ -16,7 +16,7 @@ declare global {
        * This will be setup with the `populateUser` middleware.
        * Use this property if you are unsure if it's been called or not.
        */
-       safeUserEntity?: UserEntity;
+      safeUserEntity?: UserEntity;
     }
     export interface User {
       accessToken: string;
