@@ -8,8 +8,6 @@ type EventPropertyKeys = keyof EventConstructorValues;
 
 @Entity()
 export class Event extends Node<Event> {
-  SAFE_KEYS: EventPropertyKeys[] = ['name', 'start', 'end', 'description'];
-
   @Property({ columnType: 'text' })
   name: string;
 
@@ -29,5 +27,9 @@ export class Event extends Node<Event> {
     this.start = start;
     this.end = end;
     this.description = description;
+  }
+
+  getSafeKeys(): EventPropertyKeys[] {
+    return ['name', 'start', 'end', 'description'];
   }
 }

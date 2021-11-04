@@ -8,8 +8,6 @@ type PrizePropertyKeys = keyof PrizeConstructorValues;
 
 @Entity()
 export class Prize extends Node<Prize> {
-  SAFE_KEYS: PrizePropertyKeys[] = ['name', 'description', 'isBonus'];
-
   @Property({ columnType: 'text' })
   name: string;
 
@@ -27,5 +25,9 @@ export class Prize extends Node<Prize> {
 
     this.name = name;
     this.sortOrder = sortOrder;
+  }
+
+  getSafeKeys(): PrizePropertyKeys[] {
+    return ['name', 'description', 'isBonus'];
   }
 }

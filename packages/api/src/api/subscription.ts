@@ -3,7 +3,7 @@ import logger from '../logger';
 import { populateUser } from '../middleware/populateUser';
 
 export const subscription = Router();
-subscription.use(populateUser);
+subscription.use(populateUser());
 
 const subscriptionHandler =
   (subscribe: boolean): Handler =>
