@@ -3,5 +3,5 @@
   "compilerOptions": {
     "noEmit": false
   },
-  "exclude": ["node_modules", "tests/**/*"]
+  "exclude": ["node_modules", "tests/**/*", "src/__mocks__"]
 }
