@@ -22,8 +22,6 @@ export enum QueueStatus {
 
 @Entity()
 export class QueueUser extends Node<QueueUser> {
-  SAFE_KEYS: QueueUserPropertyKeys[] = ['user', 'type', 'status'];
-
   @ManyToOne(() => User)
   user: IdentifiedReference<User>;
 
@@ -38,5 +36,9 @@ export class QueueUser extends Node<QueueUser> {
 
     this.user = user;
     this.type = type;
+  }
+
+  getSafeKeys(): QueueUserPropertyKeys[] {
+    return ['user', 'type', 'status'];
   }
 }

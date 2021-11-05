@@ -52,6 +52,12 @@
         "global-require": "off",
         "import/no-extraneous-dependencies": "off"
       }
+    },
+    {
+      "files": ["**/entities/*.ts"],
+      "rules": {
+        "class-methods-use-this": ["error", { "exceptMethods": ["getSafeKeys"] }]
+      }
     }
   ]
 }

@@ -1,8 +1,6 @@
 import { Node } from '../../src/entities/Node';
 
 class TestNode extends Node<TestNode> {
-  SAFE_KEYS: (keyof TestNode)[] = ['field', 'reference'];
-
   field?: string;
 
   sensitive?: string;
@@ -10,6 +8,10 @@ class TestNode extends Node<TestNode> {
   reference?: { id: string; isInitialized: () => boolean };
 
   sensitiveReference?: { id: string; isInitialized: () => boolean };
+
+  getSafeKeys(): (keyof TestNode)[] {
+    return ['field', 'reference'];
+  }
 
   toJSON() {
     return {
@@ -33,7 +35,9 @@ describe('Node', () => {
   });
 
   it('toSafeJson changes initialized references to be just the id and removes keys not in SAFE_KEYS', () => {
-    expect(new TestNode({ field, reference, sensitive, sensitiveReference }).toSafeJSON()).toEqual({
+    expect(
+      new TestNode({ field, reference, sensitive, sensitiveReference }).toSafeJSON({} as any),
+    ).toEqual({
       field,
       reference: { id: reference.id },
     });
