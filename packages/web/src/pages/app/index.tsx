@@ -18,6 +18,19 @@ import { AppLayout } from '../../components/Layout';
 import { AppContainer } from '../../components/AppContainer/AppContainer';
 import { Prizes } from '../../components/Prizes';
 import { Schedule } from '../../components/Schedule';
+import { PopupModal } from '../../components/RemindMe';
+
+const subscribeUser = async () => {
+  const res = await fetch('/api/subscription/subscribe', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!res.ok) {
+    throw new Error();
+  }
+};
 
 const AppHome: NextPage = () => (
   <AppLayout>
@@ -34,7 +47,15 @@ const AppHome: NextPage = () => (
             </Text>
             <HStack spacing={4}>
               <Button colorScheme="blue">Pre-Register</Button>
-              <Button variant="ghost">Remind Me</Button>
+              <PopupModal
+                openModalText="Remind Me"
+                onConfirm={subscribeUser}
+                header="Confirm Notification Subscription"
+                body="By pressing confirm, you will be subscribed to our notification system"
+                openButtonVariant="ghost"
+                succussMessage="You will now be notified of upcoming events via Discord"
+                errorMessage="Something went wrong, please try again later."
+              />
             </HStack>
           </VStack>
           <VStack
