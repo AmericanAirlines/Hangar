@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen } from '../../testUtils/testTools';
 import { Prize, PrizeRow } from '../../../src/components/Prizes/PrizeRow';
-import { Table, Tbody } from '@chakra-ui/table';
 
 const mockPrize: Prize = {
   id: '1',
@@ -25,35 +24,26 @@ describe('Prize Row testing', () => {
   it('renders a normal prize correctly', async () => {
     expect(() =>
       render(
-        <Table>
-          <Tbody>
-            <PrizeRow
-              variant={mockPrize.isBonus ? 'secondary' : 'primary'}
-              place={1}
-              prize={mockPrize}
-            />
-          </Tbody>
-        </Table>,
+        <PrizeRow
+          variant={mockPrize.isBonus ? 'secondary' : 'primary'}
+          index={0}
+          prize={mockPrize}
+        />,
       ),
     ).not.toThrowError();
 
     expect(screen.getByText('first prize')).toBeInTheDocument();
     expect(screen.getByText('a thing')).toBeInTheDocument();
-    expect(screen.getByText('1')).toBeInTheDocument();
   });
 
   it('renders a bonus prize correctly', async () => {
     expect(() =>
       render(
-        <Table>
-          <Tbody>
-            <PrizeRow
-              variant={mockBonusPrize.isBonus ? 'secondary' : 'primary'}
-              place={1}
-              prize={mockBonusPrize}
-            />
-          </Tbody>
-        </Table>,
+        <PrizeRow
+          variant={mockBonusPrize.isBonus ? 'secondary' : 'primary'}
+          index={0}
+          prize={mockBonusPrize}
+        />,
       ),
     ).not.toThrowError();
 
