@@ -42,7 +42,7 @@ const AppHome: NextPage = () => (
             spacing={4}
             width="350px"
             padding={4}
-            backgroundColor={useColorModeValue('gray.50', 'rgba(0, 0, 0, 0.35)')}
+            backgroundColor={useColorModeValue('white', 'gray.950')}
             borderRadius="md"
           >
             <Heading as="h3" size="md">

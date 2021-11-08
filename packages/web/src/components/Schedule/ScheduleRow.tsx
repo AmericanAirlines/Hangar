@@ -1,5 +1,14 @@
 import React from 'react';
-import { Heading, VStack, Text, useDisclosure, Box, Collapse, Icon } from '@chakra-ui/react';
+import {
+  Heading,
+  VStack,
+  Text,
+  useDisclosure,
+  Box,
+  Collapse,
+  Icon,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi';
 import { DateTime } from 'luxon';
 
@@ -51,7 +60,7 @@ export const ScheduleRow: React.FC<ScheduleRowProps> = ({ event }) => {
     <Box
       as="button"
       textAlign="unset"
-      backgroundColor="white"
+      backgroundColor={useColorModeValue('white', 'gray.950')}
       shadow="md"
       padding={4}
       paddingBottom={2}

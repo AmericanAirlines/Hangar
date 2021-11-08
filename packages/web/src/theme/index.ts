@@ -7,6 +7,11 @@ const config: ThemeConfig = {
 
 export const theme = extendTheme({
   config,
+  colors: {
+    gray: {
+      950: '#0f1017',
+    },
+  },
   components: {
     Link: {
       variants: {
