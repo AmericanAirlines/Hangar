@@ -1,7 +1,16 @@
 import React from 'react';
 import { render, screen } from '../../testUtils/testTools';
 import { Prize, PrizeRow } from '../../../src/components/Prizes/PrizeRow';
-import { Table, Tbody } from '@chakra-ui/table';
+
+jest.mock('@chakra-ui/react', () => {
+  const chakra = jest.requireActual('@chakra-ui/react');
+  const MockIconComponent = () => <div data-testid="mock-icon">Mock icon</div>;
+
+  return {
+    ...chakra,
+    Icon: MockIconComponent,
+  };
+});
 
 const mockPrize: Prize = {
   id: '1',
@@ -22,42 +31,23 @@ describe('Prize Row testing', () => {
     jest.clearAllMocks();
   });
 
-  it('renders a normal prize correctly', async () => {
+  it('renders a primary prize with an icon', async () => {
     expect(() =>
-      render(
-        <Table>
-          <Tbody>
-            <PrizeRow
-              variant={mockPrize.isBonus ? 'secondary' : 'primary'}
-              place={1}
-              prize={mockPrize}
-            />
-          </Tbody>
-        </Table>,
-      ),
+      render(<PrizeRow variant="primary" index={0} prize={mockPrize} />),
     ).not.toThrowError();
 
-    expect(screen.getByText('first prize')).toBeInTheDocument();
-    expect(screen.getByText('a thing')).toBeInTheDocument();
-    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.queryByText(mockPrize.name)).toBeVisible();
+    expect(screen.queryByText(mockPrize.description!)).toBeVisible();
+    expect(screen.queryByTestId('mock-icon')).toBeVisible();
   });
 
-  it('renders a bonus prize correctly', async () => {
+  it('renders a secondary prize without an icon', async () => {
     expect(() =>
-      render(
-        <Table>
-          <Tbody>
-            <PrizeRow
-              variant={mockBonusPrize.isBonus ? 'secondary' : 'primary'}
-              place={1}
-              prize={mockBonusPrize}
-            />
-          </Tbody>
-        </Table>,
-      ),
+      render(<PrizeRow variant="secondary" index={0} prize={mockBonusPrize} />),
     ).not.toThrowError();
 
-    expect(screen.getByText('second prize')).toBeInTheDocument();
-    expect(screen.getByText('another thing')).toBeInTheDocument();
+    expect(screen.queryByText(mockBonusPrize.name)).toBeVisible();
+    expect(screen.queryByText(mockBonusPrize.description!)).toBeVisible();
+    expect(screen.queryByTestId('mock-icon')).not.toBeInTheDocument();
   });
 });

@@ -4,7 +4,7 @@ import { Event } from '../entities/Event';
 
 export const events = Router();
 
-events.get('/', async (req, res) => {
+events.get('', async (req, res) => {
   try {
     const availableEvents = await req.entityManager.find(Event, {}, { orderBy: { start: 'ASC' } });
 

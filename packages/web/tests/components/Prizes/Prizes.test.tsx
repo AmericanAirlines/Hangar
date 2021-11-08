@@ -1,59 +1,82 @@
 import React from 'react';
-import { render, screen } from '../../testUtils/testTools';
+import fetchMock from 'fetch-mock-jest';
+import { render, screen, waitFor } from '../../testUtils/testTools';
 import { getMock } from '../../testUtils/getMock';
 import { Prizes } from '../../../src/components/Prizes';
 import { PrizeRow, Prize } from '../../../src/components/Prizes/PrizeRow';
-import { Td, Tr } from '@chakra-ui/react';
 
 jest.mock('../../../src/components/Prizes/PrizeRow.tsx');
+getMock(PrizeRow).mockImplementation(({ prize }) => <div data-testid={prize.id}>prize row</div>);
 
-getMock(PrizeRow).mockImplementation(() => (
-  <Tr>
-    <Td>text</Td>
-  </Tr>
-));
-
-const mockPrize: Prize = {
-  id: '1',
-  name: 'first prize',
-  description: 'the very first one',
-  isBonus: true,
-};
-
-const mockBonusPrize: Prize = {
-  id: '2',
-  name: 'second prize',
-  isBonus: false,
-};
+const mockPrizes: Prize[] = [
+  {
+    id: '1',
+    name: 'first prize',
+    description: 'the very first one',
+    isBonus: true,
+  },
+  {
+    id: '2',
+    name: 'second prize',
+    isBonus: false,
+  },
+];
 
 describe('Prize component testing', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
   });
 
-  it('renders both regular prizes and bonus prizes correctly', async () => {
-    expect(() => render(<Prizes prizes={[mockPrize, mockBonusPrize]} />)).not.toThrowError();
-    expect(PrizeRow).toBeCalledTimes(2);
-    expect(screen.getAllByText('text')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('text')[1]).toBeInTheDocument();
+  it('renders a loading spinner when prizes are being fetched', async () => {
+    fetchMock.getOnce('/api/prizes', mockPrizes);
+
+    render(<Prizes />);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Loading', { exact: false })).toBeVisible();
+    });
   });
 
-  it('renders only bonus prizes if there are only bonus prizes', async () => {
-    expect(() => render(<Prizes prizes={[mockBonusPrize]} />)).not.toThrowError();
-    expect(PrizeRow).toBeCalledTimes(1);
-    expect(screen.getByText('text')).toBeInTheDocument();
+  it('renders a PrizeRow for each prize fetched', async () => {
+    fetchMock.getOnce('/api/prizes', mockPrizes);
+
+    render(<Prizes />);
+
+    await waitFor(() => {
+      expect(PrizeRow).toBeCalledTimes(2);
+    });
+
+    expect(PrizeRow).toHaveBeenCalledWith(
+      expect.objectContaining({ prize: mockPrizes[0] }),
+      expect.anything(),
+    );
+
+    expect(PrizeRow).toHaveBeenCalledWith(
+      expect.objectContaining({ prize: mockPrizes[1] }),
+      expect.anything(),
+    );
+
+    expect(screen.queryByTestId(mockPrizes[0].id)).toBeVisible();
+    expect(screen.queryByTestId(mockPrizes[1].id)).toBeVisible();
   });
 
-  it('renders only normal prizes if there are only normal prizes', async () => {
-    expect(() => render(<Prizes prizes={[mockPrize]} />)).not.toThrowError();
-    expect(PrizeRow).toBeCalledTimes(1);
-    expect(screen.getByText('text')).toBeInTheDocument();
+  it('renders info message if there are no prizes', async () => {
+    fetchMock.getOnce('/api/prizes', []);
+
+    render(<Prizes />);
+
+    await waitFor(async () => {
+      expect(screen.queryByText('Prizes are not visible yet')).toBeVisible();
+    });
   });
 
-  it('does not render anything except a message if there are no prizes', async () => {
-    expect(() => render(<Prizes prizes={[]} />)).not.toThrowError();
-    const errorMessage = "We haven't posted any prizes yet, please check back later!";
-    expect(PrizeRow).toBeCalledTimes(0);
-    expect(screen.getByText(errorMessage)).toBeInTheDocument();
+  it('renders error message if prizes cannot be fetched', async () => {
+    fetchMock.getOnce('/api/prizes', 500);
+
+    render(<Prizes />);
+
+    await waitFor(async () => {
+      expect(screen.queryByText('There was an error fetching prizes')).toBeVisible();
+    });
   });
 });
