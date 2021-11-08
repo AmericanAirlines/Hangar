@@ -24,8 +24,8 @@ interface PopupModalProps {
     | 'unstyled'
     | undefined;
   onConfirm?: () => Promise<void>;
-  succussMessage: string;
-  errorMessage: string;
+  succussMessage?: string;
+  errorMessage?: string;
 }
 
 export const PopupModal: React.FC<PopupModalProps> = ({
@@ -75,11 +75,15 @@ export const PopupModal: React.FC<PopupModalProps> = ({
                   try {
                     setIsLoading(true);
                     await onConfirm();
-                    setModalHeader('Success!!!');
-                    setBodyText(succussMessage);
+                    if (succussMessage) {
+                      setModalHeader('Success !!!');
+                      setBodyText(succussMessage);
+                    }
                   } catch (e) {
-                    setModalHeader('An Error Occurred');
-                    setBodyText(errorMessage);
+                    if (errorMessage) {
+                      setModalHeader('An Error Occurred');
+                      setBodyText(errorMessage);
+                    }
                   } finally {
                     setIsLoading(false);
                     setConfirmButtonVisible(false);
