@@ -14,8 +14,7 @@ import {
 interface PopupModalProps {
   openModalText: String;
   header: String;
-  body: String;
-  openButtonVariant?: 'link' | 'outline' | (string & {}) | 'ghost' | 'solid' | 'unstyled';
+  openButtonVariant?: ButtonProps['variant'];
   onConfirm?: () => Promise<void>;
   succussMessage?: string;
   errorMessage?: string;
@@ -25,23 +24,43 @@ export const PopUpModal: React.FC<PopupModalProps> = ({
   openModalText,
   header,
   openButtonVariant,
-  body,
+  children,
   onConfirm,
   succussMessage,
   errorMessage,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [modalHeader, setModalHeader] = useState(header);
-  const [bodyText, setBodyText] = useState(body);
+  const [bodyText, setBodyText] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [confirmButtonVisible, setConfirmButtonVisible] = useState(true);
+
+  const onConfirmClick = async () => {
+    try {
+      setIsLoading(true);
+      await onConfirm();
+      
+      if (succussMessage) {
+        setModalHeader('Success');
+        setBodyText(succussMessage);
+      } else {
+        onClose();
+      }
+    } catch (err) {
+      setModalHeader('Uh oh');
+      setBodyText(errorMessage ?? err.message);
+    }
+    
+    setIsLoading(false);
+    setConfirmButtonVisible(false);
+  };
 
   return (
     <>
       <Button
         onClick={() => {
           setModalHeader(header);
-          setBodyText(body);
+          setBodyText(undefined);
           setConfirmButtonVisible(true);
           onOpen();
         }}
@@ -55,37 +74,23 @@ export const PopUpModal: React.FC<PopupModalProps> = ({
         <ModalContent>
           <ModalHeader>{modalHeader}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>{bodyText}</ModalBody>
+          <ModalBody>{bodyText ?? children}</ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            {onConfirm && confirmButtonVisible && (
-              <Button
-                isLoading={isLoading}
-                onClick={async () => {
-                  try {
-                    setIsLoading(true);
-                    await onConfirm();
-                    if (succussMessage) {
-                      setModalHeader('Success !!!');
-                      setBodyText(succussMessage);
-                    }
-                  } catch (e) {
-                    if (errorMessage) {
-                      setModalHeader('An Error Occurred');
-                      setBodyText(errorMessage);
-                    }
-                  } finally {
-                    setIsLoading(false);
-                    setConfirmButtonVisible(false);
-                  }
-                }}
-              >
-                Confirm
+            <HStack justifyContent="flex-end">
+              <Button variant="ghost" onClick={onClose}>
+                Close
               </Button>
-            )}
+              {onConfirm && confirmButtonVisible ? (
+                <Button
+                  isLoading={isLoading}
+                  colorScheme="blue"
+                  onClick={onConfirmClick}
+                >
+                  Confirm
+                </Button>
+              ) : null}
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>
