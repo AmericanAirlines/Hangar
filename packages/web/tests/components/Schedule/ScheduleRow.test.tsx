@@ -1,6 +1,6 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { render, screen, waitFor, act } from '../../testUtils/testTools';
+import { render, screen, waitFor } from '../../testUtils/testTools';
 import { ScheduleRow, Event } from '../../../src/components/Schedule/ScheduleRow';
 
 const mockEvent: Event = {

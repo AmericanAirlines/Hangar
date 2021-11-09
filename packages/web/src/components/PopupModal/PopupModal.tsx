@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import {
   Button,
+  ButtonProps,
+  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -38,8 +40,8 @@ export const PopUpModal: React.FC<PopupModalProps> = ({
   const onConfirmClick = async () => {
     try {
       setIsLoading(true);
-      await onConfirm();
-      
+      await onConfirm!();
+
       if (succussMessage) {
         setModalHeader('Success');
         setBodyText(succussMessage);
@@ -48,9 +50,9 @@ export const PopUpModal: React.FC<PopupModalProps> = ({
       }
     } catch (err) {
       setModalHeader('Uh oh');
-      setBodyText(errorMessage ?? err.message);
+      setBodyText(errorMessage ?? (err as Error).message);
     }
-    
+
     setIsLoading(false);
     setConfirmButtonVisible(false);
   };
@@ -82,11 +84,7 @@ export const PopUpModal: React.FC<PopupModalProps> = ({
                 Close
               </Button>
               {onConfirm && confirmButtonVisible ? (
-                <Button
-                  isLoading={isLoading}
-                  colorScheme="blue"
-                  onClick={onConfirmClick}
-                >
+                <Button isLoading={isLoading} colorScheme="blue" onClick={onConfirmClick}>
                   Confirm
                 </Button>
               ) : null}

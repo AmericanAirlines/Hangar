@@ -18,7 +18,7 @@ import { AppLayout } from '../../components/Layout';
 import { AppContainer } from '../../components/AppContainer/AppContainer';
 import { Prizes } from '../../components/Prizes';
 import { Schedule } from '../../components/Schedule';
-import { RemindMeModal } from '../../components/PopupModal/RemindModal';
+import { RemindMeModal } from '../../components/RemindMeModal';
 
 const AppHome: NextPage = () => (
   <AppLayout>

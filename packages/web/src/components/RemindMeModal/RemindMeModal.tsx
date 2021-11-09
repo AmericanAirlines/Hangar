@@ -1,5 +1,5 @@
 import React from 'react';
-import { PopUpModal } from '.';
+import { PopUpModal } from '../PopupModal';
 
 export const RemindMeModal: React.FC = () => {
   const subscribeUser = async () => {
@@ -20,10 +20,11 @@ export const RemindMeModal: React.FC = () => {
       openModalText="Remind Me"
       onConfirm={subscribeUser}
       header="Confirm Notification Subscription"
-      body="By pressing confirm, you will be subscribed to our notification system"
       openButtonVariant="ghost"
       succussMessage="You will now be notified of upcoming events via Discord"
       errorMessage="Something went wrong, please try again later."
-    />
+    >
+      By pressing confirm, you will be subscribed to our notification system
+    </PopUpModal>
   );
 };

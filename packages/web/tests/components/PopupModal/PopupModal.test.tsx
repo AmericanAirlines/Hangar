@@ -16,7 +16,11 @@ describe('Popup Modal', () => {
   const mockConfirmationAction = jest.fn();
 
   it('renders correctly', async () => {
-    render(<PopUpModal openModalText={openModalText} header={headerText} body={bodyText} />);
+    render(
+      <PopUpModal openModalText={openModalText} header={headerText}>
+        {bodyText}
+      </PopUpModal>,
+    );
 
     const openModalButton = screen.getByText(openModalText);
     expect(openModalButton).toBeVisible();
@@ -43,11 +47,12 @@ describe('Popup Modal', () => {
       <PopUpModal
         openModalText={openModalText}
         header={headerText}
-        body={bodyText}
         errorMessage={errorMessage}
         succussMessage={succussMessage}
         onConfirm={mockConfirmationAction}
-      />,
+      >
+        {bodyText}
+      </PopUpModal>,
     );
 
     const openModalButton = screen.getByText(openModalText);
@@ -74,11 +79,12 @@ describe('Popup Modal', () => {
       <PopUpModal
         openModalText={openModalText}
         header={headerText}
-        body={bodyText}
         errorMessage={errorMessage}
         succussMessage={succussMessage}
         onConfirm={mockConfirmationAction}
-      />,
+      >
+        {bodyText}
+      </PopUpModal>,
     );
 
     const openModalButton = screen.getByText(openModalText);
@@ -96,7 +102,7 @@ describe('Popup Modal', () => {
     await waitFor(() => {
       expect(mockConfirmationAction).toBeCalledTimes(1);
       expect(screen.queryByText('Close')).toBeVisible();
-      expect(screen.queryByText('An Error Occurred', { exact: false })).toBeVisible();
+      expect(screen.queryByText('Uh oh', { exact: false })).toBeVisible();
       expect(screen.queryByText(errorMessage)).toBeVisible();
     });
   });
@@ -106,10 +112,11 @@ describe('Popup Modal', () => {
       <PopUpModal
         openModalText={openModalText}
         header={headerText}
-        body={bodyText}
         errorMessage={errorMessage}
         onConfirm={mockConfirmationAction}
-      />,
+      >
+        {bodyText}
+      </PopUpModal>,
     );
 
     const openModalButton = screen.getByText(openModalText);
@@ -128,15 +135,37 @@ describe('Popup Modal', () => {
     });
   });
 
+  it('does not display confirm button if onConfirm is not provided', async () => {
+    render(
+      <PopUpModal
+        openModalText={openModalText}
+        header={headerText}
+        errorMessage={errorMessage}
+        succussMessage={succussMessage}
+      >
+        {bodyText}
+      </PopUpModal>,
+    );
+
+    const openModalButton = screen.getByText(openModalText);
+    expect(openModalButton).toBeVisible();
+    userEvent.click(openModalButton);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Confirm')).toBe(null);
+    });
+  });
+
   it('displays an error message if something occurs when performing confirmation action', async () => {
     render(
       <PopUpModal
         openModalText={openModalText}
         header={headerText}
-        body={bodyText}
         succussMessage={succussMessage}
         onConfirm={mockConfirmationAction}
-      />,
+      >
+        {bodyText}
+      </PopUpModal>,
     );
 
     const openModalButton = screen.getByText(openModalText);
