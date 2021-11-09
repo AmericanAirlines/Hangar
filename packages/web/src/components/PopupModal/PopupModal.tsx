@@ -15,20 +15,13 @@ interface PopupModalProps {
   openModalText: String;
   header: String;
   body: String;
-  openButtonVariant:
-    | 'link'
-    | 'outline'
-    | (string & {})
-    | 'ghost'
-    | 'solid'
-    | 'unstyled'
-    | undefined;
+  openButtonVariant?: 'link' | 'outline' | (string & {}) | 'ghost' | 'solid' | 'unstyled';
   onConfirm?: () => Promise<void>;
   succussMessage?: string;
   errorMessage?: string;
 }
 
-export const PopupModal: React.FC<PopupModalProps> = ({
+export const PopUpModal: React.FC<PopupModalProps> = ({
   openModalText,
   header,
   openButtonVariant,
