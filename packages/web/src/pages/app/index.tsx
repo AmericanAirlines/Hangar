@@ -18,6 +18,7 @@ import { AppLayout } from '../../components/Layout';
 import { AppContainer } from '../../components/AppContainer/AppContainer';
 import { Prizes } from '../../components/Prizes';
 import { Schedule } from '../../components/Schedule';
+import { RemindMeModal } from '../../components/RemindMeModal';
 
 const AppHome: NextPage = () => (
   <AppLayout>
@@ -34,7 +35,7 @@ const AppHome: NextPage = () => (
             </Text>
             <HStack spacing={4}>
               <Button colorScheme="blue">Pre-Register</Button>
-              <Button variant="ghost">Remind Me</Button>
+              <RemindMeModal />
             </HStack>
           </VStack>
           <VStack
