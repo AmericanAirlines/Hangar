@@ -8,6 +8,7 @@ export class Migration20211110195415 extends Migration {
   }
 
   async down(): Promise<void> {
+    this.addSql('alter table "queue-user" drop constraint "queue-user_assignee_foreign";');
     this.addSql('alter table "queue-user" drop column "assignee";');
   }
 }
