@@ -38,7 +38,7 @@ describe('/queue', () => {
         'Content-Type': 'application/json',
       })
       .expect(200);
-    expect(body).toEqual({queue: '2', queueRow: mockQueueUsers[1]});
+    expect(body).toEqual({ queue: '2', queueRow: mockQueueUsers[1] });
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       QueueUser,
       { type: 'Job', status: 'Pending' },

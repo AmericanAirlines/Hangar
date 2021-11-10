@@ -21,7 +21,7 @@ queue.get('/:type', async (req, res) => {
     );
     const queueUser = queueList.filter((queueItem) => queueItem.user.id.includes(user.id));
     const queuePosition = (queueList.indexOf(queueUser[0]) + 1).toString();
-    res.send({queue: queuePosition, queueRow: queueUser[0]});
+    res.send({ queue: queuePosition, queueRow: queueUser[0] });
   } catch (err) {
     const errorMsg = 'There was an issue fetching a list of users from the user queue';
     logger.error(`${errorMsg}: `, err);
