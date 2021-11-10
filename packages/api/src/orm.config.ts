@@ -58,6 +58,17 @@ export default {
   forceUndefined: true,
   debug: env.nodeEnv !== 'production',
   namingStrategy: MongoNamingStrategy, // Camel case property and table names
+  driverOptions: {
+    connection: {
+      ssl:
+        env.nodeEnv === 'production'
+          ? {
+              rejectUnauthorized: false,
+              sslmode: 'require',
+            }
+          : undefined,
+    },
+  },
   pool: {
     min: 2,
     max: 10,
