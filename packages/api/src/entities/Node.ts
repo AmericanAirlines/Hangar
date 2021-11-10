@@ -35,19 +35,21 @@ export abstract class Node<T extends AnyEntity> extends BaseEntity<T, 'id'> {
 
   abstract getSafeKeys(req: Express.Request): Array<keyof T>;
 
-  toSafeJSON(req: Express.Request) {
+  toSafeJSON(req: Express.Request, removeReferences = true) {
+    const safeKeys = ['id', 'createdAt', 'updatedAt', ...this.getSafeKeys(req)];
     const json = this.toJSON();
 
     for (const [key, val] of Object.entries(this) as Array<
       [keyof Node<T>, Node<T>[keyof Node<T>] | IdentifiedReference<AnyNode>]
     >) {
-      if (isReference(val) && val.isInitialized()) {
-        json[key] = { id: val.id };
+      if (safeKeys.includes(key) && isReference(val) && val.isInitialized()) {
+        json[key] = removeReferences
+          ? { id: val.id }
+          : val.getEntity().toSafeJSON(req, removeReferences);
       }
     }
 
     const safeJson: Record<string, any> = {};
-    const safeKeys = ['id', 'createdAt', 'updatedAt', ...this.getSafeKeys(req)];
 
     for (const [key, val] of Object.entries(json)) {
       if (safeKeys.includes(key)) {
