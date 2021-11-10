@@ -1,32 +1,66 @@
-import { Table, Th, Tbody, Thead, TableCaption, Tr, Box, Center } from '@chakra-ui/react';
 import React from 'react';
-import { ScheduleRow } from './ScheduleRow';
-import { Event } from './ScheduleRow';
+import { Center, Spinner, Alert, AlertDescription, AlertIcon, VStack } from '@chakra-ui/react';
+import { Event, ScheduleRow } from './ScheduleRow';
 
-export interface ScheduleProps {
-  events: Event[];
-}
+export const Schedule: React.FC = () => {
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState('');
+  const [events, setEvents] = React.useState<Event[]>([]);
 
-export const Schedule: React.FC<ScheduleProps> = ({ events }) => {
-  return events.length > 0 ? (
-    <Table variant="simple">
-      <Thead>
-        <Tr>
-          <Th>Title</Th>
-          <Th>Start Date</Th>
-          <Th>End Date</Th>
-          <Th>Description</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {events.map((scheduledEvent: Event) => (
-          <ScheduleRow event={scheduledEvent} key={scheduledEvent.name} />
-        ))}
-      </Tbody>
-    </Table>
-  ) : (
-    <Center>
-      <Box>We don&apos;t have anything planned at the moment 😬 Please check back later!</Box>
-    </Center>
+  React.useEffect(() => {
+    const fetchEvents = async () => {
+      const res = await fetch('/api/events');
+
+      try {
+        if (!res.ok) {
+          throw new Error();
+        }
+
+        const data = await res.json();
+        setEvents(data);
+      } catch (err) {
+        setError('There was an error fetching events');
+      }
+
+      setLoading(false);
+    };
+
+    void fetchEvents();
+  }, []);
+
+  if (loading) {
+    return (
+      <Center height={24}>
+        <Spinner />
+      </Center>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert status="error" rounded="2xl">
+        <AlertIcon />
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (events.length === 0) {
+    return (
+      <Alert status="info" rounded="2xl">
+        <AlertIcon />
+        <AlertDescription>
+          We haven&apos;t posted any events yet, please check back later
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  return (
+    <VStack alignItems="stretch" spacing={3}>
+      {events.map((event: Event) => (
+        <ScheduleRow key={event.id} event={event} />
+      ))}
+    </VStack>
   );
 };

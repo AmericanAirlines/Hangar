@@ -4,6 +4,7 @@ import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 
 export type PrizeConstructorValues = ConstructorValues<Prize>;
+type PrizePropertyKeys = keyof PrizeConstructorValues;
 
 @Entity()
 export class Prize extends Node<Prize> {
@@ -24,5 +25,9 @@ export class Prize extends Node<Prize> {
 
     this.name = name;
     this.sortOrder = sortOrder;
+  }
+
+  getSafeKeys(): PrizePropertyKeys[] {
+    return ['name', 'description', 'isBonus'];
   }
 }

@@ -3,7 +3,7 @@ import { UserProfile } from '../../../src/components/userprofile';
 import { UserProfileProps } from '../../../src/components/userprofile/UserProfile';
 import { render, screen } from '../../testUtils/testTools';
 
-const sampleUser: UserProfileProps = {
+const sampleUser: UserProfileProps['user'] = {
   name: 'Steve Job',
   pronouns: 'he/him',
   schoolName: 'Apple University',
@@ -11,7 +11,7 @@ const sampleUser: UserProfileProps = {
 
 describe('Mock UserProfileLayout component', () => {
   it('renders sampleUser', () => {
-    render(<UserProfile {...sampleUser} />);
+    render(<UserProfile user={sampleUser} />);
 
     expect(screen.getByText('Steve Job')).toBeVisible();
     expect(screen.getByText('he/him')).toBeVisible();

@@ -5,6 +5,7 @@ import { Node } from './Node';
 import { User } from './User';
 
 export type QueueUserConstructorValues = ConstructorValues<QueueUser>;
+type QueueUserPropertyKeys = keyof QueueUserConstructorValues;
 
 export enum QueueType {
   Idea = 'Idea',
@@ -35,5 +36,9 @@ export class QueueUser extends Node<QueueUser> {
 
     this.user = user;
     this.type = type;
+  }
+
+  getSafeKeys(): QueueUserPropertyKeys[] {
+    return ['user', 'type', 'status'];
   }
 }

@@ -4,6 +4,7 @@ import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 
 export type EventConstructorValues = ConstructorValues<Event>;
+type EventPropertyKeys = keyof EventConstructorValues;
 
 @Entity()
 export class Event extends Node<Event> {
@@ -26,5 +27,9 @@ export class Event extends Node<Event> {
     this.start = start;
     this.end = end;
     this.description = description;
+  }
+
+  getSafeKeys(): EventPropertyKeys[] {
+    return ['name', 'start', 'end', 'description'];
   }
 }

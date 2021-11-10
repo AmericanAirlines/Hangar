@@ -1,3 +1,4 @@
+import { Handler } from 'express';
 import { users } from '../../src/api/users';
 import { User } from '../../src/entities/User';
 import logger from '../../src/logger';
@@ -10,6 +11,15 @@ const sampleUser: Partial<User> = {
 };
 
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
+
+jest.mock('../../src/middleware/populateUser.ts', () => ({
+  populateUser: jest.fn(
+    (): Handler => (req, _res, next) => {
+      req.userEntity = {} as User;
+      next();
+    },
+  ),
+}));
 
 describe('/users', () => {
   beforeEach(async () => {
@@ -25,7 +35,10 @@ describe('/users', () => {
 
   it('successfully returns a user', async () => {
     const handler = testHandler(users);
-    handler.entityManager.findOne.mockResolvedValueOnce(sampleUser);
+    handler.entityManager.findOne.mockResolvedValueOnce({
+      ...sampleUser,
+      toSafeJSON: () => sampleUser,
+    });
 
     const { body } = await handler.get('/0').expect(200);
 
