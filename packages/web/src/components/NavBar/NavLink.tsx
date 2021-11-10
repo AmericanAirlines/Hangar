@@ -8,6 +8,6 @@ export interface NavLinkProps {
 }
 export const NavLink: React.FC<NavLinkProps> = ({ label, href }) => (
   <NextLink href={href} passHref>
-    <Link variant="navbar">{label}</Link>
+    <Link variant="nav">{label}</Link>
   </NextLink>
 );

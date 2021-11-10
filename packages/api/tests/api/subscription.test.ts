@@ -1,18 +1,20 @@
+import { Handler } from 'express';
 import { subscription } from '../../src/api/subscription';
 import { User } from '../../src/entities/User';
 import logger from '../../src/logger';
-import { populateUser } from '../../src/middleware/populateUser';
-import { getMock } from '../testUtils/getMock';
 import { testHandler } from '../testUtils/testHandler';
 
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
-jest.mock('../../src/middleware/populateUser.ts');
-const mockUser = {} as User;
+const mockUser = { id: 'mocked' } as User;
 
-const populateUserMock = getMock(populateUser).mockImplementation((req, res, next) => {
-  req.userEntity = mockUser as User;
-  next();
-});
+jest.mock('../../src/middleware/populateUser.ts', () => ({
+  populateUser: jest.fn(
+    (): Handler => (req, _res, next) => {
+      req.userEntity = mockUser as User;
+      next();
+    },
+  ),
+}));
 
 describe('/subscriptions', () => {
   beforeEach(async () => {

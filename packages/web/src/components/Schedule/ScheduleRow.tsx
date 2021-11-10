@@ -1,5 +1,15 @@
 import React from 'react';
-import { Tr, Td, VStack, Text } from '@chakra-ui/react';
+import {
+  Heading,
+  VStack,
+  Text,
+  useDisclosure,
+  Box,
+  Collapse,
+  Icon,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi';
 import { DateTime } from 'luxon';
 
 interface ScheduleRowProps {
@@ -14,27 +24,62 @@ export interface Event {
   description: string;
 }
 
-const formatDate = (isoDate: string) => {
-  const luxonDate = DateTime.fromISO(isoDate);
-  const localDate = luxonDate.toFormat('ccc, LLL d, t'); // '2019/10/10'
-  const relativeDate = luxonDate.toRelative() ?? ' '; // 'in 2 days'
+const formatDuration = (start: string, end: string) => {
+  const startDate = DateTime.fromISO(start);
+  const endDate = DateTime.fromISO(end);
+
+  if (!startDate.isValid || !endDate.isValid) {
+    return <Text>TBD</Text>;
+  }
+
+  const localeStart = startDate.toFormat('ccc, LLL d, t'); // Mon, Jan 1, 12:00 PM
+  const localeEnd =
+    startDate.day === endDate.day ? endDate.toFormat('t') : endDate.toFormat('LLL d, t');
+  const hoursAway = startDate.diffNow('hours').hours;
+  const relativeDate = startDate.toRelative()!; // The bang is ONLY here because we check validity above
 
   return (
-    <VStack alignItems="flex-start">
-      <Text>{localDate}</Text>
-      <Text opacity={0.5}>
-        {relativeDate[0].toUpperCase()}
-        {relativeDate.substring(1)}
+    <VStack alignItems="flex-start" spacing={0}>
+      <Text>
+        {localeStart} - {localeEnd}
       </Text>
+      {Math.abs(hoursAway) < 12 ? (
+        <Text fontSize="sm" fontWeight="medium" opacity={0.5}>
+          {relativeDate[0].toUpperCase()}
+          {relativeDate.substring(1)}
+        </Text>
+      ) : null}
     </VStack>
   );
 };
 
-export const ScheduleRow: React.FC<ScheduleRowProps> = ({ event }) => (
-  <Tr>
-    <Td>{event.name}</Td>
-    <Td>{formatDate(event.start)}</Td>
-    <Td>{formatDate(event.end)}</Td>
-    <Td>{event.description}</Td>
-  </Tr>
-);
+export const ScheduleRow: React.FC<ScheduleRowProps> = ({ event }) => {
+  const { isOpen, onToggle } = useDisclosure();
+
+  return (
+    <Box
+      as="button"
+      textAlign="unset"
+      backgroundColor={useColorModeValue('white', 'gray.950')}
+      shadow="md"
+      padding={4}
+      paddingBottom={2}
+      rounded="2xl"
+      onClick={onToggle}
+      title={isOpen ? 'Collapse details' : 'Expand details'}
+    >
+      <VStack alignItems="stretch" spacing={0}>
+        <Heading as="p" size="sm">
+          {event.name}
+        </Heading>
+        <Box>{formatDuration(event.start, event.end)}</Box>
+        <Collapse in={isOpen} animateOpacity>
+          <Text paddingTop={2}>{event.description}</Text>
+        </Collapse>
+        <VStack>
+          <Icon as={isOpen ? HiChevronUp : HiChevronDown} />
+        </VStack>
+      </VStack>
+    </Box>
+  );
+};

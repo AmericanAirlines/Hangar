@@ -1,14 +1,17 @@
 import React from 'react';
-import { HStack, Spacer, useColorModeValue } from '@chakra-ui/react';
+import { HStack, Spacer } from '@chakra-ui/react';
 import { NavLink } from './NavLink';
-import { NavProfileMenu } from './NavProfileMenu';
+import { Logo } from './Logo';
 
 export const NavBar: React.FC = () => (
-  <HStack bg={useColorModeValue('gray.100', 'gray.900')}>
-    <NavLink label="Home" href="/app" />
-    <NavLink label="Community" href="" />
-    <NavLink label="Videos" href="/app/videos" />
+  <HStack as="nav" spacing={8}>
+    <Logo width="70px" />
+    <HStack spacing={0}>
+      <NavLink label="My Project" href="/app" />
+      <NavLink label="Get Help" href="" />
+      <NavLink label="Work at American" href="/app/videos" />
+    </HStack>
     <Spacer />
-    <NavProfileMenu />
+    <NavLink label="Logout" href="/auth/logout" />
   </HStack>
 );

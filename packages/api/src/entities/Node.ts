@@ -13,8 +13,6 @@ const isReference = (val: any): val is IdentifiedReference<AnyNode> =>
   typeof val === 'object' && val && 'isInitialized' in val;
 
 export abstract class Node<T extends AnyEntity> extends BaseEntity<T, 'id'> {
-  abstract SAFE_KEYS: Array<keyof T>;
-
   @PrimaryKey({ type: BigIntType })
   public id!: string;
 
@@ -35,7 +33,9 @@ export abstract class Node<T extends AnyEntity> extends BaseEntity<T, 'id'> {
     }
   }
 
-  toSafeJSON() {
+  abstract getSafeKeys(req: Express.Request): Array<keyof T>;
+
+  toSafeJSON(req: Express.Request) {
     const json = this.toJSON();
 
     for (const [key, val] of Object.entries(this) as Array<
@@ -47,9 +47,10 @@ export abstract class Node<T extends AnyEntity> extends BaseEntity<T, 'id'> {
     }
 
     const safeJson: Record<string, any> = {};
+    const safeKeys = ['id', 'createdAt', 'updatedAt', ...this.getSafeKeys(req)];
 
     for (const [key, val] of Object.entries(json)) {
-      if (this.SAFE_KEYS.includes(key)) {
+      if (safeKeys.includes(key)) {
         safeJson[key] = val;
       }
     }

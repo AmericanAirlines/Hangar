@@ -1,15 +1,15 @@
+import { Alert, AlertDescription, AlertIcon, Center, Spinner, VStack } from '@chakra-ui/react';
 import React from 'react';
-import { Center, Spinner, Alert, AlertDescription, AlertIcon, VStack } from '@chakra-ui/react';
-import { Event, ScheduleRow } from './ScheduleRow';
+import { PrizeRow, Prize } from './PrizeRow';
 
-export const Schedule: React.FC = () => {
+export const Prizes: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState('');
-  const [events, setEvents] = React.useState<Event[]>([]);
+  const [prizes, setPrizes] = React.useState<Prize[]>([]);
 
   React.useEffect(() => {
-    const fetchEvents = async () => {
-      const res = await fetch('/api/events');
+    const fetchPrizes = async () => {
+      const res = await fetch('/api/prizes');
 
       try {
         if (!res.ok) {
@@ -17,15 +17,15 @@ export const Schedule: React.FC = () => {
         }
 
         const data = await res.json();
-        setEvents(data);
+        setPrizes(data);
       } catch (err) {
-        setError('There was an error fetching events');
+        setError('There was an error fetching prizes');
       }
 
       setLoading(false);
     };
 
-    void fetchEvents();
+    void fetchPrizes();
   }, []);
 
   if (loading) {
@@ -45,21 +45,24 @@ export const Schedule: React.FC = () => {
     );
   }
 
-  if (events.length === 0) {
+  if (prizes.length === 0) {
     return (
       <Alert status="info" rounded="2xl">
         <AlertIcon />
-        <AlertDescription>
-          We haven&apos;t posted any events yet, please check back later
-        </AlertDescription>
+        <AlertDescription>Prizes are not visible yet</AlertDescription>
       </Alert>
     );
   }
 
   return (
     <VStack alignItems="stretch" spacing={3}>
-      {events.map((event: Event) => (
-        <ScheduleRow key={event.id} event={event} />
+      {prizes.map((prize: Prize, index: number) => (
+        <PrizeRow
+          variant={prize.isBonus ? 'secondary' : 'primary'}
+          index={index}
+          prize={prize}
+          key={prize.name}
+        />
       ))}
     </VStack>
   );

@@ -13,7 +13,7 @@
     "operator-linebreak": ["off"],
     "import/extensions": ["error", "ignorePackages", { "ts": "never", "tsx": "never" }],
     "import/no-cycle": ["off"],
-    "quotes": ["error", "single"],
+    "quotes": ["error", "single", { "avoidEscape": true }],
     "no-restricted-syntax": [
       "error",
       {

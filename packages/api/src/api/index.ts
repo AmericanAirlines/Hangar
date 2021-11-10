@@ -10,6 +10,6 @@ export const api = Router();
 
 api.use('/health', health);
 api.use('/users', users);
-api.use('/event', events);
+api.use('/events', events);
 api.use('/prizes', prizes);
 api.use('/subscription', subscription);
