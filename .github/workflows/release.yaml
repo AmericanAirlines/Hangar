@@ -7,7 +7,7 @@ on:
 env:
   DOCKER_REGISTRY: registry.heroku.com
   HEROKU_PROCESS_TYPE: web
-  APP_NAME: american-airlines-hackutd
+  APP_NAME: hackutd-hangar
 
 jobs:
   release:
