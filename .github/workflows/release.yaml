@@ -2,10 +2,12 @@ name: Release to Production
 
 on:
   push:
-    branches: [main, v2]
+    branches: [main, v2, actions]
 
 env:
-  DOCKER_REGISTRY: ghcr.io
+  DOCKER_REGISTRY: registry.heroku.com
+  HEROKU_PROCESS_TYPE: web
+  APP_NAME: american-airlines-hackutd
 
 jobs:
   release:
@@ -32,28 +34,31 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ${{ env.DOCKER_REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get Image SHA tag
-        id: getTag
-        run: echo ::set-output name=shaImageTag::sha-${GITHUB_SHA::8}
-
-      - name: Get Docker Image Name
-        uses: actions/github-script@v4
-        id: dockerImageName
-        with:
-          result-encoding: string
-          script: return "${{ github.repository }}".toLowerCase();
+          username: _
+          password: ${{ secrets.HEROKU_API_KEY }}
 
       - name: Docker build
         uses: docker/build-push-action@v2
-        env:
-          DOCKER_IMAGE: ${{ env.DOCKER_REGISTRY }}/${{ steps.dockerImageName.outputs.result }}
         with:
           push: true
-          tags: |
-            ${{ env.DOCKER_IMAGE }}:${{ steps.getTag.outputs.shaImageTag }}
-            ${{ env.DOCKER_IMAGE }}:latest
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}/${{ env.HEROKU_PROCESS_TYPE }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Heroku Set Config and release
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          APP_URL=`heroku apps:info ${{ env.APP_NAME }} -s | grep web_url | cut -d= -f2`
+          APP_URL=${APP_URL%/}
+
+          heroku config:set --app ${{ env.APP_NAME }} \
+            NODE_ENV=production \
+            APP_URL=$APP_URL \
+            \
+            SESSION_SECRET=${{ secrets.SESSION_SECRET }} \
+            DISCORD_CLIENT_ID=${{ secrets.DISCORD_CLIENT_ID }} \
+            DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }} \
+            DISCORD_GUILD_ID=${{ secrets.DISCORD_GUILD_ID }}
+
+          heroku container:release ${{ env.HEROKU_PROCESS_TYPE }} --app ${{ env.APP_NAME }}
