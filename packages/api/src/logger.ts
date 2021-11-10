@@ -2,8 +2,7 @@
 import * as winston from 'winston';
 
 // If `LOG_LEVEL` is not specified, default to `debug` for non-production or `warning` for production
-const level =
-  process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'debug');
+const level = process.env.LOG_LEVEL || (process.env.NODE_ENV === 'production' ? 'info' : 'debug');
 
 const logger = winston.createLogger({
   format: winston.format.combine(
