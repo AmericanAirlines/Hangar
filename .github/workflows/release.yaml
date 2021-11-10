@@ -7,7 +7,6 @@ on:
 env:
   DOCKER_REGISTRY: registry.heroku.com
   HEROKU_PROCESS_TYPE: web
-  APP_NAME: hackutd-hangar
 
 jobs:
   release:
@@ -41,7 +40,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ env.DOCKER_REGISTRY }}/${{ env.APP_NAME }}/${{ env.HEROKU_PROCESS_TYPE }}
+          tags: ${{ env.DOCKER_REGISTRY }}/${{ secrets.APP_NAME }}/${{ env.HEROKU_PROCESS_TYPE }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
@@ -49,10 +48,10 @@ jobs:
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          APP_URL=`heroku apps:info ${{ env.APP_NAME }} -s | grep web_url | cut -d= -f2`
+          APP_URL=`heroku apps:info ${{ secrets.APP_NAME }} -s | grep web_url | cut -d= -f2`
           APP_URL=${APP_URL%/}
 
-          heroku config:set --app ${{ env.APP_NAME }} \
+          heroku config:set --app ${{ secrets.APP_NAME }} \
             NODE_ENV=production \
             APP_URL=$APP_URL \
             \
@@ -61,4 +60,4 @@ jobs:
             DISCORD_CLIENT_SECRET=${{ secrets.DISCORD_CLIENT_SECRET }} \
             DISCORD_GUILD_ID=${{ secrets.DISCORD_GUILD_ID }}
 
-          heroku container:release ${{ env.HEROKU_PROCESS_TYPE }} --app ${{ env.APP_NAME }}
+          heroku container:release ${{ env.HEROKU_PROCESS_TYPE }} --app ${{ secrets.APP_NAME }}
