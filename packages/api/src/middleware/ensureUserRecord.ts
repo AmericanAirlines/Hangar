@@ -13,11 +13,13 @@ export const ensureUserRecord =
   async (req, res, next) => {
     const { user } = req;
     if (user && !user.onboardingComplete && req.originalUrl !== options.redirectUrl) {
-      const userEntity = await options.entityManager.count(User, { authId: user.profile.id });
+      const userExists = await options.entityManager
+        .count(User, { authId: user.profile.id })
+        .then((count) => count > 0);
 
-      user.onboardingComplete = !!userEntity; // They have been onboarded if they have a userEntity object
+      user.onboardingComplete = userExists; // They have been onboarded if they have a userEntity object
 
-      if (!userEntity) {
+      if (!userExists) {
         res.redirect(options.redirectUrl);
         return;
       }
