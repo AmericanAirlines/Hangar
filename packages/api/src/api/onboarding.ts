@@ -5,16 +5,21 @@ import logger from '../logger';
 export const onboarding = Router();
 
 onboarding.post('', async (req, res) => {
-  const { name, email: rawEmail } = req.body;
-  const email = (rawEmail as string | undefined)?.toLowerCase();
+  const { name = '', email: rawEmail = '' } = req.body;
+  const email = (rawEmail as string).toLowerCase();
 
   if ([name, email].some((val) => !val)) {
     res.status(400).send('All onboarding fields are required');
     return;
   }
 
+  if (!email.match(/.edu$/)) {
+    res.status(400).send('Email must be a valid student email ending in .edu');
+    return;
+  }
+
   const { user } = req;
-  /* instanbul ignore next */
+  /* istanbul ignore next */
   if (!user) {
     // This shouldn't be possible - this is a session-protected endpoint
     res.sendStatus(500);

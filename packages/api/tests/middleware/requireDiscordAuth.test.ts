@@ -1,5 +1,5 @@
 import { User } from '../../src/entities/User';
-import { ensureUserRecord } from '../../src/middleware/ensureUserRecord';
+import { requireAuthAndOnboarding } from '../../src/middleware/requireAuthAndOnboarding';
 import { testHandler } from '../testUtils/testHandler';
 import { createTestRouter } from '../testUtils/createTestRouter';
 
@@ -7,18 +7,15 @@ const mockEntityManager = {
   count: jest.fn(),
 };
 
-describe('Ensure User Record middleware', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('passes through when there is no session', async () => {
-    const router = createTestRouter((req, _res, next) => {
+describe('requireAuthAndOnboarding middleware', () => {
+  it('redirects when there is no session', async () => {
+    const router = createTestRouter((req, res, next) => {
       req.user = undefined;
       next();
-    }, ensureUserRecord({ entityManager: mockEntityManager as any, redirectUrl: '' }));
+    }, requireAuthAndOnboarding({ entityManager: mockEntityManager as any, onboardingUrl: '' }));
 
-    await testHandler(router).get('/').expect(200);
+    const res = await testHandler(router).get('/').expect(302);
+    expect(res.headers.location).toEqual('/auth/discord');
   });
 
   it('passes through when onboarding is already completed', async () => {
@@ -27,22 +24,23 @@ describe('Ensure User Record middleware', () => {
         onboardingComplete: true,
       } as any;
       next();
-    }, ensureUserRecord({ entityManager: mockEntityManager as any, redirectUrl: '' }));
+    }, requireAuthAndOnboarding({ entityManager: mockEntityManager as any, onboardingUrl: '' }));
 
     expect(mockEntityManager.count).not.toHaveBeenCalled();
     await testHandler(router).get('/').expect(200);
   });
 
-  it('passes through when the url is the same as the redirect url', async () => {
+  it('redirects to /app when onboarding is complete and the url matches the onboarding url', async () => {
     const router = createTestRouter((req, _res, next) => {
       req.user = {
         onboardingComplete: true,
       } as any;
       next();
-    }, ensureUserRecord({ entityManager: mockEntityManager as any, redirectUrl: '/' }));
+    }, requireAuthAndOnboarding({ entityManager: mockEntityManager as any, onboardingUrl: '/' }));
 
     expect(mockEntityManager.count).not.toHaveBeenCalled();
-    await testHandler(router).get('/').expect(200);
+    const res = await testHandler(router).get('/').expect(302);
+    expect(res.headers.location).toEqual('/app');
   });
 
   it('passes through when there is a session and a user entity', async () => {
@@ -57,7 +55,7 @@ describe('Ensure User Record middleware', () => {
     const router = createTestRouter((req, _res, next) => {
       req.user = mockUser as any;
       next();
-    }, ensureUserRecord({ entityManager: mockEntityManager as any, redirectUrl: '' }));
+    }, requireAuthAndOnboarding({ entityManager: mockEntityManager as any, onboardingUrl: '' }));
 
     await testHandler(router).get('').expect(200);
 
@@ -68,7 +66,7 @@ describe('Ensure User Record middleware', () => {
   });
 
   it('redirects when there is a session, but no user entity', async () => {
-    const mockRedirectUrl = '/wow';
+    const mockOnboardingUrl = '/wow';
     const mockUser: Partial<Express.User> = {
       profile: {
         id: '123123',
@@ -79,9 +77,9 @@ describe('Ensure User Record middleware', () => {
     const router = createTestRouter((req, _res, next) => {
       req.user = mockUser as any;
       next();
-    }, ensureUserRecord({ entityManager: mockEntityManager as any, redirectUrl: mockRedirectUrl }));
+    }, requireAuthAndOnboarding({ entityManager: mockEntityManager as any, onboardingUrl: mockOnboardingUrl }));
 
-    await testHandler(router).get('/').expect('Location', mockRedirectUrl).expect(302);
+    await testHandler(router).get('/').expect('Location', mockOnboardingUrl).expect(302);
 
     expect(mockEntityManager.count).toHaveBeenCalledTimes(1);
     expect(mockEntityManager.count).toHaveBeenCalledWith(User, { authId: mockUser.profile!.id });

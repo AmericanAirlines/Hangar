@@ -11,6 +11,9 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Alert,
+  AlertTitle,
+  AlertIcon,
 } from '@chakra-ui/react';
 
 type OnboardingFormValues = yup.InferType<typeof onboardingFormSchema>;
@@ -23,8 +26,6 @@ const onboardingFormSchema = yup.object({
     .matches(/edu$/i, { message: 'Email must be a student email ending in .edu' })
     .required('Student email is required'),
 });
-
-// TODO: Test to see if asdasd90@edu is valid
 
 const OnboardingPage: React.FC = () => {
   const [errorText, setErrorText] = React.useState<string | undefined>(undefined);
@@ -62,9 +63,11 @@ const OnboardingPage: React.FC = () => {
     },
   });
 
-  if (formik.submitCount && !validateWhileTyping) {
-    setValidateWhileTyping(true);
-  }
+  React.useEffect(() => {
+    if (formik.submitCount && !validateWhileTyping) {
+      setValidateWhileTyping(true);
+    }
+  }, [formik.submitCount, validateWhileTyping]);
 
   return (
     <VStack mt={10} spacing={10}>
@@ -82,11 +85,9 @@ const OnboardingPage: React.FC = () => {
       >
         <VStack minWidth={10} alignItems="flex-end">
           <FormControl id="name">
-            <FormLabel htmlFor="name">Name</FormLabel>
+            <FormLabel>Name</FormLabel>
             <Input
-              id="name"
               type="text"
-              name="name"
               autoComplete="off"
               placeholder="Some Hacker"
               disabled={formik.isSubmitting}
@@ -96,14 +97,14 @@ const OnboardingPage: React.FC = () => {
             />
             <FormHelperText>What&apos;s your full name?</FormHelperText>
             <FormHelperText color="red.400">{formik.errors.name}&nbsp;</FormHelperText>
+          </FormControl>
 
-            <FormLabel htmlFor="email">Student Email</FormLabel>
+          <FormControl id="email">
+            <FormLabel>Student Email</FormLabel>
             <Input
-              id="email"
               type="email"
-              name="email"
               autoComplete="off"
-              placeholder="learn.stuff@school.edu"
+              placeholder="first.last@school.edu"
               disabled={formik.isSubmitting}
               value={formik.values.email}
               onChange={formik.handleChange}
@@ -115,9 +116,14 @@ const OnboardingPage: React.FC = () => {
           <Button type="submit" isLoading={formik.isSubmitting}>
             Submit
           </Button>
+          {errorText ? (
+            <Alert status="error" rounded="2xl">
+              <AlertIcon />
+              <AlertTitle mr={2}>{errorText}</AlertTitle>
+            </Alert>
+          ) : null}
         </VStack>
       </form>
-      {errorText ? <Heading color="red.500"> {errorText} </Heading> : null}
     </VStack>
   );
 };

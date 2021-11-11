@@ -8,7 +8,7 @@ import { env } from './env';
 import { api } from './api';
 import { initDatabase } from './database';
 import logger from './logger';
-import { ensureUserRecord } from './middleware/ensureUserRecord';
+import { requireAuthAndOnboarding } from './middleware/requireAuthAndOnboarding';
 
 export class PassportVerifyError extends Error {}
 
@@ -99,17 +99,10 @@ void (async () => {
   }) as ErrorRequestHandler);
 
   app.all(
-    '/app',
-    (req, res, next) => {
-      if (req.user) {
-        next();
-      } else {
-        res.redirect('/auth/discord');
-      }
-    },
-    ensureUserRecord({
+    '/app*',
+    requireAuthAndOnboarding({
       entityManager: orm.em.fork(),
-      redirectUrl: '/app/onboarding',
+      onboardingUrl: '/app/onboarding',
     }),
     webHandler,
   );
