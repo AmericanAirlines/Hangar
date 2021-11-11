@@ -29,6 +29,7 @@ const onboardingFormSchema = yup.object({
 
 const OnboardingPage: React.FC = () => {
   const [errorText, setErrorText] = React.useState<string | undefined>(undefined);
+  const [isRedirecting, setIsRedirecting] = React.useState(false);
   const [validateWhileTyping, setValidateWhileTyping] = React.useState(false);
 
   const formik = useFormik<OnboardingFormValues>({
@@ -58,6 +59,8 @@ const OnboardingPage: React.FC = () => {
         setErrorText(text);
         return;
       }
+
+      setIsRedirecting(true);
 
       window.location.href = '/app';
     },
@@ -113,7 +116,7 @@ const OnboardingPage: React.FC = () => {
             <FormHelperText>What&apos;s your student email?</FormHelperText>
             <FormHelperText color="red.400">{formik.errors.email}&nbsp;</FormHelperText>
           </FormControl>
-          <Button type="submit" isLoading={formik.isSubmitting}>
+          <Button type="submit" isLoading={formik.isSubmitting || isRedirecting}>
             Submit
           </Button>
           {errorText ? (

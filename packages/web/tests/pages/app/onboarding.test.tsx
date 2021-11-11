@@ -105,6 +105,7 @@ describe('/app/onboarding', () => {
           body: JSON.stringify({ name, email }),
         }),
       );
+      expect(submitButton).toBeDisabled();
       expect(window.location.href).toEqual('');
       expect(screen.queryByText(errorText)).toBeVisible();
     });
