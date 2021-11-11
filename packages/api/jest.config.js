@@ -5,6 +5,7 @@ module.exports = {
   moduleFileExtensions: ['js', 'json', 'ts'],
   testMatch: ['**/*.test.ts'],
   setupFilesAfterEnv: ['./tests/setupTests.ts'],
+  clearMocks: true,
   testPathIgnorePatterns: ['/node_modules/'],
   coverageDirectory: './coverage',
   collectCoverageFrom: [

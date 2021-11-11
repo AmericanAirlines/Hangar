@@ -8,7 +8,7 @@ import { env } from './env';
 import { api } from './api';
 import { initDatabase } from './database';
 import logger from './logger';
-import { User } from './entities/User';
+import { requireAuthAndOnboarding } from './middleware/requireAuthAndOnboarding';
 
 export class PassportVerifyError extends Error {}
 
@@ -18,6 +18,8 @@ const dev = env.nodeEnv === 'development';
 
 void (async () => {
   const orm = await initDatabase();
+
+  app.use(express.json());
 
   app.use(session({ secret: env.sessionSecret }));
   app.use(passport.initialize());
@@ -32,14 +34,6 @@ void (async () => {
         scope: ['identify', 'email', 'guilds'],
       },
       async (accessToken, refreshToken, profile, done) => {
-        const entityManager = orm.em.fork();
-        const count = await entityManager.count(User, { authId: profile.id });
-
-        if (count === 0) {
-          const newUser = new User({ authId: profile.id, name: profile.username });
-          await entityManager.persistAndFlush(newUser);
-        }
-
         const isMemberOfEventGuild = (profile.guilds ?? [])
           .map((guild) => guild.id)
           .includes(env.discordGuildId);
@@ -105,14 +99,11 @@ void (async () => {
   }) as ErrorRequestHandler);
 
   app.all(
-    '/app',
-    (req, res, next) => {
-      if (req.user) {
-        next();
-      } else {
-        res.redirect('/auth/discord');
-      }
-    },
+    '/app*',
+    requireAuthAndOnboarding({
+      entityManager: orm.em.fork(),
+      onboardingUrl: '/app/onboarding',
+    }),
     webHandler,
   );
   app.all('*', webHandler);
