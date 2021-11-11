@@ -50,7 +50,7 @@ export const RegistrationForm: React.FC = () => {
   const RegistrationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     description: Yup.string(),
-    tableNumber: Yup.number(),
+    tableNumber: Yup.number().typeError('table number need to be digits'),
   });
 
   const formik = useFormik({
@@ -126,7 +126,7 @@ export const RegistrationForm: React.FC = () => {
           />
           <FormHelperText color="red.500">{formik.errors.tableNumber}&nbsp;</FormHelperText>
         </FormControl>
-        <Button type="submit" className="btn btn-primary btn-block mb-5">
+        <Button type="submit" className="btn btn-primary btn-block mb-5" lo>
           Submit
         </Button>
         {serverError !== '' ? (
