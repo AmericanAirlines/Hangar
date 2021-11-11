@@ -80,13 +80,10 @@ const OnboardingPage: React.FC = () => {
       </Box>
 
       <form
-        style={{
-          minWidth: '20%',
-        }}
         onSubmit={formik.handleSubmit}
         onReset={formik.handleReset}
       >
-        <VStack minWidth={10} alignItems="flex-end">
+        <VStack minWidth={10} alignItems="flex-end" maxWidth="300px" width="100%" paddingX={4}>
           <FormControl id="name">
             <FormLabel>Name</FormLabel>
             <Input
