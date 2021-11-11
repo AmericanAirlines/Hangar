@@ -10,6 +10,7 @@ module.exports = {
   testMatch: ['**/*.test.{ts,tsx}'],
   testPathIgnorePatterns: ['/node_modules/'],
   setupFilesAfterEnv: ['./tests/setupTests.ts'],
+  clearMocks: true,
   coverageDirectory: './coverage',
   collectCoverageFrom: [
     // To ignore an individual file add this on line one `/* istanbul ignore file */`
