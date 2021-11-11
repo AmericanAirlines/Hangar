@@ -6,11 +6,10 @@ import { testHandler } from '../testUtils/testHandler';
 const mockReturnUsers = [
   {
     user: { id: '25' },
-
   },
   {
     user: { id: '26' },
-  }
+  },
 ];
 
 const mockQueueUsers = [
@@ -21,9 +20,8 @@ const mockQueueUsers = [
   {
     user: { id: '26' },
     toSafeJSON: jest.fn().mockReturnValue(mockReturnUsers[1]),
-  }
+  },
 ];
-
 
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
 
@@ -35,13 +33,14 @@ describe('/queue', () => {
   it('successfully returns the position in queue of a given queue type', async () => {
     const handler = testHandler(queue);
     handler.entityManager.find.mockResolvedValueOnce(mockQueueUsers);
-    const { body } = await handler
-      .get('/Job')
-      .expect(200);
+    const { body } = await handler.get('/Job').expect(200);
     expect(body).toEqual(mockReturnUsers);
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       QueueUser,
-      { $or: [ { status: { $eq: 'Pending'},}, { status: { $eq: 'InProgress'},}], $and: [{type: 'Job'}]},
+      {
+        $or: [{ status: { $eq: 'Pending' } }, { status: { $eq: 'InProgress' } }],
+        $and: [{ type: 'Job' }],
+      },
       { orderBy: { createdAt: 'ASC' } },
     );
   });
@@ -56,9 +55,7 @@ describe('/queue', () => {
   it('throws a 500 if there is an issue with fetching a list of queue items', async () => {
     const handler = testHandler(queue);
     handler.entityManager.find.mockRejectedValueOnce(new Error('Error has occurred'));
-    const { text } = await handler
-      .get('/Job')
-      .expect(500);
+    const { text } = await handler.get('/Job').expect(500);
 
     expect(text).toEqual('There was an issue fetching a list of users from the queue');
     expect(loggerSpy).toBeCalledTimes(1);

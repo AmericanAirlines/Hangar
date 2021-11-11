@@ -20,7 +20,7 @@ queue.get('/:type', async (req, res) => {
       },
       { orderBy: { createdAt: 'ASC' } },
     );
-    res.send(queueList.map(queueItem => queueItem.toSafeJSON(req, false)));
+    res.send(queueList.map((queueItem) => queueItem.toSafeJSON(req, false)));
   } catch (err) {
     const errorMsg = 'There was an issue fetching a list of users from the queue';
     logger.error(`${errorMsg}: `, err);
