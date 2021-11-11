@@ -40,7 +40,7 @@ export const RegistrationForm: React.FC = () => {
         setProject(data);
       } catch (err) {
         // TODO print/log error message to show we were unable to pull their project data
-        setProject({ name: '' });
+        setProject({});
       }
     };
 
