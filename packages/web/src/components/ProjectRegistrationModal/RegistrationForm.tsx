@@ -48,7 +48,7 @@ export const RegistrationForm: React.FC = () => {
   }, []);
 
   const RegistrationSchema = Yup.object().shape({
-    name: Yup.string(),
+    name: Yup.string().required('Name is required'),
     description: Yup.string(),
     tableNumber: Yup.number(),
   });
@@ -92,11 +92,11 @@ export const RegistrationForm: React.FC = () => {
           <Input
             type="text"
             placeholder="Your project name"
-            required={true}
             value={formik.values.name ?? project.name}
-            isInvalid={Boolean(formik.errors.name)}
+            isInvalid={!!formik.errors.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            disabled={formik.isSubmitting}
           />
           <FormHelperText color="red.500">{formik.errors.name}&nbsp;</FormHelperText>
         </FormControl>
@@ -106,9 +106,10 @@ export const RegistrationForm: React.FC = () => {
             type="text"
             placeholder="My project will..."
             value={formik.values.description ?? project.description}
-            isInvalid={Boolean(formik.errors.description)}
+            isInvalid={!!formik.errors.description}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            disabled={formik.isSubmitting}
           />
           <FormHelperText color="red.500">{formik.errors.description}&nbsp;</FormHelperText>
         </FormControl>
@@ -118,9 +119,10 @@ export const RegistrationForm: React.FC = () => {
             type="text"
             placeholder="Enter value..."
             value={formik.values.tableNumber ?? project.tableNumber}
-            isInvalid={Boolean(formik.errors.tableNumber)}
+            isInvalid={!!formik.errors.tableNumber}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            disabled={formik.isSubmitting}
           />
           <FormHelperText color="red.500">{formik.errors.tableNumber}&nbsp;</FormHelperText>
         </FormControl>
