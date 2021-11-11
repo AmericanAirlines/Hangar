@@ -73,17 +73,14 @@ const OnboardingPage: React.FC = () => {
   }, [formik.submitCount, validateWhileTyping]);
 
   return (
-    <VStack mt={10} spacing={10}>
-      <Box>
-        <Heading>Welcome to Hangar 👋</Heading>
-        <Text>Before we get started, we need just a little more info 👇</Text>
+    <VStack mt={10} spacing={10} alignItems="stretch">
+      <Box maxWidth="500px" width="100%" mx="auto">
+        <Heading textAlign="center">Welcome to Hangar 👋</Heading>
+        <Text textAlign="center">Before we get started, we need just a little more info 👇</Text>
       </Box>
 
-      <form
-        onSubmit={formik.handleSubmit}
-        onReset={formik.handleReset}
-      >
-        <VStack minWidth={10} alignItems="flex-end" maxWidth="300px" width="100%" paddingX={4}>
+      <form onSubmit={formik.handleSubmit} onReset={formik.handleReset}>
+        <VStack maxWidth="500px" width="100%" mx="auto">
           <FormControl id="name">
             <FormLabel>Name</FormLabel>
             <Input
