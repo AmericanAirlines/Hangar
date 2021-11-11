@@ -22,7 +22,6 @@ queue.get('/:type', async (req, res) => {
     );
     res.send(queueList.map(queueItem => queueItem.toSafeJSON(req, false)));
   } catch (err) {
-    console.log(err);
     const errorMsg = 'There was an issue fetching a list of users from the queue';
     logger.error(`${errorMsg}: `, err);
     res.status(500).send(errorMsg);

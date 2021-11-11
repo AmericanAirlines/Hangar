@@ -3,14 +3,27 @@ import { QueueUser } from '../../src/entities/QueueUser';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
-const mockQueueUsers = [
+const mockReturnUsers = [
   {
     user: { id: '25' },
+
   },
   {
     user: { id: '26' },
   }
 ];
+
+const mockQueueUsers = [
+  {
+    user: { id: '25' },
+    toSafeJSON: jest.fn().mockReturnValue(mockReturnUsers[0]),
+  },
+  {
+    user: { id: '26' },
+    toSafeJSON: jest.fn().mockReturnValue(mockReturnUsers[1]),
+  }
+];
+
 
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
 
@@ -25,7 +38,7 @@ describe('/queue', () => {
     const { body } = await handler
       .get('/Job')
       .expect(200);
-    expect(body).toEqual(mockQueueUsers);
+    expect(body).toEqual(mockReturnUsers);
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       QueueUser,
       { $or: [ { status: { $eq: 'Pending'},}, { status: { $eq: 'InProgress'},}], $and: [{type: 'Job'}]},
