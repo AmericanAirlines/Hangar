@@ -20,6 +20,7 @@ interface ProjectProps {
   description?: string;
   tableNumber?: number;
 }
+
 export const RegistrationForm: React.FC = () => {
   const [serverError, setServerError] = useState('');
   const [project, setProject] = useState<ProjectProps>({});
