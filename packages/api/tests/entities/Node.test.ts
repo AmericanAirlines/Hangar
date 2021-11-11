@@ -5,7 +5,12 @@ class TestNode extends Node<TestNode> {
 
   sensitive?: string;
 
-  reference?: { id: string; isInitialized: () => boolean };
+  reference?: {
+    id: string;
+    isInitialized: () => boolean;
+    getEntity: () => any;
+    toSafeJSON: () => any;
+  };
 
   sensitiveReference?: { id: string; isInitialized: () => boolean };
 
@@ -25,7 +30,14 @@ class TestNode extends Node<TestNode> {
 
 const field = 'hello';
 const sensitive = 'password123';
-const reference = { id: 'user123', otherKey: 'wow', isInitialized: () => true };
+const mockedToSafeJSONReference = { id: 'safe-ref' };
+const reference = {
+  id: 'user123',
+  otherKey: 'wow',
+  isInitialized: () => true,
+  getEntity: () => reference,
+  toSafeJSON: jest.fn(() => mockedToSafeJSONReference),
+};
 const sensitiveReference = { id: 'admin123', otherKey: 'wow', isInitialized: () => true };
 
 describe('Node', () => {
@@ -41,5 +53,17 @@ describe('Node', () => {
       field,
       reference: { id: reference.id },
     });
+  });
+
+  it('toSafeJson with removeReferences set to false calls toSafeJSON on the entity', () => {
+    const mockReq = { mockReq: 'mock' } as any;
+    expect(
+      new TestNode({ field, reference, sensitive, sensitiveReference }).toSafeJSON(mockReq, false),
+    ).toEqual({
+      field,
+      reference: mockedToSafeJSONReference,
+    });
+
+    expect(reference.toSafeJSON).toHaveBeenCalledWith(mockReq, false);
   });
 });

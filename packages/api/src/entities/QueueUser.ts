@@ -25,6 +25,9 @@ export class QueueUser extends Node<QueueUser> {
   @ManyToOne(() => User)
   user: IdentifiedReference<User>;
 
+  @ManyToOne(() => User, { nullable: true })
+  assignee?: IdentifiedReference<User>;
+
   @Enum({ columnType: 'text' })
   type: QueueType;
 
