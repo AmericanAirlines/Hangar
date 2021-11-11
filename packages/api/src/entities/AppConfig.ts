@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 import { Entity, Property } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/knex';
-import { initDatabase } from '../database';
 import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 
