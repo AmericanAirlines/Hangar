@@ -6,7 +6,6 @@ import {
   VStack,
   useColorModeValue,
   Box,
-  Button,
   List,
   ListItem,
   ListIcon,
@@ -19,6 +18,7 @@ import { AppContainer } from '../../components/AppContainer/AppContainer';
 import { Prizes } from '../../components/Prizes';
 import { Schedule } from '../../components/Schedule';
 import { RemindMeModal } from '../../components/RemindMeModal';
+import { RegistrationModal } from '../../components/ProjectRegistrationModal';
 
 const AppHome: NextPage = () => (
   <AppLayout>
@@ -34,7 +34,7 @@ const AppHome: NextPage = () => (
               register on this site.
             </Text>
             <HStack spacing={4}>
-              <Button colorScheme="blue">Pre-Register</Button>
+              <RegistrationModal />
               <RemindMeModal />
             </HStack>
           </VStack>
