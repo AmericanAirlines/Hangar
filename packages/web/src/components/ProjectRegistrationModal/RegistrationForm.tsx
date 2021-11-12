@@ -51,7 +51,7 @@ export const RegistrationForm: React.FC = () => {
   const RegistrationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     description: Yup.string(),
-    tableNumber: Yup.number().typeError('table number need to be digi'),
+    tableNumber: Yup.number().typeError('Table number must be an integer'),
   });
 
   const formik = useFormik({
