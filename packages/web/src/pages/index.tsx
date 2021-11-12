@@ -1,5 +1,5 @@
 import { NextPage } from 'next';
-import { Link, Button, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import { Link, Button, Heading, HStack, Text, VStack, useColorModeValue } from '@chakra-ui/react';
 import { MarketingLayout } from '../components/Layout';
 
 const Home: NextPage = () => (
@@ -15,6 +15,7 @@ const Home: NextPage = () => (
           href="https://github.com/AmericanAirlines/Hangar"
           isExternal
           color="teal.500"
+          textDecoration={useColorModeValue('underline', 'none')}
         >
           Open Source
         </Link>{' '}
@@ -28,9 +29,9 @@ const Home: NextPage = () => (
         <Button
           as="a"
           size="lg"
-          colorScheme="blue"
+          colorScheme={useColorModeValue('teal', 'blue')}
           href="/app"
-          variant="outline"
+          variant={useColorModeValue('solid', 'outline')}
           p="7"
           fontWeight="bold"
           borderRadius="10px"
