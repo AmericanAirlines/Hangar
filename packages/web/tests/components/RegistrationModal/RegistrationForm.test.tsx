@@ -29,7 +29,7 @@ describe('Registration Form', () => {
 
   it('submits form with correct values', async () => {
     fetchMock.getOnce('/api/project/', mockProject);
-    fetchMock.postOnce('/api/project/register', 200);
+    fetchMock.postOnce('/api/projects/', 200);
     const { getByLabelText, getByRole } = render(<RegistrationForm />);
     userEvent.type(getByLabelText(/name/i), 'A new name');
     userEvent.type(getByLabelText(/description/i), 'A new description');
@@ -47,7 +47,7 @@ describe('Registration Form', () => {
 
   it('displays an error if the registration call fails', async () => {
     fetchMock.getOnce('/api/project/', mockProject);
-    fetchMock.postOnce('/api/project/register', 500);
+    fetchMock.postOnce('/api/projects/', 500);
     const { getByLabelText, getByRole, queryByText } = render(<RegistrationForm />);
     userEvent.type(getByLabelText(/name/i), 'A new name');
     userEvent.type(getByLabelText(/description/i), 'A new description');
@@ -73,7 +73,7 @@ describe('Registration Form', () => {
 
   it('removes the server error when the user clicks the close button', async () => {
     fetchMock.getOnce('/api/project/', mockProject);
-    fetchMock.postOnce('/api/project/register', 500);
+    fetchMock.postOnce('/api/projects/', 500);
     const { getByLabelText, getByRole, queryByText, getByTestId } = render(<RegistrationForm />);
     userEvent.type(getByLabelText(/name/i), 'A new name');
     userEvent.type(getByLabelText(/description/i), 'A new description');

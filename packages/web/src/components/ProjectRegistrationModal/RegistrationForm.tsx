@@ -41,7 +41,7 @@ export const RegistrationForm: React.FC = () => {
         setProject(data);
       } catch (err) {
         // TODO print/log error message to show we were unable to pull their project data
-        window.alert(`Something went wrong, while trying to load your project ${res.statusText}`);
+        alert(`Something went wrong, while trying to load your project ${res.statusText}`);
       }
     };
 
@@ -64,7 +64,7 @@ export const RegistrationForm: React.FC = () => {
     validateOnBlur: validateWhileTyping,
     validateOnChange: validateWhileTyping,
     async onSubmit(values) {
-      const res = await fetch('/api/project/register', {
+      const res = await fetch('/api/projects/', {
         method: 'POST',
         body: JSON.stringify({
           inputConfig: values,
