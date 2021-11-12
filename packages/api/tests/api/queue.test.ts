@@ -76,6 +76,7 @@ describe('/queue', () => {
 
   it('successfully adds a user to a queue given a specific type', async () => {
     const handler = testHandler(queue);
+    handler.entityManager.find.mockResolvedValueOnce([]);
     const type = 'Idea';
     await handler
       .post('/join')
@@ -96,8 +97,35 @@ describe('/queue', () => {
     expect(text).toEqual(invalidQueueMsg);
   });
 
+  it('will return a 409 if the user is already in a queue', async () => {
+    const handler = testHandler(queue);
+    handler.entityManager.find.mockResolvedValueOnce(mockQueueUsers);
+    const type = 'Idea';
+    const alreadyInQueueMsg = 'It appears that you are already waiting in a queue!';
+    const { text } = await handler
+      .post('/join')
+      .send({ type })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(409);
+    expect(text).toEqual(alreadyInQueueMsg);
+  });
+
+  it('will return a 500 if there is an issue with checking whether or not the user is already in a queue', async () => {
+    const handler = testHandler(queue);
+    handler.entityManager.find.mockRejectedValueOnce('err');
+    const type = 'Idea';
+    const errMsgFind = 'There was an issue with checking if the user is already in a queue';
+    const { text } = await handler
+      .post('/join')
+      .send({ type })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(500);
+    expect(text).toEqual(errMsgFind);
+  });
+
   it('will return a 500 if there is an issue with adding a user to the queue', async () => {
     const handler = testHandler(queue);
+    handler.entityManager.find.mockResolvedValueOnce([]);
     handler.entityManager.persistAndFlush.mockRejectedValueOnce('err');
     const type = 'Idea';
     const errMsg = 'There was an issue adding a user to a queue';
