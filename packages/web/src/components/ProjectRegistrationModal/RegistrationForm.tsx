@@ -91,7 +91,7 @@ export const RegistrationForm: React.FC = () => {
           <FormLabel>Name</FormLabel>
           <Input
             type="text"
-            placeholder="Your project name"
+            placeholder="American Mac App"
             value={formik.values.name ?? project.name}
             isInvalid={!!formik.errors.name}
             onChange={formik.handleChange}
@@ -104,7 +104,7 @@ export const RegistrationForm: React.FC = () => {
           <FormLabel>Description</FormLabel>
           <Input
             type="text"
-            placeholder="My project will..."
+            placeholder="With the new American Airlines Mac app, you get the information you need exactly when you need it. Curious about traffic to the airport? Wondering if a better seat is available? All this and more is at your fingertips."
             value={formik.values.description ?? project.description}
             isInvalid={!!formik.errors.description}
             onChange={formik.handleChange}
@@ -117,7 +117,7 @@ export const RegistrationForm: React.FC = () => {
           <FormLabel>Table Number</FormLabel>
           <Input
             type="text"
-            placeholder="Enter value..."
+            placeholder="42"
             value={formik.values.tableNumber ?? project.tableNumber}
             isInvalid={!!formik.errors.tableNumber}
             onChange={formik.handleChange}
