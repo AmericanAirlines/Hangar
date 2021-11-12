@@ -3,6 +3,8 @@ import { Project } from '../../src/entities/Project';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
+jest.mock('../../src/middleware/populateUser');
+
 const mockProjects: Partial<Project>[] = [
   {
     id: '1234',

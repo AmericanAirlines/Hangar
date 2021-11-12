@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import logger from '../logger';
 import { Project } from '../entities/Project';
+import { populateUser } from '../middleware/populateUser';
 
 export const project = Router();
+project.use(populateUser());
 
 project.get('/', async (req, res) => {
   try {

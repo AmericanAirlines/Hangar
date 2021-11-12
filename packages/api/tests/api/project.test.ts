@@ -4,6 +4,8 @@ import { User } from '../../src/entities/User';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
+jest.mock('../../src/middleware/populateUser');
+
 const mockProject: Partial<Project> = {
   id: '1234',
   name: 'Project A',
