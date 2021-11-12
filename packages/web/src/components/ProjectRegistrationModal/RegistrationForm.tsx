@@ -13,6 +13,7 @@ import {
   AlertTitle,
   CloseButton,
   Button,
+  Textarea,
 } from '@chakra-ui/react';
 
 interface ProjectProps {
@@ -40,7 +41,7 @@ export const RegistrationForm: React.FC = () => {
         setProject(data);
       } catch (err) {
         // TODO print/log error message to show we were unable to pull their project data
-        setProject({});
+        window.alert(`Something went wrong, while trying to load your project ${res.statusText}`);
       }
     };
 
@@ -50,7 +51,7 @@ export const RegistrationForm: React.FC = () => {
   const RegistrationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     description: Yup.string(),
-    tableNumber: Yup.number().typeError('table number need to be digits'),
+    tableNumber: Yup.number().typeError('table number need to be digi'),
   });
 
   const formik = useFormik({
@@ -102,7 +103,8 @@ export const RegistrationForm: React.FC = () => {
         </FormControl>
         <FormControl id="description">
           <FormLabel>Description</FormLabel>
-          <Input
+
+          <Textarea
             type="text"
             placeholder="With the new American Airlines Mac app, you get the information you need exactly when you need it. Curious about traffic to the airport? Wondering if a better seat is available? All this and more is at your fingertips."
             value={formik.values.description ?? project.description}
