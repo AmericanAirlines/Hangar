@@ -38,8 +38,8 @@ describe('/queue', () => {
     expect(handler.entityManager.find).toHaveBeenCalledWith(
       QueueUser,
       {
-        status: { $in: ['Pending', 'InProgress'], },
-        type
+        status: { $in: ['Pending', 'InProgress'] },
+        type: 'Job',
       },
       { orderBy: { createdAt: 'ASC' } },
     );

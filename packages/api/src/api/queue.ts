@@ -15,8 +15,8 @@ queue.get('/:type', async (req, res) => {
     const queueList = await req.entityManager.find(
       QueueUser,
       {
-        status: { $in: ['Pending', 'InProgress'], },
-        type
+        status: { $in: ['Pending', 'InProgress'] },
+        type,
       },
       { orderBy: { createdAt: 'ASC' } },
     );
