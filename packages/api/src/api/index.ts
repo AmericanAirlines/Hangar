@@ -5,6 +5,8 @@ import { health } from './health';
 import { users } from './users';
 import { prizes } from './prizes';
 import { subscription } from './subscription';
+import { project } from './project';
+import { projects } from './projects';
 
 export const api = Router();
 
@@ -13,3 +15,5 @@ api.use('/users', users);
 api.use('/events', events);
 api.use('/prizes', prizes);
 api.use('/subscription', subscription);
+api.use('/project', project);
+api.use('/projects', projects);
