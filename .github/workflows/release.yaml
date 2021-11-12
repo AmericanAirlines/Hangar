@@ -3,6 +3,7 @@ name: Release to Production
 on:
   push:
     branches: [main, v2]
+  workflow_dispatch:
 
 env:
   DOCKER_REGISTRY: registry.heroku.com
