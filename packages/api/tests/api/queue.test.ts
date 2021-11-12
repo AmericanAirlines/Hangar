@@ -1,5 +1,7 @@
+import { Handler } from 'express';
 import { queue } from '../../src/api/queue';
 import { QueueUser } from '../../src/entities/QueueUser';
+import { User } from '../../src/entities/User';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
@@ -24,6 +26,17 @@ const mockQueueUsers = [
 ];
 
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
+
+const mockUser = { id: 'mocked', isAdmin: true, toReference: jest.fn() } as unknown as User;
+
+jest.mock('../../src/middleware/populateUser.ts', () => ({
+  populateUser: jest.fn(
+    (): Handler => (req, _res, next) => {
+      req.userEntity = mockUser;
+      next();
+    },
+  ),
+}));
 
 describe('/queue', () => {
   beforeEach(async () => {
@@ -59,5 +72,40 @@ describe('/queue', () => {
 
     expect(text).toEqual('There was an issue fetching a list of users from the queue');
     expect(loggerSpy).toBeCalledTimes(1);
+  });
+
+  it('successfully adds a user to a queue given a specific type', async () => {
+    const handler = testHandler(queue);
+    const type = 'Idea';
+    await handler
+      .post('/join')
+      .send({ type })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(200);
+  });
+
+  it('will return a 400 if the user enters an invalid queue', async () => {
+    const handler = testHandler(queue);
+    const type = 'not a real thing';
+    const invalidQueueMsg = 'The queue type entered is invalid';
+    const { text } = await handler
+      .post('/join')
+      .send({ type })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(400);
+    expect(text).toEqual(invalidQueueMsg);
+  });
+
+  it('will return a 500 if there is an issue with adding a user to the queue', async () => {
+    const handler = testHandler(queue);
+    handler.entityManager.persistAndFlush.mockRejectedValueOnce('err');
+    const type = 'Idea';
+    const errMsg = 'There was an issue adding a user to a queue';
+    const { text } = await handler
+      .post('/join')
+      .send({ type })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(500);
+    expect(text).toEqual(errMsg);
   });
 });
