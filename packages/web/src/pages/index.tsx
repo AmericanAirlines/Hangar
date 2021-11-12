@@ -10,7 +10,12 @@ const Home: NextPage = () => (
       </Heading>
       <Text textAlign="center" maxWidth="60ch" fontSize="2xl" lineHeight="2">
         Hangar is an{' '}
-        <Link as="a" target="_blank" href="https://github.com/AmericanAirlines/Hangar">
+        <Link
+          target="_blank"
+          href="https://github.com/AmericanAirlines/Hangar"
+          isExternal
+          color="teal.500"
+        >
           Open Source
         </Link>{' '}
         Hackathon sponsorship platform.
