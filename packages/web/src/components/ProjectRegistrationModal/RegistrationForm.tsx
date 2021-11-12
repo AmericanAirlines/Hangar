@@ -28,7 +28,7 @@ export const RegistrationForm: React.FC = () => {
   const [validateWhileTyping, setValidateWhileTyping] = React.useState(false);
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchProject = async () => {
       // todo default endpoint that user req.user to find the user's project/team
       const res = await fetch('/api/project/');
 
