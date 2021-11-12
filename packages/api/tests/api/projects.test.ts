@@ -1,9 +1,12 @@
+import { Handler } from 'express';
 import { projects } from '../../src/api/projects';
 import { Project } from '../../src/entities/Project';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
 
-jest.mock('../../src/middleware/populateUser');
+jest.mock('../../src/middleware/populateUser', () => ({
+  populateUser: jest.fn((): Handler => (_req, _res, next) => next()),
+}));
 
 const mockProjects: Partial<Project>[] = [
   {
