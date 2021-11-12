@@ -1,25 +1,36 @@
 import { NextPage } from 'next';
-import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import { Link, Button, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import { MarketingLayout } from '../components/Layout';
 
 const Home: NextPage = () => (
   <MarketingLayout>
     <VStack alignItems="center" paddingY={32} spacing={8}>
       <Heading size="4xl" textAlign="center" lineHeight="1.4">
-        The Web App Template of the Emerging Tech EOA Team
+        Welcome to Hangar 🛩️
       </Heading>
       <Text textAlign="center" maxWidth="60ch" fontSize="2xl" lineHeight="2">
-        You&apos;ve got a production ready React.js frontend (with Dark Mode) and Express.js
-        backend. It is written in Typescript and has 100% test coverage.
-        <br />
-        Now go build something cool!
+        Hangar is an{' '}
+        <Link as="a" target="_blank" href="https://github.com/AmericanAirlines/Hangar">
+          Open Source
+        </Link>{' '}
+        Hackathon sponsorship platform.
+      </Text>
+      <Text textAlign="center" maxWidth="60ch" fontSize="2xl" lineHeight="2">
+        We&apos;re happy you&apos;re here and we can&apos;t wait to see what you build! Let&apos;s
+        get started 👇
       </Text>
       <HStack spacing={8}>
-        <Button as="a" size="lg" colorScheme="blue" href="https://nextjs.org/" target="_blank">
-          Next.js
-        </Button>
-        <Button as="a" size="lg" colorScheme="gray" href="https://chakra-ui.com/" target="_blank">
-          Chakra UI
+        <Button
+          as="a"
+          size="lg"
+          colorScheme="blue"
+          href="/app"
+          variant="outline"
+          p="7"
+          fontWeight="bold"
+          borderRadius="10px"
+        >
+          ✨ Get Started ✨
         </Button>
       </HStack>
     </VStack>
