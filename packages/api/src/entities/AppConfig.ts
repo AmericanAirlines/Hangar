@@ -12,7 +12,7 @@ type AppConfigPropertyKeys = keyof AppConfigConstructorValues;
 
 @Entity()
 export class AppConfig extends Node<AppConfig> {
-  @Property({ columnType: 'text' })
+  @Property({ columnType: 'text', unique: true })
   key: ConfigKey;
 
   @Property({ columnType: 'jsonb', nullable: true })

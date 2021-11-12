@@ -9,7 +9,7 @@ appConfig.use(populateUser());
 appConfig.get('/', async (req, res) => {
   const user = req.userEntity;
   if (!user.isAdmin) {
-    res.status(403).send('only admins have permission to access this endpoint!');
+    res.sendStatus(403);
     return;
   }
 
@@ -28,19 +28,12 @@ appConfig.put('/', async (req, res) => {
   const { key, value } = req.body;
 
   if (!user.isAdmin) {
-    res.status(403).send('only admins have permission to access this endpoint!');
+    res.sendStatus(403);
     return;
   }
 
   try {
-    const configItemToUpdate = await req.entityManager.findOne(AppConfig, { key });
-
-    if (!configItemToUpdate) {
-      res.status(400).send('The specified config item does not exist');
-      return;
-    }
-
-    configItemToUpdate.value = value;
+    const configItemToUpdate = new AppConfig({ key, value });
     await req.entityManager.persistAndFlush(configItemToUpdate);
     res.send(200);
     return;
@@ -56,7 +49,7 @@ appConfig.post('/', async (req, res) => {
   const { key, value } = req.body;
 
   if (!user.isAdmin) {
-    res.status(403).send('only admins have permission to access this endpoint!');
+    res.sendStatus(403);
     return;
   }
 
