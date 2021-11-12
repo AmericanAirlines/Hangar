@@ -40,12 +40,11 @@ export const RegistrationForm: React.FC = () => {
         const data = await res.json();
         setProject(data);
       } catch (err) {
-        // TODO print/log error message to show we were unable to pull their project data
         alert(`Something went wrong, while trying to load your project ${res.statusText}`);
       }
     };
 
-    void fetchProjects();
+    void fetchProject();
   }, []);
 
   const RegistrationSchema = Yup.object().shape({
