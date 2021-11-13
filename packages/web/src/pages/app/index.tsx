@@ -29,9 +29,24 @@ const AppHome: NextPage = () => (
             <Heading>Welcome</Heading>
             <Text>
               We&apos;re big on attending hackathons, sharing our tech, and helping students have an
-              amazing time. Come join us for a chance to meet our team, learn more about what we do,
-              and win some great prizes! If you are want to be eligible for our prizes, you must
-              register on this site.
+              amazing time. Come meet our team, learn more about what we do, and win some great
+              prizes! If you are want to be eligible for our prizes, you must register on this site.
+            </Text>
+
+            <Heading variant="h2" size="md">
+              Hacking with us?
+            </Heading>
+
+            <Text>You&apos;ll need to register your team prior to judging.</Text>
+
+            <Text>
+              ⚠️{' '}
+              <Text as="span" fontWeight="bold">
+                NOTE
+              </Text>
+              : if you plan to take on our challenge, you&apos;ll need to register your team using
+              the button below. If you don&apos;t have your table number yet, make sure to come back
+              and add it before judging starts.
             </Text>
             <HStack spacing={4}>
               <Button colorScheme="blue">Pre-Register</Button>
@@ -64,10 +79,12 @@ const AppHome: NextPage = () => (
               </Heading>
               <Text>
                 Thousands of people fly American each and every day. This awesome responsibility
-                opens the door to incredible opportunities. Help us elevate the customer travel
-                experience, boost operational efficiencies and employee performance (baggage
-                handling, gate agents, etc.), or enhance American&apos;s brand image with your
-                innovative hacks!
+                opens the door to incredible opportunities!
+              </Text>
+              <Text>
+                Build something that helps us elevate the customer travel experience, boost
+                operational efficiencies and employee performance (baggage handling, gate agents,
+                etc.), or enhance American’s brand image.
               </Text>
             </VStack>
             <VStack alignItems="stretch">
