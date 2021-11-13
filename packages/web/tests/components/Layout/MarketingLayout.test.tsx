@@ -18,6 +18,6 @@ describe('MarketingLayout', () => {
   it('renders button', async () => {
     render(<MarketingLayout />);
 
-    expect(screen.getByText('Hangar')).toBeVisible();
+    expect(screen.getByTitle('Hangar Logo')).toBeInTheDocument();
   });
 });
