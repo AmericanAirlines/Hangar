@@ -10,6 +10,8 @@ import {
   ListItem,
   ListIcon,
   Link,
+  Stack,
+  Button,
 } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import { TiMinus } from 'react-icons/ti';
@@ -23,7 +25,12 @@ const AppHome: NextPage = () => (
   <AppLayout>
     <Box backgroundColor={useColorModeValue('gray.200', 'gray.900')}>
       <AppContainer>
-        <HStack paddingY={12} spacing={16} alignItems="flex-start">
+        <Stack
+          direction={['column', 'column', 'column', 'row']}
+          paddingY={12}
+          spacing={16}
+          alignItems="flex-start"
+        >
           <VStack flex={1} alignItems="flex-start" spacing={4}>
             <Heading>Welcome</Heading>
             <Text>
@@ -54,7 +61,7 @@ const AppHome: NextPage = () => (
           <VStack
             alignItems="stretch"
             spacing={4}
-            width="350px"
+            width={['100%', '100%', '100%', '350px']}
             padding={4}
             backgroundColor={useColorModeValue('white', 'gray.950')}
             borderRadius="md"
@@ -64,13 +71,26 @@ const AppHome: NextPage = () => (
             </Heading>
             <Prizes />
           </VStack>
-        </HStack>
+        </Stack>
       </AppContainer>
     </Box>
     <Box>
       <AppContainer>
-        <HStack paddingY={12} spacing={16} alignItems="flex-start">
+        <Stack
+          direction={['column', 'column', 'column', 'row']}
+          paddingY={12}
+          spacing={16}
+          alignItems="flex-start"
+        >
           <VStack flex={1} alignItems="flex-start" spacing={12}>
+            <Button
+              as="a"
+              colorScheme="blue"
+              href="#ScheduleSection"
+              display={['flex', 'flex', 'flex', 'none']}
+            >
+              Click to view our schedule
+            </Button>
             <VStack alignItems="stretch">
               <Heading variant="h2" size="lg">
                 Our Challenge
@@ -138,8 +158,8 @@ const AppHome: NextPage = () => (
               </Link>
             </VStack>
           </VStack>
-          <VStack alignItems="stretch" spacing={4} width="350px">
-            <Heading as="h2" size="md">
+          <VStack alignItems="stretch" spacing={4} width={['100%', '100%', '100%', '350px']}>
+            <Heading id="ScheduleSection" as="h2" size="md">
               Schedule
               <Text fontSize="sm" fontWeight="medium" opacity={0.5}>
                 Click to read details
@@ -147,7 +167,7 @@ const AppHome: NextPage = () => (
             </Heading>
             <Schedule />
           </VStack>
-        </HStack>
+        </Stack>
       </AppContainer>
     </Box>
   </AppLayout>
