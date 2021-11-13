@@ -27,18 +27,8 @@ describe('Popup Modal', () => {
     userEvent.click(openModalButton);
 
     await waitFor(() => {
-      expect(screen.queryByText('Close')).toBeVisible();
       expect(screen.queryByText(headerText)).toBeVisible();
       expect(screen.queryByText(bodyText)).toBeVisible();
-    });
-
-    const closeModalButton = screen.getByText('Close');
-    userEvent.click(closeModalButton);
-
-    await waitFor(() => {
-      expect(screen.queryByText('Close')).not.toBeVisible();
-      expect(screen.queryByText(headerText)).not.toBeVisible();
-      expect(screen.queryByText(bodyText)).not.toBeVisible();
     });
   });
 
@@ -68,7 +58,6 @@ describe('Popup Modal', () => {
 
     await waitFor(() => {
       expect(mockConfirmationAction).toBeCalledTimes(1);
-      expect(screen.queryByText('Close')).toBeVisible();
       expect(screen.queryByText('Success', { exact: false })).toBeVisible();
       expect(screen.queryByText(succussMessage)).toBeVisible();
     });
@@ -101,7 +90,6 @@ describe('Popup Modal', () => {
 
     await waitFor(() => {
       expect(mockConfirmationAction).toBeCalledTimes(1);
-      expect(screen.queryByText('Close')).toBeVisible();
       expect(screen.queryByText('Uh oh', { exact: false })).toBeVisible();
       expect(screen.queryByText(errorMessage)).toBeVisible();
     });
@@ -153,6 +141,28 @@ describe('Popup Modal', () => {
 
     await waitFor(() => {
       expect(screen.queryByText('Confirm')).toBe(null);
+    });
+  });
+
+  it('does not display close button if hideCloseBUtton is true', async () => {
+    render(
+      <PopUpModal
+        openModalText={openModalText}
+        header={headerText}
+        errorMessage={errorMessage}
+        succussMessage={succussMessage}
+        hideCloseButton
+      >
+        {bodyText}
+      </PopUpModal>,
+    );
+
+    const openModalButton = screen.getByText(openModalText);
+    expect(openModalButton).toBeVisible();
+    userEvent.click(openModalButton);
+
+    await waitFor(() => {
+      expect(screen.queryByText('Close')).toBe(null);
     });
   });
 
