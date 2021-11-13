@@ -17,8 +17,7 @@ import { AppLayout } from '../../components/Layout';
 import { AppContainer } from '../../components/AppContainer/AppContainer';
 import { Prizes } from '../../components/Prizes';
 import { Schedule } from '../../components/Schedule';
-import { RemindMeModal } from '../../components/RemindMeModal';
-import { RegistrationModal } from '../../components/ProjectRegistrationModal';
+import { RegistrationModal } from '../../components/RegistrationModal';
 
 const AppHome: NextPage = () => (
   <AppLayout>
@@ -50,7 +49,6 @@ const AppHome: NextPage = () => (
             </Text>
             <HStack spacing={4}>
               <RegistrationModal />
-              <RemindMeModal />
             </HStack>
           </VStack>
           <VStack

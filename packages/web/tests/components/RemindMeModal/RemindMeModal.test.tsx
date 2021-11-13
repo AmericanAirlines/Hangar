@@ -10,7 +10,7 @@ jest.mock('../../../src/components/PopupModal');
 const mockPopupModal = getMock(PopUpModal).mockImplementation(() => <div>Mock Popup Modal</div>);
 
 describe('Remind Me Modal', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
   });
 

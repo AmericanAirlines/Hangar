@@ -16,7 +16,8 @@ import {
 interface PopupModalProps {
   openModalText: String;
   header: String;
-  openButtonVariant?: ButtonProps['variant'];
+  hideCloseButton?: boolean;
+  openButtonProps?: ButtonProps;
   onConfirm?: () => Promise<void>;
   succussMessage?: string;
   errorMessage?: string;
@@ -25,7 +26,8 @@ interface PopupModalProps {
 export const PopUpModal: React.FC<PopupModalProps> = ({
   openModalText,
   header,
-  openButtonVariant,
+  openButtonProps,
+  hideCloseButton = false,
   children,
   onConfirm,
   succussMessage,
@@ -60,18 +62,18 @@ export const PopUpModal: React.FC<PopupModalProps> = ({
   return (
     <>
       <Button
+        {...openButtonProps}
         onClick={() => {
           setModalHeader(header);
           setBodyText(undefined);
           setConfirmButtonVisible(true);
           onOpen();
         }}
-        variant={openButtonVariant}
       >
         {openModalText}
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{modalHeader}</ModalHeader>
@@ -80,9 +82,11 @@ export const PopUpModal: React.FC<PopupModalProps> = ({
 
           <ModalFooter>
             <HStack justifyContent="flex-end">
-              <Button variant="ghost" onClick={onClose}>
-                Close
-              </Button>
+              {!hideCloseButton ? (
+                <Button variant="ghost" onClick={onClose}>
+                  Close
+                </Button>
+              ) : null}
               {onConfirm && confirmButtonVisible ? (
                 <Button isLoading={isLoading} colorScheme="blue" onClick={onConfirmClick}>
                   Confirm
