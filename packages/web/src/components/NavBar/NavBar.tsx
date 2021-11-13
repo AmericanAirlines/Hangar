@@ -7,8 +7,8 @@ export const NavBar: React.FC = () => (
   <HStack as="nav" spacing={8}>
     <Logo width="70px" />
     <HStack spacing={0}>
-      <NavLink label="My Project" href="/app" />
-      <NavLink label="Get Help" href="" />
+      <NavLink label="Home" href="/app" />
+      <NavLink label="Get Help" href="/app/help" />
       <Link as="a" variant="nav" href="https://jobs.aa.com" target="_blank">
         Work at American
       </Link>
