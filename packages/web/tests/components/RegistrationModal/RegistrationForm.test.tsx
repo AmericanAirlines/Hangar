@@ -1,13 +1,13 @@
 import React from 'react';
 import fetchMock from 'fetch-mock-jest';
 import userEvent from '@testing-library/user-event';
-import { render, waitFor } from '../../testUtils/testTools';
+import { render, waitFor, screen } from '../../testUtils/testTools';
 import { RegistrationForm } from '../../../src/components/ProjectRegistrationModal';
 
 const mockProject = {
   name: 'A Project Name',
   description: 'A project that does stuff',
-  tableNumber: 1,
+  tableNumber: '1',
 };
 
 describe('Registration Form', () => {
@@ -18,7 +18,7 @@ describe('Registration Form', () => {
 
   it('renders correctly', async () => {
     fetchMock.getOnce('/api/project/', mockProject);
-    const { getByDisplayValue } = render(<RegistrationForm />);
+    const { getByDisplayValue } = render(<RegistrationForm initialValues={mockProject} />);
 
     await waitFor(() => {
       expect(getByDisplayValue(mockProject.name)).toBeVisible();
@@ -28,27 +28,28 @@ describe('Registration Form', () => {
   });
 
   it('submits form with correct values', async () => {
-    fetchMock.getOnce('/api/project/', mockProject);
     fetchMock.postOnce('/api/projects/', 200);
-    const { getByLabelText, getByRole } = render(<RegistrationForm />);
-    userEvent.type(getByLabelText(/name/i), 'A new name');
-    userEvent.type(getByLabelText(/description/i), 'A new description');
-    userEvent.type(getByLabelText(/table number/i), '1');
+    render(<RegistrationForm initialValues={mockProject} />);
+    userEvent.type(screen.getByLabelText(/name/i), 'A new name');
+    userEvent.type(screen.getByLabelText(/description/i), 'A new description');
+    userEvent.type(screen.getByLabelText(/table number/i), '1');
 
-    userEvent.click(getByRole('button', { name: /submit/i }));
+    userEvent.click(screen.getByText('Submit'));
 
     await waitFor(() =>
-      expect(fetchMock).toHaveLastFetched(undefined, {
-        url: 'localhost:3000/api/auth',
-        body: { name: 'A new name', description: 'A new description', tableNumber: 1 },
+      expect(fetchMock).toHaveFetched('/api/projects/', {
+        body: {
+          inputConfig: { name: 'A new name', description: 'A new description', tableNumber: '1' },
+        },
       }),
     );
   });
 
   it('displays an error if the registration call fails', async () => {
-    fetchMock.getOnce('/api/project/', mockProject);
     fetchMock.postOnce('/api/projects/', 500);
-    const { getByLabelText, getByRole, queryByText } = render(<RegistrationForm />);
+    const { getByLabelText, getByRole, queryByText } = render(
+      <RegistrationForm initialValues={mockProject} />,
+    );
     userEvent.type(getByLabelText(/name/i), 'A new name');
     userEvent.type(getByLabelText(/description/i), 'A new description');
     userEvent.type(getByLabelText(/table number/i), '1');
@@ -61,7 +62,6 @@ describe('Registration Form', () => {
   });
 
   it('defaults the fields to empty string when the initial project pull fails', async () => {
-    fetchMock.getOnce('/api/project/', 500);
     const { getByLabelText } = render(<RegistrationForm />);
 
     await waitFor(() => {
@@ -72,9 +72,10 @@ describe('Registration Form', () => {
   });
 
   it('removes the server error when the user clicks the close button', async () => {
-    fetchMock.getOnce('/api/project/', mockProject);
     fetchMock.postOnce('/api/projects/', 500);
-    const { getByLabelText, getByRole, queryByText, getByTestId } = render(<RegistrationForm />);
+    const { getByLabelText, getByRole, queryByText, getByTestId } = render(
+      <RegistrationForm initialValues={mockProject} />,
+    );
     userEvent.type(getByLabelText(/name/i), 'A new name');
     userEvent.type(getByLabelText(/description/i), 'A new description');
     userEvent.type(getByLabelText(/table number/i), '1');

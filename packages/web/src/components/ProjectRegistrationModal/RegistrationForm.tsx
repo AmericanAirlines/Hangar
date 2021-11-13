@@ -1,6 +1,6 @@
 import { useFormik } from 'formik';
 import React, { useEffect, useState } from 'react';
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import {
   Input,
   FormControl,
@@ -16,50 +16,32 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 
-interface ProjectProps {
-  name?: string;
-  description?: string;
-  tableNumber?: number;
+interface RegistrationFormProps {
+  initialValues?: {
+    name: string;
+    description: string;
+    tableNumber: string;
+  };
 }
 
-export const RegistrationForm: React.FC = () => {
+type RegistrationSchema = yup.InferType<typeof registrationSchema>;
+const registrationSchema = yup.object({
+  name: yup.string().required('Name is required'),
+  description: yup.string(),
+  tableNumber: yup.string(),
+});
+
+export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValues }) => {
   const [serverError, setServerError] = useState('');
-  const [project, setProject] = useState<ProjectProps>({});
   const [validateWhileTyping, setValidateWhileTyping] = React.useState(false);
 
-  useEffect(() => {
-    const fetchProject = async () => {
-      // todo default endpoint that user req.user to find the user's project/team
-      const res = await fetch('/api/project/');
-
-      try {
-        if (!res.ok) {
-          throw new Error();
-        }
-
-        const data = await res.json();
-        setProject(data);
-      } catch (err) {
-        alert(`Something went wrong, while trying to load your project ${res.statusText}`);
-      }
-    };
-
-    void fetchProject();
-  }, []);
-
-  const RegistrationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    description: Yup.string(),
-    tableNumber: Yup.number().typeError('Table number must be an integer'),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      name: project.name,
-      description: project.description,
-      tableNumber: project.tableNumber,
+  const formik = useFormik<RegistrationSchema>({
+    initialValues: initialValues ?? {
+      name: '',
+      description: '',
+      tableNumber: '',
     },
-    validationSchema: RegistrationSchema,
+    validationSchema: registrationSchema,
     validateOnBlur: validateWhileTyping,
     validateOnChange: validateWhileTyping,
     async onSubmit(values) {
@@ -92,7 +74,7 @@ export const RegistrationForm: React.FC = () => {
           <Input
             type="text"
             placeholder="American Mac App"
-            value={formik.values.name ?? project.name}
+            value={formik.values.name}
             isInvalid={!!formik.errors.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -106,7 +88,7 @@ export const RegistrationForm: React.FC = () => {
           <Textarea
             type="text"
             placeholder="With the new American Airlines Mac app, you get the information you need exactly when you need it. Curious about traffic to the airport? Wondering if a better seat is available? All this and more is at your fingertips."
-            value={formik.values.description ?? project.description}
+            value={formik.values.description}
             isInvalid={!!formik.errors.description}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -119,7 +101,7 @@ export const RegistrationForm: React.FC = () => {
           <Input
             type="text"
             placeholder="42"
-            value={formik.values.tableNumber ?? project.tableNumber}
+            value={formik.values.tableNumber}
             isInvalid={!!formik.errors.tableNumber}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
