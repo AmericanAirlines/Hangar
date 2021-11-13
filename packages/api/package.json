@@ -16,9 +16,12 @@
   },
   "dependencies": {
     "@americanairlines/simple-env": "^1.0.4",
+    "@discordjs/rest": "^0.1.0-canary.0",
     "@hangar/web": "*",
     "@mikro-orm/core": "^4.5.9",
     "@mikro-orm/postgresql": "^4.5.9",
+    "discord-api-types": "^0.24.0",
+    "discord.js": "^13.3.1",
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.2",
