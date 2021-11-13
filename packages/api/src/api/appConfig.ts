@@ -33,32 +33,12 @@ appConfig.put('/', async (req, res) => {
   }
 
   try {
-    const configItemToUpdate = new AppConfig({ key, value });
-    await req.entityManager.persistAndFlush(configItemToUpdate);
+    const selectedConfigItem = new AppConfig({ key, value });
+    await req.entityManager.persistAndFlush(selectedConfigItem);
     res.send(200);
     return;
   } catch (error) {
-    const errorMsg = 'There was an issue editing a config item';
-    logger.error(`${errorMsg}: `, error);
-    res.status(500).send(errorMsg);
-  }
-});
-
-appConfig.post('/', async (req, res) => {
-  const user = req.userEntity;
-  const { key, value } = req.body;
-
-  if (!user.isAdmin) {
-    res.sendStatus(403);
-    return;
-  }
-
-  try {
-    const newConfigItem = new AppConfig({ key, value });
-    await req.entityManager.persistAndFlush(newConfigItem);
-    res.send(200);
-  } catch (error) {
-    const errorMsg = 'There was an issue adding a new config item';
+    const errorMsg = 'There was an issue editing/creating a config item';
     logger.error(`${errorMsg}: `, error);
     res.status(500).send(errorMsg);
   }

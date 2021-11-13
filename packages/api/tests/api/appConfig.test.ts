@@ -91,44 +91,11 @@ describe('/appConfig', () => {
 
   it('returns a 500 when there is an issue with fetching a specific config item', async () => {
     const handler = testHandler(appConfig);
-    const errMsg = 'There was an issue editing a config item';
+    const errMsg = 'There was an issue editing/creating a config item';
     handler.entityManager.persistAndFlush.mockRejectedValueOnce('err');
     const { text } = await handler
       .put('/')
       .send({ key: mockAppConfigItems[0].key, value: newConfigItem.value })
-      .set({ 'Content-Type': 'application/json' })
-      .expect(500);
-    expect(text).toEqual(errMsg);
-    expect(loggerSpy).toBeCalledTimes(1);
-  });
-
-  it('successfully creates a specified AppConfig item', async () => {
-    const handler = testHandler(appConfig);
-    await handler
-      .post('/')
-      .send(newConfigItem)
-      .set({ 'Content-Type': 'application/json' })
-      .expect(200);
-    expect(handler.entityManager.persistAndFlush).toHaveBeenCalledTimes(1);
-  });
-
-  it('returns a 403 when the user is not an admin and attempts to create a new AppConfig item', async () => {
-    mockUser.isAdmin = false;
-    const handler = testHandler(appConfig);
-    await handler
-      .post('/')
-      .send(newConfigItem)
-      .set({ 'Content-Type': 'application/json' })
-      .expect(403);
-  });
-
-  it('returns a 500 when there is an issue with saving a new config item', async () => {
-    const handler = testHandler(appConfig);
-    const errMsg = 'There was an issue adding a new config item';
-    handler.entityManager.persistAndFlush.mockRejectedValueOnce('err');
-    const { text } = await handler
-      .post('/')
-      .send(newConfigItem)
       .set({ 'Content-Type': 'application/json' })
       .expect(500);
     expect(text).toEqual(errMsg);
