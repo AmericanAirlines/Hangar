@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@americanairlines/simple-env": "^1.0.4",
-    "@discordjs/rest": "^0.1.0-canary.0",
     "@hangar/web": "*",
     "@mikro-orm/core": "^4.5.9",
     "@mikro-orm/postgresql": "^4.5.9",
