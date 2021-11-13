@@ -89,7 +89,7 @@ queue.put('/:id', async (req, res) => {
     if (queueItemToChange.status === QueueStatus.Pending && status === QueueStatus.InProgress) {
       queueItemToChange.assignee = user.toReference();
       const message = `${user.name} is ready to assist you! Please make your way to the American Airlines booth and ask to see ${user.name}.`;
-      messageUsers(queueItemToChange.user.id, message);
+      await messageUsers(queueItemToChange.user.id, message);
     }
 
     queueItemToChange.status = status;
