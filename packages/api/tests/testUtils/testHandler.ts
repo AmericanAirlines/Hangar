@@ -4,7 +4,7 @@ import { EntityManager } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 type MockEntityManager = jest.Mocked<
-  Pick<EntityManager<PostgreSqlDriver>, 'fork' | 'find' | 'findOne' | 'flush' | 'persistAndFlush'>
+  Pick<EntityManager<PostgreSqlDriver>, 'fork' | 'find' | 'findOne' | 'flush' | 'count' | 'persistAndFlush'>
 >;
 
 type MockForkedEntityManager = Omit<MockEntityManager, 'fork'>;
@@ -22,6 +22,7 @@ const createTestApp = (...handlers: Handler[]) => {
     find: jest.fn(),
     findOne: jest.fn(),
     flush: jest.fn(),
+    count: jest.fn(),
     persistAndFlush: jest.fn(),
   };
 
@@ -30,6 +31,7 @@ const createTestApp = (...handlers: Handler[]) => {
     find: jest.fn(),
     findOne: jest.fn(),
     flush: jest.fn(),
+    count: jest.fn(),
     persistAndFlush: jest.fn(),
   };
 

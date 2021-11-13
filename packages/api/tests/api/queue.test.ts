@@ -76,10 +76,10 @@ describe('/queue', () => {
 
   it('successfully adds a user to a queue given a specific type', async () => {
     const handler = testHandler(queue);
-    handler.entityManager.find.mockResolvedValueOnce([]);
+    handler.entityManager.count.mockResolvedValueOnce(0);
     const type = 'Idea';
     await handler
-      .post('/join')
+      .post('/')
       .send({ type })
       .set({ 'Content-Type': 'application/json' })
       .expect(200);
@@ -90,7 +90,7 @@ describe('/queue', () => {
     const type = 'not a real thing';
     const invalidQueueMsg = 'The queue type entered is invalid';
     const { text } = await handler
-      .post('/join')
+      .post('/')
       .send({ type })
       .set({ 'Content-Type': 'application/json' })
       .expect(400);
@@ -99,11 +99,11 @@ describe('/queue', () => {
 
   it('will return a 409 if the user is already in a queue', async () => {
     const handler = testHandler(queue);
-    handler.entityManager.find.mockResolvedValueOnce(mockQueueUsers);
+    handler.entityManager.count.mockResolvedValueOnce(1);
     const type = 'Idea';
     const alreadyInQueueMsg = 'It appears that you are already waiting in a queue!';
     const { text } = await handler
-      .post('/join')
+      .post('/')
       .send({ type })
       .set({ 'Content-Type': 'application/json' })
       .expect(409);
@@ -112,11 +112,11 @@ describe('/queue', () => {
 
   it('will return a 500 if there is an issue with checking whether or not the user is already in a queue', async () => {
     const handler = testHandler(queue);
-    handler.entityManager.find.mockRejectedValueOnce('err');
+    handler.entityManager.count.mockRejectedValueOnce('err');
     const type = 'Idea';
     const errMsgFind = 'There was an issue with checking if the user is already in a queue';
     const { text } = await handler
-      .post('/join')
+      .post('/')
       .send({ type })
       .set({ 'Content-Type': 'application/json' })
       .expect(500);
@@ -125,12 +125,12 @@ describe('/queue', () => {
 
   it('will return a 500 if there is an issue with adding a user to the queue', async () => {
     const handler = testHandler(queue);
-    handler.entityManager.find.mockResolvedValueOnce([]);
+    handler.entityManager.count.mockResolvedValueOnce(0);
     handler.entityManager.persistAndFlush.mockRejectedValueOnce('err');
     const type = 'Idea';
     const errMsg = 'There was an issue adding a user to a queue';
     const { text } = await handler
-      .post('/join')
+      .post('/')
       .send({ type })
       .set({ 'Content-Type': 'application/json' })
       .expect(500);
