@@ -14,6 +14,7 @@ export const env = setEnv({
     discordClientSecret: 'DISCORD_CLIENT_SECRET',
     discordGuildId: 'DISCORD_GUILD_ID',
     appUrl: 'APP_URL',
+    discordBotToken: 'DISCORD_BOT_TOKEN',
   },
   optional: {
     databaseUser: 'DATABASE_USER',

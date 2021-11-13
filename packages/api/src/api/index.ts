@@ -9,6 +9,7 @@ import { project } from './project';
 import { projects } from './projects';
 import { queue } from './queue';
 import { onboarding } from './onboarding';
+import { discord } from './discord';
 
 export const api = Router();
 
@@ -21,3 +22,4 @@ api.use('/project', project);
 api.use('/projects', projects);
 api.use('/queue', queue);
 api.use('/onboarding', onboarding);
+api.use('/discord', discord);
