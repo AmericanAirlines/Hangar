@@ -1,9 +1,10 @@
 import { Handler } from 'express';
 import { queue } from '../../src/api/queue';
-import { QueueUser } from '../../src/entities/QueueUser';
+import { QueueStatus, QueueUser } from '../../src/entities/QueueUser';
 import { User } from '../../src/entities/User';
 import logger from '../../src/logger';
 import { testHandler } from '../testUtils/testHandler';
+import { messageUsers } from '../../src/api/discord';
 
 const mockReturnUsers = [
   {
@@ -17,22 +18,36 @@ const mockReturnUsers = [
 const mockQueueUsers = [
   {
     user: { id: '25' },
+    id: '1',
+    assignee: null,
+    status: QueueStatus.Pending,
     toSafeJSON: jest.fn().mockReturnValue(mockReturnUsers[0]),
   },
   {
     user: { id: '26' },
+    id: '2',
+    status: QueueStatus.Abandoned,
     toSafeJSON: jest.fn().mockReturnValue(mockReturnUsers[1]),
   },
 ];
 
+jest.mock('../../src/api/discord', () => ({
+  messageUsers: jest.fn(),
+}));
+
 const loggerSpy = jest.spyOn(logger, 'error').mockImplementation();
 
-const mockUser = { id: 'mocked', isAdmin: true, toReference: jest.fn() } as unknown as User;
+const mockQueueModerator = {
+  id: 'mocked',
+  isAdmin: true,
+  name: 'bob',
+  toReference: jest.fn(),
+} as unknown as User;
 
 jest.mock('../../src/middleware/populateUser.ts', () => ({
   populateUser: jest.fn(
     (): Handler => (req, _res, next) => {
-      req.userEntity = mockUser;
+      req.userEntity = mockQueueModerator;
       next();
     },
   ),
@@ -41,6 +56,10 @@ jest.mock('../../src/middleware/populateUser.ts', () => ({
 describe('/queue', () => {
   beforeEach(async () => {
     jest.clearAllMocks();
+    mockQueueUsers[0].status = QueueStatus.Pending;
+    delete mockQueueUsers[0].assignee;
+    mockQueueUsers[1].status = QueueStatus.Abandoned;
+    mockQueueModerator.isAdmin = true;
   });
 
   it('successfully returns the position in queue of a given queue type', async () => {
@@ -130,6 +149,90 @@ describe('/queue', () => {
       .send({ type })
       .set({ 'Content-Type': 'application/json' })
       .expect(500);
+    expect(text).toEqual(errMsg);
+  });
+
+  it('will update a queue item that has the pending status to the inProgress status and then assign a user and message them via Discord', async () => {
+    const handler = testHandler(queue);
+    handler.entityManager.findOne.mockResolvedValueOnce(mockQueueUsers[0]);
+    const status = QueueStatus.InProgress;
+    const discordMsg =
+      'bob is ready to assist you! Please make your way to the American Airlines booth and ask to see bob.';
+    await handler
+      .put('/1')
+      .send({ status })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(200);
+    expect(handler.entityManager.flush).toBeCalledTimes(1);
+    expect(mockQueueUsers[0].status).toEqual(status);
+    expect(mockQueueUsers[0].assignee).toEqual(mockQueueModerator.toReference());
+    expect(messageUsers as jest.Mock).toBeCalledWith(mockQueueUsers[0].user.id, discordMsg);
+  });
+
+  it('will update a queue item that has one status to one that has another status', async () => {
+    const handler = testHandler(queue);
+    handler.entityManager.findOne.mockResolvedValueOnce(mockQueueUsers[1]);
+    const status = QueueStatus.Pending;
+    await handler
+      .put('/2')
+      .send({ status })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(200);
+    expect(handler.entityManager.flush).toBeCalledTimes(1);
+    expect(mockQueueUsers[1].status).toEqual(status);
+  });
+
+  it('will return a 403 if the user is not an admin', async () => {
+    const handler = testHandler(queue);
+    mockQueueModerator.isAdmin = false;
+    const status = QueueStatus.Pending;
+    await handler
+      .put('/1')
+      .send({ status })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(403);
+    expect(handler.entityManager.findOne).not.toBeCalled();
+  });
+
+  it('will return a 404 if the specified queue item does not exist', async () => {
+    const handler = testHandler(queue);
+    const status = QueueStatus.Pending;
+    handler.entityManager.findOne.mockResolvedValueOnce(null);
+    await handler
+      .put('/88')
+      .send({ status })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(404);
+    expect(handler.entityManager.findOne).toBeCalledTimes(1);
+    expect(handler.entityManager.flush).not.toBeCalled();
+  });
+
+  it('will throw a 500 if there is an issue with fetching a queue item', async () => {
+    const handler = testHandler(queue);
+    handler.entityManager.findOne.mockRejectedValueOnce('err');
+    const status = QueueStatus.Pending;
+    const errMsg = 'There was an issue popping a user off of the queue';
+    const { text } = await handler
+      .put('/2')
+      .send({ status })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(500);
+    expect(loggerSpy).toBeCalledTimes(1);
+    expect(text).toEqual(errMsg);
+  });
+
+  it('will throw a 500 if there is an issue with updating a queue item', async () => {
+    const handler = testHandler(queue);
+    handler.entityManager.findOne.mockResolvedValueOnce(mockQueueUsers[1]);
+    handler.entityManager.flush.mockRejectedValueOnce('err');
+    const status = QueueStatus.Pending;
+    const errMsg = 'There was an issue popping a user off of the queue';
+    const { text } = await handler
+      .put('/2')
+      .send({ status })
+      .set({ 'Content-Type': 'application/json' })
+      .expect(500);
+    expect(loggerSpy).toBeCalledTimes(1);
     expect(text).toEqual(errMsg);
   });
 });
