@@ -4,7 +4,7 @@ import { ConstructorValues } from '../utils/types';
 import { Node } from './Node';
 import { User } from './User';
 
-export type QueueUserConstructorValues = ConstructorValues<QueueUser>;
+export type QueueUserConstructorValues = ConstructorValues<QueueUser, never, 'status'>;
 type QueueUserPropertyKeys = keyof QueueUserConstructorValues;
 
 export enum QueueType {
