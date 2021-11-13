@@ -52,9 +52,9 @@ If you need inspiration for challenges, check out some of [our past challenges](
 
 ## Prerequisites
 
-### Node 14
+### Node 16
 
-Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 14.x.
+Hangar uses Node.js as its runtime. To use the Hangar, you'll need to [download](https://nodejs.org/en/) and install the LTS (Long Term Support) version, which is currently 16.x.
 
 :warning: If you decide to use another version of Node, such as 13.x or 15.x, you may experience unexpected issues.
 

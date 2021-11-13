@@ -26,7 +26,7 @@
 4. Add a new **`COPY`** command to the `Dockerfile` for the `package.json` file
 
    ```Dockerfile
-   FROM node:14
+   FROM node:16
    WORKDIR /usr/src/app
 
    COPY yarn.lock package.json ./
