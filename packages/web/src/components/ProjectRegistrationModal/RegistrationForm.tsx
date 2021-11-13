@@ -47,9 +47,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
     async onSubmit(values) {
       const res = await fetch('/api/projects/', {
         method: 'POST',
-        body: JSON.stringify({
-          inputConfig: values,
-        }),
+        body: JSON.stringify(values),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -109,7 +107,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
           />
           <FormHelperText color="red.500">{formik.errors.tableNumber}&nbsp;</FormHelperText>
         </FormControl>
-        <Button type="submit" className="btn btn-primary btn-block mb-5" lo>
+        <Button type="submit" className="btn btn-primary btn-block mb-5">
           Submit
         </Button>
         {serverError !== '' ? (

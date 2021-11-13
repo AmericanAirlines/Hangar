@@ -38,9 +38,7 @@ describe('Registration Form', () => {
 
     await waitFor(() =>
       expect(fetchMock).toHaveFetched('/api/projects/', {
-        body: {
-          inputConfig: { name: 'A new name', description: 'A new description', tableNumber: '1' },
-        },
+        body: { name: 'A new name', description: 'A new description', tableNumber: '1' },
       }),
     );
   });
