@@ -4,7 +4,10 @@ import { EntityManager } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 
 type MockEntityManager = jest.Mocked<
-  Pick<EntityManager<PostgreSqlDriver>, 'fork' | 'find' | 'findOne' | 'flush' | 'count' | 'persistAndFlush'>
+  Pick<
+    EntityManager<PostgreSqlDriver>,
+    'fork' | 'find' | 'findOne' | 'flush' | 'count' | 'persistAndFlush'
+  >
 >;
 
 type MockForkedEntityManager = Omit<MockEntityManager, 'fork'>;

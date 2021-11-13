@@ -78,11 +78,7 @@ describe('/queue', () => {
     const handler = testHandler(queue);
     handler.entityManager.count.mockResolvedValueOnce(0);
     const type = 'Idea';
-    await handler
-      .post('/')
-      .send({ type })
-      .set({ 'Content-Type': 'application/json' })
-      .expect(200);
+    await handler.post('/').send({ type }).set({ 'Content-Type': 'application/json' }).expect(200);
   });
 
   it('will return a 400 if the user enters an invalid queue', async () => {

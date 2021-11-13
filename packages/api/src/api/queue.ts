@@ -40,11 +40,13 @@ queue.post('/', async (req, res) => {
   }
 
   try {
-    const userAlreadyInQueue = await req.entityManager.count(QueueUser, {
-      user,
-      status: { $in: ['Pending', 'InProgress'] },
-    }).then((count) => !!count);
-    if(userAlreadyInQueue) {
+    const userAlreadyInQueue = await req.entityManager
+      .count(QueueUser, {
+        user,
+        status: { $in: ['Pending', 'InProgress'] },
+      })
+      .then((count) => !!count);
+    if (userAlreadyInQueue) {
       res.status(409).send('It appears that you are already waiting in a queue!');
       return;
     }
