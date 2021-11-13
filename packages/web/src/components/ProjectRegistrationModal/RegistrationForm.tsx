@@ -7,14 +7,10 @@ import {
   VStack,
   FormHelperText,
   FormLabel,
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  CloseButton,
   Button,
   Textarea,
 } from '@chakra-ui/react';
+import { AlertResponse } from '.';
 
 interface RegistrationFormProps {
   initialValues?: {
@@ -32,7 +28,8 @@ const registrationSchema = yup.object({
 });
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValues }) => {
-  const [serverError, setServerError] = useState('');
+  const [serverError, setServerError] = useState(false);
+  const [alertDescription, setAlertDescription] = useState('');
   const [validateWhileTyping, setValidateWhileTyping] = React.useState(false);
 
   const formik = useFormik<RegistrationSchema>({
@@ -53,7 +50,11 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
         },
       });
       if (!res.ok) {
-        setServerError('Something went wrong, please try again later...');
+        setServerError(true);
+        setAlertDescription('Something went wrong, please try again later...');
+      } else {
+        setServerError(false);
+        setAlertDescription('Your project is now registered. You may close this window.');
       }
     },
   });
@@ -110,19 +111,12 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
         <Button type="submit" className="btn btn-primary btn-block mb-5">
           Submit
         </Button>
-        {serverError !== '' ? (
-          <Alert status="error">
-            <AlertIcon />
-            <AlertTitle mr={2}>Uh oh</AlertTitle>
-            <AlertDescription>{serverError}</AlertDescription>
-            <CloseButton
-              position="absolute"
-              right="8px"
-              top="8px"
-              onClick={() => setServerError('')}
-              data-testid="alert-close-button"
-            />
-          </Alert>
+        {alertDescription !== '' ? (
+          <AlertResponse
+            error={serverError}
+            description={alertDescription}
+            closeAlert={() => setAlertDescription('')}
+          />
         ) : null}
       </VStack>
     </form>

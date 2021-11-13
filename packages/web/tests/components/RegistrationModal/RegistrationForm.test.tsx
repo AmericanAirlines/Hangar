@@ -17,7 +17,6 @@ describe('Registration Form', () => {
   });
 
   it('renders correctly', async () => {
-    fetchMock.getOnce('/api/project/', mockProject);
     const { getByDisplayValue } = render(<RegistrationForm initialValues={mockProject} />);
 
     await waitFor(() => {
@@ -29,17 +28,15 @@ describe('Registration Form', () => {
 
   it('submits form with correct values', async () => {
     fetchMock.postOnce('/api/projects/', 200);
-    render(<RegistrationForm initialValues={mockProject} />);
-    userEvent.type(screen.getByLabelText(/name/i), 'A new name');
-    userEvent.type(screen.getByLabelText(/description/i), 'A new description');
-    userEvent.type(screen.getByLabelText(/table number/i), '1');
+    const { queryByText } = render(<RegistrationForm />);
+    userEvent.type(screen.getByLabelText(/name/i), mockProject.name);
+    userEvent.type(screen.getByLabelText(/description/i), mockProject.description);
+    userEvent.type(screen.getByLabelText(/table number/i), mockProject.tableNumber);
 
     userEvent.click(screen.getByText('Submit'));
 
     await waitFor(() =>
-      expect(fetchMock).toHaveFetched('/api/projects/', {
-        body: { name: 'A new name', description: 'A new description', tableNumber: '1' },
-      }),
+      expect(queryByText('Your project is now registered', { exact: false })).toBeVisible(),
     );
   });
 
