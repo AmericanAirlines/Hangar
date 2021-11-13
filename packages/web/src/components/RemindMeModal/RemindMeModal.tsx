@@ -20,7 +20,7 @@ export const RemindMeModal: React.FC = () => {
       openModalText="Remind Me"
       onConfirm={subscribeUser}
       header="Confirm Notification Subscription"
-      openButtonVariant="ghost"
+      openButtonProps={{ variant: 'ghost' }}
       succussMessage="You will now be notified of upcoming events via Discord"
       errorMessage="Something went wrong, please try again later."
     >

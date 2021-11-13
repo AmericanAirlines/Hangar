@@ -9,15 +9,21 @@ import {
   FormLabel,
   Button,
   Textarea,
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
 } from '@chakra-ui/react';
 import { AlertResponse } from '.';
 
-interface RegistrationFormProps {
+export interface RegistrationFormProps {
   initialValues?: {
+    id: string;
     name: string;
     description: string;
     tableNumber: string;
   };
+  onSubmit?(): void;
 }
 
 type RegistrationSchema = yup.InferType<typeof registrationSchema>;
@@ -27,7 +33,7 @@ const registrationSchema = yup.object({
   tableNumber: yup.string(),
 });
 
-export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValues }) => {
+export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValues, onSubmit }) => {
   const [serverError, setServerError] = useState(false);
   const [alertDescription, setAlertDescription] = useState('');
   const [validateWhileTyping, setValidateWhileTyping] = React.useState(false);
@@ -42,19 +48,32 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
     validateOnBlur: validateWhileTyping,
     validateOnChange: validateWhileTyping,
     async onSubmit(values) {
-      const res = await fetch('/api/projects/', {
-        method: 'POST',
-        body: JSON.stringify(values),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      let res: Response;
+
+      if (initialValues) {
+        res = await fetch(`/api/projects/${initialValues.id}`, {
+          method: 'PUT',
+          body: JSON.stringify(values),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      } else {
+        res = await fetch('/api/projects/', {
+          method: 'POST',
+          body: JSON.stringify(values),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      }
       if (!res.ok) {
         setServerError(true);
         setAlertDescription('Something went wrong, please try again later...');
       } else {
         setServerError(false);
-        setAlertDescription('Your project is now registered. You may close this window.');
+        setAlertDescription('You may close this modal now');
+        onSubmit?.();
       }
     },
   });
@@ -68,9 +87,15 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
   return (
     <form onSubmit={formik.handleSubmit}>
       <VStack alignItems="stretch">
+        <Alert status="info" rounded="2xl" marginBottom={8}>
+          <AlertIcon />
+          <AlertTitle mr={2}>Important</AlertTitle>
+          <AlertDescription>You can come back and edit this after submitting</AlertDescription>
+        </Alert>
         <FormControl id="name">
           <FormLabel>Name</FormLabel>
           <Input
+            variant="filled"
             type="text"
             placeholder="American Mac App"
             value={formik.values.name}
@@ -85,6 +110,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
           <FormLabel>Description</FormLabel>
 
           <Textarea
+            variant="filled"
             type="text"
             placeholder="With the new American Airlines Mac app, you get the information you need exactly when you need it. Curious about traffic to the airport? Wondering if a better seat is available? All this and more is at your fingertips."
             value={formik.values.description}
@@ -98,6 +124,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
         <FormControl id="tableNumber">
           <FormLabel>Table Number</FormLabel>
           <Input
+            variant="filled"
             type="text"
             placeholder="42"
             value={formik.values.tableNumber}
@@ -106,6 +133,9 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
             onBlur={formik.handleBlur}
             disabled={formik.isSubmitting}
           />
+          <FormHelperText>
+            Leave it blank if you don&apos;t know. You will be told this sometime before judging.
+          </FormHelperText>
           <FormHelperText color="red.500">{formik.errors.tableNumber}&nbsp;</FormHelperText>
         </FormControl>
         <Button type="submit" className="btn btn-primary btn-block mb-5">

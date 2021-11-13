@@ -2,9 +2,10 @@ import React from 'react';
 import fetchMock from 'fetch-mock-jest';
 import userEvent from '@testing-library/user-event';
 import { render, waitFor, screen } from '../../testUtils/testTools';
-import { RegistrationForm } from '../../../src/components/ProjectRegistrationModal';
+import { RegistrationForm } from '../../../src/components/RegistrationModal';
 
 const mockProject = {
+  id: '1',
   name: 'A Project Name',
   description: 'A project that does stuff',
   tableNumber: '1',
@@ -35,13 +36,24 @@ describe('Registration Form', () => {
 
     userEvent.click(screen.getByText('Submit'));
 
-    await waitFor(() =>
-      expect(queryByText('Your project is now registered', { exact: false })).toBeVisible(),
-    );
+    await waitFor(() => expect(queryByText('you may close', { exact: false })).toBeVisible());
+  });
+
+  it('calls onSubmit when successful', async () => {
+    const mockSubmit = jest.fn();
+    fetchMock.postOnce('/api/projects/', 200);
+    render(<RegistrationForm onSubmit={mockSubmit} />);
+    userEvent.type(screen.getByLabelText(/name/i), mockProject.name);
+    userEvent.type(screen.getByLabelText(/description/i), mockProject.description);
+    userEvent.type(screen.getByLabelText(/table number/i), mockProject.tableNumber);
+
+    userEvent.click(screen.getByText('Submit'));
+
+    await waitFor(() => expect(mockSubmit).toHaveBeenCalled());
   });
 
   it('displays an error if the registration call fails', async () => {
-    fetchMock.postOnce('/api/projects/', 500);
+    fetchMock.putOnce(`/api/projects/${mockProject.id}`, 500);
     const { getByLabelText, getByRole, queryByText } = render(
       <RegistrationForm initialValues={mockProject} />,
     );
@@ -67,7 +79,7 @@ describe('Registration Form', () => {
   });
 
   it('removes the server error when the user clicks the close button', async () => {
-    fetchMock.postOnce('/api/projects/', 500);
+    fetchMock.putOnce(`/api/projects/${mockProject.id}`, 500);
     const { getByLabelText, getByRole, queryByText, getByTestId } = render(
       <RegistrationForm initialValues={mockProject} />,
     );
