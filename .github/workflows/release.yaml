@@ -2,7 +2,7 @@ name: Release to Production
 
 on:
   push:
-    branches: [main, v2, queue-and-mobile]
+    branches: [main, v2]
   workflow_dispatch:
 
 env:
