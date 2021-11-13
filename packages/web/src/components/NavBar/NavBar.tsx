@@ -1,5 +1,5 @@
 import React from 'react';
-import { HStack, Spacer } from '@chakra-ui/react';
+import { HStack, Spacer, Link } from '@chakra-ui/react';
 import { NavLink } from './NavLink';
 import { Logo } from './Logo';
 
@@ -9,7 +9,9 @@ export const NavBar: React.FC = () => (
     <HStack spacing={0}>
       <NavLink label="My Project" href="/app" />
       <NavLink label="Get Help" href="" />
-      <NavLink label="Work at American" href="/app/videos" />
+      <Link as="a" variant="nav" href="https://jobs.aa.com" target="_blank">
+        Work at American
+      </Link>
     </HStack>
     <Spacer />
     <NavLink label="Logout" href="/auth/logout" />
