@@ -15,7 +15,7 @@ export class Project extends Node<Project> {
   @Property({ columnType: 'text' })
   description: string;
 
-  @Property({ columnType: 'text', nullable: true })
+  @Property({ columnType: 'text', nullable: true, unique: true })
   tableNumber?: string;
 
   @OneToOne(() => User)
