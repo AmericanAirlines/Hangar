@@ -52,6 +52,28 @@ describe('Registration Form', () => {
     await waitFor(() => expect(mockSubmit).toHaveBeenCalled());
   });
 
+  it('trims the table number before sending to the server', async () => {
+    const mockSubmit = jest.fn();
+    fetchMock.postOnce('/api/projects/', 200);
+    render(<RegistrationForm onSubmit={mockSubmit} />);
+    userEvent.type(screen.getByLabelText(/name/i), mockProject.name);
+    userEvent.type(screen.getByLabelText(/description/i), mockProject.description);
+    userEvent.type(screen.getByLabelText(/table number/i), `    ${mockProject.tableNumber}    `);
+
+    userEvent.click(screen.getByText('Submit'));
+
+    await waitFor(() =>
+      expect(fetchMock).toHaveFetched(
+        '/api/projects/',
+        expect.objectContaining({
+          body: expect.objectContaining({
+            tableNumber: mockProject.tableNumber,
+          }),
+        }),
+      ),
+    );
+  });
+
   it('displays an error if the registration call fails', async () => {
     fetchMock.putOnce(`/api/projects/${mockProject.id}`, 500);
     const { getByLabelText, getByRole, queryByText } = render(

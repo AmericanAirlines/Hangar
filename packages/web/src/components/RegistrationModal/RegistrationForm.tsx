@@ -29,7 +29,7 @@ export interface RegistrationFormProps {
 type RegistrationSchema = yup.InferType<typeof registrationSchema>;
 const registrationSchema = yup.object({
   name: yup.string().required('Name is required'),
-  description: yup.string(),
+  description: yup.string().required('Description is required'),
   tableNumber: yup.string(),
 });
 
@@ -50,10 +50,15 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
     async onSubmit(values) {
       let res: Response;
 
+      const fetchBody = JSON.stringify({
+        ...values,
+        tableNumber: values.tableNumber!.trim(),
+      });
+
       if (initialValues) {
         res = await fetch(`/api/projects/${initialValues.id}`, {
           method: 'PUT',
-          body: JSON.stringify(values),
+          body: fetchBody,
           headers: {
             'Content-Type': 'application/json',
           },
@@ -61,7 +66,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
       } else {
         res = await fetch('/api/projects/', {
           method: 'POST',
-          body: JSON.stringify(values),
+          body: fetchBody,
           headers: {
             'Content-Type': 'application/json',
           },
