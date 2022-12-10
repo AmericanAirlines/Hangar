@@ -71,7 +71,7 @@
     "discord.js": "^12.4.1",
     "docsify-cli": "^4.4.1",
     "dotenv": "^6.2.0",
-    "express": "4.16.4",
+    "express": "4.17.3",
     "formik": "^2.1.2",
     "luxon": "^1.21.3",
     "next": "^9.5.4",
