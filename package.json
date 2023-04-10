@@ -83,7 +83,7 @@
     "reflect-metadata": "^0.1.13",
     "shuffle-array": "^1.0.1",
     "styled-components": "^5.2.1",
-    "typeorm": "^0.2.26",
+    "typeorm": "^0.3.14",
     "typescript": "^3.8.0",
     "winston": "^3.3.3",
     "yup": "^0.32.9"
