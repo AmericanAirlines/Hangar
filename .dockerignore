@@ -1,0 +1,8 @@
+.github
+**/.next
+**/*/dist
+**/*/coverage
+**/*/docs
+**/*/.env*
+.git
+**/*/node_modules

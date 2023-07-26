@@ -1,0 +1,33 @@
+{
+  "env": {
+    "es6": true
+  },
+  "rules": {
+    "@typescript-eslint/no-floating-promises": ["error"],
+    "curly": ["error"],
+    "import/prefer-default-export": ["off"],
+    "no-void": ["error", { "allowAsStatement": true }],
+    "no-await-in-loop": ["off"],
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["**/dist/**", "!/**/*.css"],
+            "message": "Don't import from `dist` directories"
+          },
+          {
+            "group": [
+              "**/web/src/**",
+              "**/api/src/**",
+              "**/shared/src/**",
+              "**/database/src/**",
+              "!@hangar/shared"
+            ],
+            "message": "Don't import across packages; Move to @hangar/shared if necessary"
+          }
+        ]
+      }
+    ]
+  }
+}

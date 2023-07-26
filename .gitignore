@@ -1,0 +1,13 @@
+node_modules
+.DS_Store
+**/*/tsconfig.tsbuildinfo
+
+# dotenv environment variables file (only local)
+.env.local
+.env.docker
+
+# Log Files
+*.log
+
+coverage
+dist

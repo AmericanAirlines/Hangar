@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "incremental": true,
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "outDir": "dist",
+    "declaration": true,
+    "jsx": "react-jsxdev"
+  },
+  "include": ["src/index.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,46 @@
+{
+  "folders": [
+    {
+      "name": "root",
+      "path": "."
+    },
+    { "path": "packages/api" },
+    { "path": "packages/shared" },
+    { "path": "packages/database" },
+    { "path": "packages/web" }
+  ],
+  "extensions": {
+    "recommendations": [
+      "orta.vscode-jest",
+      "esbenp.prettier-vscode",
+      "miaonster.vscode-tsx-arrow-definition",
+      "dbaeumer.vscode-eslint",
+      "streetsidesoftware.code-spell-checker",
+      "mikestead.dotenv",
+      "yoavbls.pretty-ts-errors"
+    ]
+  },
+  "settings": {
+    "eslint.workingDirectories": [
+      { "directory": "packages/api", "changeProcessCWD": true },
+      { "directory": "packages/shared", "changeProcessCWD": true },
+      { "directory": "packages/database", "changeProcessCWD": true },
+      { "directory": "packages/web", "changeProcessCWD": true }
+    ],
+    "files.exclude": {
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "packages/*/*": true
+    },
+    "jest.disabledWorkspaceFolders": ["root"],
+    "typescript.tsdk": "root/node_modules/typescript/lib",
+    "jest.jestCommandLine": "yarn jest",
+    "cSpell.enabled": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+  }
+}

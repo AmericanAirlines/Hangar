@@ -1,0 +1,29 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "react"],
+  "extends": [
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "prettier",
+    "next/core-web-vitals",
+    "../../.eslintrc"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "project": "./tsconfig.json"
+  },
+  "ignorePatterns": ["node_modules", "**/*.js"],
+  "rules": {
+    "import/no-cycle": ["off"],
+    "import/order": ["error"],
+    "prefer-template": ["error"],
+    "no-plusplus": ["error"],
+    "no-nested-ternary": ["error"],
+    "no-unused-expressions": ["error"],
+    "react/no-array-index-key": ["error"]
+  }
+}

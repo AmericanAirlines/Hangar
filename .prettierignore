@@ -1,0 +1,6 @@
+.next
+.gitkeep
+dist
+coverage
+.github/*_TEMPLATE*
+migrations

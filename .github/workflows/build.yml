@@ -1,0 +1,47 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [main]
+  merge_group:
+    branches: [main]
+
+env:
+  NODE_VERSION: 16
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build Shared
+        run: yarn workspace @hangar/shared build
+
+      - name: Build Database
+        run: yarn workspace @hangar/database build
+
+      - name: Typecheck
+        run: yarn typecheck
+
+      - name: Build
+        run: yarn build
+
+      - name: Entrypoint check
+        run: |
+          ENTRYPOINT_FILE="./packages/api/dist/index.js"
+          if ! test -f "$ENTRYPOINT_FILE"; then
+            echo "App entrypoint file missing ($ENTRYPOINT_FILE); app will fail to start in runtime environments."
+            exit 1
+          fi

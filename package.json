@@ -1,0 +1,45 @@
+{
+  "name": "hangar",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "yarn build:deps:ifneeded && lerna run dev --parallel --no-bail --stream",
+    "dev:fresh": "yarn build:deps && yarn dev",
+    "start": "yarn workspace @hangar/api start",
+    "build": "yarn run build:deps && lerna run --scope @hangar/api --scope @hangar/web build --parallel --stream",
+    "build:deps": "lerna run --scope @hangar/shared --scope @hangar/database --scope @hangar/web build --stream",
+    "build:deps:ifneeded": "node scripts/depsExist.js > /dev/null || yarn build:deps",
+    "migrate": "yarn workspace @hangar/database migrate",
+    "db:fresh": "yarn workspace @hangar/database mikro-orm migration:fresh",
+    "db:seed": "yarn db:fresh --seed DatabaseSeeder",
+    "typecheck": "lerna run typecheck --concurrency=1 --stream --no-bail",
+    "lint": "lerna run lint --concurrency=1 --stream --no-bail",
+    "lint:fix": "lerna run lint:fix --concurrency=1 --stream --no-bail",
+    "prettier": "prettier -cu \"**/*\"",
+    "prettier:fix": "yarn prettier --write",
+    "test": "lerna run test --concurrency=1 --stream --no-bail",
+    "test:coverage": "lerna run test:coverage --concurrency=1 --stream --no-bail",
+    "clean": "lerna run clean --parallel",
+    "reset": "yarn clean",
+    "postreset": "rimraf **/node_modules",
+    "postinstall": "patch-package",
+    "docker:build": "docker build . --tag delete-me",
+    "docker:run": "docker rm -f delete-me && docker run -p 3001:8080 --env-file packages/api/.env.local --env-file .env.docker --name delete-me delete-me",
+    "spellcheck": "yarn cspell --no-progress ."
+  },
+  "dependencies": {
+    "esbuild": "^0.15.8",
+    "patch-package": "^6.4.7"
+  },
+  "devDependencies": {
+    "cspell": "^6.31.1",
+    "lerna": "^5.5.4",
+    "postinstall-postinstall": "^2.1.0",
+    "prettier": "^2.4.0",
+    "pretty-quick": "^3.1.1",
+    "rimraf": "^3.0.2"
+  }
+}
