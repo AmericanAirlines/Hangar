@@ -1,6 +1,0 @@
-node_modules
-.github
-cypress
-.next
-dist
-coverage

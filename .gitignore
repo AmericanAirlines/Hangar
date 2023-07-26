@@ -1,6 +1,0 @@
-node_modules
-.DS_Store
-
-# dotenv environment variables file (only local)
-env.local
-env.*.local
