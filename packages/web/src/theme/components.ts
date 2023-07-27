@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ThemeComponents } from '@chakra-ui/react';
 import { colors, statusColors } from './colors';
 
