@@ -23,159 +23,167 @@
 
 ### Setup
 
-1. Open the project via the workspace file (e.g., `code hangar.code-workspace`)
+1.  Open the project via the workspace file (e.g., `code hangar.code-workspace`)
 
-1. Install dependencies
+1.  Install dependencies
 
-   ```zsh
-   yarn
-   ```
+    ```zsh
+    yarn
+    ```
 
-1. Copy `packages/api/.env.sample` to `packages/api/.env.local`
+1.  Copy `packages/api/.env.sample` to `packages/api/.env.local`
 
-   ```zsh
-   cp packages/api/.env.sample packages/api/.env.local
-   ```
+    ```zsh
+    cp packages/api/.env.sample packages/api/.env.local
+    ```
 
-   ### PostgreSQL
+    ### PostgreSQL
 
-   If you don't have Postgres installed already, see the `Installation and Use` section below.
+    If you don't have Postgres installed already, see the `Installation and Use` section below.
 
-   After installing, create a DB with the name `hangar` (or use another name and override `DATABASE_URL` in your `.env.local`).
+    After installing, create a DB with the name `hangar` (or use another name and override `DATABASE_URL` in your `.env.local`).
 
-   <details>
-     <summary><strong>Installation and Use</strong></summary>
+    Once the hangar database has been created:
 
-   #### macOS
+    - Make sure you go to your local env file( packages/api/.env.local) and uncomment DATABASE_PASS='xxxxx' DATABASE_USER=xxx and put in your database password and DATABASE_USER as postgres.
 
-   We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
+        <details>
+         <summary><strong>Installation and Use</strong></summary>
 
-   #### Windows/macOS/Linux
+    #### macOS
 
-   During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)), you will be prompted to set a password - make sure to use something you'll remember.
+    We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
 
-   #### Viewing/Editing the DB
+    #### Windows/macOS/Linux
 
-   If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
+    During the installation process (if you follow the steps on [postgresql.org](https://www.postgresql.org/download/)), you will be prompted to set a password - make sure to use something you'll remember.
 
-   #### Seeding the Database
+    #### Viewing/Editing the DB
 
-   You can seed the database using the `mikro-orm/cli` tool.
+    If you'd like a visual way of viewing or editing your local database, try using [TablePlus](https://tableplus.com).
 
-   You can drop, create, migrate, and seed the database any time you need with this command (run from `packages/api`):
+    #### Seeding the Database
 
-   - `yarn mikro-orm migration:fresh --seed DatabaseSeeder`
+    You can seed the database using the `mikro-orm/cli` tool.
 
-   > :warning: **NOTE**: Running the above command will delete all data in your database
+    You can drop, create, migrate, and seed the database any time you need with this command (run from `packages/api`):
 
-   #### Database migrations
+    - `yarn mikro-orm migration:fresh --seed DatabaseSeeder`
 
-   To run migrations locally, use `yarn migrate` from the root. If you ever want to replace your db contents with a fresh setup, run `yarn db:fresh`.
+    > :warning: **NOTE**: Running the above command will delete all data in your database
 
-   #### Updating Mikro-ORM
+    #### Database migrations
 
-   The process to update all packages is a little painful because ALL Mikro-ORM dependencies across BOTH packages must be kept in sync. Run both commands below (after modifying the version to match whatever target needed)
+    To run migrations locally, use `yarn migrate` from the root. If you ever want to replace your db contents with a fresh setup, run `yarn db:fresh`.
 
-   ```sh
-   # API
-   yarn workspace @hangar/api add @mikro-orm/core@^6.0 @mikro-orm/knex@^6.0 @mikro-orm/postgresql@^6.0 mikro-orm@^6.0
+    #### Updating Mikro-ORM
 
-   # DB
-   yarn workspace @hangar/database add @mikro-orm/cli@^6.0 @mikro-orm/core@^6.0 @mikro-orm/knex@^6.0 @mikro-orm/migrations@^6.0 @mikro-orm/postgresql@^6.0 @mikro-orm/seeder@^6.0 mikro-orm@^6.0
-   ```
+    The process to update all packages is a little painful because ALL Mikro-ORM dependencies across BOTH packages must be kept in sync. Run both commands below (after modifying the version to match whatever target needed)
 
-   #### Restoring a Production DB locally
+    ```sh
+    # API
+    yarn workspace @hangar/api add @mikro-orm/core@^6.0 @mikro-orm/knex@^6.0 @mikro-orm/postgresql@^6.0 mikro-orm@^6.0
 
-   In order to debug an issue locally, it can be helpful to mirror the prod DB locally. When doing so, make sure to avoid actions that will trigger text messages because user data is REAL. Always re-seed the DB after fixing your issue to avoid sending erroneous texts.
+    # DB
+    yarn workspace @hangar/database add @mikro-orm/cli@^6.0 @mikro-orm/core@^6.0 @mikro-orm/knex@^6.0 @mikro-orm/migrations@^6.0 @mikro-orm/postgresql@^6.0 @mikro-orm/seeder@^6.0 mikro-orm@^6.0
+    ```
 
-   ⚠️ **WARNING**: Make sure to follow these steps closely. Making an error below has the potential to overwrite production data if your token allows for write access.
+    #### Restoring a Production DB locally
 
-   1. Open TablePlus (no need to connect to a DB)
-   1. Go to `File > Backup` (Windows steps TBD), choose your **production** database connection
-   1. Select the prod database
-   1. Make sure the Postgres version is `PostgreSQL 14.0` and set the options to be `--no-owner` and `--format=custom`
-   1. Click `Start Backup`
-   1. (_OPTIONAL_) Drop all current data to ensure your local copy is an exact replica, otherwise some local data may persist
-      1. Open a connection to your **local** database, select all tables and functions (`command + a` on macOS), right click, and choose "Delete"
-      1. When prompted, check the option for `Cascade` and click `OK`
-   1. Wait for the backup to finish and then go to `File > Restore` (Windows steps TBD), choose your **local** database connection
-   1. Remove all flags from the left hand side (primarily, `--single-transaction` which will cause your restore to fail on conflict)
-   1. Select your database on the right hand side
-   1. Click `Start restore`
+    In order to debug an issue locally, it can be helpful to mirror the prod DB locally. When doing so, make sure to avoid actions that will trigger text messages because user data is REAL. Always re-seed the DB after fixing your issue to avoid sending erroneous texts.
 
-   #### Restarting Table Sequences
+    ⚠️ **WARNING**: Make sure to follow these steps closely. Making an error below has the potential to overwrite production data if your token allows for write access.
 
-   If you add data manually to your database (through a tool like TablePlus) and do _NOT_ let Postgres assign an `id` automatically, you will disrupt the sequence for that table that determines the _next_ available `id` to assign. If that happens, perform the following queries to restart it.
+    1. Open TablePlus (no need to connect to a DB)
+    1. Go to `File > Backup` (Windows steps TBD), choose your **production** database connection
+    1. Select the prod database
+    1. Make sure the Postgres version is `PostgreSQL 14.0` and set the options to be `--no-owner` and `--format=custom`
+    1. Click `Start Backup`
+    1. (_OPTIONAL_) Drop all current data to ensure your local copy is an exact replica, otherwise some local data may persist
+       1. Open a connection to your **local** database, select all tables and functions (`command + a` on macOS), right click, and choose "Delete"
+       1. When prompted, check the option for `Cascade` and click `OK`
+    1. Wait for the backup to finish and then go to `File > Restore` (Windows steps TBD), choose your **local** database connection
+    1. Remove all flags from the left hand side (primarily, `--single-transaction` which will cause your restore to fail on conflict)
+    1. Select your database on the right hand side
+    1. Click `Start restore`
 
-   Find the appropriate sequence name:
+    #### Restarting Table Sequences
 
-   ```sql
-   SELECT sequence_schema, sequence_name
-   FROM information_schema.sequences
-   ORDER BY sequence_name;
-   ```
+    If you add data manually to your database (through a tool like TablePlus) and do _NOT_ let Postgres assign an `id` automatically, you will disrupt the sequence for that table that determines the _next_ available `id` to assign. If that happens, perform the following queries to restart it.
 
-   Restart the sequence with a new id:
+    Find the appropriate sequence name:
 
-   ```sql
-   ALTER SEQUENCE "YOUR_TABLE_SEQUENCE" RESTART WITH THE_NEXT_ID_TO_ASSIGN;
-   ```
+    ```sql
+    SELECT sequence_schema, sequence_name
+    FROM information_schema.sequences
+    ORDER BY sequence_name;
+    ```
 
-   (e.g., `ALTER SEQUENCE "Provider_id_seq" RESTART WITH 11;`)
+    Restart the sequence with a new id:
 
-   </details>
+    ```sql
+    ALTER SEQUENCE "YOUR_TABLE_SEQUENCE" RESTART WITH THE_NEXT_ID_TO_ASSIGN;
+    ```
 
-   ### Slack
+    (e.g., `ALTER SEQUENCE "Provider_id_seq" RESTART WITH 11;`)
 
-   To configure Slack notifications for certain events, create a Slack app use the following manifest after selecting `From an app manifest` (NOTE: watch out for whitespace issues when copying):
+       </details>
 
-   ```yml
-   display_information:
-     name: Hangar Dev (YOUR_FIRST_NAME)
-     description: Dev bot for testing integrations
-     background_color: '#000000'
-   features:
-     bot_user:
-       display_name: Hangar (YOUR_FIRST_NAME)
-       always_online: false
-   oauth_config:
-     scopes:
-       bot:
-         - chat:write.public
-         - chat:write
-   settings:
-     org_deploy_enabled: false
-     socket_mode_enabled: false
-     token_rotation_enabled: false
-   ```
+    ### Slack
 
-   After creating the app, use the sidebar and go to `Install App` and request to install the app to your workspace. Once approved, head back to this section and `Install to workspace`.
+    To configure Slack notifications for certain events, create a Slack app use the following manifest after selecting `From an app manifest` (NOTE: watch out for whitespace issues when copying):
 
-   After installation, copy the `Bot User OAuth Token` value (starting with `xoxb-`) and use that for your `SLACK_BOT_TOKEN`.
+    ```yml
+    display_information:
+    name: Hangar (YOUR_FIRST_NAME)
+    description: Dev bot for testing integrations
+    background_color: '#000000'
+    features:
+    bot_user:
+      display_name: Hangar (YOUR_FIRST_NAME)
+      always_online: false
+    oauth_config:
+    scopes:
+      user:
+        - email
+        - openid
+        - profile
+      bot:
+        - chat:write
+        - chat:write.public
+    settings:
+    org_deploy_enabled: false
+    socket_mode_enabled: false
+    token_rotation_enabled: false
+    ```
 
-   Channel IDs can be obtained by right clicking a channel in the sidebar and removing the last path value from the URL.
+    After creating the app, use the sidebar and go to `Install App` and request to install the app to your workspace. Once approved, head back to this section and `Install to workspace`.
 
-1. Start the development server
+    After installation, copy the `Bot User OAuth Token` value (starting with `xoxb-`) and use that for your `SLACK_BOT_TOKEN`.
 
-   ```zsh
-   yarn dev
-   ```
+    Channel IDs can be obtained by right clicking on a channel in the sidebar and clicking on "View Channel Details" and at he very nottom you will see the channel ID or you can go to copy-> copy link and then removing the last path value from the URL.
 
-   When you see this success message, open the url to load the site
+1.  Start the development server
 
-   ```zsh
-   🚀 Listening at http://localhost:3000
-   ```
+    ```zsh
+    yarn dev
+    ```
 
-   > The server starts before Next.js finishes compiling, so the first time may take a little bit to load
+    When you see this success message, open the url to load the site
 
-1. After your initial setup, you'll need to run your database migrations:
+    ```zsh
+    🚀 Listening at http://localhost:3000
+    ```
 
-   ```
-   yarn migrate
-   ```
+    > The server starts before Next.js finishes compiling, so the first time may take a little bit to load
 
-1. Start developing
+1.  After your initial setup, you'll need to run your database migrations:
+
+    ```
+    yarn migrate
+    ```
+
+1.  Start developing
 
 ### Containerization
 
