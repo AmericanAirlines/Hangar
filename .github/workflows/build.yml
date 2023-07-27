@@ -32,6 +32,9 @@ jobs:
       - name: Build Database
         run: yarn workspace @hangar/database build
 
+      - name: Build Web
+        run: yarn workspace @hangar/web build
+
       - name: Typecheck
         run: yarn typecheck
 
