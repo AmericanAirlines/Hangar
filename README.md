@@ -131,13 +131,13 @@
 
    ```yml
    display_information:
-   name: Hangar (YOUR_FIRST_NAME)
-   description: Dev bot for testing integrations
-   background_color: '#000000'
+     name: Hangar Dev (YOUR_FIRST_NAME)
+     description: Dev bot for testing integrations
+     background_color: '#000000'
    features:
-   bot_user:
-     display_name: Hangar (YOUR_FIRST_NAME)
-     always_online: false
+     bot_user:
+       display_name: Hangar (YOUR_FIRST_NAME)
+       always_online: false
    oauth_config:
    scopes:
      user:
@@ -148,9 +148,9 @@
        - chat:write
        - chat:write.public
    settings:
-   org_deploy_enabled: false
-   socket_mode_enabled: false
-   token_rotation_enabled: false
+     org_deploy_enabled: false
+     socket_mode_enabled: false
+     token_rotation_enabled: false
    ```
 
    After creating the app, use the sidebar and go to `Install App` and request to install the app to your workspace. Once approved, head back to this section and `Install to workspace`.
