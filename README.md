@@ -153,6 +153,8 @@
 
    After installation, copy the `Bot User OAuth Token` value (starting with `xoxb-`) and use that for your `SLACK_BOT_TOKEN`.
 
+   ### Add Redirect URL info here!!!
+
    Channel IDs can be obtained by right clicking a channel in the sidebar and removing the last path value from the URL.
 
 1. Start the development server

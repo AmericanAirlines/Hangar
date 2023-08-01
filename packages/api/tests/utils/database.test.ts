@@ -10,7 +10,7 @@ describe('database utils', () => {
   describe('initDb', () => {
     it('loads the appropriate config', async () => {
       await jest.isolateModulesAsync(async () => {
-        const { initDb } = require('../../src/utils/database');
+        const { initDb } = await import('../../src/utils/database');
         const mockConfig = {};
         const mockDb = {};
         getApiConfigMock.mockReturnValueOnce(mockConfig);
@@ -18,7 +18,7 @@ describe('database utils', () => {
 
         const db = await initDb();
 
-        expect(db).toEqual(mockDb);
+        expect(db).toBe(mockDb);
         expect(initDatabaseMock).toBeCalledWith(
           expect.objectContaining({
             migrate: false,
@@ -30,11 +30,11 @@ describe('database utils', () => {
 
     it('runs migrations in prod', async () => {
       await jest.isolateModulesAsync(async () => {
-        const { initDb } = require('../../src/utils/database');
+        const { initDb } = await import('../../src/utils/database');
         const mockConfig = {};
         getApiConfigMock.mockReturnValueOnce(mockConfig);
 
-        (env as any).nodeEnv = 'production';
+        (env as Record<keyof typeof env, string>).nodeEnv = 'production';
 
         await initDb();
 
@@ -50,7 +50,7 @@ describe('database utils', () => {
   describe('getDbConnection', () => {
     it('throws if the db has not been initialized', async () => {
       await jest.isolateModulesAsync(async () => {
-        const { getDbConnection } = require('../../src/utils/database');
+        const { getDbConnection } = await import('../../src/utils/database');
 
         expect(getDbConnection).toThrow();
       });
@@ -58,7 +58,7 @@ describe('database utils', () => {
 
     it('returns a cached version of the orm if it has been initialized', async () => {
       await jest.isolateModulesAsync(async () => {
-        const { getDbConnection, initDb } = require('../../src/utils/database');
+        const { getDbConnection, initDb } = await import('../../src/utils/database');
 
         const mockConfig = {};
         const mockDb = {};
