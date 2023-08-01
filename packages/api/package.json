@@ -14,10 +14,10 @@
     "clean": "rimraf dist coverage"
   },
   "dependencies": {
+    "@americanairlines/simple-env": "^1.0.4",
     "@hangar/database": "*",
     "@hangar/shared": "*",
     "@hangar/web": "*",
-    "@americanairlines/simple-env": "^1.0.4",
     "@mikro-orm/core": "^6.0.0-dev",
     "@mikro-orm/knex": "^6.0.0-dev",
     "@mikro-orm/postgresql": "^6.0.0-dev",
@@ -26,6 +26,7 @@
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
     "express-rate-limit": "^6.3.0",
+    "jwt-decode": "^3.1.2",
     "mikro-orm": "^6.0.0-dev",
     "readline-sync": "^1.4.10",
     "winston": "^3.3.3"

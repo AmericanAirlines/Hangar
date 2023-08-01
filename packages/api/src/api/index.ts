@@ -3,6 +3,8 @@ import { enforceRateLimiting } from './settings';
 import { env } from '../env';
 import { health } from './health';
 import { slack } from './slack';
+import { auth } from './auth';
+import { callback } from './callback';
 
 export const api = Router();
 
@@ -12,6 +14,8 @@ if (env.nodeEnv !== 'development') api.use(enforceRateLimiting);
 
 // UNPROTECTED ROUTES
 api.use('/health', health);
+api.use('/auth', auth);
+api.use('/callback', callback);
 
 // SELF-PROTECTED ROUTES
 api.use(slack);
