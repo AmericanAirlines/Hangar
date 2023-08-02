@@ -16,6 +16,8 @@ module.exports = {
     '!./src/env.ts',
     '!./src/slack/*',
   ],
+  // Remove this line when the dummyOAuth.ts file is deleted
+  coveragePathIgnorePatterns: ['./src/api/auth/callback/dummyOAuth.ts'],
   coverageThreshold: {
     global: {
       statements: 100,
