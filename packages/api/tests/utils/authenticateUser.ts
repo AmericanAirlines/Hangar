@@ -11,7 +11,7 @@ const res:any = {
 }
 // then we can test the middleware
 describe('authenticate user', () => {
-    it('should call next if the user is authenticated', () => {
+    it('should call redirect to "/" if the user is authenticated', () => {
         // setup
         const options:OAuthUserData = {
             email : 'x' ,
@@ -25,7 +25,7 @@ describe('authenticate user', () => {
         expect(res.redirect).toHaveBeenCalledWith('/');
     })
     
-    it('should call res.status(401) if the user is not authenticated', () => {
+    it('should call redirect to "/error" if the user is not authenticated', () => {
         // setup
         const options:OAuthUserData = {
             email : '' ,
