@@ -25,9 +25,8 @@ describe('Slack auth callback', () => {
     const mockWebClient = { openid: { connect: { token: mockTokenMethod } } };
     webClientSpy.mockReturnValueOnce(mockWebClient as any);
     const mockReq = { query: { code: 'mockCode' } };
-    const mockRes = {};
 
-    await slack(mockReq as any, mockRes as any);
+    await slack(mockReq as any);
 
     expect(mockTokenMethod).toHaveBeenCalledTimes(1);
     expect(mockTokenMethod).toHaveBeenCalledWith(
