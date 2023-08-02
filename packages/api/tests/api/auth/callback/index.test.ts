@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express';
 import request from 'supertest';
-import { slack } from '../../../src/api/auth/callback/slack';
-import { getMock } from '../../testUtils/getMock';
+import { slack } from '../../../../src/api/auth/callback/slack';
+import { getMock } from '../../../testUtils/getMock';
 
-jest.mock('../../../src/api/auth/callback/slack', () => ({
+jest.mock('../../../../src/api/auth/callback/slack', () => ({
   slack: jest.fn().mockImplementation(async (req: Request, res: Response) => {
     res.sendStatus(200);
   }),
@@ -14,7 +14,7 @@ describe('slack callback declarations', () => {
   it('registers the callback handler', async () => {
     await jest.isolateModulesAsync(async () => {
       // Import callback for the first time AFTER the slack method is mocked
-      const { callback } = require('../../../src/api/auth/callback');
+      const { callback } = require('../../../../src/api/auth/callback');
       const app = express();
       app.use(callback);
 
