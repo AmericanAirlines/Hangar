@@ -23,7 +23,6 @@
     "@mikro-orm/postgresql": "^6.0.0-dev",
     "@slack/bolt": "^3.11.0",
     "@slack/web-api": "^6.6.0",
-    "@types/cookie-session": "^2.0.44",
     "cookie-session": "^2.0.0",
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
