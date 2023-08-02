@@ -140,9 +140,13 @@
        always_online: false
    oauth_config:
      scopes:
+       user:
+         - email
+         - openid
+         - profile
        bot:
-         - chat:write.public
          - chat:write
+         - chat:write.public
    settings:
      org_deploy_enabled: false
      socket_mode_enabled: false

@@ -2,9 +2,9 @@ name: Build
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, v3]
   merge_group:
-    branches: [main]
+    branches: [main, v3]
 
 env:
   NODE_VERSION: 16
@@ -31,6 +31,9 @@ jobs:
 
       - name: Build Database
         run: yarn workspace @hangar/database build
+
+      - name: Build Web
+        run: yarn workspace @hangar/web build
 
       - name: Typecheck
         run: yarn typecheck

@@ -8,6 +8,7 @@
     "import/prefer-default-export": ["off"],
     "no-void": ["error", { "allowAsStatement": true }],
     "no-await-in-loop": ["off"],
+    "max-lines": ["error", 100],
     "no-restricted-imports": [
       "error",
       {
