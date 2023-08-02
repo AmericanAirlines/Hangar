@@ -1,12 +1,12 @@
 import * as Slack from '@slack/web-api';
 import jwt_decode from 'jwt-decode';
-import { dummyOAuth } from '../../../../src/api/auth/callback/dummyOAuth';
-import { get } from '../../../../src/api/auth/callback/get';
+import { dummyOAuth } from '../../../../src/api/auth/callback/slack/dummyOAuth';
+import { get } from '../../../../src/api/auth/callback/slack/get';
 import { getMock } from '../../../testUtils/getMock';
 
 jest.mock('@slack/web-api');
 jest.mock('jwt-decode');
-jest.mock('../../../../src/api/auth/callback/dummyOAuth');
+jest.mock('../../../../src/api/auth/callback/slack/dummyOAuth');
 
 const mockToken = {
   ok: true,

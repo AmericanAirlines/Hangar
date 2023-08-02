@@ -5,4 +5,4 @@ import { callback } from './callback';
 export const auth = Router();
 
 auth.use('/callback', callback);
-auth.get('/get', get);
+auth.get('/slack', get);

@@ -1,8 +1,14 @@
 import { WebClient } from '@slack/web-api';
 import { Request /* Response */ } from 'express';
 import jwt_decode from 'jwt-decode';
-import { env } from '../../../env';
-import { dummyOAuth, OAuthArgs } from './dummyOAuth';
+import { env } from '../../../../env';
+import { dummyOAuth } from './dummyOAuth';
+
+type SlackTokenData = {
+  email: string;
+  given_name: string;
+  family_name: string;
+};
 
 export const get = async (req: Request /* , res: Response */) => {
   const myCode: string = req.query.code as string;
@@ -18,8 +24,12 @@ export const get = async (req: Request /* , res: Response */) => {
     redirect_uri: redirect,
   });
 
-  const decoded = jwt_decode<OAuthArgs>(fullToken.id_token as string);
+  const {
+    given_name: firstName,
+    family_name: lastName,
+    email,
+  } = jwt_decode<SlackTokenData>(fullToken.id_token as string);
 
   // Replace this with Core OAuth flow
-  dummyOAuth(decoded);
+  dummyOAuth({ firstName, lastName, email });
 };
