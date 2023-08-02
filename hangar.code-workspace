@@ -16,8 +16,7 @@
       "miaonster.vscode-tsx-arrow-definition",
       "dbaeumer.vscode-eslint",
       "streetsidesoftware.code-spell-checker",
-      "mikestead.dotenv",
-      "yoavbls.pretty-ts-errors"
+      "mikestead.dotenv"
     ]
   },
   "settings": {

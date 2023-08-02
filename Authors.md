@@ -22,4 +22,5 @@
 - Natalie Martinez (mart125074@tamu.edu)
 - Turner Levey (turnerlevey@tamu.edu)
 - Demondre Livinston (demondre.livingston@aa.com)
+- Ansaar Syed (ansaar.syed@aa.com)
 - Grant Hill (grant.hill1@aa.com)
