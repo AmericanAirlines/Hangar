@@ -159,7 +159,7 @@
 
    You will also need to got to `App Home` and use `Cient ID` and `Client Secret` as your `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`, respectively.
 
-   For Slack OAuth to work, your bot needs to be configured with your redirect URL. Go to `OAuth & Permissions` and add a new Redirect URL that = `[your ngrok address]/api/auth/callback/slack`
+   For Slack OAuth to work, your bot needs to be configured with your redirect URL. Go to `OAuth & Permissions` and add a new Redirect URL that = `[your ngrok address]/api/auth/callback/get`
 
    Channel IDs can be obtained by right clicking a channel in the sidebar and removing the last path value from the URL.
 

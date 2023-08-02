@@ -5,7 +5,7 @@ import React from 'react';
 import { PageContainer } from '../components/layout/PageContainer';
 
 async function signInWithSlack() {
-  window.open('/api/auth/slack');
+  window.open('/api/auth/get');
 }
 
 const Home: NextPage = () => (

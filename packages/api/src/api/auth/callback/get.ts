@@ -4,11 +4,11 @@ import jwt_decode from 'jwt-decode';
 import { env } from '../../../env';
 import { dummyOAuth, OAuthArgs } from './dummyOAuth';
 
-export const slack = async (req: Request /* , res: Response */) => {
+export const get = async (req: Request /* , res: Response */) => {
   const myCode: string = req.query.code as string;
   const { slackClientID, slackClientSecret } = env;
 
-  const redirect: string = `${env.baseUrl}/api/auth/callback/slack`;
+  const redirect: string = `${env.baseUrl}/api/auth/callback/get`;
 
   const client = new WebClient(env.slackBotToken);
   const fullToken = await client.openid.connect.token({

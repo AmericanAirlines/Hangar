@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { slack } from './slack';
+import { get } from './get';
 
 export const callback = Router();
 
-callback.get('/slack', slack);
+callback.get('/get', get);

@@ -1,14 +1,14 @@
 import express, { Request, Response } from 'express';
 import request from 'supertest';
-import { slack } from '../../../../src/api/auth/callback/slack';
+import { get } from '../../../../src/api/auth/callback/get';
 import { getMock } from '../../../testUtils/getMock';
 
-jest.mock('../../../../src/api/auth/callback/slack', () => ({
-  slack: jest.fn().mockImplementation(async (req: Request, res: Response) => {
+jest.mock('../../../../src/api/auth/callback/get', () => ({
+  get: jest.fn().mockImplementation(async (req: Request, res: Response) => {
     res.sendStatus(200);
   }),
 }));
-const mockGet = getMock(slack);
+const mockGet = getMock(get);
 
 describe('slack callback declarations', () => {
   it('registers the callback handler', async () => {
@@ -18,7 +18,7 @@ describe('slack callback declarations', () => {
       const app = express();
       app.use(callback);
 
-      await request(app).get('/slack');
+      await request(app).get('/get');
 
       expect(mockGet).toBeCalledTimes(1);
     });

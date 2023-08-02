@@ -1,7 +1,7 @@
 import * as Slack from '@slack/web-api';
 import jwt_decode from 'jwt-decode';
 import { dummyOAuth } from '../../../../src/api/auth/callback/dummyOAuth';
-import { slack } from '../../../../src/api/auth/callback/slack';
+import { get } from '../../../../src/api/auth/callback/get';
 import { getMock } from '../../../testUtils/getMock';
 
 jest.mock('@slack/web-api');
@@ -26,13 +26,13 @@ describe('Slack auth callback', () => {
     webClientSpy.mockReturnValueOnce(mockWebClient as any);
     const mockReq = { query: { code: 'mockCode' } };
 
-    await slack(mockReq as any);
+    await get(mockReq as any);
 
     expect(mockTokenMethod).toHaveBeenCalledTimes(1);
     expect(mockTokenMethod).toHaveBeenCalledWith(
       expect.objectContaining({
         code: mockReq.query.code,
-        redirect_uri: expect.stringContaining('/api/auth/callback/slack'),
+        redirect_uri: expect.stringContaining('/api/auth/callback/get'),
       }),
     );
     expect(dummyOAuthMock).toHaveBeenCalledWith({});
