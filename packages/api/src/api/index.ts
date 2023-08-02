@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import cookieSession from 'cookie-session'
+import cookieSession from 'cookie-session';
 import { enforceRateLimiting } from './settings';
 import { env } from '../env';
 import { health } from './health';
@@ -17,10 +17,12 @@ api.use('/health', health);
 // SELF-PROTECTED ROUTES
 api.use(slack);
 
-api.use(cookieSession({
-    secret : env.sessionSecret ,
-    maxAge : 24 * 60 * 60 * 1000
-}))
+api.use(
+  cookieSession({
+    secret: env.sessionSecret,
+    maxAge: 24 * 60 * 60 * 1000,
+  }),
+);
 
 // Generic catch all for bad requests
 api.use((_req, res) => res.status(404).send({ error: 'API route not found' }));
