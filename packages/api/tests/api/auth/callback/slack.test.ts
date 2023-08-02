@@ -33,7 +33,7 @@ describe('Slack auth callback', () => {
     expect(mockTokenMethod).toHaveBeenCalledWith(
       expect.objectContaining({
         code: mockReq.query.code,
-        redirect_uri: expect.stringContaining('/api/callback/slack'),
+        redirect_uri: expect.stringContaining('/api/auth/callback/slack'),
       }),
     );
     expect(dummyOAuthMock).toHaveBeenCalledWith({});

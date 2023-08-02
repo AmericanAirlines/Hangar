@@ -8,8 +8,7 @@ export const slack = async (req: Request, res: Response) => {
   const myCode: string = req.query.code as string;
   const { slackClientID, slackClientSecret } = env;
 
-  // Make this an env variable
-  const redirect: string = `${env.baseUrl}/api/callback/slack`;
+  const redirect: string = `${env.baseUrl}/api/auth/callback/slack`;
 
   const client = new WebClient(env.slackBotToken);
   const fullToken = await client.openid.connect.token({

@@ -3,7 +3,7 @@ import { slack } from '../../../src/api/auth/slack';
 describe('auth SLACK', () => {
   it('redirects to correct url for happy path', async () => {
     const fullLink =
-      'https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&redirect_uri=undefined%2Fapi%2Fcallback%2Fslack&client_id=undefined';
+      'https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&redirect_uri=undefined%2Fapi%2Fauth%2Fcallback%2Fslack&client_id=undefined';
 
     const mockRedirect = jest.fn();
     const mockReq = {};
