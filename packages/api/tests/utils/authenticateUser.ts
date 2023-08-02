@@ -35,6 +35,7 @@ describe('authenticate user', () => {
         // test
         authenticateUser({options,request:req,response:res})
         // assert
-        expect(res.status).toHaveBeenCalledWith(401)
+        expect(res.redirect).toHaveBeenCalledTimes(1);
+        expect(res.redirect).toHaveBeenCalledWith('/error');
     })
 })
