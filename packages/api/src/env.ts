@@ -9,6 +9,7 @@ export const env = setEnv({
     port: 'PORT',
     slackBotToken: 'SLACK_BOT_TOKEN',
     slackSigningSecret: 'SLACK_SIGNING_SECRET',
+    sessionSecret: 'SESSION_SECRET',
   },
   optional: {
     slackLogLevel: 'SLACK_LOG_LEVEL',
