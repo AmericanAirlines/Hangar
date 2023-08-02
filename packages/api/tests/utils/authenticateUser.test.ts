@@ -6,7 +6,7 @@ const req:any = {
     }
 }
 const res = {
-    redirect : jest.fn(),
+    redirect : jest.fn() ,
 }
 
 // then we can test the middleware
