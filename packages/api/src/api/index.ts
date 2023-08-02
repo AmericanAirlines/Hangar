@@ -18,8 +18,8 @@ api.use('/health', health);
 api.use(slack);
 
 api.use(cookieSession({
-    secret: env.sessionSecret ,
-    maxAge: 24 * 60 * 60 * 1000
+    secret : env.sessionSecret ,
+    maxAge : 24 * 60 * 60 * 1000
 }))
 
 // Generic catch all for bad requests
