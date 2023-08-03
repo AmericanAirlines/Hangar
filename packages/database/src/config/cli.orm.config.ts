@@ -1,10 +1,10 @@
 /* istanbul ignore file */
+import fs from 'fs';
 import { Options } from '@mikro-orm/core';
 import { config } from 'dotenv-flow';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { SeedManager } from '@mikro-orm/seeder';
 import readlineSync from 'readline-sync';
-import fs from 'fs';
 import {
   baseExtensions,
   entitiesPath,
