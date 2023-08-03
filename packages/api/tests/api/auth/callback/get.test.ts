@@ -1,12 +1,12 @@
 import * as Slack from '@slack/web-api';
 import jwt_decode from 'jwt-decode';
-import { dummyOAuth } from '../../../../src/api/auth/callback/slack/dummyOAuth';
-import { get } from '../../../../src/api/auth/callback/slack/get';
+import { SlackTokenData, get } from '../../../../src/api/auth/callback/slack/get';
 import { getMock } from '../../../testUtils/getMock';
+import { authenticateUser } from '../../../../src/utils/authenticateUser';
 
 jest.mock('@slack/web-api');
 jest.mock('jwt-decode');
-jest.mock('../../../../src/api/auth/callback/slack/dummyOAuth');
+jest.mock('../../../../src/utils/authenticateUser');
 
 const mockToken = {
   ok: true,
@@ -16,17 +16,22 @@ const mockToken = {
 };
 const jwtDecodeMock = getMock(jwt_decode);
 const webClientSpy = jest.spyOn(Slack, 'WebClient');
-const dummyOAuthMock = getMock(dummyOAuth);
+const authenticateUserMock = getMock(authenticateUser);
 
 describe('Slack auth callback', () => {
   it('fetches a token using the correct args', async () => {
     const mockTokenMethod = jest.fn().mockReturnValueOnce(mockToken);
-    jwtDecodeMock.mockReturnValueOnce({});
+    const mockUserData: SlackTokenData = {
+      email: 'user@domain.com',
+      given_name: 'Lorem',
+      family_name: 'Ipsum',
+    };
+    jwtDecodeMock.mockReturnValueOnce(mockUserData);
     const mockWebClient = { openid: { connect: { token: mockTokenMethod } } };
     webClientSpy.mockReturnValueOnce(mockWebClient as any);
     const mockReq = { query: { code: 'mockCode' } };
 
-    await get(mockReq as any);
+    await get(mockReq as any, {} as any);
 
     expect(mockTokenMethod).toHaveBeenCalledTimes(1);
     expect(mockTokenMethod).toHaveBeenCalledWith(
@@ -35,12 +40,14 @@ describe('Slack auth callback', () => {
         redirect_uri: expect.stringContaining('/api/auth/callback/get'),
       }),
     );
-    expect(dummyOAuthMock).toHaveBeenCalledWith({});
-  });
-
-  it('fetches the correct user info', async () => {
-    // Set up
-    // Execute
-    // Evaluate
+    expect(authenticateUserMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: {
+          firstName: mockUserData.given_name,
+          lastName: mockUserData.family_name,
+          email: mockUserData.email,
+        },
+      }),
+    );
   });
 });

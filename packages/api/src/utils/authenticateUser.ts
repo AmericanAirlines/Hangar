@@ -10,16 +10,16 @@ export type OAuthUserData = {
   family_name?: string;
 };
 type AuthenticateArgs = {
-  options: OAuthUserData;
   req: Request;
   res: Response;
+  data: OAuthUserData;
 };
-export const authenticateUser = ({ options, req, res }: AuthenticateArgs) => {
+export const authenticateUser = ({ data, req, res }: AuthenticateArgs) => {
   // validate the request has a valid OAuthUserData object
   // if so, add it to the session
   // if not, redirect to error
-  if (options.email) {
-    req.session = options;
+  if (data.email) {
+    req.session = data;
     res.redirect('/');
   } else {
     res.redirect('/error');

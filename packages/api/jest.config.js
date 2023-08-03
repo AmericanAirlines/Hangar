@@ -1,4 +1,3 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -16,8 +15,6 @@ module.exports = {
     '!./src/env.ts',
     '!./src/slack/*',
   ],
-  // Remove this line when the dummyOAuth.ts file is deleted
-  coveragePathIgnorePatterns: ['./src/api/auth/callback/slack/dummyOAuth.ts'],
   coverageThreshold: {
     global: {
       statements: 100,
