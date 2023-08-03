@@ -27,6 +27,7 @@
     "dotenv-flow": "^3.2.0",
     "express": "^4.17.1",
     "express-rate-limit": "^6.3.0",
+    "jwt-decode": "^3.1.2",
     "mikro-orm": "^6.0.0-dev",
     "readline-sync": "^1.4.10",
     "winston": "^3.3.3"

@@ -13,13 +13,13 @@ const res = {
 describe('authenticate user', () => {
   it('should call redirect to "/" if the user is authenticated', () => {
     // setup
-    const options: OAuthUserData = {
+    const data: OAuthUserData = {
       email: 'x',
       firstName: 'a',
       lastName: 'b',
     };
     // test
-    authenticateUser({ options, req, res } as any);
+    authenticateUser({ data, req, res } as any);
     // assert
     expect(res.redirect).toHaveBeenCalledTimes(1);
     expect(res.redirect).toHaveBeenCalledWith('/');
@@ -27,13 +27,13 @@ describe('authenticate user', () => {
 
   it('should call redirect to "/error" if the user is not authenticated', () => {
     // setup
-    const options: OAuthUserData = {
+    const data: OAuthUserData = {
       email: '',
       firstName: 'a',
       lastName: 'b',
     };
     // test
-    authenticateUser({ options, req, res } as any);
+    authenticateUser({ data, req, res } as any);
     // assert
     expect(res.redirect).toHaveBeenCalledTimes(1);
     expect(res.redirect).toHaveBeenCalledWith('/error');

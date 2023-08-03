@@ -157,6 +157,10 @@
 
    After installation, copy the `Bot User OAuth Token` value (starting with `xoxb-`) and use that for your `SLACK_BOT_TOKEN`.
 
+   You will also need to got to `App Home` and use `Cient ID` and `Client Secret` as your `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`, respectively.
+
+   For Slack OAuth to work, your bot needs to be configured with your redirect URL. Go to `OAuth & Permissions` and add a new Redirect URL that = `[your ngrok address]/api/auth/callback/slack`
+
    Channel IDs can be obtained by right clicking a channel in the sidebar and removing the last path value from the URL.
 
 1. Start the development server
@@ -180,6 +184,7 @@
    ```
 
 1. Start developing
+1. For Slack integration, make sure to copy your ngrok address into `BASE_URL` config var (with no trailing slash!)
 
 ### Containerization
 
