@@ -1,19 +1,19 @@
 type Colors = Record<string, string>;
 
-const brandPrimary = '#33658A';
-const brandPrimaryLight = '#86BBD8';
-const brandPrimaryDark = '#2F4858';
-const brandTertiary = '#F6AE2D';
-const brandCta = '#F26419';
-const grayscaleLight = '#EDEEF3';
-const grayscale = '#CBCDD9';
+const brandPrimary = '#00467F';
+const brandPrimaryLight = '#0078D2';
+const brandPrimaryDark = '#36495A';
+const brandTertiary = '#FAAF00';
+const brandCta = '#FF7318';
+const grayscaleLight = '#D0DAE0';
+const grayscale = '#9DA6AB';
 
 export const statusColors: Colors = {
-  error: '#E53E3E',
-  errorFaint: '#FF8888',
-  errorDark: '#C52E2E',
-  warning: '#DD6B20',
-  success: '#38A169',
+  error: '#E53E3E', // not in brand
+  errorFaint: '#FF8888', // not in brand
+  errorDark: '#C30019',
+  warning: '#FAAF00',
+  success: '#00B989',
   alert: brandCta,
 };
 
@@ -26,7 +26,7 @@ export const colors: Colors = {
   grayscaleLight,
   grayscale,
   white: '#FFFFFF',
-  black: '#000000',
-  muted: '#868895',
+  black: '#131313',
+  muted: '#7B8085',
   ...statusColors,
 };
