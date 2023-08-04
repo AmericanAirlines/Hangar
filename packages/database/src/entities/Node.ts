@@ -1,5 +1,6 @@
 import { AnyEntity, BaseEntity, BigIntType, PrimaryKey, Property } from '@mikro-orm/core';
 
+export type AnyNode = Node<AnyEntity>;
 export abstract class Node<T extends AnyEntity> extends BaseEntity {
   @PrimaryKey({ type: BigIntType })
   public id!: string;
