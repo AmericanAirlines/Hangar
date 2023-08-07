@@ -33,7 +33,7 @@ export const NavBar: React.FC = () => {
           aria-label="Navigation Menu"
           colorScheme="whiteAlpha"
           icon={<HamburgerIcon />}
-          display={{ base: 'inline', sm: 'inline', md: 'inline', lg: 'none' }}
+          display={{ base: 'inline', sm: 'inline', lg: 'none' }}
           onClick={onOpen}
         />
         <Box
@@ -53,7 +53,7 @@ export const NavBar: React.FC = () => {
             <Text fontWeight="bold" fontSize={LOGO_FONT_SIZE}></Text>
           </HStack>
         </Box>
-        <Box display={{ base: 'none', sm: 'none', md: 'none', lg: 'inline' }}>
+        <Box display={{ base: 'none', sm: 'none', lg: 'inline' }}>
           <HStack sx={{ float: 'right', w: '100%' }}>
             <Button sx={{ w: '75%', bgColor: statusColors.alert, ml: '4px' }}>Sign Up</Button>
             <Button>Login</Button>
