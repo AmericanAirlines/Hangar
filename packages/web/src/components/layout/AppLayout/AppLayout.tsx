@@ -1,17 +1,7 @@
-import {
-  Box,
-  Center,
-  ChakraProps,
-  Flex,
-  HStack,
-  Heading,
-  Image,
-  Spacer,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Center, ChakraProps, Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { appName } from '@hangar/shared';
 import { colors } from '../../../theme';
+import { NavBar } from './NavBar/NavBar';
 
 type AppLayoutProps = ChakraProps & {
   children: React.ReactNode;
@@ -19,8 +9,6 @@ type AppLayoutProps = ChakraProps & {
 
 const MAX_CONTENT_WIDTH_IN_PIXELS = 1200;
 const NAV_HEIGHT = '60px';
-const LOGO_HEIGHT = { base: '24px', sm: '28px', md: '40px' };
-const LOGO_FONT_SIZE = { base: '22px', md: '33px' };
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children, ...chakraProps }) => {
   const router = useRouter();
@@ -38,26 +26,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, ...chakraProps }
           gap={0}
           minH={NAV_HEIGHT}
         >
-          <Box
-            onClick={() => {
-              void router.push('/');
-            }}
-            cursor="pointer"
-          >
-            <HStack as="a" py={3} spacing={2} lineHeight={LOGO_HEIGHT}>
-              <Image
-                alt="logo"
-                src={'/Logo.svg'}
-                height={LOGO_HEIGHT}
-                fallback={<Heading>{appName}</Heading>}
-              />
-              <Text fontWeight="bold" fontSize={LOGO_FONT_SIZE}></Text>
-            </HStack>
-          </Box>
-
-          <Spacer />
-
           {/* Add nav elements here */}
+          <NavBar />
         </Flex>
       </Box>
 
