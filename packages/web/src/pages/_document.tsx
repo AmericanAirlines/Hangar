@@ -29,12 +29,6 @@ export default class Document extends NextDocument {
           <link rel="manifest" href="/manifest.json" />
           <meta name="msapplication-TileColor" content={colors.brandPrimary} />
           <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
-            rel="stylesheet"
-          />
         </Head>
         <body style={{ minHeight: '100%' }}>
           {/* Load color mode script for non-SSR pages */}

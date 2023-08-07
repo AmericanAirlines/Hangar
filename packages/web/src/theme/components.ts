@@ -10,6 +10,13 @@ export const components: ThemeComponents = {
       },
     },
   },
+  Heading: {
+    variants: {
+      cta: {
+        fontFamily: 'Pacifico',
+      },
+    },
+  },
   Link: {
     variants: {
       cta: {

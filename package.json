@@ -31,13 +31,15 @@
     "spellcheck": "yarn cspell --no-progress ."
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.0",
+    "@next/font": "^13.4.13",
     "esbuild": "^0.15.8",
-    "patch-package": "^6.4.7",
-    "@chakra-ui/icons": "^2.1.0"
+    "patch-package": "^6.4.7"
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.44",
     "cspell": "^6.31.1",
+    "husky": "^8.0.3",
     "lerna": "^5.5.4",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.4.0",

@@ -28,39 +28,45 @@ export const NavBar: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <HStack sx={{ w: '100%' }}>
+      <HStack width="full">
         <IconButton
           aria-label="Navigation Menu"
           colorScheme="whiteAlpha"
           icon={<HamburgerIcon />}
-          display={{ base: 'inline', sm: 'inline', lg: 'none' }}
+          display={{ base: 'inline', lg: 'none' }}
           onClick={onOpen}
         />
+
         <Box
           onClick={() => {
             void router.push('/');
           }}
           cursor="pointer"
-          sx={{ w: '100%' }}
+          width="full"
         >
           <HStack as="a" py={3} spacing={2} lineHeight={LOGO_HEIGHT}>
             <Image
               alt="logo"
               src={'/Logo.svg'}
               height={LOGO_HEIGHT}
-              fallback={<Heading>{appName}</Heading>}
+              fallback={<Heading variant={'cta'}>{appName}</Heading>}
             />
             <Text fontWeight="bold" fontSize={LOGO_FONT_SIZE}></Text>
           </HStack>
         </Box>
-        <Box display={{ base: 'none', sm: 'none', lg: 'inline' }}>
-          <HStack sx={{ float: 'right', w: '100%' }}>
-            <Button sx={{ w: '75%', bgColor: statusColors.alert, ml: '4px' }}>Sign Up</Button>
+
+        <Box display={{ base: 'none', lg: 'inline' }}>
+          <HStack float="right" width="full">
+            <Button width="75%" backgroundColor={statusColors.alert} marginLeft="4px">
+              Sign Up
+            </Button>
             <Button>Login</Button>
           </HStack>
         </Box>
       </HStack>
+
       <Spacer />
+
       <Drawer placement="left" size={'xs'} onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
