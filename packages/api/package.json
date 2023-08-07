@@ -18,7 +18,6 @@
     "@hangar/database": "*",
     "@hangar/shared": "*",
     "@hangar/web": "*",
-    "@mikro-orm/cli": "^6.0.0-dev.89",
     "@mikro-orm/core": "^6.0.0-dev",
     "@mikro-orm/knex": "^6.0.0-dev",
     "@mikro-orm/postgresql": "^6.0.0-dev",
