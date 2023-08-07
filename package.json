@@ -31,8 +31,6 @@
     "spellcheck": "yarn cspell --no-progress ."
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.0",
-    "@next/font": "^13.4.13",
     "esbuild": "^0.15.8",
     "patch-package": "^6.4.7"
   },
