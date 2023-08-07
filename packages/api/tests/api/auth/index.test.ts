@@ -18,7 +18,7 @@ describe('slack auth declarations', () => {
       const app = express();
       app.use(auth);
 
-      await request(app).get('/slack');
+      await request(app).get('/');
 
       expect(mockGet).toBeCalledTimes(1);
     });
