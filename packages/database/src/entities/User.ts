@@ -1,6 +1,7 @@
 /* istanbul ignore file */
-import { Entity, Property } from '@mikro-orm/core';
+import { Entity, Property , OneToOne } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
+import { Project } from './Project';
 import { Node } from './Node';
 
 export type UserConstructorValues = ConstructorValues<User>;
@@ -9,9 +10,12 @@ export type UserConstructorValues = ConstructorValues<User>;
 export class User extends Node<User> {
   @Property({ columnType: 'text' })
   firstName: string;
-
+  
   @Property({ columnType: 'text' })
   lastName: string;
+  
+  @OneToOne({nullable:true})
+  project?: Project
 
   constructor({ firstName, lastName }: UserConstructorValues) {
     super();
