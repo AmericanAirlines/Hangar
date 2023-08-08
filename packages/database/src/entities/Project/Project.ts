@@ -1,12 +1,12 @@
 /* istanbul ignore file */
-import { Entity, Ref, OneToOne, Property , OneToMany , Collection , QueryResult } from '@mikro-orm/core';
-import { EntityManager as em, EntityRepository } from '@mikro-orm/postgresql'
-import { ConstructorValues } from '../utils/types';
-import { Node } from './Node';
-import { User } from './User';
+import { Entity, Property , OneToMany , Collection , QueryResult } from '@mikro-orm/core';
+import { EntityManager as em } from '@mikro-orm/postgresql'
+import { ConstructorValues } from '../../types/ConstructorValues';
+import { Node } from '../Node';
+import { User } from '../User';
+import { decrementActiveJudgeCount , incrementJudgeVisits } from './judgeCount';
 
 export type ProjectConstructorValues = ConstructorValues<Project,'contributors','location'>;
-type ProjectPropertyKeys = keyof ProjectConstructorValues;
 
 @Entity()
 export class Project extends Node<Project> {
@@ -24,10 +24,10 @@ export class Project extends Node<Project> {
   
   // does the following apply with mikro-orm?
   // TODO: Make the below two attributes private once this issue is closed: https://github.com/typeorm/typeorm/issues/3548
-  @Property({ columnType: 'int' })
+  @Property({ columnType: 'int', hidden: true })
   judgeVisits: number = 0;
 
-  @Property({ columnType: 'int' })
+  @Property({ columnType: 'int', hidden: true })
   activeJudgeCount: number = 0;
   
   constructor({ name, description, ...extraValues }: ProjectConstructorValues) {
@@ -37,7 +37,6 @@ export class Project extends Node<Project> {
     this.description = description;
   }
 
-    // static async getNextAvailableProjectExcludingProjects(excludedProjectIds: number[] = []): Promise<Project> {
   static async getNextAvailableProjectExcludingProjects({excludedProjectIds=[], entityManager}:{excludedProjectIds: string[],entityManager:em}): Promise<Project|undefined> {
     let project: Project|null;
     let retries = 5;
@@ -70,11 +69,11 @@ export class Project extends Node<Project> {
         }
       } else {
         // No projects remaining
-        return;
+        return undefined;
       }
 
       // We picked a project that we couldn't modify; wait briefly and then try again
-      await new Promise((resolve) => setTimeout(resolve, Math.random() * 500));
+      await new Promise((resolve) => {setTimeout(resolve, Math.random() * 500)});
 
       retries -= 1;
     } while (retries > 0);
@@ -84,7 +83,6 @@ export class Project extends Node<Project> {
   }
 
   /* istanbul ignore next */
-  // static async updateSelectedProject(project: Project, hash: string): Promise<UpdateResult> {
   static async updateSelectedProject({project,entityManager}:{project: Project,entityManager:em}): Promise<QueryResult<Project>> {
     return entityManager.createQueryBuilder(Project)
       .update({ activeJudgeCount: project.activeJudgeCount + 1 })
@@ -96,25 +94,7 @@ export class Project extends Node<Project> {
       .execute();
   }
 
-  /* istanbul ignore next */
-  async decrementActiveJudgeCount({project,entityManager}:{project: Project, entityManager:em}): Promise<void> {
-    await entityManager.createQueryBuilder(Project)
-      .update({ activeJudgeCount: project.activeJudgeCount - 1 })
-      // .update()
-      // .set({ activeJudgeCount: () => '"project"."activeJudgeCount" - 1' })
-      .where({ id: project.id })
-      // .where('"project"."id" = :id AND "project"."activeJudgeCount" > 0', { id: project.id })
-      .execute();
-  }
+  static decrementActiveJudgeCount = decrementActiveJudgeCount
 
-  /* istanbul ignore next */
-  async incrementJudgeVisits({project,entityManager}:{project: Project, entityManager:em}): Promise<void> {
-    await entityManager.createQueryBuilder('project')
-      .update({ judgeVisits: project.judgeVisits - 1 })
-      // .update()
-      // .set({ judgeVisits: () => '"project"."judgeVisits" + 1' })
-      .where({ id: project.id })
-      // .where('"project"."id" = :id', { id: this.id })
-      .execute();
-  }
+  static incrementJudgeVisits = incrementJudgeVisits
 }

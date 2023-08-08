@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 import { Entity, Property, EntityManager } from '@mikro-orm/core';
-import { ConstructorValues } from '../utils/types';
+import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 
 export enum AppConfigKey {
