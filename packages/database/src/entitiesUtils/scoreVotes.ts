@@ -78,9 +78,8 @@ export const scoreVotes = (
                 // Update min/max score for traditional scoring
                 const calibratedScores = Object.values(scores);
                 for (let j = 0; j < calibratedScores.length; j += 1) {
-                  // check? calibratedScores?.[j]?.score||0
-                  minScore = Math.min(minScore, calibratedScores?.[j]?.score||0);
-                  maxScore = Math.max(maxScore, calibratedScores?.[j]?.score||0);
+                  minScore = Math.min(minScore, calibratedScores?.[j]?.score as number);
+                  maxScore = Math.max(maxScore, calibratedScores?.[j]?.score as number);
                 }
               }
             }

@@ -35,7 +35,6 @@ export class Judge extends Node<Judge> {
     
     this.currentProject = newProject?.toReference() // ? newProject.id : null;
     await entityManager.persistAndFlush(this)
-    // await this.save();
     return newProject;
   }
 
@@ -53,35 +52,35 @@ export class Judge extends Node<Judge> {
       throw new Error('Current Project or previous Project was not defined during vote operation')
     }
     // Create a new vote object with the outcome of the vote
-    // await new JudgingVote(this.visitedProjects[this.visitedProjects.length - 1], this.currentProject, currentProjectChosen).save();
-    const j=new JudgingVote({
-      // previousProject: number, currentProject: number, currentProjectChosen: boolean
-      previousProject: this.previousProject , // this.visitedProjects[this.visitedProjects.length - 1] ,
+    await entityManager.persistAndFlush(new JudgingVote({
+      previousProject: this.previousProject ,
       currentProject: this.currentProject ,
       currentProjectChosen ,
-    })
-    await entityManager.persistAndFlush(j)
+    }))
     await this.recordCurrentProjectAndSave({entityManager,updatePrevious:true});
   }
 
   async recordCurrentProjectAndSave({entityManager , updatePrevious = true}:{entityManager:em,updatePrevious:boolean}): Promise<void> {
+    
     if (!this.currentProject) {
       throw new Error('Current Project was not defined during save operation')
     }
     this.visitedProjects.add( this.currentProject );
+    
     if (updatePrevious) {
       this.previousProject = this.currentProject;
     }
-    // const currentProject = await Project.findOne(this.currentProject);
+    
     if(this.currentProject){
       const currentProject = await entityManager.findOne(Project,{id:this.currentProject.id});
+
       if(currentProject){
         await Project.decrementActiveJudgeCount({project:currentProject,entityManager});
         await Project.incrementJudgeVisits({project:currentProject,entityManager});
       }
+
       this.currentProject = undefined;
       await entityManager.persistAndFlush(this)
-      // await this.save();
     }
   }
 }

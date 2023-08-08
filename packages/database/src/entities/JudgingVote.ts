@@ -11,6 +11,8 @@ const shuffle = (arr:any) =>
 
 export const insufficientVoteCountError = 'InsufficientVoteCount';
 
+type NormalizedScore = number[]
+type NormalizedScores = { [id: string]: NormalizedScore }
 
 export type JudgingVoteConstructorValues = ConstructorValues<JudgingVote>
 
@@ -63,11 +65,10 @@ export class JudgingVote extends Node<JudgingVote> {
     }
 
     // Average scores from all passes
-    const normalizedScores: { [id: string]: number[] } = {};
+    const normalizedScores: NormalizedScores = {}
     Object.values(initialScores).forEach((scores) => {
       Object.values(scores).forEach((projectScore) => {
-        // check?  (normalizedScores[projectScore.id]||[])
-        normalizedScores[projectScore.id] = normalizedScores[projectScore.id] ? [...(normalizedScores[projectScore.id]||[]), projectScore.score] : [projectScore.score];
+        normalizedScores[projectScore.id] = normalizedScores[projectScore.id] ? [...(normalizedScores[projectScore.id] as NormalizedScore), projectScore.score] : [projectScore.score];
       });
     });
 
@@ -91,8 +92,7 @@ export class JudgingVote extends Node<JudgingVote> {
       }
     }
 
-    // check? ||0
-    const orderedProjects = projects.sort((a: Project, b: Project) => (((trimmedMeanScores[a.id]||0) > (trimmedMeanScores[b.id]||0)) ? -1 : 1));
+    const orderedProjects = projects.sort((a: Project, b: Project) => (((trimmedMeanScores[a.id] as number) > (trimmedMeanScores[b.id] as number)) ? -1 : 1));
 
     const projectResults: ProjectResult[] = [];
 
@@ -102,7 +102,7 @@ export class JudgingVote extends Node<JudgingVote> {
         projectResults.push({
           id: matchingProject.id,
           name: matchingProject.name,
-          score: trimmedMeanScores[scoredProject.id]||0,
+          score: trimmedMeanScores[scoredProject.id] as number,
         });
 			}
     });

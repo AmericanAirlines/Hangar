@@ -204,35 +204,26 @@
           "default": "clock_timestamp()",
           "mappedType": "datetime"
         },
-        "name": {
-          "name": "name",
-          "type": "text",
+        "previousProject": {
+          "name": "previousProject",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "text"
+          "mappedType": "string"
         },
-        "sortOrder": {
-          "name": "sortOrder",
-          "type": "int",
+        "currentProject": {
+          "name": "currentProject",
+          "type": "varchar(255)",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "mappedType": "string"
         },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "text"
-        },
-        "isBonus": {
-          "name": "isBonus",
+        "currentProjectChosen": {
+          "name": "currentProjectChosen",
           "type": "boolean",
           "unsigned": false,
           "autoincrement": false,
@@ -241,11 +232,11 @@
           "mappedType": "boolean"
         }
       },
-      "name": "Prize",
+      "name": "JudgingVote",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "Prize_pkey",
+          "keyName": "JudgingVote_pkey",
           "columnNames": [
             "id"
           ],
@@ -291,15 +282,6 @@
           "default": "clock_timestamp()",
           "mappedType": "datetime"
         },
-        "authId": {
-          "name": "authId",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
-        },
         "name": {
           "name": "name",
           "type": "text",
@@ -309,17 +291,17 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "subscribed": {
-          "name": "subscribed",
-          "type": "boolean",
+        "position": {
+          "name": "position",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "boolean"
+          "mappedType": "integer"
         },
-        "email": {
-          "name": "email",
+        "description": {
+          "name": "description",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
@@ -327,40 +309,30 @@
           "nullable": true,
           "mappedType": "text"
         },
-        "metadata": {
-          "name": "metadata",
-          "type": "jsonb",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "json"
-        },
-        "isAdmin": {
-          "name": "isAdmin",
+        "isBonus": {
+          "name": "isBonus",
           "type": "boolean",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "default": "false",
           "mappedType": "boolean"
         }
       },
-      "name": "User",
+      "name": "Prize",
       "schema": "public",
       "indexes": [
         {
           "columnNames": [
-            "authId"
+            "position"
           ],
           "composite": false,
-          "keyName": "User_authId_unique",
+          "keyName": "Prize_position_unique",
           "primary": false,
           "unique": true
         },
         {
-          "keyName": "User_pkey",
+          "keyName": "Prize_pkey",
           "columnNames": [
             "id"
           ],
@@ -433,14 +405,23 @@
           "nullable": true,
           "mappedType": "text"
         },
-        "user": {
-          "name": "user",
-          "type": "bigint",
+        "judgeVisits": {
+          "name": "judgeVisits",
+          "type": "int",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "bigint"
+          "mappedType": "integer"
+        },
+        "activeJudgeCount": {
+          "name": "activeJudgeCount",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
         }
       },
       "name": "Project",
@@ -456,15 +437,6 @@
           "unique": true
         },
         {
-          "columnNames": [
-            "user"
-          ],
-          "composite": false,
-          "keyName": "Project_user_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
           "keyName": "Project_pkey",
           "columnNames": [
             "id"
@@ -475,17 +447,306 @@
         }
       ],
       "checks": [],
+      "foreignKeys": {},
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "firstName": {
+          "name": "firstName",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "lastName": {
+          "name": "lastName",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "project": {
+          "name": "project",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "User",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "User_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
       "foreignKeys": {
-        "Project_user_foreign": {
-          "constraintName": "Project_user_foreign",
+        "User_project_foreign": {
+          "constraintName": "User_project_foreign",
+          "columnNames": [
+            "project"
+          ],
+          "localTableName": "public.User",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "user": {
+          "name": "user",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "currentProject": {
+          "name": "currentProject",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "bigint"
+        },
+        "previousProject": {
+          "name": "previousProject",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "Judge",
+      "schema": "public",
+      "indexes": [
+        {
           "columnNames": [
             "user"
           ],
-          "localTableName": "public.Project",
+          "composite": false,
+          "keyName": "Judge_user_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "currentProject"
+          ],
+          "composite": false,
+          "keyName": "Judge_currentProject_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "columnNames": [
+            "previousProject"
+          ],
+          "composite": false,
+          "keyName": "Judge_previousProject_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Judge_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Judge_user_foreign": {
+          "constraintName": "Judge_user_foreign",
+          "columnNames": [
+            "user"
+          ],
+          "localTableName": "public.Judge",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.User",
+          "updateRule": "cascade"
+        },
+        "Judge_currentProject_foreign": {
+          "constraintName": "Judge_currentProject_foreign",
+          "columnNames": [
+            "currentProject"
+          ],
+          "localTableName": "public.Judge",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "Judge_previousProject_foreign": {
+          "constraintName": "Judge_previousProject_foreign",
+          "columnNames": [
+            "previousProject"
+          ],
+          "localTableName": "public.Judge",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "judge": {
+          "name": "judge",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "project": {
+          "name": "project",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "Judge_visitedProjects",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "Judge_visitedProjects_pkey",
+          "columnNames": [
+            "judge",
+            "project"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Judge_visitedProjects_judge_foreign": {
+          "constraintName": "Judge_visitedProjects_judge_foreign",
+          "columnNames": [
+            "judge"
+          ],
+          "localTableName": "public.Judge_visitedProjects",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Judge",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "Judge_visitedProjects_project_foreign": {
+          "constraintName": "Judge_visitedProjects_project_foreign",
+          "columnNames": [
+            "project"
+          ],
+          "localTableName": "public.Judge_visitedProjects",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },
