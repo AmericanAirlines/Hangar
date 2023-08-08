@@ -5,27 +5,26 @@ import {
   Image,
   Spacer,
   Text,
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerOverlay,
-  DrawerContent,
-  useDisclosure,
   Button,
   IconButton,
-  VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { appName } from '@hangar/shared';
 import { statusColors } from '../../../../theme';
+import { NavDrawer } from './NavDrawer';
 
 const LOGO_HEIGHT = { base: '24px', sm: '28px', md: '40px' };
 const LOGO_FONT_SIZE = { base: '22px', md: '33px' };
 
+export async function signInWithSlack() {
+  window.open('/api/auth/');
+}
+
 export const NavBar: React.FC = () => {
   const router = useRouter();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { onOpen, onClose, isOpen } = useDisclosure();
   return (
     <>
       <HStack width="full">
@@ -57,33 +56,30 @@ export const NavBar: React.FC = () => {
 
         <Box display={{ base: 'none', lg: 'inline' }}>
           <HStack float="right" width="full">
-            <Button width="75%" backgroundColor={statusColors.alert} marginLeft="4px">
+            <Button
+              width="75%"
+              backgroundColor={statusColors.alert}
+              marginLeft="4px"
+              onClick={async () => {
+                await signInWithSlack();
+              }}
+            >
               Sign Up
             </Button>
-            <Button>Login</Button>
+            <Button
+              onClick={async () => {
+                await signInWithSlack();
+              }}
+            >
+              Login
+            </Button>
           </HStack>
         </Box>
       </HStack>
 
       <Spacer />
 
-      <Drawer placement="left" size={'xs'} onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerBody>
-            <VStack>
-              <Button>Sign Up</Button>
-              <Button>Login</Button>
-            </VStack>
-          </DrawerBody>
-
-          <DrawerFooter>
-            <Button variant="outline" mr={3}>
-              Admin
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+      <NavDrawer isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
