@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { Chakra } from '../components/Chakra';
 import { defaultPageTitle, pageTitleKey } from '../components/layout/PageContainer';
 import { AppLayout } from '../components/layout/AppLayout';
+import '@fontsource/pacifico/400.css';
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => (
   <>
