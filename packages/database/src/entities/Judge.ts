@@ -77,8 +77,8 @@ export class Judge extends Node<Judge> {
     if(this.currentProject){
       const currentProject = await entityManager.findOne(Project,{id:this.currentProject.id});
       if(currentProject){
-        await currentProject.decrementActiveJudgeCount({project:currentProject,entityManager});
-        await currentProject.incrementJudgeVisits({project:currentProject,entityManager});
+        await Project.decrementActiveJudgeCount({project:currentProject,entityManager});
+        await Project.incrementJudgeVisits({project:currentProject,entityManager});
       }
       this.currentProject = undefined;
       await entityManager.persistAndFlush(this)

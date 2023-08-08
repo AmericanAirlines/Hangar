@@ -11,6 +11,7 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { getEnv } from '../env';
 
 export const migrationsPath = `${__dirname}/../migrations`;
+// export const entitiesPath = [`${__dirname}/../entities`,`!${__dirname}/../entities/utils`];
 export const entitiesPath = [`${__dirname}/../entities`];
 
 export const baseExtensions = [Migrator];

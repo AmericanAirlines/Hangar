@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
-import { Project } from '../Project';
-import { JudgingVote } from '../JudgingVote/JudgingVote';
+import { Project } from '../entities/Project';
+import { JudgingVote } from '../entities/JudgingVote';
 
 export interface ProjectScore {
     id: string;

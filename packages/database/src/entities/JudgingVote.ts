@@ -1,10 +1,10 @@
 /* eslint-disable max-lines */
 import { Entity, Property , Ref } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql'
-import { ConstructorValues } from '../../types/ConstructorValues';
-import { Project } from '../Project';
-import { Node } from '../Node';
-import { scoreVotes , ProjectResult, ProjectScore  } from './scoreVotes';
+import { ConstructorValues } from '../types/ConstructorValues';
+import { Project } from './Project';
+import { Node } from './Node';
+import { scoreVotes , ProjectResult, ProjectScore  } from '../utils/scoreVotes';
 
 const shuffle = (arr:any) =>
   arr.sort(()=>Math.random()-0.5)

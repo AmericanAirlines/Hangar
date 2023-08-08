@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 import { Entity, Property , OneToMany , Collection , QueryResult } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql'
-import { ConstructorValues } from '../../types/ConstructorValues';
-import { Node } from '../Node';
-import { User } from '../User';
-import { decrementActiveJudgeCount , incrementJudgeVisits } from './judgeCount';
+import { ConstructorValues } from '../types/ConstructorValues';
+import { Node } from './Node';
+import { User } from './User';
+import { decrementActiveJudgeCount , incrementJudgeVisits } from '../utils/judgeCount';
 
 export type ProjectConstructorValues = ConstructorValues<Project,'contributors','location'>;
 
@@ -41,9 +41,6 @@ export class Project extends Node<Project> {
     let project: Project|null;
     let retries = 5;
     /* eslint-disable no-await-in-loop */
-    // let query = []
-    // if (excludedProjectIds.length)
-    //     query
     const query:object = excludedProjectIds.length ? { id: { $nin: excludedProjectIds } } : {}
     const queryOptions = { orderBy: { activeJudgeCount: 'ASC', judgeVisits: 'ASC' } }
     do {

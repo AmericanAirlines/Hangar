@@ -1,5 +1,5 @@
 import { EntityManager as em } from '@mikro-orm/postgresql'
-import { Project } from '../entities/Project/Project';
+import { Project } from '../entities/Project';
 
 /* istanbul ignore next */
 export const decrementActiveJudgeCount = async ({project,entityManager}:{project: Project, entityManager:em}): Promise<void> => {
