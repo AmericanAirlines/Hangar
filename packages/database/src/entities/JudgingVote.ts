@@ -1,33 +1,36 @@
 /* eslint-disable max-lines */
-import { Entity, Property , Ref } from '@mikro-orm/core';
-import { EntityManager as em } from '@mikro-orm/postgresql'
+import { Entity, Property, Ref } from '@mikro-orm/core';
+import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Project } from './Project';
 import { Node } from './Node';
-import { scoreVotes , ProjectResult, ProjectScore  } from '../entitiesUtils/scoreVotes';
+import { scoreVotes, ProjectResult, ProjectScore } from '../entitiesUtils/scoreVotes';
 
-const shuffle = (arr:any) =>
-  arr.sort(()=>Math.random()-0.5)
+const shuffle = (arr: any) => arr.sort(() => Math.random() - 0.5);
 
 export const insufficientVoteCountError = 'InsufficientVoteCount';
 
-type NormalizedScore = number[]
-type NormalizedScores = { [id: string]: NormalizedScore }
+type NormalizedScore = number[];
+type NormalizedScores = { [id: string]: NormalizedScore };
 
-export type JudgingVoteConstructorValues = ConstructorValues<JudgingVote>
+export type JudgingVoteConstructorValues = ConstructorValues<JudgingVote>;
 
 @Entity()
 export class JudgingVote extends Node<JudgingVote> {
-  @Property({ ref: true})
+  @Property({ ref: true })
   previousProject: Ref<Project>;
-	
-  @Property({ ref: true})
+
+  @Property({ ref: true })
   currentProject: Ref<Project>;
-	
-  @Property({ columnType: 'boolean'})
+
+  @Property({ columnType: 'boolean' })
   currentProjectChosen: boolean;
 
-  constructor({previousProject, currentProject, currentProjectChosen}:JudgingVoteConstructorValues) {
+  constructor({
+    previousProject,
+    currentProject,
+    currentProjectChosen,
+  }: JudgingVoteConstructorValues) {
     super();
 
     this.previousProject = previousProject;
@@ -35,7 +38,7 @@ export class JudgingVote extends Node<JudgingVote> {
     this.currentProjectChosen = currentProjectChosen;
   }
 
-  static async tabulate({entityManager}:{entityManager:em}): Promise<ProjectResult[]> {
+  static async tabulate({ entityManager }: { entityManager: em }): Promise<ProjectResult[]> {
     const allVotes = await entityManager.find(JudgingVote, {});
     const projects = await entityManager.find(Project, {});
     const numProjects = projects.length;
@@ -46,7 +49,9 @@ export class JudgingVote extends Node<JudgingVote> {
     // Use a designated percent of the votes for calibration
     const avgNumVotesPerProject = numProjects ? allVotes.length / numProjects : 0;
     const percentOfVotesToUseForCalibration = 0.2;
-    const percentBasedCalibrationVotes = Math.round(percentOfVotesToUseForCalibration * avgNumVotesPerProject);
+    const percentBasedCalibrationVotes = Math.round(
+      percentOfVotesToUseForCalibration * avgNumVotesPerProject,
+    );
     // Use percentOfVotesToUseForCalibration percent of the votes OR 2, whichever is bigger
     const votesNeededForCalibration = Math.max(percentBasedCalibrationVotes, 2);
 
@@ -61,28 +66,38 @@ export class JudgingVote extends Node<JudgingVote> {
     const randomJudgingIterations = 20;
     for (let j = 0; j < randomJudgingIterations; j += 1) {
       // Randomize order to prevent bias based on vote ordering
-      initialScores.push(this.scoreVotes(votesNeededForCalibration, shuffle([...allVotes]), shuffle([...projects])));
+      initialScores.push(
+        this.scoreVotes(votesNeededForCalibration, shuffle([...allVotes]), shuffle([...projects])),
+      );
     }
 
     // Average scores from all passes
-    const normalizedScores: NormalizedScores = {}
+    const normalizedScores: NormalizedScores = {};
     Object.values(initialScores).forEach((scores) => {
       Object.values(scores).forEach((projectScore) => {
-        normalizedScores[projectScore.id] = normalizedScores[projectScore.id] ? [...(normalizedScores[projectScore.id] as NormalizedScore), projectScore.score] : [projectScore.score];
+        normalizedScores[projectScore.id] = normalizedScores[projectScore.id]
+          ? [...(normalizedScores[projectScore.id] as NormalizedScore), projectScore.score]
+          : [projectScore.score];
       });
     });
 
     const trimmedMeanScores: { [id: string]: number } = {};
     const percentOfOutliersToRemove = 0.2;
-    const outliersToRemoveFromEachSide = Math.max(Math.floor(percentOfOutliersToRemove * randomJudgingIterations) / 2, 1);
+    const outliersToRemoveFromEachSide = Math.max(
+      Math.floor(percentOfOutliersToRemove * randomJudgingIterations) / 2,
+      1,
+    );
     for (let i = 0; i < Object.keys(normalizedScores).length; i += 1) {
       const projectId = Object.keys(normalizedScores)[i];
-      if (projectId){
-        const sortedScores = (normalizedScores[projectId]||[]).sort();
+      if (projectId) {
+        const sortedScores = (normalizedScores[projectId] || []).sort();
         // Remove outlier(s) from front
         sortedScores.splice(0, outliersToRemoveFromEachSide);
         // Remove outlier(s) from end
-        sortedScores.splice(sortedScores.length - outliersToRemoveFromEachSide, outliersToRemoveFromEachSide);
+        sortedScores.splice(
+          sortedScores.length - outliersToRemoveFromEachSide,
+          outliersToRemoveFromEachSide,
+        );
 
         let sum = 0;
         sortedScores.forEach((score) => {
@@ -92,23 +107,25 @@ export class JudgingVote extends Node<JudgingVote> {
       }
     }
 
-    const orderedProjects = projects.sort((a: Project, b: Project) => (((trimmedMeanScores[a.id] as number) > (trimmedMeanScores[b.id] as number)) ? -1 : 1));
+    const orderedProjects = projects.sort((a: Project, b: Project) =>
+      (trimmedMeanScores[a.id] as number) > (trimmedMeanScores[b.id] as number) ? -1 : 1,
+    );
 
     const projectResults: ProjectResult[] = [];
 
     orderedProjects.forEach((scoredProject) => {
       const matchingProject = projects.find((project) => project.id === scoredProject.id);
-      if (matchingProject){
+      if (matchingProject) {
         projectResults.push({
           id: matchingProject.id,
           name: matchingProject.name,
           score: trimmedMeanScores[scoredProject.id] as number,
         });
-			}
+      }
     });
 
     return projectResults;
   }
 
-  static scoreVotes = scoreVotes
+  static scoreVotes = scoreVotes;
 }

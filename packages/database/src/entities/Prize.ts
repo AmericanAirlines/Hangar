@@ -9,22 +9,27 @@ export type PrizeConstructorValues = ConstructorValues<Prize, never, 'isBonus'>;
 export class Prize extends Node<Prize> {
   @Property({ columnType: 'text' })
   name: string;
-  
+
   @Property({ columnType: 'int', unique: true })
   position: number;
-  
+
   @Property({ columnType: 'text', nullable: true })
   description?: string;
-  
+
   @Property({ columnType: 'boolean' })
   isBonus: boolean;
-  
-  constructor({ name, position, description, isBonus = false,  ...extraValues }: PrizeConstructorValues) {
+
+  constructor({
+    name,
+    position,
+    description,
+    isBonus = false,
+    ...extraValues
+  }: PrizeConstructorValues) {
     super(extraValues);
-    
+
     this.name = name;
     this.position = position;
     this.isBonus = isBonus;
   }
-
 }
