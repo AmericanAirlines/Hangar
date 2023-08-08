@@ -1,20 +1,29 @@
-/* eslint-disable max-lines */
 /* istanbul ignore file */
 import { Entity, Property, EntityManager } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 
-export enum ConfigKey {}
+export enum AppConfigKey {
+  Test,
+}
 
 type JSONValue = string | number | boolean | Record<string, any> | any[];
 
 export type AppConfigConstructorValues = ConstructorValues<AppConfig>;
-type AppConfigPropertyKeys = keyof AppConfigConstructorValues;
+
+type GetValueAsArgs = {
+  entityManager: EntityManager;
+  key: AppConfigKey;
+};
+
+type GetValueAsArgsWithForcedType = GetValueAsArgs & {
+  forceType: 'number' | 'string' | 'array' | 'object';
+};
 
 @Entity()
 export class AppConfig extends Node<AppConfig> {
   @Property({ columnType: 'text', unique: true })
-  key: ConfigKey;
+  key: AppConfigKey;
 
   @Property({ columnType: 'jsonb', nullable: true })
   value: JSONValue | null;
@@ -26,148 +35,48 @@ export class AppConfig extends Node<AppConfig> {
     this.value = value;
   }
 
-  static getSafeKeys(): AppConfigPropertyKeys[] {
-    return ['key', 'value'];
-  }
-
   /**
-   * Get the value of a Config item that is a string, and return null if it's not
+   * @template T {@link JSONValue} used to specify the return type of the data
+   * @param args {@link GetValueAsArgs} or {@link GetValueAsArgsWithForcedType}
+   * @returns the value coerced to the specified type
+   *
+   * @example
+   *
+    void AppConfig.getValueAs<string>({
+      entityManager: em,
+      key: AppConfigKey.Test,
+      forceType: 'string',
+    }).then((item) => {
+      console.log(item); // item is of type 'string'
+    });
    */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'string',
-    shouldThrow: false,
-  ): Promise<string | null>;
+  static async getValueAs<T extends JSONValue>(args: GetValueAsArgs): Promise<T | null>;
+  static async getValueAs<T extends JSONValue>(args: GetValueAsArgsWithForcedType): Promise<T>;
+  static async getValueAs<T extends JSONValue>(
+    args: GetValueAsArgs | GetValueAsArgsWithForcedType,
+  ): Promise<T | null> {
+    const { entityManager: em, key } = args;
+    const item = await em.findOne(AppConfig, { key });
 
-  /**
-   * Get the value of a Config item that is a string, and throw an error if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'string',
-    shouldThrow: true,
-  ): Promise<string>;
+    if (!item) {
+      throw new Error(`No config item with the key ${key}`);
+    }
 
-  /**
-   * Get the value of a Config item that is a boolean, and return null if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'boolean',
-    shouldThrow: false,
-  ): Promise<boolean | null>;
-
-  /**
-   * Get the value of a Config item that is a boolean, and throw an error if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'boolean',
-    shouldThrow: true,
-  ): Promise<boolean>;
-
-  /**
-   * Get the value of a Config item that is a number, and return null if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'number',
-    shouldThrow: false,
-  ): Promise<number | null>;
-
-  /**
-   * Get the value of a Config item that is a number, and throw an error if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'number',
-    shouldThrow: true,
-  ): Promise<number>;
-
-  /**
-   * Get the value of a Config item that is a object, and return null if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'object',
-    shouldThrow: false,
-  ): Promise<Record<string, any> | null>;
-
-  /**
-   * Get the value of a Config item that is a object, and throw an error if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'object',
-    shouldThrow: true,
-  ): Promise<Record<string, any>>;
-
-  /**
-   * Get the value of a Config item that is a array, and return null if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'array',
-    shouldThrow: false,
-  ): Promise<any[] | null>;
-
-  /**
-   * Get the value of a Config item that is a array, and throw an error if it's not
-   */
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'array',
-    shouldThrow: true,
-  ): Promise<any[]>;
-
-  static async getValueAs(
-    em: EntityManager,
-    key: ConfigKey,
-    valueType: 'string' | 'boolean' | 'number' | 'object' | 'array',
-    shouldThrow: boolean,
-  ): Promise<string | boolean | number | Record<string, any> | null> {
-    try {
-      const item = await em.findOne(AppConfig, { key });
-
-      if (!item) {
-        if (shouldThrow) {
-          throw new Error(`No config item with the key ${key}`);
-        } else {
-          return null;
+    if ('forceType' in args) {
+      const { forceType } = args;
+      if (forceType === 'array') {
+        if (!Array.isArray(item.value)) {
+          throw new Error(`Value is not an array. It is of type ${typeof item.value}`);
         }
-      }
-
-      if (item.value === null && shouldThrow) {
-        throw new Error('Value was null');
-      }
-
-      if (valueType === 'array' && !Array.isArray(item.value)) {
-        throw new Error(`Value is not an array. It is of type ${typeof item.value}`);
-      }
-
-      if (valueType !== 'array' && typeof item.value !== valueType) {
+      } else if (typeof item.value !== forceType) {
         throw new Error(
-          `Value was of undesired type. Requested type was ${valueType} but found ${typeof item.value}.`,
+          `Value was of undesired type. Requested type was ${forceType} but found ${typeof item.value}`,
         );
       }
 
-      return item.value;
-    } catch (err) {
-      if (shouldThrow) {
-        throw err;
-      } else {
-        return null;
-      }
+      return item.value as T;
     }
+
+    return item.value as T | null;
   }
 }
