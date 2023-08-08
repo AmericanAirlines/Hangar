@@ -59,7 +59,6 @@ export class Project extends Node<Project> {
         project = await entityManager.findOne(Project,query, queryOptions)
         // await project.reload();
 
-        // if (result.affected > 0) {
         if (result.affectedRows > 0) {
           // We found a project and assigned the judge correctly; return it
           return project??undefined;
