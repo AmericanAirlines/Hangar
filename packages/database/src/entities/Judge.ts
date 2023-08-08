@@ -1,6 +1,5 @@
 import { Entity, ManyToMany, OneToOne, Ref, Collection } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql'
-// import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { JudgingVote } from './JudgingVote';
 import { Project } from './Project';

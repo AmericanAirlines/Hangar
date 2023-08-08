@@ -10,8 +10,8 @@ export class Prize extends Node<Prize> {
   @Property({ columnType: 'text' })
   name: string;
 
-  @Property({ columnType: 'int' })
-  sortOrder: number;
+  @Property({ columnType: 'int', unique: true })
+  position: number;
 
   @Property({ columnType: 'text', nullable: true })
   description?: string;

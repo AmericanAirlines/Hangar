@@ -6,7 +6,7 @@ import { Node } from './Node';
 import { User } from './User';
 import { decrementActiveJudgeCount , incrementJudgeVisits } from '../entitiesUtils/judgeCount';
 
-export type ProjectConstructorValues = ConstructorValues<Project,'contributors','location'>;
+export type ProjectConstructorValues = ConstructorValues<Project,'contributors' | 'judgeVisits' | 'activeJudgeCount', 'location'>;
 
 @Entity()
 export class Project extends Node<Project> {
