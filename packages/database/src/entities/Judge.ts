@@ -11,6 +11,7 @@ export type JudgeConstructorValues = ConstructorValues<
   Judge,
   'currentProject' | 'previousProject' | 'visitedProjects'
 >;
+
 @Entity()
 export class Judge extends Node<Judge> {
   constructor({ user }: JudgeConstructorValues) {
