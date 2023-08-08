@@ -1,10 +1,9 @@
 /* istanbul ignore file */
 import { Entity, Property } from '@mikro-orm/core';
-import { ConstructorValues } from '../utils/types';
+import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 
 export type PrizeConstructorValues = ConstructorValues<Prize>;
-type PrizePropertyKeys = keyof PrizeConstructorValues;
 
 @Entity()
 export class Prize extends Node<Prize> {
