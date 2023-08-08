@@ -22,7 +22,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, ...chakraProps }
         gap={0}
         minH={NAV_HEIGHT}
       >
-        {/* Add nav elements here */}
         <NavBar />
       </Flex>
     </Box>

@@ -20,7 +20,6 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@fontsource/pacifico": "^5.0.8",
-    "@hangar/shared": "*",
     "axios": "^1.2.5",
     "dayjs": "^1.11.5",
     "framer-motion": "^7.1.0",
