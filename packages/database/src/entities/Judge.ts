@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Entity, ManyToMany, OneToOne, Ref, Collection } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
