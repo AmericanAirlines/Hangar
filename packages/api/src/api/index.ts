@@ -1,12 +1,14 @@
-import { Router } from 'express';
+import { Router, json } from 'express';
 import cookieSession from 'cookie-session';
 import { enforceRateLimiting } from './settings';
 import { env } from '../env';
 import { health } from './health';
 import { slack } from './slack';
 import { auth } from './auth';
+import { users } from './users';
 
 export const api = Router();
+api.use(json());
 
 // General API route config
 // api.use(enforceMaxFileSize, customParsingSettings, nocache());
@@ -18,6 +20,7 @@ api.use('/auth', auth);
 
 // SELF-PROTECTED ROUTES
 api.use(slack);
+api.use('/users', users);
 
 api.use(
   cookieSession({
