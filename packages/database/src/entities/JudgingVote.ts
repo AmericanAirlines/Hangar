@@ -4,7 +4,7 @@ import { EntityManager as em } from '@mikro-orm/postgresql'
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Project } from './Project';
 import { Node } from './Node';
-import { scoreVotes , ProjectResult, ProjectScore  } from '../utils/scoreVotes';
+import { scoreVotes , ProjectResult, ProjectScore  } from '../entitiesUtils/scoreVotes';
 
 const shuffle = (arr:any) =>
   arr.sort(()=>Math.random()-0.5)

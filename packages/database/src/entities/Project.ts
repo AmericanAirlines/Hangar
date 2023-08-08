@@ -4,7 +4,7 @@ import { EntityManager as em } from '@mikro-orm/postgresql'
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 import { User } from './User';
-import { decrementActiveJudgeCount , incrementJudgeVisits } from '../utils/judgeCount';
+import { decrementActiveJudgeCount , incrementJudgeVisits } from '../entitiesUtils/judgeCount';
 
 export type ProjectConstructorValues = ConstructorValues<Project,'contributors','location'>;
 

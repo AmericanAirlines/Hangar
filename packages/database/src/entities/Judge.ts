@@ -22,10 +22,10 @@ export class Judge extends Node<Judge> {
   @ManyToMany({ entity:()=>Project })
   visitedProjects= new Collection<Project>(this);
   
-  @OneToOne({ nullable: true })
+  @OneToOne({ entity:()=>Project, nullable: true, ref:true })
   currentProject?: Ref<Project>;
 
-  @OneToOne({ nullable: true })
+  @OneToOne({ entity:()=>Project, nullable: true, ref:true })
   previousProject?: Ref<Project>;
 
   async getNextProject({entityManager}:{entityManager:em}): Promise<Project|undefined> {
