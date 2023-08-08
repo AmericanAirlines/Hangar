@@ -3,7 +3,7 @@ import { Entity, Property } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 
-export type PrizeConstructorValues = ConstructorValues<Prize>;
+export type PrizeConstructorValues = ConstructorValues<Prize, never, 'isBonus'>;
 
 @Entity()
 export class Prize extends Node<Prize> {
@@ -17,9 +17,9 @@ export class Prize extends Node<Prize> {
   description?: string;
 
   @Property({ columnType: 'boolean' })
-  isBonus: boolean = false;
+  isBonus: boolean;
 
-  constructor({ name, sortOrder, ...extraValues }: PrizeConstructorValues) {
+  constructor({ name, position, description, isBonus = false,  ...extraValues }: PrizeConstructorValues) {
     super(extraValues);
 
     this.name = name;
