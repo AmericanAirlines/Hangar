@@ -28,8 +28,8 @@ export const theme = extendTheme({
         // fontWeight: 400, // When adding additional weights, make sure to add the import to _app.tsx
       },
       body: {
-        color: colors.black,
-        backgroundColor: colors.grayscaleLight,
+        color: colors.white,
+        backgroundColor: colors.black,
       },
     }),
   },

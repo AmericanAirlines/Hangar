@@ -12,7 +12,7 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { appName } from '@hangar/shared';
-import { statusColors } from '../../../../theme';
+import { colors } from '../../../../theme';
 import { NavDrawer } from './NavDrawer';
 
 const LOGO_HEIGHT = { base: '24px', sm: '28px', md: '40px' };
@@ -58,7 +58,7 @@ export const NavBar: React.FC = () => {
           <HStack float="right" width="full">
             <Button
               width="75%"
-              backgroundColor={statusColors.alert}
+              backgroundColor={colors.success}
               marginLeft="4px"
               onClick={async () => {
                 await signInWithSlack();
