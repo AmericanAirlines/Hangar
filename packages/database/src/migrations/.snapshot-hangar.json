@@ -501,6 +501,15 @@
           "nullable": false,
           "mappedType": "text"
         },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
         "project": {
           "name": "project",
           "type": "bigint",
@@ -514,6 +523,15 @@
       "name": "User",
       "schema": "public",
       "indexes": [
+        {
+          "columnNames": [
+            "email"
+          ],
+          "composite": false,
+          "keyName": "User_email_unique",
+          "primary": false,
+          "unique": true
+        },
         {
           "keyName": "User_pkey",
           "columnNames": [

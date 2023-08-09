@@ -14,12 +14,17 @@ export class User extends Node<User> {
   @Property({ columnType: 'text' })
   lastName: string;
 
+  @Property({ columnType: 'text', unique: true })
+  email: string;
+
   @ManyToOne({ entity: () => Project, nullable: true, ref: true })
   project?: Ref<Project>;
 
-  constructor({ firstName, lastName }: UserConstructorValues) {
+  constructor({ firstName, lastName, email }: UserConstructorValues) {
     super();
+
     this.firstName = firstName;
     this.lastName = lastName;
+    this.email = email;
   }
 }
