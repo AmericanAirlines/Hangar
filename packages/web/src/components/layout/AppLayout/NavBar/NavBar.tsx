@@ -19,7 +19,7 @@ const LOGO_HEIGHT = { base: '24px', sm: '28px', md: '40px' };
 const LOGO_FONT_SIZE = { base: '22px', md: '33px' };
 
 export async function signInWithSlack() {
-  window.open('/api/auth/');
+  window.location.href = '/api/auth/';
 }
 
 export const NavBar: React.FC = () => {
