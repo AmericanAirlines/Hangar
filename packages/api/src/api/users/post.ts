@@ -13,6 +13,7 @@ export const post = async (req: Request, res: Response) => {
   try {
     const user = new User({ firstName, lastName, email });
     await em.persistAndFlush(user);
+    req.session.id = user.id;
     res.send(user);
   } catch (err) {
     if ((err as DriverException).code === '23505') {
