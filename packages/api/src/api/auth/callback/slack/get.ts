@@ -4,6 +4,7 @@ import jwt_decode from 'jwt-decode';
 import { env } from '../../../../env';
 import { authenticateUser } from '../../../../utils/authenticateUser';
 
+export const codeQueryParam = 'code';
 export type SlackTokenData = {
   email: string;
   given_name: string;
@@ -11,7 +12,7 @@ export type SlackTokenData = {
 };
 
 export const get = async (req: Request, res: Response) => {
-  const myCode: string = req.query.code as string;
+  const myCode: string = req.query[codeQueryParam] as string;
   const { slackClientID, slackClientSecret } = env;
 
   const redirect: string = `${env.baseUrl}/api/auth/callback/slack/`;

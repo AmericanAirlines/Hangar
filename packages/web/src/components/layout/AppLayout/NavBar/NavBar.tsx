@@ -34,6 +34,7 @@ export const NavBar: React.FC = () => {
           icon={<HamburgerIcon />}
           display={{ base: 'inline', lg: 'none' }}
           onClick={onOpen}
+          mr={3}
         />
 
         <Box

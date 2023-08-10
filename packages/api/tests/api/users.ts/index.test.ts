@@ -12,9 +12,11 @@ describe('/users router registrations', () => {
     it('calls next when a valid session is found', async () => {
       await jest.isolateModulesAsync(async () => {
         const { users } = require('../../../src/api/users');
+
         const router = express();
+
         router.use((req, res, next) => {
-          req.session = {} as any;
+          req.session = { email: 'pancakes@waffles.bananas' } as any;
           next();
         }, users);
 
@@ -26,6 +28,7 @@ describe('/users router registrations', () => {
     it('returns a 401 when a valid session cannot be found', async () => {
       await jest.isolateModulesAsync(async () => {
         const { users } = require('../../../src/api/users');
+
         const router = express();
         router.use(users);
 

@@ -1,12 +1,12 @@
 import * as Slack from '@slack/web-api';
 import jwt_decode from 'jwt-decode';
-import { SlackTokenData, get } from '../../../../src/api/auth/callback/slack/get';
-import { getMock } from '../../../testUtils/getMock';
-import { authenticateUser } from '../../../../src/utils/authenticateUser';
+import { SlackTokenData, get } from '../../../../../src/api/auth/callback/slack/get';
+import { getMock } from '../../../../testUtils/getMock';
+import { authenticateUser } from '../../../../../src/utils/authenticateUser';
 
 jest.mock('@slack/web-api');
 jest.mock('jwt-decode');
-jest.mock('../../../../src/utils/authenticateUser');
+jest.mock('../../../../../src/utils/authenticateUser');
 
 const mockToken = {
   ok: true,
@@ -49,5 +49,17 @@ describe('Slack auth callback', () => {
         },
       }),
     );
+  });
+
+  it('redirects to an error page if an error occurs', async () => {
+    const mockTokenMethod = jest.fn().mockRejectedValueOnce(new Error('Something went wrong'));
+    const mockWebClient = { openid: { connect: { token: mockTokenMethod } } };
+    webClientSpy.mockReturnValueOnce(mockWebClient as any);
+    const mockReq = { query: { code: 'mockCode' } };
+    const mockRes = { redirect: jest.fn() };
+
+    await get(mockReq as any, mockRes as any);
+
+    expect(mockRes.redirect).toBeCalledWith(expect.stringContaining('error'));
   });
 });

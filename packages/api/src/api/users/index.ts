@@ -6,7 +6,7 @@ export const users = Router();
 users.post(
   '',
   (req, res, next) => {
-    if (!req.session.email) {
+    if (!req.session?.email) {
       // User does not have a valid session
       res.sendStatus(401);
       return;

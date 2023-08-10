@@ -3,7 +3,7 @@ import { colors } from './colors';
 import { components } from './components';
 
 // https://chakra-ui.com/docs/styled-system/color-mode
-export const forcedColorMode = 'light';
+export const forcedColorMode = 'dark';
 const config: ThemeConfig = {
   initialColorMode: forcedColorMode,
   useSystemColorMode: false,

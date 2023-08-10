@@ -28,11 +28,12 @@ describe('users post endpoint', () => {
         lastName: 'Doe',
       },
     };
+    const expectedUserConstructorData = { ...mockReq.body, ...mockReq.session };
 
     await post(mockReq as any, mockRes as Response);
 
     expect(User as jest.Mock).toHaveBeenCalledWith(
-      expect.objectContaining({ ...mockReq.body, ...mockReq.session }),
+      expect.objectContaining(expectedUserConstructorData),
     );
     expect(mockEntityManager.persistAndFlush).toBeCalledTimes(1);
     expect(mockRes.send).toBeCalledWith(mockUser);

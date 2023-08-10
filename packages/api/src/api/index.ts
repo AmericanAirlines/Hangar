@@ -18,7 +18,6 @@ api.use(
   cookieSession({
     secret: env.sessionSecret,
     maxAge: 24 * 60 * 60 * 1000,
-    // secure: env.nodeEnv !== 'development', // Needed if base url does not include https
   }),
 );
 

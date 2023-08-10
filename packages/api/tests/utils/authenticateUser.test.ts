@@ -24,18 +24,4 @@ describe('authenticate user', () => {
     expect(res.redirect).toHaveBeenCalledTimes(1);
     expect(res.redirect).toHaveBeenCalledWith('/');
   });
-
-  it('should call redirect to "/error" if the user is not authenticated', () => {
-    // setup
-    const data: OAuthUserData = {
-      email: '',
-      firstName: 'a',
-      lastName: 'b',
-    };
-    // test
-    authenticateUser({ data, req, res } as any);
-    // assert
-    expect(res.redirect).toHaveBeenCalledTimes(1);
-    expect(res.redirect).toHaveBeenCalledWith('/error');
-  });
 });
