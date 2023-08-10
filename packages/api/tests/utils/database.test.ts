@@ -1,6 +1,6 @@
 import { getApiConfig, initDatabase } from '@hangar/database';
 import { getMock } from '../testUtils/getMock';
-import { env } from '../../src/env';
+import { mockEnv } from '../testUtils/mockEnv';
 
 jest.mock('@hangar/database');
 const initDatabaseMock = getMock(initDatabase);
@@ -34,7 +34,7 @@ describe('database utils', () => {
         const mockConfig = {};
         getApiConfigMock.mockReturnValueOnce(mockConfig);
 
-        (env as Record<keyof typeof env, string>).nodeEnv = 'production';
+        mockEnv({ nodeEnv: 'production' });
 
         await initDb();
 
