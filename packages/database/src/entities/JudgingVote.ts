@@ -129,5 +129,3 @@ export class JudgingVote extends Node<JudgingVote> {
 
   static scoreVotes = scoreVotes;
 }
-
-type MyType<UnionWith, TotalOrWith = never> = (Boolean & UnionWith) | TotalOrWith;
