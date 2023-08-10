@@ -6,7 +6,13 @@ jest.mock('@hangar/database', () => ({
   User: jest.fn(),
 }));
 
-const mockEntityManager = { persistAndFlush: jest.fn() };
+const mockUserId = '1';
+const mockEntityManager = {
+  persistAndFlush: jest.fn(async (user: User) => {
+    // eslint-disable-next-line no-param-reassign
+    user.id = mockUserId;
+  }),
+};
 const mockRes: jest.Mocked<Partial<Response>> = {
   send: jest.fn(),
   status: jest.fn().mockReturnThis(),
@@ -27,7 +33,7 @@ describe('users post endpoint', () => {
         firstName: 'John',
         lastName: 'Doe',
       },
-    };
+    } as any;
     const expectedUserConstructorData = { ...mockReq.body, ...mockReq.session };
 
     await post(mockReq as any, mockRes as Response);
@@ -37,6 +43,7 @@ describe('users post endpoint', () => {
     );
     expect(mockEntityManager.persistAndFlush).toBeCalledTimes(1);
     expect(mockRes.send).toBeCalledWith(mockUser);
+    expect(mockReq.session.id).toBe(mockUserId);
   });
 
   it('returns an error when a user with the same email already exists', async () => {
