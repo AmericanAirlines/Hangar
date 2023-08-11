@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { MikroORM, Entity, Property, Ref, ManyToOne, EntityDTO } from '@mikro-orm/core';
+import { Entity, Property, Ref, ManyToOne, EntityDTO } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Project } from './Project';

@@ -10,7 +10,7 @@
     "dev:fresh": "yarn build:deps && yarn dev",
     "start": "yarn workspace @hangar/api start",
     "build": "yarn run build:deps && lerna run --scope @hangar/api --scope @hangar/web build --parallel --stream",
-    "build:deps": "lerna run --scope @hangar/shared --scope @hangar/database --scope @hangar/web build --stream",
+    "build:deps": "lerna run --scope @hangar/database --scope @hangar/shared --scope @hangar/web build --stream --concurrency=1",
     "build:deps:ifneeded": "node scripts/depsExist.js > /dev/null || yarn build:deps",
     "migrate": "yarn workspace @hangar/database migrate",
     "db:fresh": "yarn workspace @hangar/database mikro-orm migration:fresh",
