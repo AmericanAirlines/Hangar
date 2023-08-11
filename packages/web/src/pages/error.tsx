@@ -6,10 +6,14 @@ import { PageContainer } from '../components/layout/PageContainer';
 
 const Error: NextPage = () => {
   const router = useRouter();
-  const { statusCode } = router.query;
+  const { statusCode, description } = router.query;
+  const errorReason = description ?? statusCode;
 
   return (
-    <PageContainer pageTitle={`Error - ${statusCode}`} heading={`Error - ${statusCode}`}>
+    <PageContainer
+      pageTitle={`Something went wrong...`}
+      heading={`Error${errorReason ? ` - ${errorReason}` : ''}`}
+    >
       <VStack p={10} spacing={10}>
         <ErrorPageContent statusCode={Number(statusCode)} />
       </VStack>

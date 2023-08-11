@@ -14,6 +14,13 @@ api.use(json());
 // api.use(enforceMaxFileSize, customParsingSettings, nocache());
 if (env.nodeEnv !== 'development') api.use(enforceRateLimiting);
 
+api.use(
+  cookieSession({
+    secret: env.sessionSecret,
+    maxAge: 24 * 60 * 60 * 1000,
+  }),
+);
+
 // UNPROTECTED ROUTES
 api.use('/health', health);
 api.use('/auth', auth);
@@ -21,13 +28,6 @@ api.use('/auth', auth);
 // SELF-PROTECTED ROUTES
 api.use(slack);
 api.use('/users', users);
-
-api.use(
-  cookieSession({
-    secret: env.sessionSecret,
-    maxAge: 24 * 60 * 60 * 1000,
-  }),
-);
 
 // Generic catch all for bad requests
 api.use((_req, res) => res.status(404).send({ error: 'API route not found' }));

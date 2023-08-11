@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { Entity, Property, Ref } from '@mikro-orm/core';
+import { Entity, ManyToOne, Property, Ref } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Project } from './Project';
@@ -17,10 +17,10 @@ export type JudgingVoteConstructorValues = ConstructorValues<JudgingVote>;
 
 @Entity()
 export class JudgingVote extends Node<JudgingVote> {
-  @Property({ ref: true })
+  @ManyToOne({ entity: () => Project, ref: true })
   previousProject: Ref<Project>;
 
-  @Property({ ref: true })
+  @ManyToOne({ entity: () => Project, ref: true })
   currentProject: Ref<Project>;
 
   @Property({ columnType: 'boolean' })
