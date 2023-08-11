@@ -2650,6 +2650,19 @@
     tsconfig-paths "4.2.0"
     yargs "17.7.2"
 
+"@mikro-orm/core@^5.7.14":
+  version "5.7.14"
+  resolved "https://registry.yarnpkg.com/@mikro-orm/core/-/core-5.7.14.tgz#25298e90a303ca79ba1295b5c63e917128bc87d1"
+  integrity sha512-og2TJ4mRdGKF8ok/xSdGNbznm+WFF6VJosJnneulmY4VirRNfDfp7uNPBOinewigS4Q8Ntdirmponx4KrOoMBg==
+  dependencies:
+    acorn-loose "8.3.0"
+    acorn-walk "8.2.0"
+    dotenv "16.3.1"
+    fs-extra "11.1.1"
+    globby "11.1.0"
+    mikro-orm "~5.7.14"
+    reflect-metadata "0.1.13"
+
 "@mikro-orm/core@^6.0.0-dev", "@mikro-orm/core@~6.0.0-dev.89":
   version "6.0.0-dev.89"
   resolved "https://registry.npmjs.org/@mikro-orm/core/-/core-6.0.0-dev.89.tgz"
@@ -5388,6 +5401,11 @@ dotenv@16.1.4:
   version "16.1.4"
   resolved "https://registry.npmjs.org/dotenv/-/dotenv-16.1.4.tgz"
   integrity sha512-m55RtE8AsPeJBpOIFKihEmqUcoVncQIwo7x9U8ZwLEZw9ZpXboz2c+rvog+jUaJvVrZ5kBOeYQBX5+8Aa/OZQw==
+
+dotenv@16.3.1:
+  version "16.3.1"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.3.1.tgz#369034de7d7e5b120972693352a3bf112172cc3e"
+  integrity sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==
 
 dotenv@^8.0.0:
   version "8.6.0"
@@ -8394,6 +8412,11 @@ mikro-orm@^6.0.0-dev, mikro-orm@~6.0.0-dev.89:
   version "6.0.0-dev.89"
   resolved "https://registry.npmjs.org/mikro-orm/-/mikro-orm-6.0.0-dev.89.tgz"
   integrity sha512-VdFrnu8zfm+9mn37JkW45afT/xjKlrneWgXuRM9Mz99ZXLCTjZM0MzsEWUJ6fsyLJdywsM/pNz1/kGhdCL4iYQ==
+
+mikro-orm@~5.7.14:
+  version "5.7.14"
+  resolved "https://registry.yarnpkg.com/mikro-orm/-/mikro-orm-5.7.14.tgz#040f40b4e0c28966469d5ad42d93fdbd91ffc04c"
+  integrity sha512-izfG8Cz5aYGYhxaNNv1Ozc1LAC/ifIsniwDrTWbxHVJkMlWLKAM8FzJhoZpXZzBissZqeRN9tPdzvBCxwV4G0w==
 
 mime-db@1.52.0:
   version "1.52.0"

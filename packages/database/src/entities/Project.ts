@@ -1,10 +1,12 @@
 /* istanbul ignore file */
-import { Entity, Property, OneToMany, Collection, QueryResult } from '@mikro-orm/core';
+import { Entity, Property, OneToMany, Collection, QueryResult, EntityDTO } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 import { User } from './User';
 import { decrementActiveJudgeCount, incrementJudgeVisits } from '../entitiesUtils/judgeCount';
+
+export type ProjectDTO = EntityDTO<Project>
 
 export type ProjectConstructorValues = ConstructorValues<
   Project,

@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { Entity, Property, EntityManager } from '@mikro-orm/core';
+import { Entity, Property, EntityManager, EntityDTO } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 
@@ -8,6 +8,8 @@ export enum AppConfigKey {
 }
 
 type JSONValue = string | number | boolean | Record<string, any> | any[];
+
+export type AppConfigDTO = EntityDTO<AppConfig>
 
 export type AppConfigConstructorValues = ConstructorValues<AppConfig>;
 
