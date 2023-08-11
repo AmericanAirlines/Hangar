@@ -14,7 +14,10 @@
     "clean": "rimraf dist coverage",
     "test": "jest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@hangar/database": "*",
+    "dayjs": "^1.11.9"
+  },
   "devDependencies": {
     "@types/jest": "^29.2.1",
     "@types/prettier": "^2.7.1",
