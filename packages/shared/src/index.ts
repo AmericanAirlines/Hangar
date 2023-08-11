@@ -1,7 +1,7 @@
 export * from './config';
 export * from './types';
 export * from './utils';
-export {
+export type {
   UserDTO,
   ProjectDTO,
   EventDTO,
