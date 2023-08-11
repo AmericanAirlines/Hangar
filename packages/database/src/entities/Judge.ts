@@ -7,7 +7,7 @@ import { Project } from './Project';
 import { Node } from './Node';
 import { User } from './User';
 
-export type JudgeDTO = EntityDTO<Judge>
+export type JudgeDTO = EntityDTO<Judge>;
 
 export type JudgeConstructorValues = ConstructorValues<
   Judge,

@@ -3,7 +3,7 @@ import { Entity, Property, EntityDTO } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 
-export type PrizeDTO = EntityDTO<Prize>
+export type PrizeDTO = EntityDTO<Prize>;
 
 export type PrizeConstructorValues = ConstructorValues<Prize, never, 'isBonus'>;
 

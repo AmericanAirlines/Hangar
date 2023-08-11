@@ -13,7 +13,7 @@ export const insufficientVoteCountError = 'InsufficientVoteCount';
 type NormalizedScore = number[];
 type NormalizedScores = { [id: string]: NormalizedScore };
 
-export type JudgingVoteDTO = EntityDTO<JudgingVote>
+export type JudgingVoteDTO = EntityDTO<JudgingVote>;
 
 export type JudgingVoteConstructorValues = ConstructorValues<JudgingVote>;
 

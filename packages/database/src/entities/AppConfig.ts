@@ -9,7 +9,7 @@ export enum AppConfigKey {
 
 type JSONValue = string | number | boolean | Record<string, any> | any[];
 
-export type AppConfigDTO = EntityDTO<AppConfig>
+export type AppConfigDTO = EntityDTO<AppConfig>;
 
 export type AppConfigConstructorValues = ConstructorValues<AppConfig>;
 

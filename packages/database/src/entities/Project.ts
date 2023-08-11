@@ -7,10 +7,10 @@ import { User } from './User';
 import {
   decrementActiveJudgeCount,
   incrementJudgeVisits,
-  getNextAvailableProjectExcludingProjects
+  getNextAvailableProjectExcludingProjects,
 } from '../entitiesUtils';
 
-export type ProjectDTO = EntityDTO<Project>
+export type ProjectDTO = EntityDTO<Project>;
 
 export type ProjectConstructorValues = ConstructorValues<
   Project,
@@ -45,8 +45,8 @@ export class Project extends Node<Project> {
     this.description = description;
   }
 
-  static getNextAvailableProjectExcludingProjects = getNextAvailableProjectExcludingProjects
-  
+  static getNextAvailableProjectExcludingProjects = getNextAvailableProjectExcludingProjects;
+
   /* istanbul ignore next */
   static async updateSelectedProject({
     project,
