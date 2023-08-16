@@ -1,4 +1,4 @@
-import { Router, Response, Request } from 'express';
+import { Router } from 'express';
 import { post } from './post';
 import { addUser } from '../../utils/addUser';
 
