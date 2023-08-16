@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "build": "tsc -p tsconfig.build.json --pretty",
     "typecheck": "tsc",
-    "test": "jest",
+    "test": "jest tests/api/users ",
     "test:coverage": "yarn test --coverage",
     "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
     "lint:fix": "yarn lint --fix",

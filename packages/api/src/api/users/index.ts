@@ -1,17 +1,7 @@
-import { Router } from 'express';
+import { Router, Response, Request } from 'express';
 import { post } from './post';
+import { addUser } from '../../utils/addUser';
 
 export const users = Router();
 
-users.post(
-  '',
-  (req, res, next) => {
-    if (!req.session?.email) {
-      // User does not have a valid session
-      res.sendStatus(401);
-      return;
-    }
-    next();
-  },
-  post,
-);
+users.post( '', addUser, post );
