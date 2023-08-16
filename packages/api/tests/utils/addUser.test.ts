@@ -8,18 +8,28 @@ jest.mock('../../src/api/users/post', () => ({
 }));
 
 
-const mockReq = {
+const mockUser = {
+  firstName: 'a',
+  lastName: 'b',
+  email: 'a@b.c',
+  project:undefined
+};
+const mockReq:any = {
   session: {
     email: ''
   },
   entityManager: {
-    findOne: jest.fn()
+    findOne: jest.fn(()=>{
+      return mockReq.session.email === 'pancakes@waffles.bananas'
+        ? mockUser
+        : null
+    })
   } ,
   user: null
-}
+};
 const mockRes = {
   sendStatus: jest.fn()
-}
+};
 const mockNext = jest.fn()
 
 describe('mounting user on /user', () => {
@@ -53,19 +63,29 @@ describe('mounting user on /user', () => {
   
   it('adds a user to the request when a valid session is found', async () => {
     // setup
+    const req = {
+      ...mockReq ,
+      session: { email: 'pancakes@waffles.bananas' }
+    };
     // test
-    await addUser(mockReq as unknown as Request, mockRes as unknown as Response, mockNext);
+    await addUser(req as unknown as Request, mockRes as unknown as Response, mockNext);
     // await addUser( mockReq as any, mockRes as any, mockNext );
 
     // assert
-    expect(mockReq.user).toBeDefined();
+    expect(req.user).toBeDefined();
+    expect(mockNext).toHaveBeenCalled();
 
   });
   it('returns a 403 when a valid session is found but the user is not authorized', async () => {
     // setup
+    const req = {
+      ...mockReq ,
+      session: { email: 'unauthorized@user.io' }
+    };
     // test
     await addUser( mockReq as any, mockRes as any, mockNext );
     // assert
     expect(mockRes.sendStatus).toHaveBeenCalledWith(403);
+    expect(mockNext).not.toHaveBeenCalled();
   });
 });

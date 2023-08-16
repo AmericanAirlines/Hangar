@@ -15,6 +15,11 @@ export const addUser = async ( req: Request, res: Response, next:Function ) => {
   if (user) {
     req.user = user;
   }
+  else {
+    // User does not exist in the database
+    res.sendStatus(403);
+    return;
+  }
   
   next();
 }
