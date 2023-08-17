@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { post } from './post';
-import { addUser } from '../../middleware/userMiddleware';
+import { sessionMiddleware } from '../../middleware/sessionMiddleware';
 
 export const users = Router();
 
-users.post( '', addUser, post );
+users.post('', sessionMiddleware, post);
