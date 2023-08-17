@@ -2,16 +2,24 @@ import { Request, Response } from 'express';
 import { User } from '@hangar/database';
 
 export const addUser = async ( req: Request, res: Response, next:Function ) => {
-  const email = req.session?.email;
-  const userQuery = { email };
+  const id = req.session?.id;
+  const userQuery = { id };
   
-  if (!email) {
+  if (!id) {
     // User does not have a valid session
     res.sendStatus(401);
     return;
   }
   
-  const user = await req.entityManager.findOne( User, userQuery );
+  let user;
+  try {
+    user = await req.entityManager.findOne( User, userQuery );
+  }
+  catch {
+    res.sendStatus(500);
+    return;
+  }
+
   if (user) {
     req.user = user;
   }
