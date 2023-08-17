@@ -26,11 +26,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Build Shared
-        run: yarn workspace @hangar/shared build
-
       - name: Build Database
         run: yarn workspace @hangar/database build
+
+      - name: Build Shared
+        run: yarn workspace @hangar/shared build
 
       - name: Build Web
         run: yarn workspace @hangar/web build

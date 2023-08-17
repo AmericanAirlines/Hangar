@@ -1,11 +1,13 @@
 /* eslint-disable max-lines */
-import { Entity, ManyToMany, OneToOne, Ref, Collection } from '@mikro-orm/core';
+import { Entity, ManyToMany, OneToOne, Ref, Collection, EntityDTO } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { JudgingVote } from './JudgingVote';
 import { Project } from './Project';
 import { Node } from './Node';
 import { User } from './User';
+
+export type JudgeDTO = EntityDTO<Judge>;
 
 export type JudgeConstructorValues = ConstructorValues<
   Judge,

@@ -1,8 +1,10 @@
 /* istanbul ignore file */
-import { Entity, Property, ManyToOne, Ref } from '@mikro-orm/core';
+import { Entity, Property, ManyToOne, Ref, EntityDTO } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Project } from './Project';
 import { Node } from './Node';
+
+export type UserDTO = EntityDTO<User>;
 
 export type UserConstructorValues = ConstructorValues<User>;
 

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { Entity, ManyToOne, Property, Ref } from '@mikro-orm/core';
+import { Entity, Property, Ref, ManyToOne, EntityDTO } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Project } from './Project';
@@ -12,6 +12,8 @@ export const insufficientVoteCountError = 'InsufficientVoteCount';
 
 type NormalizedScore = number[];
 type NormalizedScores = { [id: string]: NormalizedScore };
+
+export type JudgingVoteDTO = EntityDTO<JudgingVote>;
 
 export type JudgingVoteConstructorValues = ConstructorValues<JudgingVote>;
 

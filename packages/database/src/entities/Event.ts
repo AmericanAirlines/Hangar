@@ -1,7 +1,9 @@
 /* istanbul ignore file */
-import { Entity, Property } from '@mikro-orm/core';
+import { Entity, Property, EntityDTO } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
+
+export type EventDTO = EntityDTO<Event>;
 
 export type EventConstructorValues = ConstructorValues<Event, never, 'description'>;
 
