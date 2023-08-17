@@ -6,15 +6,15 @@ describe('mounting user on /user', () => {
   it('adds a user to the request', async () => {
     // setup
     const req = {
-      ...createMockReq() ,
-      session: { id: '1' }
+      ...createMockReq(),
+      session: { id: '1' },
     };
     const mockNext = jest.fn();
-    const mockRes = createMockRes()
-    
+    const mockRes = createMockRes();
+
     // test
     await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
-    
+
     // assert
     expect(req.user).toBeDefined();
     expect(mockNext).toHaveBeenCalled();
@@ -23,35 +23,35 @@ describe('mounting user on /user', () => {
   it('sends a 403 status when a session id is not found', async () => {
     // setup
     const req = {
-      ...createMockReq() ,
+      ...createMockReq(),
       session: undefined
     };
     const mockNext = jest.fn();
-    const mockRes = createMockRes()
-    
+    const mockRes = createMockRes();
+
     // test
     await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
-    
+
     // assert
     expect(mockRes.sendStatus).toHaveBeenCalledWith(403);
     expect(mockNext).not.toHaveBeenCalled();
   });
-  
+
   it('sends a 500 status when an error occurs', async () => {
     // setup
     const req = {
-      ...createMockReq() ,
-      session: { id: '1' }
+      ...createMockReq(),
+      session: { id: '1' },
     };
     req.entityManager.findOne = jest.fn(() => {
       throw new Error('test error');
     });
     const mockNext = jest.fn();
-    const mockRes = createMockRes()
-    
+    const mockRes = createMockRes();
+
     // test
     await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
-    
+
     // assert
     expect(mockRes.sendStatus).toHaveBeenCalledWith(500);
     expect(mockNext).not.toHaveBeenCalled();
