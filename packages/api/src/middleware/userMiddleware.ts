@@ -1,15 +1,9 @@
 import { Request, Response } from 'express';
 import { User } from '@hangar/database';
+import { validateSession } from './validateSessionMiddleware';
 
-export const addUser = async ( req: Request, res: Response, next:Function ) => {
-  const id = req.session?.id;
-  const userQuery = { id };
-  
-  if (!id) {
-    // User does not have a valid session
-    res.sendStatus(401);
-    return;
-  }
+export const mountUser = async ( req: Request, res: Response, next:Function ) => {
+  const userQuery = { id: req.session?.id };
   
   let user;
   try {
@@ -19,7 +13,7 @@ export const addUser = async ( req: Request, res: Response, next:Function ) => {
     res.sendStatus(500);
     return;
   }
-
+  
   if (user) {
     req.user = user;
   }
@@ -31,3 +25,5 @@ export const addUser = async ( req: Request, res: Response, next:Function ) => {
   
   next();
 }
+
+export const validateSessionMountUser = [ validateSession, mountUser ];
