@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { post } from './post';
-import { addUser } from '../../middleware/userMiddleware';
+import { validateSession } from '../../middleware/validateSessionMiddleware';
 
 export const users = Router();
 
-users.post( '', addUser, post );
+users.post( '', validateSession, post );
