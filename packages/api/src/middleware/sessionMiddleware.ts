@@ -3,7 +3,7 @@ import { Handler } from 'express';
 /**
  * A middleware handler to check to see if the request included a valid session.
  *
- * Session validity is determined by the presence of an email within signed cookie included with the request.
+ * Session validity is determined by the presence of an email and id within signed cookie included with the request.
  * If the session is valid, the next function is invoked.
  *
  * @param req Express Request
@@ -11,7 +11,7 @@ import { Handler } from 'express';
  * @param next Express Next function
  */
 export const sessionMiddleware: Handler = (req, res, next) => {
-  if (!req.session?.email) {
+  if (!req.session?.email || !req.session?.id) {
     // User does not have a valid session
     res.sendStatus(401);
     return;

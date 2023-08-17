@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { User } from '@hangar/database';
-import { validateSession } from './validateSessionMiddleware';
+import { sessionMiddleware } from './sessionMiddleware';
 
-export const mountUser = async ( req: Request, res: Response, next:Function ) => {
+export const mountUserMiddleware = async ( req: Request, res: Response, next:Function ) => {
   const userQuery = { id: req.session?.id };
   
   let user;
@@ -26,4 +26,4 @@ export const mountUser = async ( req: Request, res: Response, next:Function ) =>
   next();
 }
 
-export const validateSessionMountUser = [ validateSession, mountUser ];
+export const validateSessionMountUser = [ sessionMiddleware, mountUserMiddleware ];

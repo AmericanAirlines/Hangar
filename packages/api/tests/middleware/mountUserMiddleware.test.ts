@@ -1,17 +1,19 @@
 import { Request, Response } from 'express';
-import { mountUser } from '../../src/middleware/userMiddleware';
-import { mockReq, mockRes, mockNext } from './mockData';
+import { mountUserMiddleware } from '../../src/middleware/mountUserMiddleware';
+import { createMockReq, createMockRes } from '../testUtils/mockUserData';
 
 describe('mounting user on /user', () => {
   it('adds a user to the request when a valid session is found', async () => {
     // setup
     const req = {
-      ...mockReq ,
+      ...createMockReq() ,
       session: { id: '1' }
     };
+    const mockNext = jest.fn();
+    const mockRes = createMockRes()
     
     // test
-    await mountUser(req as unknown as Request, mockRes as unknown as Response, mockNext);
+    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
     
     // assert
     expect(req.user).toBeDefined();
@@ -21,12 +23,14 @@ describe('mounting user on /user', () => {
   it('sends a 403 status when a valid session is found but the user is not authorized', async () => {
     // setup
     const req = {
-      ...mockReq ,
+      ...createMockReq() ,
       session: { id: undefined }
     };
+    const mockNext = jest.fn();
+    const mockRes = createMockRes()
     
     // test
-    await mountUser(req as unknown as Request, mockRes as unknown as Response, mockNext);
+    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
     
     // assert
     expect(mockRes.sendStatus).toHaveBeenCalledWith(403);
@@ -36,15 +40,17 @@ describe('mounting user on /user', () => {
   it('sends a 500 status when an error occurs', async () => {
     // setup
     const req = {
-      ...mockReq ,
+      ...createMockReq() ,
       session: { id: '1' }
     };
     req.entityManager.findOne = jest.fn(() => {
       throw new Error('test error');
     });
+    const mockNext = jest.fn();
+    const mockRes = createMockRes()
     
     // test
-    await mountUser(req as unknown as Request, mockRes as unknown as Response, mockNext);
+    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
     
     // assert
     expect(mockRes.sendStatus).toHaveBeenCalledWith(500);
