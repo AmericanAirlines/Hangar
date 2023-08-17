@@ -1,10 +1,9 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 import supertest from 'supertest';
+import { createMockNext } from '../testUtils/createMockNext';
 
 jest.mock('../../src/api/settings', () => ({
-  enforceRateLimiting: (req: Request, res: Response, next: NextFunction) => {
-    next();
-  },
+  enforceRateLimiting: createMockNext(),
 }));
 
 describe('/api route registration', () => {
