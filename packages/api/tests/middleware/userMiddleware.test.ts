@@ -7,7 +7,7 @@ describe('mounting user on /user', () => {
     // setup
     const req = {
       ...mockReq ,
-      session: { email: 'pancakes@waffles.bananas' }
+      session: { id: '1' }
     };
     
     // test
@@ -22,7 +22,7 @@ describe('mounting user on /user', () => {
     // setup
     const req = {
       ...mockReq ,
-      session: { email: 'unauthorized@user.io' }
+      session: { id: undefined }
     };
     
     // test
@@ -37,7 +37,7 @@ describe('mounting user on /user', () => {
     // setup
     const req = {
       ...mockReq ,
-      session: { email: '' }
+      session: { id: '1' }
     };
     req.entityManager.findOne = jest.fn(() => {
       throw new Error('test error');

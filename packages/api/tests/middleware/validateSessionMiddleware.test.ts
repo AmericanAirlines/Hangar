@@ -7,7 +7,7 @@ describe('session validation', () => {
     // setup
     const req = {
       ...mockReq ,
-      session: { email: '' }
+      session: { id: '1' }
     };
     
     // test
@@ -21,7 +21,7 @@ describe('session validation', () => {
     // setup
     const req = {
       ...mockReq ,
-      session: { email: '' }
+      session: { id: undefined }
     };
     
     // test

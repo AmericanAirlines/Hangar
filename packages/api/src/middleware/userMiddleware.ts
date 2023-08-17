@@ -26,4 +26,4 @@ export const mountUser = async ( req: Request, res: Response, next:Function ) =>
   next();
 }
 
-export const validateSession_mountUser = [ validateSession, mountUser ];
+export const validateSessionMountUser = [ validateSession, mountUser ];

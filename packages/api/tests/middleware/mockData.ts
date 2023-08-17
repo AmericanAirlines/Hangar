@@ -9,16 +9,16 @@ export const mockUser = {
 
 export const mockReq:any = {
   session: {
-    email: ''
+    id: undefined
   },
   entityManager: {
-    findOne: jest.fn(()=>{
-      return mockReq.session.email === 'pancakes@waffles.bananas'
+    findOne: jest.fn((entity,query)=>{
+      return query.id
         ? mockUser
-        : null
+        : undefined
     })
   } ,
-  user: null
+  user: undefined
 };
 
 export const mockRes = {
