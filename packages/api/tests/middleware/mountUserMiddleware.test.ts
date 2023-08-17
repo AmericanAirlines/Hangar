@@ -3,7 +3,7 @@ import { mountUserMiddleware } from '../../src/middleware/mountUserMiddleware';
 import { createMockReq, createMockRes } from '../testUtils/mockUserData';
 
 describe('mounting user on /user', () => {
-  it('adds a user to the request when a valid session is found', async () => {
+  it('adds a user to the request', async () => {
     // setup
     const req = {
       ...createMockReq() ,
@@ -20,11 +20,11 @@ describe('mounting user on /user', () => {
     expect(mockNext).toHaveBeenCalled();
   });
   
-  it('sends a 403 status when a valid session is found but the user is not authorized', async () => {
+  it('sends a 403 status when a session id is not found', async () => {
     // setup
     const req = {
       ...createMockReq() ,
-      session: { id: undefined }
+      session: undefined
     };
     const mockNext = jest.fn();
     const mockRes = createMockRes()

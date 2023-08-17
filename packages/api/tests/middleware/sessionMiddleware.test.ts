@@ -36,6 +36,7 @@ describe('', () => {
     expect(mockRes.sendStatus).toBeCalledTimes(1);
     expect(mockRes.sendStatus).toBeCalledWith(401);
   });
+
   it('returns a 401 when a an id is not included in the session', async () => {
     const mockReq = { session: { email: '' } };
     const mockRes = { sendStatus: jest.fn() };
@@ -45,4 +46,5 @@ describe('', () => {
     expect(mockRes.sendStatus).toBeCalledTimes(1);
     expect(mockRes.sendStatus).toBeCalledWith(401);
   });
+  
 });
