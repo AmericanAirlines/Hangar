@@ -1,14 +1,19 @@
 import { NextPage } from 'next';
 import { appName } from '@hangar/shared';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PageContainer } from '../components/layout/PageContainer';
-import { useUserStore as any } from '../stores/user';
+import { useUserStore } from '../stores/user';
 
 const User: React.FC = () => {
-  useUserStore((state:any) => state.user); 
+  const { user, loading, fetchUser } = useUserStore((state:any) => state); 
+  useEffect(() => {
+    fetchUser();
+  }, []);
   return (
     <div>
-      <h1>user</h1>
+
+      <h1>{loading+''}</h1>
+      <h1>{user.firstName}</h1>
     </div>
   );
 }
