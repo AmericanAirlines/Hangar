@@ -1,6 +1,5 @@
 import { users } from '..';
-import { mountUserMiddleware } from '../../../middleware/mountUserMiddleware';
+import { validateSessionMountUser } from '../../../middleware/mountUserMiddleware';
+import { returnUser } from './get';
 
-users.get('/api/users/me', mountUserMiddleware, (req, res) => {
-  res.json(req.user);
-});
+users.get('/me', validateSessionMountUser, returnUser);
