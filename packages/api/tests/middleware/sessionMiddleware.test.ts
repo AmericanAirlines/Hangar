@@ -6,6 +6,7 @@ describe('', () => {
       const mockReq = {
         session: {
           email: 'pancakes@waffles.breakfast',
+          id: '1',
         },
       };
       const mockRes = {};
@@ -27,7 +28,17 @@ describe('', () => {
   });
 
   it('returns a 401 when a an email is not included in the session', async () => {
-    const mockReq = { session: {} };
+    const mockReq = { session: { id: '1' } };
+    const mockRes = { sendStatus: jest.fn() };
+    const mockNext = jest.fn();
+    sessionMiddleware(mockReq as any, mockRes as any, mockNext);
+
+    expect(mockRes.sendStatus).toBeCalledTimes(1);
+    expect(mockRes.sendStatus).toBeCalledWith(401);
+  });
+
+  it('returns a 401 when a an id is not included in the session', async () => {
+    const mockReq = { session: { email: '' } };
     const mockRes = { sendStatus: jest.fn() };
     const mockNext = jest.fn();
     sessionMiddleware(mockReq as any, mockRes as any, mockNext);
