@@ -19,12 +19,12 @@ describe('mounting user on /user', () => {
     expect(req.user).toBeDefined();
     expect(mockNext).toHaveBeenCalled();
   });
-  
+
   it('sends a 403 status when a session id is not found', async () => {
     // setup
     const req = {
       ...createMockReq(),
-      session: undefined
+      session: undefined,
     };
     const mockNext = jest.fn();
     const mockRes = createMockRes();

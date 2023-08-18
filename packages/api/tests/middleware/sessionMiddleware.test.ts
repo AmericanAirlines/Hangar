@@ -46,5 +46,4 @@ describe('', () => {
     expect(mockRes.sendStatus).toBeCalledTimes(1);
     expect(mockRes.sendStatus).toBeCalledWith(401);
   });
-  
 });
