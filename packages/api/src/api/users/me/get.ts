@@ -1,3 +1,5 @@
-export const returnUser = (req, res) => {
+import { Request, Response } from 'express';
+
+export const returnUser = (req: Request, res: Response) => {
   res.json(req.user);
 };
