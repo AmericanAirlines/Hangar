@@ -24,4 +24,4 @@ export const mountUserMiddleware = async (req: Request, res: Response, next: Fun
   next();
 };
 
-export const validateSessionMountUser = [sessionMiddleware, mountUserMiddleware];
+export const validateSessionMountUser = [sessionMiddleware, mountUserMiddleware] as const;

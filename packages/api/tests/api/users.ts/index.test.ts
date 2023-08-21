@@ -14,18 +14,37 @@ jest.mock('../../../src/middleware/sessionMiddleware', () => ({
   sessionMiddleware: createMockNext(),
 }));
 
+jest.mock('../../../src/middleware/mountUserMiddleware', () => ({
+  validateSessionMountUser: [createMockNext(), createMockNext()],
+}));
+
 const sessionMiddlewareMock = getMock(sessionMiddleware);
 
 describe('/users router registrations', () => {
-  it('uses sessionMiddleware', async () => {
-    await jest.isolateModulesAsync(async () => {
-      const { users } = require('../../../src/api/users');
+  describe('post registration', () => {
+    it('uses sessionMiddleware', async () => {
+      await jest.isolateModulesAsync(async () => {
+        const { users } = await import('../../../src/api/users');
 
-      const app = express();
-      app.use(users);
-      const res = await supertest(app).post('');
-      expect(sessionMiddlewareMock).toBeCalledTimes(1);
-      expect(res.status).toEqual(200);
+        const app = express();
+        app.use(users);
+        const res = await supertest(app).post('');
+        expect(sessionMiddlewareMock).toBeCalledTimes(1);
+        expect(res.status).toEqual(200);
+      });
+    });
+  });
+
+  describe('me router registration', () => {
+    it('uses mountUserMiddleware', async () => {
+      await jest.isolateModulesAsync(async () => {
+        const { me } = await import('../../../src/api/users/me');
+
+        const app = express();
+        app.use(me);
+        const res = await supertest(app).get('');
+        expect(res.status).toEqual(200);
+      });
     });
   });
 });

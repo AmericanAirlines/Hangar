@@ -1,5 +1,7 @@
-import { users } from '..';
+import { Router } from 'express';
 import { validateSessionMountUser } from '../../../middleware/mountUserMiddleware';
 import { returnUser } from './get';
 
-users.get('/me', validateSessionMountUser, returnUser);
+export const me = Router();
+
+me.get('/me', validateSessionMountUser, returnUser);

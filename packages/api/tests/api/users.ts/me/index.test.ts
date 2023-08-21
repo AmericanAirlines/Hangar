@@ -19,13 +19,13 @@ const mountUserMiddlewareMock = getMock(mountUserMiddleware);
 describe('/users/me is returning a user from request body', () => {
   it('uses mountUserMiddleware', async () => {
     await jest.isolateModulesAsync(async () => {
-      const { users } = require('../../../../src/api/users');
+      const { me } = require('../../../../src/api/users/me');
 
       const app = express();
-      app.use(users);
-      const res = await supertest(app).get('/me');
-      expect(mountUserMiddlewareMock).toBeCalledTimes(1);
+      app.use(me);
+      const res = await supertest(app).get('');
       expect(res.status).toEqual(200);
+      expect(mountUserMiddlewareMock).toBeCalledTimes(1);
     });
   });
 });
