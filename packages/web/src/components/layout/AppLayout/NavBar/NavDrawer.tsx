@@ -6,9 +6,9 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerOverlay,
+  Fade,
   VStack,
 } from '@chakra-ui/react';
-import { useEffect } from 'react';
 import { signInWithSlack } from './NavBar';
 import { useUserStore } from '../../../../stores/user';
 
@@ -19,20 +19,16 @@ type NavDrawerProps = {
 };
 
 export const NavDrawer: React.FC<NavDrawerProps> = (props) => {
-  const { user, doneLoading, fetchUser } = useUserStore((state: any) => state);
-
-  useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+  const { user, doneLoading } = useUserStore((state: any) => state);
 
   return (
     <Drawer placement="left" size={'xs'} onClose={props.onClose} isOpen={props.isOpen}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerBody>
-          {doneLoading ? (
+          <Fade in={doneLoading}>
             <Box>
-              {user.firstName ? (
+              {user?.firstName ? (
                 <Box alignContent={'center'}>Welcome back, {user.firstName}!</Box>
               ) : (
                 <VStack>
@@ -53,9 +49,7 @@ export const NavDrawer: React.FC<NavDrawerProps> = (props) => {
                 </VStack>
               )}
             </Box>
-          ) : (
-            <Box>Loading...</Box>
-          )}
+          </Fade>
         </DrawerBody>
 
         <DrawerFooter>
