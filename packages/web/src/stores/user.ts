@@ -1,3 +1,4 @@
+import { User } from '@hangar/shared';
 import create from 'zustand';
 
 const mockFetchUser = () =>
@@ -21,8 +22,14 @@ const mockFetchUser = () =>
     }, 1000);
   });
 
-export const useUserStore = create((set: any) => ({
-  user: {},
+type UserStore = {
+  user?: User;
+  doneLoading: boolean;
+  fetchUser: () => Promise<void>;
+};
+
+export const useUserStore = create<UserStore>((set) => ({
+  user: undefined,
   doneLoading: false,
   fetchUser: async () => {
     const res: any = await mockFetchUser();

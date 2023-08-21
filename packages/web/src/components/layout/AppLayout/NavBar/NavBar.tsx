@@ -8,11 +8,11 @@ import {
   Button,
   IconButton,
   useDisclosure,
+  Fade,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { appName } from '@hangar/shared';
-import { useEffect } from 'react';
 import { colors } from '../../../../theme';
 import { NavDrawer } from './NavDrawer';
 import { useUserStore } from '../../../../stores/user';
@@ -27,11 +27,7 @@ export async function signInWithSlack() {
 export const NavBar: React.FC = () => {
   const router = useRouter();
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const { user, doneLoading, fetchUser } = useUserStore((state: any) => state);
-
-  useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+  const { user, doneLoading } = useUserStore((state: any) => state);
 
   return (
     <>
@@ -63,9 +59,9 @@ export const NavBar: React.FC = () => {
           </HStack>
         </Box>
 
-        {doneLoading ? (
+        <Fade in={doneLoading}>
           <Box display={{ base: 'none', lg: 'inline' }} marginLeft="auto">
-            {user.firstName ? (
+            {user?.firstName ? (
               <Box>
                 {user.firstName} {user.lastName}
               </Box>
@@ -91,9 +87,7 @@ export const NavBar: React.FC = () => {
               </HStack>
             )}
           </Box>
-        ) : (
-          <Box>Loading...</Box>
-        )}
+        </Fade>
       </HStack>
       <Spacer />
       <NavDrawer isOpen={isOpen} onClose={onClose} doneLoading={doneLoading} />
