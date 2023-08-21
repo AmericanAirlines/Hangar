@@ -21,7 +21,7 @@ const mountUserMiddlewareMock = getMock(mountUserMiddleware);
 
 describe('/users router registrations', () => {
   describe('post registration', () => {
-    it('uses sessionMiddleware', async () => {
+    it('uses mountUserMiddleware', async () => {
       await jest.isolateModulesAsync(async () => {
         const { users } = await import('../../../src/api/users');
 
@@ -35,7 +35,7 @@ describe('/users router registrations', () => {
   });
 
   describe('me registration', () => {
-    it('uses sessionMiddleware', async () => {
+    it('uses mountUserMiddleware', async () => {
       await jest.isolateModulesAsync(async () => {
         const { users } = await import('../../../src/api/users');
 
