@@ -7,4 +7,7 @@ import { validateSessionMountUser } from '../../middleware/mountUserMiddleware';
 export const users = Router();
 
 users.post('', sessionMiddleware, post);
-users.use('/me', validateSessionMountUser, me);
+
+// Routes that require the user
+users.use(validateSessionMountUser);
+users.use('/me', me);
