@@ -1,13 +1,10 @@
 import { sessionMiddleware } from '../../src/middleware/sessionMiddleware';
+import { createMockRequest } from '../testUtils/expressHelpers/createMockRequest';
 
 describe('', () => {
   it('calls next when a valid session is found', async () => {
     await jest.isolateModulesAsync(async () => {
-      const mockReq = {
-        session: {
-          email: 'pancakes@waffles.breakfast',
-        },
-      };
+      const mockReq = createMockRequest({ session: { id: '1' } });
       const mockRes = {};
       const mockNext = jest.fn();
       sessionMiddleware(mockReq as any, mockRes as any, mockNext);
@@ -17,7 +14,7 @@ describe('', () => {
   });
 
   it('returns a 401 when a valid session cannot be found', async () => {
-    const mockReq = {};
+    const mockReq = createMockRequest();
     const mockRes = { sendStatus: jest.fn() };
     const mockNext = jest.fn();
     sessionMiddleware(mockReq as any, mockRes as any, mockNext);
