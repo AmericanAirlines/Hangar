@@ -1,17 +1,13 @@
 import { Router } from 'express';
 import { post } from './post';
+import { sessionMiddleware } from '../../middleware/sessionMiddleware';
+import { me } from './me';
+import { validateSessionMountUser } from '../../middleware/mountUserMiddleware';
 
 export const users = Router();
 
-users.post(
-  '',
-  (req, res, next) => {
-    if (!req.session?.email) {
-      // User does not have a valid session
-      res.sendStatus(401);
-      return;
-    }
-    next();
-  },
-  post,
-);
+users.post('', sessionMiddleware, post);
+
+// Routes that require the user
+users.use(validateSessionMountUser);
+users.use('/me', me);

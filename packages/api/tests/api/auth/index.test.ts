@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import request from 'supertest';
+import supertest from 'supertest';
 import { get } from '../../../src/api/auth/get';
 import { getMock } from '../../testUtils/getMock';
 
@@ -18,7 +18,7 @@ describe('slack auth declarations', () => {
       const app = express();
       app.use(auth);
 
-      await request(app).get('/');
+      await supertest(app).get('/');
 
       expect(mockGet).toBeCalledTimes(1);
     });
