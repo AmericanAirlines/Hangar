@@ -1,15 +1,15 @@
 import { get } from '../../../../src/api/users/me/get';
 
 const mockRequest: any = {
-  user: {},
+  user: { id: '1' },
 };
 
 const mockResponse: any = {
-  json: jest.fn(),
+  send: jest.fn(),
 };
 
-describe('Check if the request body has a user', () => {
-  it('returns a user when get is called', () => {
+describe('users me handler', () => {
+  it('returns the user associated with the request', () => {
     // test
     get(mockRequest, mockResponse);
     // assert

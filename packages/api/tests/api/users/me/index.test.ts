@@ -7,8 +7,8 @@ jest.mock('../../../../src/api/users/me/get', () => ({
   },
 }));
 
-describe('/users/me is returning a user from request body', () => {
-  it('uses mountUserMiddleware', async () => {
+describe('/users/me route registration', () => {
+  it('uses mountUserMiddleware and registers the route for the me handler', async () => {
     await jest.isolateModulesAsync(async () => {
       const { me } = await import('../../../../src/api/users/me');
 
