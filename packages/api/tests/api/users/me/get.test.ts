@@ -13,6 +13,6 @@ describe('users me handler', () => {
     // test
     get(mockRequest, mockResponse);
     // assert
-    expect(mockResponse.json).toBeCalledWith(mockRequest.user);
+    expect(mockResponse.send).toBeCalledWith(mockRequest.user);
   });
 });
