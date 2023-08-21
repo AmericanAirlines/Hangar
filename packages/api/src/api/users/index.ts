@@ -1,13 +1,11 @@
 import { Router } from 'express';
-import { post } from './post';
-import { sessionMiddleware } from '../../middleware/sessionMiddleware';
+import { put } from './put';
 import { me } from './me';
-import { validateSessionMountUser } from '../../middleware/mountUserMiddleware';
+import { mountUserMiddleware } from '../../middleware/mountUserMiddleware';
 
 export const users = Router();
 
-users.post('', sessionMiddleware, post);
+users.use(mountUserMiddleware);
 
-// Routes that require the user
-users.use(validateSessionMountUser);
+users.put('', put);
 users.use('/me', me);

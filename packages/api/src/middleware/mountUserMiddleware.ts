@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { User } from '@hangar/database';
 import { sessionMiddleware } from './sessionMiddleware';
 
-const mountUser = async (req: Request, res: Response, next: Function) => {
+const mountUser = async (req: Request, res: Response, next: NextFunction) => {
   const userQuery = { id: req.session?.id };
 
   let user;
@@ -33,4 +33,5 @@ const mountUser = async (req: Request, res: Response, next: Function) => {
  *   - 403: Unknown user with a valid session
  *   - 500: An error occured trying to identify the user
  */
-export const mountUserMiddleware = [sessionMiddleware, mountUser] as const;
+export const mountUserMiddleware = async (req: Request, res: Response, next: NextFunction) =>
+  sessionMiddleware(req, res, () => mountUser(req, res, next));

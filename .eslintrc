@@ -4,6 +4,7 @@
   },
   "rules": {
     "@typescript-eslint/no-floating-promises": ["error"],
+    "@typescript-eslint/no-require-imports": ["error"],
     "curly": ["error"],
     "import/prefer-default-export": ["off"],
     "no-void": ["error", { "allowAsStatement": true }],

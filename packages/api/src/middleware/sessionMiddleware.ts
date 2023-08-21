@@ -1,4 +1,4 @@
-import { Handler } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 /**
  * A middleware handler to check to see if the request included a valid session.
@@ -8,9 +8,9 @@ import { Handler } from 'express';
  *
  * @param req Express Request
  * @param res Express Response
- * @param next Express Next function
+ * @param next Express NextFunction
  */
-export const sessionMiddleware: Handler = (req, res, next) => {
+export const sessionMiddleware = (req: Request, res: Response, next: NextFunction) => {
   if (!req.session?.email) {
     // User does not have a valid session
     res.sendStatus(401);

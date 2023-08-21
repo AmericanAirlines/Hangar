@@ -20,7 +20,6 @@ type AuthenticateArgs = {
  */
 export const authenticateUser = async ({ data, req, res }: AuthenticateArgs) => {
   const { entityManager: em } = req;
-  req.session = data;
 
   try {
     const existingUser = await em.findOne(User, { email: data.email });

@@ -1,70 +1,58 @@
 import { Request, Response } from 'express';
+import { createMockNext } from '../testUtils/expressHelpers/createMockNext';
 import { mountUserMiddleware } from '../../src/middleware/mountUserMiddleware';
-import { createMockReq, createMockRes } from '../testUtils/mockUserData';
+import { getMock } from '../testUtils/getMock';
+import { sessionMiddleware } from '../../src/middleware/sessionMiddleware';
+import { createMockRequest } from '../testUtils/expressHelpers/createMockRequest';
+import { createMockResponse } from '../testUtils/expressHelpers/createMockResponse';
+import { createMockEntityManager } from '../testUtils/createMockEntityManager';
+
+jest.mock('../../src/middleware/sessionMiddleware', () => ({
+  sessionMiddleware: createMockNext(),
+}));
+
+const sessionMiddlewareMock = getMock(sessionMiddleware);
 
 describe('mounting user on /user', () => {
   it('adds a user to the request', async () => {
-    // setup
-    const req = {
-      ...createMockReq(),
-      session: { id: '1' },
-    };
+    const mockUser = { id: '1' };
+    const entityManager = createMockEntityManager({
+      findOne: jest.fn().mockResolvedValueOnce(mockUser),
+    });
+    const req = createMockRequest({ session: { id: '1' }, entityManager });
+    const mockRes = createMockResponse();
     const mockNext = jest.fn();
-    const mockRes = createMockRes();
 
-    // test
-    await mountUserMiddleware[1](
-      req as unknown as Request,
-      mockRes as unknown as Response,
-      mockNext,
-    );
+    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
 
-    // assert
-    expect(req.user).toBeDefined();
+    expect(sessionMiddlewareMock).toBeCalledTimes(1);
+    expect(req.user).toBe(mockUser);
     expect(mockNext).toHaveBeenCalled();
   });
 
   it('sends a 403 status when a session id is not found', async () => {
-    // setup
-    const req = {
-      ...createMockReq(),
-      session: undefined,
-    };
+    const req = createMockRequest();
     const mockNext = jest.fn();
-    const mockRes = createMockRes();
+    const mockRes = createMockResponse();
 
-    // test
-    await mountUserMiddleware[1](
-      req as unknown as Request,
-      mockRes as unknown as Response,
-      mockNext,
-    );
+    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
 
-    // assert
+    expect(sessionMiddlewareMock).toBeCalledTimes(1);
     expect(mockRes.sendStatus).toHaveBeenCalledWith(403);
     expect(mockNext).not.toHaveBeenCalled();
   });
 
   it('sends a 500 status when an error occurs', async () => {
-    // setup
-    const req = {
-      ...createMockReq(),
-      session: { id: '1' },
-    };
+    const req = createMockRequest({ session: { id: '1' } });
     req.entityManager.findOne = jest.fn(() => {
       throw new Error('test error');
     });
     const mockNext = jest.fn();
-    const mockRes = createMockRes();
+    const mockRes = createMockResponse();
 
-    // test
-    await mountUserMiddleware[1](
-      req as unknown as Request,
-      mockRes as unknown as Response,
-      mockNext,
-    );
+    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
 
-    // assert
+    expect(sessionMiddlewareMock).toBeCalledTimes(1);
     expect(mockRes.sendStatus).toHaveBeenCalledWith(500);
     expect(mockNext).not.toHaveBeenCalled();
   });

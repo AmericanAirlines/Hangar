@@ -1,22 +1,23 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import supertest from 'supertest';
-import { createMockNext } from '../../testUtils/createMockNext';
+import { createMockNext } from '../../testUtils/expressHelpers/createMockNext';
 import { getMock } from '../../testUtils/getMock';
-import { sessionMiddleware } from '../../../src/middleware/sessionMiddleware';
+import { mountUserMiddleware } from '../../../src/middleware/mountUserMiddleware';
+import { createMockHandler } from '../../testUtils/expressHelpers/createMockHandler';
 
-jest.mock('../../../src/api/users/post', () => ({
-  post: (req: Request, res: Response) => {
-    res.sendStatus(200);
-  },
+jest.mock('../../../src/api/users/put', () => ({
+  put: createMockHandler(),
 }));
 
-jest.mock('../../../src/api/users/me');
-
-jest.mock('../../../src/middleware/sessionMiddleware', () => ({
-  sessionMiddleware: createMockNext(),
+jest.mock('../../../src/api/users/me', () => ({
+  me: createMockHandler(),
 }));
 
-const sessionMiddlewareMock = getMock(sessionMiddleware);
+jest.mock('../../../src/middleware/mountUserMiddleware', () => ({
+  mountUserMiddleware: createMockNext(),
+}));
+
+const mountUserMiddlewareMock = getMock(mountUserMiddleware);
 
 describe('/users router registrations', () => {
   describe('post registration', () => {
@@ -26,8 +27,22 @@ describe('/users router registrations', () => {
 
         const app = express();
         app.use(users);
-        const res = await supertest(app).post('');
-        expect(sessionMiddlewareMock).toBeCalledTimes(1);
+        const res = await supertest(app).put('');
+        expect(mountUserMiddlewareMock).toBeCalledTimes(1);
+        expect(res.status).toEqual(200);
+      });
+    });
+  });
+
+  describe('me registration', () => {
+    it('uses sessionMiddleware', async () => {
+      await jest.isolateModulesAsync(async () => {
+        const { users } = await import('../../../src/api/users');
+
+        const app = express();
+        app.use(users);
+        const res = await supertest(app).get('/me');
+        expect(mountUserMiddlewareMock).toBeCalledTimes(1);
         expect(res.status).toEqual(200);
       });
     });
