@@ -13,7 +13,11 @@ describe('mounting user on /user', () => {
     const mockRes = createMockRes();
 
     // test
-    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
+    await mountUserMiddleware[1](
+      req as unknown as Request,
+      mockRes as unknown as Response,
+      mockNext,
+    );
 
     // assert
     expect(req.user).toBeDefined();
@@ -30,7 +34,11 @@ describe('mounting user on /user', () => {
     const mockRes = createMockRes();
 
     // test
-    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
+    await mountUserMiddleware[1](
+      req as unknown as Request,
+      mockRes as unknown as Response,
+      mockNext,
+    );
 
     // assert
     expect(mockRes.sendStatus).toHaveBeenCalledWith(403);
@@ -50,7 +58,11 @@ describe('mounting user on /user', () => {
     const mockRes = createMockRes();
 
     // test
-    await mountUserMiddleware(req as unknown as Request, mockRes as unknown as Response, mockNext);
+    await mountUserMiddleware[1](
+      req as unknown as Request,
+      mockRes as unknown as Response,
+      mockNext,
+    );
 
     // assert
     expect(mockRes.sendStatus).toHaveBeenCalledWith(500);
