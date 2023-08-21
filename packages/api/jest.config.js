@@ -14,7 +14,6 @@ module.exports = {
     '!./src/@types/**',
     '!./src/env.ts',
     '!./src/slack/*',
-    '!./src/middleware/sessionMiddleware.ts',
   ],
   coverageThreshold: {
     global: {
