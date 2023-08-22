@@ -90,7 +90,7 @@ export const NavBar: React.FC = () => {
         </Fade>
       </HStack>
       <Spacer />
-      <NavDrawer isOpen={isOpen} onClose={onClose} doneLoading={doneLoading} />
+      <NavDrawer isOpen={isOpen} onClose={onClose} />
     </>
   );
 };

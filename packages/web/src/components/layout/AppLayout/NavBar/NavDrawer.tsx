@@ -15,7 +15,6 @@ import { useUserStore } from '../../../../stores/user';
 type NavDrawerProps = {
   isOpen: any;
   onClose: any;
-  doneLoading: boolean;
 };
 
 export const NavDrawer: React.FC<NavDrawerProps> = (props) => {
