@@ -1,21 +1,21 @@
 import { Request, Response } from 'express';
-import z, { Schema, ZodObject, ZodRawShape, ZodSchema } from 'zod';
+import z, { ZodObject, ZodRawShape, ZodSchema } from 'zod';
 import { logger } from './logger';
 
-type ValidatePayloadArgs = {
+type ValidatePayloadArgs<T extends ZodObject<ZodRawShape>> = {
   req: Request;
   res: Response;
-  schema: ZodObject<ZodRawShape>;
+  schema: T;
   data?: Record<any, any>;
 };
 
 type ValidatePayloadError = {
   errorHandled: true;
-  data: undefined;
+  data?: undefined;
 };
 type ValidatedPayload<Schema extends ZodSchema> = {
   data: z.infer<Schema>;
-  errorHandled: false;
+  errorHandled?: undefined;
 };
 
 type ValidatePayloadResponse<Schema extends ZodSchema> =
@@ -30,9 +30,9 @@ type ValidatePayloadResponse<Schema extends ZodSchema> =
  * @param schema Zod `Schema` - the schema to use for validation
  * @param data An optional data object to combine with the request's body
  */
-export const validatePayload: <T extends Schema>(
-  args: ValidatePayloadArgs,
-) => ValidatePayloadResponse<T> = ({ req, res, schema, data }: ValidatePayloadArgs) => {
+export const validatePayload: <T extends ZodObject<ZodRawShape>>(
+  args: ValidatePayloadArgs<T>,
+) => ValidatePayloadResponse<T> = ({ req, res, schema, data }) => {
   const { body = {} } = req;
   const result = schema.strict().safeParse({ ...body, ...data });
 
@@ -46,8 +46,8 @@ export const validatePayload: <T extends Schema>(
     );
 
     res.status(400).send(formattedErrorObject);
-    return { errorHandled: true, data: undefined };
+    return { errorHandled: true };
   }
 
-  return { data: result.data, errorHandled: false };
+  return { data: result.data };
 };

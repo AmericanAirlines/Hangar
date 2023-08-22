@@ -11,7 +11,7 @@ describe('validatePayload', () => {
       someData: z.boolean(),
     });
 
-    const { errorHandled, data } = validatePayload<typeof schema>({
+    const { errorHandled, data } = validatePayload({
       req: req as any,
       res: res as any,
       schema,
@@ -32,7 +32,7 @@ describe('validatePayload', () => {
       someData: z.boolean(),
     });
 
-    const { errorHandled } = validatePayload<typeof schema>({
+    const { errorHandled } = validatePayload({
       req: req as any,
       res: res as any,
       schema,
@@ -52,7 +52,7 @@ describe('validatePayload', () => {
     const res = createMockResponse();
     const schema = z.object({});
 
-    const { errorHandled } = validatePayload<typeof schema>({
+    const { errorHandled } = validatePayload({
       req: req as any,
       res: res as any,
       schema,
@@ -73,7 +73,7 @@ describe('validatePayload', () => {
       someData: z.boolean(),
     });
 
-    const { errorHandled, data } = validatePayload<typeof schema>({
+    const { errorHandled, data } = validatePayload({
       req: req as any,
       res: res as any,
       schema,
