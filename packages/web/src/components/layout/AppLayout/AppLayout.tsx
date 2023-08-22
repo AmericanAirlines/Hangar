@@ -15,10 +15,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, ...chakraProps }
   const { setColorMode } = useColorMode();
   React.useEffect(() => setColorMode(forcedColorMode), [setColorMode]); // Make sure the color mode resets on load
 
-  const { fetchUser } = useUserStore((state: any) => state);
-
   React.useEffect(() => {
-    fetchUser();
+    void useUserStore.getState().fetchUser();
   }, []);
 
   return (
