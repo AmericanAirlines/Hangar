@@ -1,9 +1,8 @@
 import type { EntityManager, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { User } from '@hangar/database';
-import { OAuthUserData } from '../utils/authenticateUser';
 
-type Session = OAuthUserData & {
-  id?: string;
+type Session = {
+  id: string;
 };
 
 declare global {

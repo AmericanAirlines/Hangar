@@ -1,4 +1,6 @@
+import { User } from '@hangar/database';
 import { Response, Request } from 'express';
+import { logger } from './logger';
 
 export type OAuthUserData = {
   email: string;
@@ -12,8 +14,26 @@ type AuthenticateArgs = {
   data: OAuthUserData;
 };
 
-export const authenticateUser = ({ data, req, res }: AuthenticateArgs) => {
-  req.session = data;
+/**
+ * Handles a recently validated session creation and identifies an existing user or creates one if needed
+ * @param context info about the current request/response and data for the user to authenticate
+ */
+export const authenticateUser = async ({ data, req, res }: AuthenticateArgs) => {
+  const { entityManager: em } = req;
 
-  res.redirect('/');
+  try {
+    const existingUser = await em.findOne(User, { email: data.email });
+    if (existingUser) {
+      req.session.id = existingUser.id;
+    } else {
+      const newUser = new User(data);
+      await em.persistAndFlush(newUser);
+      req.session.id = newUser.id;
+    }
+
+    res.redirect('/');
+  } catch (error) {
+    logger.error(error);
+    res.redirect('/error?description=Failed to resolve identity');
+  }
 };
