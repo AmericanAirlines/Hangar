@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Center, ChakraProps, Flex, useColorMode } from '@chakra-ui/react';
 import { colors, forcedColorMode } from '../../../theme';
 import { NavBar } from './NavBar/NavBar';
+import { useUserStore } from '../../../stores/user';
 
 type AppLayoutProps = ChakraProps & {
   children: React.ReactNode;
@@ -13,6 +14,10 @@ const NAV_HEIGHT = '60px';
 export const AppLayout: React.FC<AppLayoutProps> = ({ children, ...chakraProps }) => {
   const { setColorMode } = useColorMode();
   React.useEffect(() => setColorMode(forcedColorMode), [setColorMode]); // Make sure the color mode resets on load
+
+  React.useEffect(() => {
+    void useUserStore.getState().fetchUser();
+  }, []);
 
   return (
     <>
