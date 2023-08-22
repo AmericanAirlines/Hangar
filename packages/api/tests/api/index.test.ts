@@ -1,6 +1,6 @@
 import express from 'express';
 import supertest from 'supertest';
-import { createMockNext } from '../testUtils/createMockNext';
+import { createMockNext } from '../testUtils/expressHelpers/createMockNext';
 
 jest.mock('../../src/api/settings', () => ({
   enforceRateLimiting: createMockNext(),
