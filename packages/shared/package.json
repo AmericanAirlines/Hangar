@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "@hangar/database": "*",
-    "dayjs": "^1.11.9"
+    "dayjs": "^1.11.9",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "@types/jest": "^29.2.1",

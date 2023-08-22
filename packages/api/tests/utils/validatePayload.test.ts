@@ -67,7 +67,7 @@ describe('validatePayload', () => {
   });
 
   it('optionally validates provided data in addition to the request body', () => {
-    const req = createMockRequest({ body: { someData: false } });
+    const req = createMockRequest();
     const res = createMockResponse();
     const schema = z.object({
       someData: z.boolean(),
