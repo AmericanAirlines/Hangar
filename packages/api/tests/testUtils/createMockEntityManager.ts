@@ -11,5 +11,6 @@ export const createMockEntityManager: (defaults?: MockEntityManager) => MockEnti
   flush: jest.fn(),
   persist: jest.fn(),
   persistAndFlush: jest.fn(),
+  transactional: jest.fn(),
   ...defaults,
 });

@@ -14,47 +14,37 @@ export const post = async (req: Request, res: Response) => {
   
   // const query = {id:req.user.id};
   // check for existing project
-  if (req.user?.project) {
-    // res.status(409);
-    // return;
-  }
+
+  // try catch at the highest level
 
   await em.transactional(async em => {
     
-    let user
+    let user: User;
     try {
-      user = await em.findOne( User , { id:'3' })//req.user )
+      user = await em.findOneOrFail(User, { id: '3' }, { lockMode: LockMode.PESSIMISTIC_WRITE_OR_FAIL }); // req.user )
     }
-    catch {
+    catch (err) {
+      if ((err as DriverException).code === '55P03') {
+        res.send('423')
+      }
       res.send(500)
+      return
     }
     
-    if (user) {
-      try {
-        await em.lock( user, LockMode.PESSIMISTIC_WRITE_OR_FAIL );
-      }
-      catch(err) {
-        if ((err as DriverException).code === '55P03') {
-          res.send('423')
-          return
-        }
-        console.log(err)
-      }
-      const project = new Project(data);
-      
-      if (user?.project) {
-        res.send('409')
-        return
-      }
-      user.project = project.toReference()
-      
-      try {
-        await em.persist([ user, project ]);
-        await em.flush();
-      }
-      catch {
-        res.send('500')
-      }
+    const project = new Project(data);
+    
+    if (user?.project) {
+      res.send('409')
+      return
+    }
+    user.project = project.toReference()
+    
+    try {
+      em.persist([ user, project ]);
+      await em.flush();
+    }
+    catch {
+      res.send('500')
     }
     
   })
