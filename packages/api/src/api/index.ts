@@ -6,6 +6,7 @@ import { health } from './health';
 import { slack } from './slack';
 import { auth } from './auth';
 import { users } from './users';
+import { project } from './project';
 
 export const api = Router();
 api.use(json());
@@ -28,6 +29,7 @@ api.use('/auth', auth);
 // SELF-PROTECTED ROUTES
 api.use(slack);
 api.use('/users', users);
+api.use('/project', project);
 
 // Generic catch all for bad requests
 api.use((_req, res) => res.status(404).send({ error: 'API route not found' }));

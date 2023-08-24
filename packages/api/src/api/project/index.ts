@@ -2,6 +2,6 @@ import { Router } from 'express';
 import { post } from './post';
 import { mountUserMiddleware } from '../../middleware/mountUserMiddleware';
 
-export const users = Router();
+export const project = Router();
 
-users.post('', mountUserMiddleware, post);
+project.post('', post);
