@@ -14,8 +14,7 @@ export const post = async (req: Request, res: Response) => {
   
   // check for existing project
   try {
-    const user = await em.findOne(User, query);
-    if (user?.project!==undefined) {
+    if (user?.project) {
       res.status(409);
       return;
     }
@@ -26,7 +25,7 @@ export const post = async (req: Request, res: Response) => {
   }
   try {
     const project = new Project(data);
-    em.persistAndFlush(project);
+    await em.persistAndFlush(project);
     res.send(project);
   }
   catch(err) {
