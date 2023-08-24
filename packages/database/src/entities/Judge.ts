@@ -22,7 +22,7 @@ export class Judge extends Node<Judge> {
     this.user = user;
   }
 
-  @OneToOne({ entity: () => User, ref: true })
+  @OneToOne({ entity: () => User, ref: true, unique: true })
   user: Ref<User>;
 
   @ManyToMany({ entity: () => Project })
