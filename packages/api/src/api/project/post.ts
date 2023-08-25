@@ -24,7 +24,7 @@ export const post = async (req: Request, res: Response) => {
         res.sendStatus(423)
       }
       else {
-        console.log(err)
+        // console.log(err)
         res.sendStatus(500)
       }
       return
