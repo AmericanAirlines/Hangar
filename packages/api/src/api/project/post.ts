@@ -6,48 +6,40 @@ import { Project, User } from '@hangar/database';
 import { DriverException, LockMode } from '@mikro-orm/core';
 
 export const post = async (req: Request, res: Response) => {
-  const { entityManager: em } = req;
+  const { entityManager } = req;
   const data = req.body;
 
   // const { errorHandled, data } = validatePayload({ req, res, schema: Schema.project.post });
   // if (errorHandled) return;
   
-  // const query = {id:req.user.id};
-  // check for existing project
-
-  // try catch at the highest level
-
-  await em.transactional(async em => {
-    
+  await entityManager.transactional( async em => {
     let user: User;
+    const lockMode = { lockMode: LockMode.PESSIMISTIC_WRITE_OR_FAIL };
     try {
-      user = await em.findOneOrFail(User, { id: '3' }, { lockMode: LockMode.PESSIMISTIC_WRITE_OR_FAIL }); // req.user )
+      user = await em.findOneOrFail(User, {id:req?.user?.id||'3'}, lockMode);
     }
     catch (err) {
       if ((err as DriverException).code === '55P03') {
-        res.send('423')
+        // Locking error  
+        res.sendStatus(423)
       }
-      res.send(500)
+      else {
+        console.log(err)
+        res.sendStatus(500)
+      }
       return
     }
     
     const project = new Project(data);
     
+    // Check to make sure a project STILL does not exist
     if (user?.project) {
-      res.send('409')
+      res.sendStatus(409)
       return
     }
     user.project = project.toReference()
-    
-    try {
-      em.persist([ user, project ]);
-      await em.flush();
-    }
-    catch {
-      res.send('500')
-    }
-    
+    em.persist([ user, project ]);
   })
-  
 
+  res.sendStatus(200)
 };
