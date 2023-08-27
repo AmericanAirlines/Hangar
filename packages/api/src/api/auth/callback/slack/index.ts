@@ -4,4 +4,4 @@ import { localRedirect } from './utils/localRedirect';
 
 export const slack = Router();
 
-slack.get('/', localRedirect, get);
+slack.get('', localRedirect, get);

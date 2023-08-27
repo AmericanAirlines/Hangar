@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import jwt_decode from 'jwt-decode';
 import { env } from '../../../../env';
 import { authenticateUser } from '../../../../utils/authenticateUser';
+import { logger } from '../../../../utils/logger';
 
 export const codeQueryParam = 'code';
 export type SlackTokenData = {
@@ -11,11 +12,11 @@ export type SlackTokenData = {
   family_name: string;
 };
 
+export const slackCallbackUrl: string = `${env.baseUrl ?? ''}/api/auth/callback/slack`;
+
 export const get = async (req: Request, res: Response) => {
   const myCode: string = req.query[codeQueryParam] as string;
   const { slackClientID, slackClientSecret } = env;
-
-  const redirect: string = `${env.baseUrl}/api/auth/callback/slack/`;
 
   const client = new WebClient(env.slackBotToken);
   try {
@@ -23,7 +24,7 @@ export const get = async (req: Request, res: Response) => {
       code: myCode,
       client_id: slackClientID,
       client_secret: slackClientSecret,
-      redirect_uri: redirect,
+      redirect_uri: slackCallbackUrl,
     });
 
     const {
@@ -35,6 +36,7 @@ export const get = async (req: Request, res: Response) => {
     // Replace this with Core OAuth flow
     await authenticateUser({ req, res, data: { firstName, lastName, email } });
   } catch (error) {
+    logger.error(error);
     res.redirect(`/error?description=${encodeURIComponent('Bad Slack Auth Callback')}`);
   }
 };
