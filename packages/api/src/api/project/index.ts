@@ -4,4 +4,4 @@ import { mountUserMiddleware } from '../../middleware/mountUserMiddleware';
 
 export const project = Router();
 
-project.post('', post);
+project.post('', mountUserMiddleware, post);
