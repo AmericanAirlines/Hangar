@@ -5,7 +5,7 @@
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" aria-title="License: MIT" />
   </a>
-  <img src="/.github/workflows/build.yml/badge.svg?branch=v3" />
+  ![](../../workflows/Build/badge.svg?branch=main)
   <img src="https://img.shields.io/badge/Author-%40americanairlines-blue" />
 
   <center width="400">
