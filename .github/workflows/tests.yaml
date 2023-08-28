@@ -33,3 +33,12 @@ jobs:
 
       - name: Run Test Coverage
         run: yarn test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/clover.xml
+          name: codecov-${{ matrix.node-version }}
+          verbose: true 
+
