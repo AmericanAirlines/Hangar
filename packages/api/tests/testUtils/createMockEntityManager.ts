@@ -16,9 +16,11 @@ export const createMockEntityManager: (defaults?: MockEntityManager) => MockEnti
     ...defaults,
   };
 
-  em.transactional = jest.fn(async (transaction: (em: EntityManager) => Promise<void>) =>
-    transaction(em as any),
-  ) as jest.Mock;
+  em.transactional =
+    defaults.transactional ??
+    (jest.fn(async (transaction: (em: EntityManager) => Promise<void>) =>
+      transaction(em as any),
+    ) as jest.Mock);
 
   return em;
 };
