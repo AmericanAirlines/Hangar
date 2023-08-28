@@ -31,42 +31,11 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Run API Test Coverage
-        run: yarn test:coverage --scope=@hangar/api
+      - name: Run Test Coverage
+        run: yarn test:coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          flags: api
-          verbose: true
-
-      - name: Run Web Test Coverage
-        run: yarn test:coverage --scope=@hangar/web
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: web
-          verbose: true
-
-      - name: Run Database Test Coverage
-        run: yarn test:coverage --scope=@hangar/database
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: database
-          verbose: true
-
-      - name: Run Shared Test Coverage
-        run: yarn test:coverage --scope=@hangar/shared
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: shared
           verbose: true
