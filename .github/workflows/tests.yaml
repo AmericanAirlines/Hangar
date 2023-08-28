@@ -12,8 +12,8 @@ env:
   NODE_VERSION: 16
 
 jobs:
-  API:
-    name: API Tests
+  setup:
+    name: Install dependencies & Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,6 +31,11 @@ jobs:
       - name: Build
         run: yarn build
 
+  api:
+    needs: [setup]
+    name: API Tests
+    runs-on: ubuntu-latest
+    steps:
       - name: Run Test Coverage
         run: yarn test:coverage --scope=@hangar/api
 
@@ -40,25 +45,12 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api
           verbose: true
-  Web:
+
+  web:
+    needs: [setup]
     name: Web Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build
-        run: yarn build
-
       - name: Run Test Coverage
         run: yarn test:coverage --scope=@hangar/web
 
@@ -68,25 +60,12 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: web
           verbose: true
-  Database:
+
+  database:
+    needs: [setup]
     name: Database Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build
-        run: yarn build
-
       - name: Run Test Coverage
         run: yarn test:coverage --scope=@hangar/database
 
@@ -96,25 +75,12 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: database
           verbose: true
-  Shared:
+
+  shared:
+    needs: [setup]
     name: Shared Tests
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build
-        run: yarn build
-
       - name: Run Test Coverage
         run: yarn test:coverage --scope=@hangar/shared
 
