@@ -5,7 +5,8 @@
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" aria-title="License: MIT" />
   </a>
-  <img src="../../workflows/Build/badge.svg?branch=main" />
+  <img src="/.github/workflows/build.yml/badge.svg?branch=v3" />
+  <img src="https://img.shields.io/badge/Author-%40americanairlines-blue" />
 
   <center width="400">
     Sponsoring a student hackathon? You've come to the right place! American Airlines loves to help students learn new tech and we're passionate about being a big part of hackathons.
