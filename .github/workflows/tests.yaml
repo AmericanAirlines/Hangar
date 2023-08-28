@@ -31,12 +31,7 @@ jobs:
       - name: Build
         run: yarn build
 
-  api:
-    needs: [setup]
-    name: API Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Test Coverage
+      - name: Run API Test Coverage
         run: yarn test:coverage --scope=@hangar/api
 
       - name: Upload coverage to Codecov
@@ -46,12 +41,7 @@ jobs:
           flags: api
           verbose: true
 
-  web:
-    needs: [setup]
-    name: Web Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Test Coverage
+      - name: Run Web Test Coverage
         run: yarn test:coverage --scope=@hangar/web
 
       - name: Upload coverage to Codecov
@@ -61,12 +51,7 @@ jobs:
           flags: web
           verbose: true
 
-  database:
-    needs: [setup]
-    name: Database Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Test Coverage
+      - name: Run Database Test Coverage
         run: yarn test:coverage --scope=@hangar/database
 
       - name: Upload coverage to Codecov
@@ -76,12 +61,7 @@ jobs:
           flags: database
           verbose: true
 
-  shared:
-    needs: [setup]
-    name: Shared Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Test Coverage
+      - name: Run Shared Test Coverage
         run: yarn test:coverage --scope=@hangar/shared
 
       - name: Upload coverage to Codecov
