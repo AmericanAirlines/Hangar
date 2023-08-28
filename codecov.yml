@@ -24,12 +24,12 @@ flag_management:
         - database/
       statuses:
         - type: project
-        target: 100%
-        threshold: 1%
+          target: 100%
+          threshold: 1%
     - name: shared
       paths:
         - shared/
       statuses:
         - type: project
-        target: 100%
-        threshold: 1%
+          target: 100%
+          threshold: 1%
