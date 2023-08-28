@@ -2,10 +2,15 @@
   <img src="./docs/Logo.png" width="300px"/>
   <br />
   <br />
+  <img src="https://img.shields.io/badge/Author-%40AmericanAirlines-blue" />
+  <img src="https://img.shields.io/badge/Version-v3-%5B0%2C0%2C255%5D" />
+  <img src="https://github.com/AmericanAirlines/Hangar/actions/workflows/build.yml/badge.svg?branch=v3" />
+  <a href="https://app.codecov.io/gh/AmericanAirlines/Hangar/tree/v3">
+    <img src="https://codecov.io/github/AmericanAirlines/Hangar/branch/v3/graph/badge.svg" />
+  </a>
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" aria-title="License: MIT" />
   </a>
-  <img src="../../workflows/Build/badge.svg?branch=main" />
 
   <center width="400">
     Sponsoring a student hackathon? You've come to the right place! American Airlines loves to help students learn new tech and we're passionate about being a big part of hackathons.
