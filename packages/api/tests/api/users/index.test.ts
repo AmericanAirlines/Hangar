@@ -5,11 +5,11 @@ import { getMock } from '../../testUtils/getMock';
 import { mountUserMiddleware } from '../../../src/middleware/mountUserMiddleware';
 import { createMockHandler } from '../../testUtils/expressHelpers/createMockHandler';
 
-jest.mock('../../../src/api/users/put', () => ({
+jest.mock('../../../src/api/user/put', () => ({
   put: createMockHandler(),
 }));
 
-jest.mock('../../../src/api/users/me', () => ({
+jest.mock('../../../src/api/user/me', () => ({
   me: createMockHandler(),
 }));
 
@@ -23,7 +23,7 @@ describe('/users router registrations', () => {
   describe('post registration', () => {
     it('uses mountUserMiddleware', async () => {
       await jest.isolateModulesAsync(async () => {
-        const { users } = await import('../../../src/api/users');
+        const { users } = await import('../../../src/api/user');
 
         const app = express();
         app.use(users);
@@ -37,7 +37,7 @@ describe('/users router registrations', () => {
   describe('me registration', () => {
     it('uses mountUserMiddleware', async () => {
       await jest.isolateModulesAsync(async () => {
-        const { users } = await import('../../../src/api/users');
+        const { users } = await import('../../../src/api/user');
 
         const app = express();
         app.use(users);

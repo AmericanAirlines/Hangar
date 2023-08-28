@@ -1,4 +1,4 @@
-import { get } from '../../../../src/api/users/me/get';
+import { get } from '../../../../src/api/user/me/get';
 
 const mockRequest: any = {
   user: { id: '1' },

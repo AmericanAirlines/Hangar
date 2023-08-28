@@ -5,7 +5,7 @@ import { env } from '../env';
 import { health } from './health';
 import { slack } from './slack';
 import { auth } from './auth';
-import { users } from './users';
+import { users } from './user';
 import { project } from './project';
 
 export const api = Router();
