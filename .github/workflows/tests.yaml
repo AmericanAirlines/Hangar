@@ -13,7 +13,7 @@ env:
 
 jobs:
   API:
-    name: Test Coverage
+    name: API Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,7 +41,7 @@ jobs:
           flags: api
           verbose: true
   Web:
-    name: Test Coverage
+    name: Web Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -69,7 +69,7 @@ jobs:
           flags: web
           verbose: true
   Database:
-    name: Test Coverage
+    name: Database Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -97,7 +97,7 @@ jobs:
           flags: database
           verbose: true
   Shared:
-    name: Test Coverage
+    name: Shared Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
