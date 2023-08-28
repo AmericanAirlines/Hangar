@@ -38,7 +38,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/clover.xml
-          name: codecov-${{ matrix.node-version }}
-          verbose: true 
-
+          verbose: true
