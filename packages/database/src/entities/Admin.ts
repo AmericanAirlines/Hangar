@@ -1,6 +1,7 @@
-import { Entity, PrimaryKey, BigIntType, Property, EntityDTO } from '@mikro-orm/core';
+import { Entity, Ref, EntityDTO, OneToOne } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
+import { User } from './User';
 
 export type AdminDTO = EntityDTO<Admin>;
 
@@ -8,23 +9,12 @@ export type AdminConstructorValues = ConstructorValues<Admin>;
 
 @Entity()
 export class Admin extends Node<Admin> {
-  @PrimaryKey({ type: BigIntType })
-  public id!: string;
+  @OneToOne({ entity: () => User, nullable: false, ref: true })
+  user: Ref<User>;
 
-  @Property({ unique: true })
-  username: string;
-
-  @Property()
-  password: string;
-
-  @Property({ unique: true })
-  email: string;
-
-  constructor({ username, password, email }: AdminConstructorValues) {
+  constructor({ user }: AdminConstructorValues) {
     super();
 
-    this.username = username;
-    this.password = password;
-    this.email = email;
+    this.user = user;
   }
 }
