@@ -2,7 +2,7 @@
   <img src="./docs/Logo.png" width="300px"/>
   <br />
   <br />
-  <img src="https://img.shields.io/badge/Author-%40americanairlines-blue" />
+  <img src="https://img.shields.io/badge/Author-%40AmericanAirlines-blue" />
   <img src="https://img.shields.io/badge/Version-v3-%5B0%2C0%2C255%5D" />
   <img src="../../workflows/Build/badge.svg" />
   <img src="https://img.shields.io/codecov/c/github/AmericanAirlines/Hangar/v3.svg?sanitize=true" />
