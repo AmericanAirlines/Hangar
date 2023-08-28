@@ -1,0 +1,35 @@
+coverage:
+  status:
+    project: off
+    patch: off
+
+flag_management:
+  individual_flags:
+    - name: api
+      paths:
+        - api/
+      statuses:
+        - type: project
+          target: 100%
+          threshold: 1%
+    - name: web
+      paths:
+        - web/
+      statuses:
+        - type: project
+          target: 100%
+          threshold: 1%
+    - name: database
+      paths:
+        - database/
+      statuses:
+        - type: project
+        target: 100%
+        threshold: 1%
+    - name: shared
+      paths:
+        - shared/
+      statuses:
+        - type: project
+        target: 100%
+        threshold: 1%
