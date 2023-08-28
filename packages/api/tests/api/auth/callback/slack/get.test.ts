@@ -3,6 +3,7 @@ import jwt_decode from 'jwt-decode';
 import { SlackTokenData, get } from '../../../../../src/api/auth/callback/slack/get';
 import { getMock } from '../../../../testUtils/getMock';
 import { authenticateUser } from '../../../../../src/utils/authenticateUser';
+import { mockEnv } from '../../../../testUtils/mockEnv';
 
 jest.mock('@slack/web-api');
 jest.mock('jwt-decode');
@@ -19,47 +20,68 @@ const webClientSpy = jest.spyOn(Slack, 'WebClient');
 const authenticateUserMock = getMock(authenticateUser);
 
 describe('Slack auth callback', () => {
-  it('fetches a token using the correct args', async () => {
-    const mockTokenMethod = jest.fn().mockReturnValueOnce(mockToken);
-    const mockUserData: SlackTokenData = {
-      email: 'user@domain.com',
-      given_name: 'Lorem',
-      family_name: 'Ipsum',
-    };
-    jwtDecodeMock.mockReturnValueOnce(mockUserData);
-    const mockWebClient = { openid: { connect: { token: mockTokenMethod } } };
-    webClientSpy.mockReturnValueOnce(mockWebClient as any);
-    const mockReq = { query: { code: 'mockCode' } };
+  describe('handler', () => {
+    it('fetches a token using the correct args', async () => {
+      const mockTokenMethod = jest.fn().mockReturnValueOnce(mockToken);
+      const mockUserData: SlackTokenData = {
+        email: 'user@domain.com',
+        given_name: 'Lorem',
+        family_name: 'Ipsum',
+      };
+      jwtDecodeMock.mockReturnValueOnce(mockUserData);
+      const mockWebClient = { openid: { connect: { token: mockTokenMethod } } };
+      webClientSpy.mockReturnValueOnce(mockWebClient as any);
+      const mockReq = { query: { code: 'mockCode' } };
 
-    await get(mockReq as any, {} as any);
+      await get(mockReq as any, {} as any);
 
-    expect(mockTokenMethod).toHaveBeenCalledTimes(1);
-    expect(mockTokenMethod).toHaveBeenCalledWith(
-      expect.objectContaining({
-        code: mockReq.query.code,
-        redirect_uri: expect.stringContaining('/api/auth/callback/slack'),
-      }),
-    );
-    expect(authenticateUserMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        data: {
-          firstName: mockUserData.given_name,
-          lastName: mockUserData.family_name,
-          email: mockUserData.email,
-        },
-      }),
-    );
+      expect(mockTokenMethod).toHaveBeenCalledTimes(1);
+      expect(mockTokenMethod).toHaveBeenCalledWith(
+        expect.objectContaining({
+          code: mockReq.query.code,
+          redirect_uri: expect.stringContaining('/api/auth/callback/slack'),
+        }),
+      );
+      expect(authenticateUserMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: {
+            firstName: mockUserData.given_name,
+            lastName: mockUserData.family_name,
+            email: mockUserData.email,
+          },
+        }),
+      );
+    });
+
+    it('redirects to an error page if an error occurs', async () => {
+      const mockTokenMethod = jest.fn().mockRejectedValueOnce(new Error('Something went wrong'));
+      const mockWebClient = { openid: { connect: { token: mockTokenMethod } } };
+      webClientSpy.mockReturnValueOnce(mockWebClient as any);
+      const mockReq = { query: { code: 'mockCode' } };
+      const mockRes = { redirect: jest.fn() };
+
+      await get(mockReq as any, mockRes as any);
+
+      expect(mockRes.redirect).toBeCalledWith(expect.stringContaining('error'));
+    });
   });
 
-  it('redirects to an error page if an error occurs', async () => {
-    const mockTokenMethod = jest.fn().mockRejectedValueOnce(new Error('Something went wrong'));
-    const mockWebClient = { openid: { connect: { token: mockTokenMethod } } };
-    webClientSpy.mockReturnValueOnce(mockWebClient as any);
-    const mockReq = { query: { code: 'mockCode' } };
-    const mockRes = { redirect: jest.fn() };
+  describe('callback URL', () => {
+    it('uses baseUrl if it exists', async () => {
+      await jest.isolateModulesAsync(async () => {
+        const mockBaseUrl = 'https://aa.com';
+        mockEnv({ baseUrl: mockBaseUrl });
+        const { slackCallbackUrl } = await import('../../../../../src/api/auth/callback/slack/get');
+        expect(slackCallbackUrl).toBe(`${mockBaseUrl}/api/auth/callback/slack`);
+      });
+    });
 
-    await get(mockReq as any, mockRes as any);
-
-    expect(mockRes.redirect).toBeCalledWith(expect.stringContaining('error'));
+    it('defaults to an empty string if baseUrl is undefined', async () => {
+      await jest.isolateModulesAsync(async () => {
+        mockEnv();
+        const { slackCallbackUrl } = await import('../../../../../src/api/auth/callback/slack/get');
+        expect(slackCallbackUrl).toBe(`/api/auth/callback/slack`);
+      });
+    });
   });
 });

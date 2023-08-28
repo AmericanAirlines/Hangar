@@ -15,7 +15,7 @@ export const useUserStore = create<UserStore>((set) => ({
   fetchUser: async () => {
     let user: User | undefined;
     try {
-      const res = await axios.get<SerializedUser>(`/api/users/me`);
+      const res = await axios.get<SerializedUser>(`/api/user/me`);
       const { createdAt, updatedAt, ...rest } = res.data;
       user = { ...rest, createdAt: dayjs(createdAt), updatedAt: dayjs(updatedAt) };
     } catch (error) {
