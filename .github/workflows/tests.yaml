@@ -12,8 +12,8 @@ env:
   NODE_VERSION: 16
 
 jobs:
-  setup:
-    name: Install dependencies & Build
+  tests:
+    name: Test Code Coverage
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
