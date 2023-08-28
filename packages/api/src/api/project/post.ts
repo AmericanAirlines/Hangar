@@ -10,6 +10,8 @@ export const post = async (req: Request, res: Response) => {
   // const { errorHandled, data } = validatePayload({ req, res, schema: Schema.project.post });
   // if (errorHandled) return;
 
+  let project: Project | undefined;
+
   try {
     await entityManager.transactional(async (em) => {
       const lockedUser = await em.findOneOrFail(
@@ -18,7 +20,7 @@ export const post = async (req: Request, res: Response) => {
         { lockMode: LockMode.PESSIMISTIC_WRITE_OR_FAIL },
       );
 
-      const project = new Project(data);
+      project = new Project(data);
       project.contributors.add(lockedUser);
 
       em.persist(project);
@@ -37,7 +39,8 @@ export const post = async (req: Request, res: Response) => {
     // All other errors
     logger.error(error);
     res.sendStatus(500);
+    return;
   }
 
-  res.sendStatus(200);
+  res.send(project);
 };

@@ -1,10 +1,9 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import supertest from 'supertest';
+import { createMockHandler } from '../../../testUtils/expressHelpers/createMockHandler';
 
 jest.mock('../../../../src/api/user/me/get', () => ({
-  get: (req: Request, res: Response) => {
-    res.sendStatus(200);
-  },
+  get: createMockHandler(),
 }));
 
 describe('/user/me route registration', () => {
