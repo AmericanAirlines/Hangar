@@ -13,7 +13,7 @@ env:
 
 jobs:
   tests:
-    name: Test Code Coverage
+    name: Tests & Code Coverage
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
