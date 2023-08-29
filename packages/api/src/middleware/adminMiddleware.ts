@@ -2,19 +2,15 @@ import { NextFunction, Request, Response } from 'express';
 import { Admin } from '@hangar/database';
 
 export const adminMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const adminQuery = { user: req.user?.id };
-
   let userAdmin;
   try {
-    userAdmin = await req.entityManager.findOne(Admin, adminQuery);
+    userAdmin = await req.entityManager.findOne(Admin, { user: req.user?.id });
   } catch {
     res.sendStatus(500);
     return;
   }
 
-  if (userAdmin) {
-    res.sendStatus(200);
-  } else {
+  if (!userAdmin) {
     // Admin does not exist in the database
     res.sendStatus(403);
     return;
