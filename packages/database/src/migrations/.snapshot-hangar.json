@@ -794,6 +794,88 @@
         }
       },
       "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "user": {
+          "name": "user",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "Admin",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "user"
+          ],
+          "composite": false,
+          "keyName": "Admin_user_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "Admin_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Admin_user_foreign": {
+          "constraintName": "Admin_user_foreign",
+          "columnNames": [
+            "user"
+          ],
+          "localTableName": "public.Admin",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.User",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
     }
   ],
   "nativeEnums": {}
