@@ -8,7 +8,7 @@ const mockResponse: any = {
   send: jest.fn(),
 };
 
-describe('users me handler', () => {
+describe('user me handler', () => {
   it('returns the user associated with the request', () => {
     // test
     get(mockRequest, mockResponse);

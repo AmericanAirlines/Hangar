@@ -9,7 +9,7 @@ import { createMockResponse } from '../../testUtils/expressHelpers/createMockRes
 jest.mock('../../../src/utils/validatePayload');
 const validatePayloadMock = getMock(validatePayload);
 
-describe('users post endpoint', () => {
+describe('user post endpoint', () => {
   it('creates a new user with the validated data', async () => {
     const mockUser = { assign: jest.fn() };
 

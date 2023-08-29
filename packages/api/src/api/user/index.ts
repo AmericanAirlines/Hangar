@@ -3,9 +3,9 @@ import { put } from './put';
 import { me } from './me';
 import { mountUserMiddleware } from '../../middleware/mountUserMiddleware';
 
-export const users = Router();
+export const user = Router();
 
-users.use(mountUserMiddleware);
+user.use(mountUserMiddleware);
 
-users.put('', put);
-users.use('/me', me);
+user.put('', put);
+user.use('/me', me);

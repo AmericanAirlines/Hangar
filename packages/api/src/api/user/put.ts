@@ -6,7 +6,7 @@ import { validatePayload } from '../../utils/validatePayload';
 export const put = async (req: Request, res: Response) => {
   const { entityManager: em, user } = req;
 
-  const { errorHandled, data } = validatePayload({ req, res, schema: Schema.users.put });
+  const { errorHandled, data } = validatePayload({ req, res, schema: Schema.user.put });
 
   if (errorHandled) return;
 

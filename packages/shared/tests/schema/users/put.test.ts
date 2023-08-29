@@ -1,22 +1,22 @@
-import { put } from '../../../src/schema/users';
+import { Schema } from '../../../src';
 
-describe('users put schema', () => {
-  it('validates users correctly', () => {
+describe('user put schema', () => {
+  it('validates user correctly', () => {
     expect(
-      put.safeParse({
+      Schema.user.put.safeParse({
         firstName: 'John',
         lastName: 'Doe',
       }).success,
     ).toBe(true);
 
     expect(
-      put.safeParse({
+      Schema.user.put.safeParse({
         firstName: 'John',
       }).success,
     ).toBe(false);
 
     expect(
-      put.safeParse({
+      Schema.user.put.safeParse({
         lastName: 'Doe',
       }).success,
     ).toBe(false);
@@ -24,14 +24,14 @@ describe('users put schema', () => {
 
   it('validates string length correctly', () => {
     expect(
-      put.safeParse({
+      Schema.user.put.safeParse({
         firstName: 'J',
         lastName: 'Doe',
       }).success,
     ).toBe(false);
 
     expect(
-      put.safeParse({
+      Schema.user.put.safeParse({
         firstName: Array(55).fill('J'),
         lastName: 'Doe',
       }).success,
