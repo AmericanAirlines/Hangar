@@ -1,14 +1,15 @@
 import { Request, Response } from 'express';
 import { Project, User } from '@hangar/database';
+import { Schema } from '@hangar/shared';
 import { DriverException, LockMode } from '@mikro-orm/core';
 import { logger } from '../../utils/logger';
+import { validatePayload } from '../../utils/validatePayload';
 
 export const post = async (req: Request, res: Response) => {
   const { entityManager, user } = req;
-  const data = req.body;
 
-  // const { errorHandled, data } = validatePayload({ req, res, schema: Schema.project.post });
-  // if (errorHandled) return;
+  const { errorHandled, data } = validatePayload({ req, res, schema: Schema.project.post });
+  if (errorHandled) return;
 
   let project: Project | undefined;
 

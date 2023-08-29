@@ -4,13 +4,20 @@ import { post } from '../../../src/api/project/post';
 import { createMockEntityManager } from '../../testUtils/createMockEntityManager';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
+import { getMock } from '../../testUtils/getMock';
+import { validatePayload } from '../../../src/utils/validatePayload';
 
 jest.mock('@hangar/database', () => ({
   Project: jest.fn(),
 }));
 
+jest.mock('../../../src/utils/validatePayload');
+const validatePayloadMock = getMock(validatePayload);
+
 describe('project post enpoint', () => {
   it('should create a project, add a contributor, and return a 200', async () => {
+    const data = { name: 'A cool project' };
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
     const mockUser = { id: '1' };
     const entityManager = createMockEntityManager({
       findOneOrFail: jest.fn().mockResolvedValueOnce(mockUser),
@@ -30,44 +37,58 @@ describe('project post enpoint', () => {
   });
 
   it('should return 409 if the project already exists', async () => {
-    const entityManager = createMockEntityManager();
-    const req = createMockRequest({ entityManager });
+    const data = { name: 'A cool project' };
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
+    const req = createMockRequest();
     const res = createMockResponse();
-    (entityManager.transactional as jest.Mock).mockRejectedValueOnce({ name: 'NotFoundError' });
+    (req.entityManager.transactional as jest.Mock).mockRejectedValueOnce({ name: 'NotFoundError' });
 
     await post(req as any, res as any);
 
-    expect(entityManager.transactional).toBeCalledTimes(1);
-    expect(entityManager.findOneOrFail).not.toBeCalled();
-    expect(entityManager.persist).not.toBeCalled();
+    expect(req.entityManager.transactional).toBeCalledTimes(1);
+    expect(req.entityManager.findOneOrFail).not.toBeCalled();
+    expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(409);
   });
 
   it('should return 423 if the row lock could not be obtained', async () => {
-    const entityManager = createMockEntityManager();
-    const req = createMockRequest({ entityManager });
+    const data = { name: 'A cool project' };
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
+    const req = createMockRequest();
     const res = createMockResponse();
-    (entityManager.transactional as jest.Mock).mockRejectedValueOnce({ code: '55P03' });
+    (req.entityManager.transactional as jest.Mock).mockRejectedValueOnce({ code: '55P03' });
 
     await post(req as any, res as any);
 
-    expect(entityManager.transactional).toBeCalledTimes(1);
-    expect(entityManager.findOneOrFail).not.toBeCalled();
-    expect(entityManager.persist).not.toBeCalled();
+    expect(req.entityManager.transactional).toBeCalledTimes(1);
+    expect(req.entityManager.findOneOrFail).not.toBeCalled();
+    expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(423);
   });
 
   it('should return 500 something else goes wrong', async () => {
-    const entityManager = createMockEntityManager();
-    const req = createMockRequest({ entityManager });
+    const data = { name: 'A cool project' };
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
+    const req = createMockRequest();
     const res = createMockResponse();
-    (entityManager.transactional as jest.Mock).mockRejectedValueOnce(new Error('Oh no!'));
+    (req.entityManager.transactional as jest.Mock).mockRejectedValueOnce(new Error('Oh no!'));
 
     await post(req as any, res as any);
 
-    expect(entityManager.transactional).toBeCalledTimes(1);
-    expect(entityManager.findOneOrFail).not.toBeCalled();
-    expect(entityManager.persist).not.toBeCalled();
+    expect(req.entityManager.transactional).toBeCalledTimes(1);
+    expect(req.entityManager.findOneOrFail).not.toBeCalled();
+    expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(500);
+  });
+
+  it('bails if a validation error occurs', async () => {
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: true });
+    const req = createMockRequest();
+    const res = createMockResponse();
+    (req.entityManager.transactional as jest.Mock).mockRejectedValueOnce(new Error('Oh no!'));
+
+    await post(req as any, res as any);
+
+    expect(req.entityManager.transactional).not.toBeCalled();
   });
 });
