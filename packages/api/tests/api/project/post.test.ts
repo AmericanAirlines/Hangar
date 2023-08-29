@@ -29,6 +29,7 @@ describe('project post enpoint', () => {
 
     await post(req as any, res as any);
 
+    expect(Project.prototype.constructor as jest.Mock).toHaveBeenCalledWith(data);
     expect(entityManager.transactional).toBeCalledTimes(1);
     expect(entityManager.findOneOrFail).toBeCalledTimes(1);
     expect(mockProject.contributors.add).toBeCalledWith(mockUser);
