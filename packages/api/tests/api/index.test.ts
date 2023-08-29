@@ -9,7 +9,7 @@ jest.mock('../../src/api/settings', () => ({
 describe('/api route registration', () => {
   it('registers a generic catch-all handler', async () => {
     await jest.isolateModulesAsync(async () => {
-      const { api } = require('../../src/api');
+      const { api } = await import('../../src/api');
       const app = express();
       app.use(api);
 

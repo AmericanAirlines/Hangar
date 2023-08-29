@@ -19,14 +19,14 @@ jest.mock('../../../src/middleware/mountUserMiddleware', () => ({
 
 const mountUserMiddlewareMock = getMock(mountUserMiddleware);
 
-describe('/users router registrations', () => {
+describe('/user router registrations', () => {
   describe('post registration', () => {
     it('uses mountUserMiddleware', async () => {
       await jest.isolateModulesAsync(async () => {
-        const { users } = await import('../../../src/api/user');
+        const { user } = await import('../../../src/api/user');
 
         const app = express();
-        app.use(users);
+        app.use(user);
         const res = await supertest(app).put('');
         expect(mountUserMiddlewareMock).toBeCalledTimes(1);
         expect(res.status).toEqual(200);
@@ -37,10 +37,10 @@ describe('/users router registrations', () => {
   describe('me registration', () => {
     it('uses mountUserMiddleware', async () => {
       await jest.isolateModulesAsync(async () => {
-        const { users } = await import('../../../src/api/user');
+        const { user } = await import('../../../src/api/user');
 
         const app = express();
-        app.use(users);
+        app.use(user);
         const res = await supertest(app).get('/me');
         expect(mountUserMiddlewareMock).toBeCalledTimes(1);
         expect(res.status).toEqual(200);
