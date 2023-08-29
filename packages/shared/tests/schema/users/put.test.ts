@@ -1,7 +1,7 @@
-import { put } from '../../../src/schema/users';
+import { put } from '../../../src/schema/user';
 
-describe('users put schema', () => {
-  it('validates users correctly', () => {
+describe('user put schema', () => {
+  it('validates user correctly', () => {
     expect(
       put.safeParse({
         firstName: 'John',
