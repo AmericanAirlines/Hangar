@@ -1,7 +1,12 @@
 import { get } from '../../../../src/api/admin/me/get';
 
+const test = {
+  user: '1',
+};
+
 const mockRequest: any = {
   user: { id: '1' },
+  admin: test,
 };
 
 const mockResponse: any = {
@@ -13,6 +18,6 @@ describe('admin me handler', () => {
     // test
     get(mockRequest, mockResponse);
     // assert
-    expect(mockResponse.send).toBeCalledWith(mockRequest.user);
+    expect(mockResponse.send).toBeCalledWith(test);
   });
 });

@@ -1,5 +1,5 @@
 import type { EntityManager, PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { User } from '@hangar/database';
+import { User, Admin } from '@hangar/database';
 
 type Session = {
   id: string;
@@ -14,6 +14,7 @@ declare global {
        * These will only be populated if the corresponding middleware populates these values first
        */
       user: User;
+      admin: Admin;
       loggerSuffix: string;
     }
   }
