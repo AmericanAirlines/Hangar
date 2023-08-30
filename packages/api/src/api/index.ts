@@ -5,6 +5,7 @@ import { env } from '../env';
 import { health } from './health';
 import { slack } from './slack';
 import { auth } from './auth';
+import { project } from './project';
 import { user } from './user';
 
 export const api = Router();
@@ -27,6 +28,7 @@ api.use('/auth', auth);
 
 // SELF-PROTECTED ROUTES
 api.use(slack);
+api.use('/project', project);
 api.use('/user', user);
 
 // Generic catch all for bad requests
