@@ -20,7 +20,6 @@ describe('/admin/me route', () => {
       const res = await supertest(app).get('');
       expect(res.status).toEqual(200);
       expect(mockGet).toBeCalled();
-      expect(mockGet).toBeCalled();
     });
   });
 });
