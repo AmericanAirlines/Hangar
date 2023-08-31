@@ -18,7 +18,7 @@ type NavDrawerProps = {
 };
 
 export const NavDrawer: React.FC<NavDrawerProps> = (props) => {
-  const { user, doneLoading } = useUserStore((state: any) => state);
+  const { user, doneLoading } = useUserStore();
 
   return (
     <Drawer placement="left" size={'xs'} onClose={props.onClose} isOpen={props.isOpen}>

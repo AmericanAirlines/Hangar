@@ -27,7 +27,7 @@ export async function signInWithSlack() {
 export const NavBar: React.FC = () => {
   const router = useRouter();
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const { user, doneLoading } = useUserStore((state: any) => state);
+  const { user, doneLoading } = useUserStore();
 
   return (
     <>

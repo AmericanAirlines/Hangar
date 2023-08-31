@@ -12,7 +12,7 @@ import { Admin } from '@hangar/database';
 export const adminMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   let userAdmin;
   try {
-    userAdmin = await req.entityManager.findOne(Admin, { user: req.user?.id });
+    userAdmin = await req.entityManager.findOne(Admin, { user: req.session?.id });
   } catch {
     res.sendStatus(500);
     return;

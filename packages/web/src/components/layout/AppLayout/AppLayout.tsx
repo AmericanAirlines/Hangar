@@ -3,6 +3,7 @@ import { Box, Center, ChakraProps, Flex, useColorMode } from '@chakra-ui/react';
 import { colors, forcedColorMode } from '../../../theme';
 import { NavBar } from './NavBar/NavBar';
 import { useUserStore } from '../../../stores/user';
+import { useAdminStore } from '../../../stores/admin';
 
 type AppLayoutProps = ChakraProps & {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, ...chakraProps }
 
   React.useEffect(() => {
     void useUserStore.getState().fetchUser();
+    void useAdminStore.getState().fetchAdmin();
   }, []);
 
   return (
