@@ -18,7 +18,9 @@ export const adminMiddleware = async (req: Request, res: Response, next: NextFun
     return;
   }
 
-  if (!userAdmin) {
+  if (userAdmin) {
+    req.admin = userAdmin;
+  } else {
     // Admin does not exist in the database
     res.sendStatus(403);
     return;
