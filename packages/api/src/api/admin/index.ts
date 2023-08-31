@@ -1,5 +1,4 @@
 import { Router } from 'express';
-// import { put } from './put';
 import { me } from './me';
 import { adminMiddleware } from '../../middleware/adminMiddleware';
 

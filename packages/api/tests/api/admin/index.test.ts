@@ -14,6 +14,7 @@ jest.mock('../../../src/middleware/adminMiddleware', () => ({
 }));
 
 const adminMiddlewareMock = getMock(adminMiddleware);
+const meMock = getMock(me);
 
 describe('/admin router ', () => {
   describe('me registration', () => {
@@ -26,6 +27,7 @@ describe('/admin router ', () => {
         const res = await supertest(app).get('/me');
         expect(adminMiddlewareMock).toBeCalledTimes(1);
         expect(res.status).toEqual(200);
+        expect(meMock).toHaveBeenCalledTimes(1);
       });
     });
   });

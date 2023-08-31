@@ -4,11 +4,11 @@ import { createMockHandler } from '../../../testUtils/expressHelpers/createMockH
 import { getMock } from '../../../testUtils/getMock';
 import { get } from '../../../../src/api/admin/me/get';
 
-const mockGet = getMock(get);
-
 jest.mock('../../../../src/api/admin/me/get', () => ({
   get: createMockHandler(),
 }));
+
+const mockGet = getMock(get);
 
 describe('/admin/me route', () => {
   it('uses adminMiddleware and registers the admin for the me handler', async () => {
@@ -19,6 +19,7 @@ describe('/admin/me route', () => {
       app.use(me);
       const res = await supertest(app).get('');
       expect(res.status).toEqual(200);
+      expect(mockGet).toBeCalled();
       expect(mockGet).toBeCalled();
     });
   });
