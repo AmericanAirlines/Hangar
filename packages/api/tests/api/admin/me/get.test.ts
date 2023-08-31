@@ -1,21 +1,15 @@
 import { get } from '../../../../src/api/admin/me/get';
+import { createMockRequest } from '../../../testUtils/expressHelpers/createMockRequest';
+import { createMockResponse } from '../../../testUtils/expressHelpers/createMockResponse';
 
-const test = {
-  user: '1',
-};
-
-const mockRequest: any = {
-  user: { id: '1' },
-  admin: test,
-};
-
-const mockResponse: any = {
-  send: jest.fn(),
-};
-
-describe('admin me handler', () => {
+describe('admin GET me handler', () => {
   it('returns the admin associated with the request', () => {
-    get(mockRequest, mockResponse);
-    expect(mockResponse.send).toBeCalledWith(test);
+    const admin = { id: 1 };
+    const mockRequest = createMockRequest({
+      admin: admin as any,
+    });
+    const mockResponse = createMockResponse();
+    get(mockRequest as any, mockResponse as any);
+    expect(mockResponse.send).toBeCalledWith(admin);
   });
 });
