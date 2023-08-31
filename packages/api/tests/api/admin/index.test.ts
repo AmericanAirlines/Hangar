@@ -5,10 +5,6 @@ import { getMock } from '../../testUtils/getMock';
 import { adminMiddleware } from '../../../src/middleware/adminMiddleware';
 import { createMockHandler } from '../../testUtils/expressHelpers/createMockHandler';
 
-// jest.mock('../../../src/api/user/put', () => ({
-//   put: createMockHandler(),
-// }));
-
 jest.mock('../../../src/api/admin/me', () => ({
   me: createMockHandler(),
 }));

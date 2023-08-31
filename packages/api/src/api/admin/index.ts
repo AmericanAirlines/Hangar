@@ -7,5 +7,4 @@ export const user = Router();
 
 user.use(adminMiddleware);
 
-// user.put('', put);
 user.use('/me', me);

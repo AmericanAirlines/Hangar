@@ -1,10 +1,13 @@
 import express, { Request, Response } from 'express';
 import supertest from 'supertest';
+import { createMockHandler } from '../../../testUtils/expressHelpers/createMockHandler';
+import { getMock } from '../../../testUtils/getMock';
+import { get } from '../../../../src/api/admin/me/get';
+
+const mockGet = getMock(get);
 
 jest.mock('../../../../src/api/admin/me/get', () => ({
-  get: (req: Request, res: Response) => {
-    res.sendStatus(200);
-  },
+  get: createMockHandler(),
 }));
 
 describe('/admin/me route', () => {
@@ -16,6 +19,7 @@ describe('/admin/me route', () => {
       app.use(me);
       const res = await supertest(app).get('');
       expect(res.status).toEqual(200);
+      expect(mockGet).toBeCalled();
     });
   });
 });
