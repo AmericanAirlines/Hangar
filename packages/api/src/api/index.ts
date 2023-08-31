@@ -7,6 +7,7 @@ import { slack } from './slack';
 import { auth } from './auth';
 import { project } from './project';
 import { user } from './user';
+import { admin } from './admin';
 
 export const api = Router();
 api.use(json());
@@ -28,6 +29,7 @@ api.use('/auth', auth);
 
 // SELF-PROTECTED ROUTES
 api.use(slack);
+api.use('/admin', admin);
 api.use('/project', project);
 api.use('/user', user);
 

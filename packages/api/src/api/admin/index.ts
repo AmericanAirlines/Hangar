@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { me } from './me';
 import { adminMiddleware } from '../../middleware/adminMiddleware';
 
-export const user = Router();
+export const admin = Router();
 
-user.use(adminMiddleware);
+admin.use(adminMiddleware);
 
-user.use('/me', me);
+admin.use('/me', me);
