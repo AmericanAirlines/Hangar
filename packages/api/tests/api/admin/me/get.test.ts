@@ -15,9 +15,7 @@ const mockResponse: any = {
 
 describe('admin me handler', () => {
   it('returns the admin associated with the request', () => {
-    // test
     get(mockRequest, mockResponse);
-    // assert
     expect(mockResponse.send).toBeCalledWith(test);
   });
 });
