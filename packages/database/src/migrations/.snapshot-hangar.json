@@ -433,11 +433,11 @@
           "mappedType": "boolean"
         }
       },
-      "name": "JudgingVote",
+      "name": "ExpoJudgingVote",
       "schema": "public",
       "indexes": [
         {
-          "keyName": "JudgingVote_pkey",
+          "keyName": "ExpoJudgingVote_pkey",
           "columnNames": [
             "id"
           ],
@@ -448,24 +448,24 @@
       ],
       "checks": [],
       "foreignKeys": {
-        "JudgingVote_previousProject_foreign": {
-          "constraintName": "JudgingVote_previousProject_foreign",
+        "ExpoJudgingVote_previousProject_foreign": {
+          "constraintName": "ExpoJudgingVote_previousProject_foreign",
           "columnNames": [
             "previousProject"
           ],
-          "localTableName": "public.JudgingVote",
+          "localTableName": "public.ExpoJudgingVote",
           "referencedColumnNames": [
             "id"
           ],
           "referencedTableName": "public.Project",
           "updateRule": "cascade"
         },
-        "JudgingVote_currentProject_foreign": {
-          "constraintName": "JudgingVote_currentProject_foreign",
+        "ExpoJudgingVote_currentProject_foreign": {
+          "constraintName": "ExpoJudgingVote_currentProject_foreign",
           "columnNames": [
             "currentProject"
           ],
-          "localTableName": "public.JudgingVote",
+          "localTableName": "public.ExpoJudgingVote",
           "referencedColumnNames": [
             "id"
           ],

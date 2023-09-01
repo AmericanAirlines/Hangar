@@ -2,7 +2,7 @@
 import { Entity, ManyToMany, OneToOne, Ref, Collection, EntityDTO } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
-import { JudgingVote } from './JudgingVote';
+import { ExpoJudgingVote } from './ExpoJudgingVote';
 import { Project } from './Project';
 import { Node } from './Node';
 import { User } from './User';
@@ -66,7 +66,7 @@ export class Judge extends Node<Judge> {
     }
     // Create a new vote object with the outcome of the vote
     await entityManager.persistAndFlush(
-      new JudgingVote({
+      new ExpoJudgingVote({
         previousProject: this.previousProject,
         currentProject: this.currentProject,
         currentProjectChosen,
