@@ -1,8 +1,10 @@
-import { ManyToOne, Property, Entity, Ref } from '@mikro-orm/core';
+import { ManyToOne, Property, Entity, Ref, EntityDTO } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 import { Node } from './Node';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { User } from './User';
+
+export type JudgingSessionDTO = EntityDTO<JudgingSession>;
 
 export type JudgingSessionConstructorValues = ConstructorValues<JudgingSession>;
 
