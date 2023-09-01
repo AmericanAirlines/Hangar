@@ -1,4 +1,4 @@
-import { ManyToOne, Property, Entity, Ref, EntityDTO } from '@mikro-orm/core';
+import { EntityDTO, ManyToOne, Property, Ref } from '@mikro-orm/core';
 import { v4 } from 'uuid';
 import { Node } from './Node';
 import { ConstructorValues } from '../types/ConstructorValues';
@@ -8,7 +8,6 @@ export type JudgingSessionDTO = EntityDTO<JudgingSession>;
 
 export type JudgingSessionConstructorValues = ConstructorValues<JudgingSession>;
 
-@Entity()
 export abstract class JudgingSession extends Node<JudgingSession> {
   @Property()
   inviteCode: string = v4();

@@ -7,12 +7,13 @@ import { Project } from './Project';
 import { Node } from './Node';
 import { User } from './User';
 import { JudgingSession } from './JudgingSession';
+import { ExpoJudgingSession } from './ExpoJudgingSession';
 
 export type JudgeDTO = EntityDTO<Judge>;
 
 export type JudgeConstructorValues = ConstructorValues<
   Judge,
-  'currentProject' | 'previousProject' | 'visitedProjects' | 'judgingSessions'
+  'currentProject' | 'previousProject' | 'expoJudgingSessions'
 >;
 
 @Entity()
@@ -26,21 +27,24 @@ export class Judge extends Node<Judge> {
   @OneToOne({ entity: () => User, ref: true, unique: true })
   user: Ref<User>;
 
-  @ManyToMany({ entity: () => Project })
-  visitedProjects = new Collection<Project>(this);
-
   @OneToOne({ entity: () => Project, nullable: true, ref: true })
   currentProject?: Ref<Project>;
 
   @OneToOne({ entity: () => Project, nullable: true, ref: true })
   previousProject?: Ref<Project>;
 
-  @ManyToMany({ entity: () => JudgingSession })
-  judgingSessions = new Collection<JudgingSession>(this);
+  @ManyToMany({ entity: () => ExpoJudgingSession })
+  expoJudgingSessions = new Collection<ExpoJudgingSession>(this);
 
-  async getNextProject({ entityManager }: { entityManager: em }): Promise<Project | undefined> {
+  async getNextProject({
+    entityManager,
+    visitedProjectIds,
+  }: {
+    entityManager: em;
+    visitedProjectIds: Ref<Project>[];
+  }): Promise<Project | undefined> {
     const newProject = await Project.getNextAvailableProjectExcludingProjects({
-      excludedProjectIds: this.visitedProjects.getIdentifiers(),
+      excludedProjectIds: visitedProjectIds,
       entityManager,
     });
 
@@ -73,6 +77,7 @@ export class Judge extends Node<Judge> {
     // Create a new vote object with the outcome of the vote
     await entityManager.persistAndFlush(
       new ExpoJudgingVote({
+        judge: this.toReference(),
         previousProject: this.previousProject,
         currentProject: this.currentProject,
         currentProjectChosen,
@@ -92,7 +97,6 @@ export class Judge extends Node<Judge> {
     if (!this.currentProject) {
       throw new Error('Current Project was not defined during save operation');
     }
-    this.visitedProjects.add(this.currentProject);
 
     if (updatePrevious) {
       this.previousProject = this.currentProject;

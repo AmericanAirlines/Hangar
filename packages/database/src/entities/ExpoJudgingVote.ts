@@ -6,6 +6,7 @@ import { Project } from './Project';
 import { Node } from './Node';
 import { scoreVotes, ProjectResult, ProjectScore } from '../entitiesUtils/scoreVotes';
 import { ExpoJudgingSession } from './ExpoJudgingSession';
+import { Judge } from './Judge';
 
 const shuffle = (arr: any) => arr.sort(() => Math.random() - 0.5);
 
@@ -20,6 +21,9 @@ export type ExpoJudgingVoteConstructorValues = ConstructorValues<ExpoJudgingVote
 
 @Entity()
 export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
+  @ManyToOne({ entity: () => Judge, ref: true })
+  judge: Ref<Judge>;
+
   @ManyToOne({ entity: () => Project, ref: true })
   previousProject: Ref<Project>;
 
@@ -33,6 +37,7 @@ export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
   judgingSession: Ref<ExpoJudgingSession>;
 
   constructor({
+    judge,
     previousProject,
     currentProject,
     currentProjectChosen,
@@ -40,6 +45,7 @@ export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
   }: ExpoJudgingVoteConstructorValues) {
     super();
 
+    this.judge = judge;
     this.previousProject = previousProject;
     this.currentProject = currentProject;
     this.currentProjectChosen = currentProjectChosen;
