@@ -13,7 +13,7 @@ export abstract class JudgingSession extends Node<JudgingSession> {
   @Property()
   inviteCode: string = v4();
 
-  @ManyToOne({ entity: () => User, nullable: false, ref: true })
+  @ManyToOne({ entity: () => User, ref: true })
   createdBy: Ref<User>;
 
   constructor({ inviteCode, createdBy }: JudgingSessionConstructorValues) {
