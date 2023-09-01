@@ -6,12 +6,13 @@ import { ExpoJudgingVote } from './ExpoJudgingVote';
 import { Project } from './Project';
 import { Node } from './Node';
 import { User } from './User';
+import { JudgingSession } from './JudgingSession';
 
 export type JudgeDTO = EntityDTO<Judge>;
 
 export type JudgeConstructorValues = ConstructorValues<
   Judge,
-  'currentProject' | 'previousProject' | 'visitedProjects'
+  'currentProject' | 'previousProject' | 'visitedProjects' | 'judgingSessions'
 >;
 
 @Entity()
@@ -33,6 +34,9 @@ export class Judge extends Node<Judge> {
 
   @OneToOne({ entity: () => Project, nullable: true, ref: true })
   previousProject?: Ref<Project>;
+
+  @ManyToMany({ entity: () => JudgingSession })
+  judgingSessions = new Collection<JudgingSession>(this);
 
   async getNextProject({ entityManager }: { entityManager: em }): Promise<Project | undefined> {
     const newProject = await Project.getNextAvailableProjectExcludingProjects({
@@ -57,9 +61,11 @@ export class Judge extends Node<Judge> {
   async vote({
     entityManager,
     currentProjectChosen,
+    judgingSession,
   }: {
     entityManager: em;
     currentProjectChosen: boolean;
+    judgingSession: JudgingSession;
   }): Promise<void> {
     if (!this.currentProject || !this.previousProject) {
       throw new Error('Current Project or previous Project was not defined during vote operation');
@@ -70,6 +76,7 @@ export class Judge extends Node<Judge> {
         previousProject: this.previousProject,
         currentProject: this.currentProject,
         currentProjectChosen,
+        judgingSession: judgingSession.toReference(),
       }),
     );
     await this.recordCurrentProjectAndSave({ entityManager, updatePrevious: true });
