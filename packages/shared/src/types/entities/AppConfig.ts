@@ -1,12 +1,5 @@
 import { AppConfigDTO } from '@hangar/database';
-import { Dayjs } from 'dayjs';
+import { Node, SerializedNode } from './Node';
 
-export type AppConfig = Omit<AppConfigDTO, 'createdAt' | 'updatedAt'> & {
-  createdAt: Dayjs;
-  updatedAt: Dayjs;
-};
-
-export type SerializedAppConfig = Omit<AppConfig, 'createdAt' | 'updatedAt'> & {
-  createdAt: string;
-  updatedAt: string;
-};
+export type AppConfig = Node<AppConfigDTO>;
+export type SerializedAppConfig = SerializedNode<AppConfig>;
