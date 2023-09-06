@@ -8,6 +8,7 @@ import { auth } from './auth';
 import { project } from './project';
 import { user } from './user';
 import { admin } from './admin';
+import { event } from './event';
 
 export const api = Router();
 api.use(json());
@@ -24,8 +25,9 @@ api.use(
 );
 
 // UNPROTECTED ROUTES
-api.use('/health', health);
 api.use('/auth', auth);
+api.use('/event', event);
+api.use('/health', health);
 
 // SELF-PROTECTED ROUTES
 api.use(slack);

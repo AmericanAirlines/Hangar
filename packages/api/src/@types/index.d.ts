@@ -15,6 +15,7 @@ declare global {
        */
       user: User;
       admin: Admin;
+      events: Event;
       loggerSuffix: string;
     }
   }
