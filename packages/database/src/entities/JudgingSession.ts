@@ -6,19 +6,18 @@ import { User } from './User';
 
 export type JudgingSessionDTO = EntityDTO<JudgingSession>;
 
-export type JudgingSessionConstructorValues = ConstructorValues<JudgingSession>;
+export type JudgingSessionConstructorValues = ConstructorValues<JudgingSession, 'inviteCode'>;
 
 export abstract class JudgingSession extends Node<JudgingSession> {
-  @Property()
+  @Property({ unique: true })
   inviteCode: string = v4();
 
   @ManyToOne({ entity: () => User, ref: true })
   createdBy: Ref<User>;
 
-  constructor({ inviteCode, createdBy }: JudgingSessionConstructorValues) {
+  constructor({ createdBy }: JudgingSessionConstructorValues) {
     super();
 
-    this.inviteCode = inviteCode;
     this.createdBy = createdBy;
   }
 }
