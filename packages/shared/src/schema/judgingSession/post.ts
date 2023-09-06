@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-const judgingSession = z.object({
-  inviteCode: z.string(),
-});
+// export const PostValidation = {
+//   EXACT_INVITE_CODE_LENGTH: 36,
+// };
 
 export const post = z.object({
-  sessionType: judgingSession,
+  inviteCode: z.string().uuid(),
 });
