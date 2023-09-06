@@ -4,6 +4,6 @@ const judgingSession = z.object({
   inviteCode: z.string(),
 });
 
-export const put = z.object({
+export const post = z.object({
   sessionType: judgingSession,
 });
