@@ -5,6 +5,8 @@ import { ConstructorValues } from '../types/ConstructorValues';
 import { Project } from './Project';
 import { Node } from './Node';
 import { scoreVotes, ProjectResult, ProjectScore } from '../entitiesUtils/scoreVotes';
+import { ExpoJudgingSession } from './ExpoJudgingSession';
+import { Judge } from './Judge';
 
 const shuffle = (arr: any) => arr.sort(() => Math.random() - 0.5);
 
@@ -13,12 +15,15 @@ export const insufficientVoteCountError = 'InsufficientVoteCount';
 type NormalizedScore = number[];
 type NormalizedScores = { [id: string]: NormalizedScore };
 
-export type JudgingVoteDTO = EntityDTO<JudgingVote>;
+export type ExpoJudgingVoteDTO = EntityDTO<ExpoJudgingVote>;
 
-export type JudgingVoteConstructorValues = ConstructorValues<JudgingVote>;
+export type ExpoJudgingVoteConstructorValues = ConstructorValues<ExpoJudgingVote>;
 
 @Entity()
-export class JudgingVote extends Node<JudgingVote> {
+export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
+  @ManyToOne({ entity: () => Judge, ref: true })
+  judge: Ref<Judge>;
+
   @ManyToOne({ entity: () => Project, ref: true })
   previousProject: Ref<Project>;
 
@@ -28,20 +33,27 @@ export class JudgingVote extends Node<JudgingVote> {
   @Property({ columnType: 'boolean' })
   currentProjectChosen: boolean;
 
+  @ManyToOne({ entity: () => ExpoJudgingSession, ref: true })
+  judgingSession: Ref<ExpoJudgingSession>;
+
   constructor({
+    judge,
     previousProject,
     currentProject,
     currentProjectChosen,
-  }: JudgingVoteConstructorValues) {
+    judgingSession,
+  }: ExpoJudgingVoteConstructorValues) {
     super();
 
+    this.judge = judge;
     this.previousProject = previousProject;
     this.currentProject = currentProject;
     this.currentProjectChosen = currentProjectChosen;
+    this.judgingSession = judgingSession;
   }
 
   static async tabulate({ entityManager }: { entityManager: em }): Promise<ProjectResult[]> {
-    const allVotes = await entityManager.find(JudgingVote, {});
+    const allVotes = await entityManager.find(ExpoJudgingVote, {});
     const projects = await entityManager.find(Project, {});
     const numProjects = projects.length;
 
