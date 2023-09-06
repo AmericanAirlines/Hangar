@@ -8,7 +8,7 @@ export class Migration20230808214934 extends Migration {
 
     this.addSql('create table "Event" ("id" bigserial primary key, "createdAt" timestamptz not null default clock_timestamp(), "updatedAt" timestamptz not null default clock_timestamp(), "name" text not null, "start" timestamptz not null, "end" timestamptz not null, "description" text null);');
 
-    this.addSql('create table "ExpoJudgingVote" ("id" bigserial primary key, "createdAt" timestamptz not null default clock_timestamp(), "updatedAt" timestamptz not null default clock_timestamp(), "previousProject" varchar(255) not null, "currentProject" varchar(255) not null, "currentProjectChosen" boolean not null);');
+    this.addSql('create table "JudgingVote" ("id" bigserial primary key, "createdAt" timestamptz not null default clock_timestamp(), "updatedAt" timestamptz not null default clock_timestamp(), "previousProject" varchar(255) not null, "currentProject" varchar(255) not null, "currentProjectChosen" boolean not null);');
 
     this.addSql('create table "Prize" ("id" bigserial primary key, "createdAt" timestamptz not null default clock_timestamp(), "updatedAt" timestamptz not null default clock_timestamp(), "name" text not null, "position" int not null, "description" text null, "isBonus" boolean not null);');
     this.addSql('alter table "Prize" add constraint "Prize_position_unique" unique ("position");');
@@ -52,7 +52,7 @@ export class Migration20230808214934 extends Migration {
 
     this.addSql('drop table if exists "Event" cascade;');
 
-    this.addSql('drop table if exists "ExpoJudgingVote" cascade;');
+    this.addSql('drop table if exists "JudgingVote" cascade;');
 
     this.addSql('drop table if exists "Prize" cascade;');
 

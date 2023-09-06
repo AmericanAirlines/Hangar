@@ -682,6 +682,15 @@
       "schema": "public",
       "indexes": [
         {
+          "columnNames": [
+            "inviteCode"
+          ],
+          "composite": false,
+          "keyName": "ExpoJudgingSession_inviteCode_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "ExpoJudgingSession_pkey",
           "columnNames": [
             "id"
