@@ -1,11 +1,11 @@
-import { EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager, Ref } from '@mikro-orm/postgresql';
 import { Project } from '../entities/Project';
 
 export const getNextAvailableProjectExcludingProjects = async ({
   excludedProjectIds = [],
   entityManager,
 }: {
-  excludedProjectIds: string[];
+  excludedProjectIds: Ref<Project>[];
   entityManager: EntityManager;
 }): Promise<Project | undefined> => {
   let project: Project | null;

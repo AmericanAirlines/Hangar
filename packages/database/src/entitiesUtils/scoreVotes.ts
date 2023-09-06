@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { Project } from '../entities/Project';
-import { JudgingVote } from '../entities/JudgingVote';
+import { ExpoJudgingVote } from '../entities/ExpoJudgingVote';
 
 export interface ProjectScore {
   id: string;
@@ -13,7 +13,7 @@ export interface ProjectResult extends ProjectScore {
 
 export const scoreVotes = (
   votesNeededForCalibration: number,
-  votes: JudgingVote[],
+  votes: ExpoJudgingVote[],
   projects: Project[],
   calibrationScoreImpact = 150,
 ): { [id: string]: ProjectScore } => {
