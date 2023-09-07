@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   HStack,
@@ -16,7 +17,6 @@ import { appName } from '@hangar/shared';
 import { colors } from '../../../../theme';
 import { NavDrawer } from './NavDrawer';
 import { useUserStore } from '../../../../stores/user';
-
 const LOGO_HEIGHT = { base: '24px', sm: '28px', md: '40px' };
 const LOGO_FONT_SIZE = { base: '22px', md: '33px' };
 
@@ -28,7 +28,6 @@ export const NavBar: React.FC = () => {
   const router = useRouter();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const { user, doneLoading } = useUserStore();
-
   return (
     <>
       <HStack width="full">
@@ -83,6 +82,9 @@ export const NavBar: React.FC = () => {
                   }}
                 >
                   Login
+                </Button>
+                <Button onClick={() => void router.push('/schedule')}>
+                  Schedule
                 </Button>
               </HStack>
             )}
