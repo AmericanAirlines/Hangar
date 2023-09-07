@@ -1,12 +1,5 @@
 import { ExpoJudgingSessionDTO } from '@hangar/database';
-import { Dayjs } from 'dayjs';
+import { Node, SerializedNode } from './Node';
 
-export type ExpoJudgingSession = Omit<ExpoJudgingSessionDTO, 'createdAt' | 'updatedAt'> & {
-  createdAt: Dayjs;
-  updatedAt: Dayjs;
-};
-
-export type SerializedExpoJudgingSession = Omit<ExpoJudgingSession, 'createdAt' | 'updatedAt'> & {
-  createdAt: string;
-  updatedAt: string;
-};
+export type ExpoJudgingSession = Node<ExpoJudgingSessionDTO>;
+export type SerializedExpoJudgingSession = SerializedNode<ExpoJudgingSession>;

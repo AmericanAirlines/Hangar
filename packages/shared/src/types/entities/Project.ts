@@ -1,12 +1,5 @@
 import { ProjectDTO } from '@hangar/database';
-import { Dayjs } from 'dayjs';
+import { Node, SerializedNode } from './Node';
 
-export type Project = Omit<ProjectDTO, 'createdAt' | 'updatedAt'> & {
-  createdAt: Dayjs;
-  updatedAt: Dayjs;
-};
-
-export type SerializedProject = Omit<Project, 'createdAt' | 'updatedAt'> & {
-  createdAt: string;
-  updatedAt: string;
-};
+export type Project = Node<ProjectDTO>;
+export type SerializedProject = SerializedNode<Project>;

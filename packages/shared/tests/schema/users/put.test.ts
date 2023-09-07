@@ -22,6 +22,17 @@ describe('user put schema', () => {
     ).toBe(false);
   });
 
+  it('trims spaces correctly', () => {
+    const result = Schema.user.put.safeParse({
+      firstName: ' John ',
+      lastName: ' Doe ',
+    });
+    if (!result.success) throw new Error('Validation failed');
+
+    expect(result.data.firstName).toBe('John');
+    expect(result.data.lastName).toBe('Doe');
+  });
+
   it('validates string length correctly', () => {
     expect(
       Schema.user.put.safeParse({
@@ -32,7 +43,7 @@ describe('user put schema', () => {
 
     expect(
       Schema.user.put.safeParse({
-        firstName: Array(55).fill('J'),
+        firstName: Array(Schema.user.PutValidation.MAX_NAME_LENGTH + 1).fill('J'),
         lastName: 'Doe',
       }).success,
     ).toBe(false);

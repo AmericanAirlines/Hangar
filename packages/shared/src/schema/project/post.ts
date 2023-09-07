@@ -9,10 +9,11 @@ export const PostValidation = {
 };
 
 export const post = z.object({
-  name: z.string().min(PostValidation.MIN_NAME_LENGTH).max(PostValidation.MAX_NAME_LENGTH),
+  name: z.string().trim().min(PostValidation.MIN_NAME_LENGTH).max(PostValidation.MAX_NAME_LENGTH),
   description: z
     .string()
+    .trim()
     .min(PostValidation.MIN_DESCRIPTION_LENGTH)
     .max(PostValidation.MAX_DESCRIPTION_LENGTH),
-  location: z.string().max(PostValidation.MAX_LOCATION_LENGTH).optional(),
+  location: z.string().trim().max(PostValidation.MAX_LOCATION_LENGTH).optional(),
 });
