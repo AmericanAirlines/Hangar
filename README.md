@@ -137,13 +137,15 @@
    ```yml
    display_information:
      name: Hangar Dev (YOUR_FIRST_NAME)
-     description: Dev bot for testing integrations
+     description: Dev instance of Hangar
      background_color: '#000000'
    features:
      bot_user:
-       display_name: Hangar (YOUR_FIRST_NAME)
-       always_online: false
+       display_name: Hangar Dev (YOUR_FIRST_NAME)
+       always_online: true
    oauth_config:
+     redirect_urls:
+       - [YOUR_NGROK_URL]/api/auth/callback/slack
      scopes:
        user:
          - email
@@ -160,11 +162,11 @@
 
    After creating the app, use the sidebar and go to `Install App` and request to install the app to your workspace. Once approved, head back to this section and `Install to workspace`.
 
-   After installation, copy the `Bot User OAuth Token` value (starting with `xoxb-`) and use that for your `SLACK_BOT_TOKEN`.
+   After installation, go to `OAuth & Permissions` and copy the `Bot User OAuth Token` value (starting with `xoxb-`) and use that for your `SLACK_BOT_TOKEN`.
 
-   You will also need to got to `App Home` and use `Cient ID` and `Client Secret` as your `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`, respectively.
+   You will also need to go to `Basic Information` and use `Client ID` and `Client Secret` as your `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET`, respectively.
 
-   For Slack OAuth to work, your bot needs to be configured with your redirect URL. Go to `OAuth & Permissions` and add a new Redirect URL that = `[your ngrok address]/api/auth/callback/slack`
+   For Slack OAuth to work, your bot needs to be configured with your redirect URL. Go to `OAuth & Permissions` if you need to update your Redirect URL (e.g., `[YOUR_NGROK_URL]/api/auth/callback/slack`).
 
    Channel IDs can be obtained by right clicking a channel in the sidebar and removing the last path value from the URL.
 

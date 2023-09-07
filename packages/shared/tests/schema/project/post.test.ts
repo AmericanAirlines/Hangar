@@ -20,6 +20,22 @@ describe('project post schema', () => {
     expect(Schema.project.post.safeParse(projectWithoutLocation).success).toBe(true);
   });
 
+  it('trims relevant fields', () => {
+    const project = {
+      location: ' Somewhere ',
+      name: ' Someone ',
+      description: ' Something something dark side ',
+    };
+    const result = Schema.project.post.safeParse(project);
+
+    if (!result.success) throw new Error(result.error.toString());
+
+    const { description, name, location } = result.data;
+    expect(description).toBe(project.description.trim());
+    expect(name).toBe(project.name.trim());
+    expect(location).toBe(project.location.trim());
+  });
+
   it('does not validate an object with an invalid name', () => {
     expect(
       Schema.project.post.safeParse({

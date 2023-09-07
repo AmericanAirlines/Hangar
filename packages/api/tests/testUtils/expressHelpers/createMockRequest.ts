@@ -1,14 +1,14 @@
 import { Request } from 'express';
 import { User } from '@hangar/database';
-import { MockEntityManager, createMockEntityManager } from '../createMockEntityManager';
+import { createMockEntityManager } from '../createMockEntityManager';
 
 type MockRequest = jest.Mocked<
-  Partial<Omit<Request, 'entityManager'>> & { entityManager: MockEntityManager }
+  Partial<Omit<Request, 'entityManager'>> & {
+    entityManager: ReturnType<typeof createMockEntityManager>;
+  }
 >;
 
-export const createMockRequest: (defaults?: Partial<MockRequest>) => MockRequest = (
-  defaults = {},
-) => ({
+export const createMockRequest = (defaults?: Partial<MockRequest>) => ({
   entityManager: createMockEntityManager(),
   loggerSuffix: '',
   user: undefined as unknown as User,
