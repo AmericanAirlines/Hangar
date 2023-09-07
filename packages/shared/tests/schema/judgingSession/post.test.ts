@@ -1,10 +1,11 @@
+import { v4 } from 'uuid';
 import { Schema } from '../../../src';
 
 describe('judgingSession post schema', () => {
   it('validates judgingSession correctly', () => {
     expect(
       Schema.judgingSession.post.safeParse({
-        inviteCode: '00000000-0000-0000-0000-000000000000',
+        inviteCode: `${v4()}`,
       }).success,
     ).toBe(true);
   });
@@ -13,7 +14,7 @@ describe('judgingSession post schema', () => {
     // one character long (37)
     expect(
       Schema.judgingSession.post.safeParse({
-        inviteCode: '00000000-0000-0000-0000-0000000000001',
+        inviteCode: `${v4()}-junk`,
       }).success,
     ).toBe(false);
 

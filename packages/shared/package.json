@@ -17,6 +17,7 @@
   "dependencies": {
     "@hangar/database": "*",
     "dayjs": "^1.11.9",
+    "uuid": "^9.0.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
