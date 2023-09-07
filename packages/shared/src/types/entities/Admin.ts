@@ -1,12 +1,5 @@
 import { AdminDTO } from '@hangar/database';
-import { Dayjs } from 'dayjs';
+import { Node, SerializedNode } from './Node';
 
-export type Admin = Omit<AdminDTO, 'createdAt' | 'updatedAt'> & {
-  createdAt: Dayjs;
-  updatedAt: Dayjs;
-};
-
-export type SerializedAdmin = Omit<AdminDTO, 'createdAt' | 'updatedAt'> & {
-  createdAt: string;
-  updatedAt: string;
-};
+export type Admin = Node<AdminDTO>;
+export type SerializedAdmin = SerializedNode<AdminDTO>;
