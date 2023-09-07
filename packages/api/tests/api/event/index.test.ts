@@ -4,15 +4,15 @@ import { createMockHandler } from '../../testUtils/expressHelpers/createMockHand
 import { getMock } from '../../testUtils/getMock';
 import { get } from '../../../src/api/event/get';
 
-jest.mock('../../../src/api/event', () => ({
+jest.mock('../../../src/api/event/get', () => ({
   get: createMockHandler(),
 }));
 
 const mockGet = getMock(get);
 
 describe('api/event route', () => {
-  it(' registers the get endpoint', async () => {
-    await jest.isolateModules(async () => {
+  it('registers the get endpoint', async () => {
+    await jest.isolateModulesAsync(async () => {
       const { event } = await import('../../../src/api/event');
 
       const app = express();

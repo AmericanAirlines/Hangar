@@ -4,8 +4,6 @@ import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequ
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
 import { get } from '../../../src/api/event/get';
 
-// import { event } from '../../../src/api/event';
-
 describe('event GET handler', () => {
   it('returns the list of event from DB', async () => {
     const mockRequest = createMockRequest();
