@@ -21,11 +21,11 @@ void (async () => {
     req.entityManager = orm.em.fork();
     next();
   };
-  app.use(includeEntityManager);
 
   // ~~~~~~~~~~ API ~~~~~~~~~~
   app.use(
     '/api', // All routes that start with `/api` but not followed by `/auth`
+    includeEntityManager,
     api,
   );
 

@@ -3,7 +3,6 @@ import { put } from '../../../src/api/user/put';
 import { validatePayload } from '../../../src/utils/validatePayload';
 import { getMock } from '../../testUtils/getMock';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
-import { createMockEntityManager } from '../../testUtils/createMockEntityManager';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
 
 jest.mock('../../../src/utils/validatePayload');
@@ -13,15 +12,14 @@ describe('user post endpoint', () => {
   it('creates a new user with the validated data', async () => {
     const mockUser = { assign: jest.fn() };
 
-    const mockEntityManager = createMockEntityManager();
     const mockReq = createMockRequest({
-      entityManager: mockEntityManager,
       user: mockUser as any,
       body: {
         firstName: 'John',
         lastName: 'Doe',
       },
     });
+    const { entityManager: mockEntityManager } = mockReq;
     const mockRes = createMockResponse();
 
     const validatedUser = { ...mockReq.body };
@@ -47,13 +45,11 @@ describe('user post endpoint', () => {
   });
 
   it('returns an error when something unexpected goes wrong', async () => {
-    const mockEntityManager = createMockEntityManager({
-      persistAndFlush: jest.fn().mockRejectedValueOnce(new Error('Whoops!')),
-    });
     const mockReq = createMockRequest({
-      entityManager: mockEntityManager,
       user: { assign: jest.fn() } as any,
     });
+    const { entityManager: mockEntityManager } = mockReq;
+    mockEntityManager.persistAndFlush.mockRejectedValueOnce(new Error('Whoops!'));
     const mockRes = createMockResponse();
 
     validatePayloadMock.mockReturnValueOnce({ data: mockReq.body });

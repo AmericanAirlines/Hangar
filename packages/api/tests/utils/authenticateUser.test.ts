@@ -1,7 +1,6 @@
 import { User } from '@hangar/database';
 import { authenticateUser, OAuthUserData } from '../../src/utils/authenticateUser';
 import { logger } from '../../src/utils/logger';
-import { createMockEntityManager } from '../testUtils/createMockEntityManager';
 import { createMockRequest } from '../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../testUtils/expressHelpers/createMockResponse';
 
@@ -14,15 +13,12 @@ jest.mock('@hangar/database', () => ({
 describe('authenticate user', () => {
   it('finds an existing user, updates the session, and redirects to the root', async () => {
     const mockUser = { id: '1' };
-    const entityManager = createMockEntityManager({
-      findOne: jest.fn().mockResolvedValueOnce(mockUser),
-    });
     const mockSession = {} as any;
     const req = createMockRequest({
-      entityManager,
       user: mockUser as any,
       session: mockSession,
     });
+    req.entityManager.findOne.mockResolvedValueOnce(mockUser);
     const res = createMockResponse();
 
     const data: OAuthUserData = {

@@ -1,7 +1,6 @@
 // import { Response } from 'express';
 import { Project } from '@hangar/database';
 import { post } from '../../../src/api/project/post';
-import { createMockEntityManager } from '../../testUtils/createMockEntityManager';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
 import { getMock } from '../../testUtils/getMock';
@@ -19,10 +18,9 @@ describe('project post enpoint', () => {
     const data = { name: 'A cool project' };
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
     const mockUser = { id: '1' };
-    const entityManager = createMockEntityManager({
-      findOneOrFail: jest.fn().mockResolvedValueOnce(mockUser),
-    });
-    const req = createMockRequest({ entityManager, user: mockUser as any });
+    const req = createMockRequest({ user: mockUser as any });
+    const { entityManager } = req;
+    entityManager.findOneOrFail.mockResolvedValueOnce(mockUser);
     const res = createMockResponse();
     const mockProject = { contributors: { add: jest.fn() } };
     (Project.prototype.constructor as jest.Mock).mockReturnValueOnce(mockProject);
