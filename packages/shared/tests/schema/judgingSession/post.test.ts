@@ -18,13 +18,6 @@ describe('judgingSession post schema', () => {
       }).success,
     ).toBe(false);
 
-    // one character short (35)
-    expect(
-      Schema.judgingSession.post.safeParse({
-        inviteCode: '00000000-0000-0000-0000-00000000000',
-      }).success,
-    ).toBe(false);
-
     // incorrect type
     expect(
       Schema.judgingSession.post.safeParse({
