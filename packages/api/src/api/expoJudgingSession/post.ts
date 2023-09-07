@@ -32,10 +32,6 @@ export const post = async (req: Request, res: Response) => {
       em.persist(expoJudgingSession);
     });
   } catch (error) {
-    if ((error as Error).name === 'NotFoundError') {
-      res.sendStatus(409);
-      return;
-    }
     if ((error as DriverException).code === '55P03') {
       // Locking error
       res.sendStatus(423);
