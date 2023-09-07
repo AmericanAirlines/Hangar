@@ -15,6 +15,8 @@ export const post = async (req: Request, res: Response) => {
 
   try {
     await entityManager.transactional(async (em) => {
+      // Identify the correct user and lock the row
+      // Part of this check makes sure a project is not associated with the user
       const lockedUser = await em.findOneOrFail(
         User,
         { id: user.id, project: undefined },
