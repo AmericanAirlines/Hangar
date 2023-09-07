@@ -6,7 +6,7 @@ import { validatePayload } from '../../utils/validatePayload';
 import { logger } from '../../utils/logger';
 
 export const post = async (req: Request, res: Response) => {
-  const { entityManager, admin } = req;
+  const { entityManager, user } = req;
 
   const { errorHandled } = validatePayload({
     req,
@@ -21,7 +21,7 @@ export const post = async (req: Request, res: Response) => {
     await entityManager.transactional(async (em) => {
       const lockedAdmin = await em.findOneOrFail(
         Admin,
-        { id: admin.id },
+        { user },
         { lockMode: LockMode.PESSIMISTIC_WRITE_OR_FAIL },
       );
 
