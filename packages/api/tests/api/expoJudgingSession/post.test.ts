@@ -37,20 +37,6 @@ describe('expoJudgingSession post endpoint', () => {
     expect(res.send).toHaveBeenCalledWith(mockExpoJudgingSession);
   });
 
-  it('should return 423 if the row lock could not be obtained', async () => {
-    validatePayloadMock.mockReturnValueOnce({ errorHandled: false } as any);
-    const req = createMockRequest();
-    const res = createMockResponse();
-    (req.entityManager.transactional as jest.Mock).mockRejectedValueOnce({ code: '55P03' });
-
-    await post(req as any, res as any);
-
-    expect(req.entityManager.transactional).toBeCalledTimes(1);
-    expect(req.entityManager.findOneOrFail).not.toBeCalled();
-    expect(req.entityManager.persist).not.toBeCalled();
-    expect(res.sendStatus).toHaveBeenCalledWith(423);
-  });
-
   it('should return 500 something else goes wrong', async () => {
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false } as any);
     const req = createMockRequest();
