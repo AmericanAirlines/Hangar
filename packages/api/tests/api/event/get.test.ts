@@ -21,4 +21,15 @@ describe('event GET handler', () => {
     );
     expect(mockResponse.send).toBeCalledWith(mockEvents);
   });
+
+  it('should return 500 if something goes wrong', async () => {
+    const req = createMockRequest();
+    const res = createMockResponse();
+    req.entityManager.find.mockRejectedValueOnce(new Error('Oh no there is an error'));
+
+    await get(req as any, res as any);
+
+    expect(req.entityManager.find).toBeCalled();
+    expect(res.sendStatus).toHaveBeenCalledWith(500);
+  });
 });
