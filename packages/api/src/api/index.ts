@@ -28,7 +28,7 @@ api.use(
 // UNPROTECTED ROUTES
 api.use('/auth', auth);
 api.use('/event', event);
-api.use('./prizes', prize);
+api.use('./prize', prize);
 api.use('/health', health);
 
 // SELF-PROTECTED ROUTES
