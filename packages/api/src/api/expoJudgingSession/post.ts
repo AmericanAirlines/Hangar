@@ -1,7 +1,6 @@
 import { Schema } from '@hangar/shared';
 import { Request, Response } from 'express';
 import { ExpoJudgingSession } from '@hangar/database';
-import { DriverException } from '@mikro-orm/core';
 import { validatePayload } from '../../utils/validatePayload';
 import { logger } from '../../utils/logger';
 
@@ -23,11 +22,6 @@ export const post = async (req: Request, res: Response) => {
     });
     await entityManager.persistAndFlush(expoJudgingSession);
   } catch (error) {
-    if ((error as DriverException).code === '55P03') {
-      // Locking error
-      res.sendStatus(423);
-      return;
-    }
     // All other errors
     logger.error(error);
     res.sendStatus(500);
