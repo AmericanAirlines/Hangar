@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import supertest from 'supertest';
 import { createMockHandler } from '../../../testUtils/expressHelpers/createMockHandler';
 import { getMock } from '../../../testUtils/getMock';
