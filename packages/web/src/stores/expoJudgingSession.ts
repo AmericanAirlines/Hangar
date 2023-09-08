@@ -16,8 +16,7 @@ export const useExpoJudgingSessionStore = create<ExpoJudgingSessionStore>((set) 
     let expoJudgingSessions: ExpoJudgingSession[] | undefined;
     try {
       const res = await axios.get<SerializedExpoJudgingSession[]>(`/api/expoJudgingSession`);
-      expoJudgingSessions = [];
-      res.data.map(
+      expoJudgingSessions = res.data.map(
         (serializedEJS) =>
           ({
             id: serializedEJS.id,
