@@ -15,15 +15,15 @@ const validatePayloadMock = getMock(validatePayload);
 describe('expoJudgingSession post endpoint', () => {
   it('should create an ExpoJudgingSession, add a createdBy, and return a 200', async () => {
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false } as any);
-    const mockAdmin = { user: { id: '1' } };
-    const req = createMockRequest({ user: mockAdmin.user as any });
+    const mockUser = { id: '1', toReference: jest.fn() };
+    const req = createMockRequest({ user: mockUser as any });
     const { entityManager } = req;
-    entityManager.findOneOrFail.mockResolvedValueOnce(mockAdmin.user);
     const res = createMockResponse();
     const mockExpoJudgingSession = {
-      createdBy: mockAdmin.user.id,
+      createdBy: mockUser,
       inviteCode: '00000000-0000-0000-0000-00000000000',
     };
+
     (ExpoJudgingSession.prototype.constructor as jest.Mock).mockReturnValueOnce(
       mockExpoJudgingSession,
     );
@@ -31,14 +31,14 @@ describe('expoJudgingSession post endpoint', () => {
     await post(req as any, res as any);
 
     expect(ExpoJudgingSession.prototype.constructor as jest.Mock).toHaveBeenCalledTimes(1);
-    expect(entityManager.findOneOrFail).toBeCalledTimes(1);
     expect(entityManager.persistAndFlush).toBeCalledWith(mockExpoJudgingSession);
     expect(res.send).toHaveBeenCalledWith(mockExpoJudgingSession);
   });
 
   it('should return 500 something else goes wrong', async () => {
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false } as any);
-    const req = createMockRequest();
+    const mockUser = { id: '1' };
+    const req = createMockRequest({ user: mockUser as any });
     const res = createMockResponse();
     (req.entityManager.transactional as jest.Mock).mockRejectedValueOnce(new Error('Oh no!'));
 
@@ -57,6 +57,6 @@ describe('expoJudgingSession post endpoint', () => {
 
     await post(req as any, res as any);
 
-    expect(req.entityManager.transactional).not.toBeCalled();
+    expect(ExpoJudgingSession.prototype.constructor as jest.Mock).not.toBeCalled();
   });
 });
