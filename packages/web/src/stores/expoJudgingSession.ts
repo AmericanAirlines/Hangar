@@ -4,20 +4,29 @@ import dayjs from 'dayjs';
 import create from 'zustand';
 
 type ExpoJudgingSessionStore = {
-  expoJudgingSession?: ExpoJudgingSession;
+  expoJudgingSessions?: ExpoJudgingSession[];
   doneLoading: boolean;
-  fetchExpoJudgingSession: () => Promise<void>;
+  fetchExpoJudgingSessions: () => Promise<void>;
 };
 
 export const useExpoJudgingSessionStore = create<ExpoJudgingSessionStore>((set) => ({
-  expoJudgingSession: undefined,
+  expoJudgingSessions: undefined,
   doneLoading: false,
-  fetchExpoJudgingSession: async () => {
-    let expoJudgingSession: ExpoJudgingSession | undefined;
+  fetchExpoJudgingSessions: async () => {
+    let expoJudgingSessions: ExpoJudgingSession[] | undefined;
     try {
-      const res = await axios.get<SerializedExpoJudgingSession>(`/api/expoJudgingSession`);
-      const { createdAt, updatedAt, ...rest } = res.data;
-      expoJudgingSession = { ...rest, createdAt: dayjs(createdAt), updatedAt: dayjs(updatedAt) };
+      const res = await axios.get<SerializedExpoJudgingSession[]>(`/api/expoJudgingSession`);
+      expoJudgingSessions = [];
+      res.data.map(
+        (serializedEJS) =>
+          ({
+            id: serializedEJS.id,
+            inviteCode: serializedEJS.inviteCode,
+            createdBy: serializedEJS.createdBy,
+            createdAt: dayjs(serializedEJS.createdAt),
+            updatedAt: dayjs(serializedEJS.updatedAt),
+          } as ExpoJudgingSession),
+      );
     } catch (error) {
       if (!axios.isAxiosError(error) || error.status !== 401) {
         // eslint-disable-next-line no-console
@@ -25,6 +34,6 @@ export const useExpoJudgingSessionStore = create<ExpoJudgingSessionStore>((set) 
         // TODO: Show error toast
       }
     }
-    set({ expoJudgingSession, doneLoading: true });
+    set({ expoJudgingSessions, doneLoading: true });
   },
 }));
