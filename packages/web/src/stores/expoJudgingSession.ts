@@ -15,7 +15,7 @@ export const useExpoJudgingSessionStore = create<ExpoJudgingSessionStore>((set) 
   fetchExpoJudgingSession: async () => {
     let expoJudgingSession: ExpoJudgingSession | undefined;
     try {
-      const res = await axios.get<SerializedExpoJudgingSession>(`/api/user/me`);
+      const res = await axios.get<SerializedExpoJudgingSession>(`/api/expoJudgingSession`);
       const { createdAt, updatedAt, ...rest } = res.data;
       expoJudgingSession = { ...rest, createdAt: dayjs(createdAt), updatedAt: dayjs(updatedAt) };
     } catch (error) {
