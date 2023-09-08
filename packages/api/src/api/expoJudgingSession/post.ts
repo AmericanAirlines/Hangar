@@ -22,7 +22,6 @@ export const post = async (req: Request, res: Response) => {
     });
     await entityManager.persistAndFlush(expoJudgingSession);
   } catch (error) {
-    // All other errors
     logger.error(error);
     res.sendStatus(500);
     return;
