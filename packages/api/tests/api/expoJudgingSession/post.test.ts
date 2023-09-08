@@ -31,9 +31,8 @@ describe('expoJudgingSession post endpoint', () => {
     await post(req as any, res as any);
 
     expect(ExpoJudgingSession.prototype.constructor as jest.Mock).toHaveBeenCalledTimes(1);
-    expect(entityManager.transactional).toBeCalledTimes(1);
     expect(entityManager.findOneOrFail).toBeCalledTimes(1);
-    expect(entityManager.persist).toBeCalledWith(mockExpoJudgingSession);
+    expect(entityManager.persistAndFlush).toBeCalledWith(mockExpoJudgingSession);
     expect(res.send).toHaveBeenCalledWith(mockExpoJudgingSession);
   });
 
@@ -45,9 +44,8 @@ describe('expoJudgingSession post endpoint', () => {
 
     await post(req as any, res as any);
 
-    expect(req.entityManager.transactional).toBeCalledTimes(1);
     expect(req.entityManager.findOneOrFail).not.toBeCalled();
-    expect(req.entityManager.persist).not.toBeCalled();
+    expect(req.entityManager.persistAndFlush).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(500);
   });
 
