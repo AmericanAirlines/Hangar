@@ -309,6 +309,15 @@
           "nullable": false,
           "mappedType": "text"
         },
+        "repoLink": {
+          "name": "repoLink",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "text"
+        },
         "description": {
           "name": "description",
           "type": "text",
