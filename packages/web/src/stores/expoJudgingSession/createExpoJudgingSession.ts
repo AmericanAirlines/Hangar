@@ -1,4 +1,4 @@
-import { ExpoJudgingSession, SerializedExpoJudgingSession, Schema } from '@hangar/shared';
+import { SerializedExpoJudgingSession, Schema, ExpoJudgingSession } from '@hangar/shared';
 import z from 'zod';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -7,16 +7,13 @@ type CreateExpoJudgingSessionArgs = z.infer<typeof Schema.expoJudgingSession.pos
 
 export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArgs) => {
   try {
-    const res = await axios.post<SerializedExpoJudgingSession>(`/api/expoJudgingSession`);
+    const res = await axios.post<SerializedExpoJudgingSession>(`/api/expoJudgingSession`, { args });
 
-    return res.data.map(
-      ({ createdAt, updatedAt, ...rest }) =>
-        ({
-          ...rest,
-          createdAt: dayjs(createdAt),
-          updatedAt: dayjs(updatedAt),
-        } as ExpoJudgingSession),
-    );
+    return {
+      ...res.data,
+      createdAt: dayjs(res.data.createdAt),
+      updatedAt: dayjs(res.data.updatedAt),
+    } as ExpoJudgingSession;
   } catch (error) {
     if (!axios.isAxiosError(error) || error.status !== 401) {
       // eslint-disable-next-line no-console
@@ -25,5 +22,5 @@ export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArg
     }
   }
 
-  return [];
+  return {} as ExpoJudgingSession;
 };

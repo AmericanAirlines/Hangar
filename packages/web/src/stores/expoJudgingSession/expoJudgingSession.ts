@@ -17,7 +17,7 @@ export const useExpoJudgingSessionStore = create<ExpoJudgingSessionStore>((set) 
     set({ expoJudgingSessions: await fetchExpoJudgingSessions() });
   },
   addExpoJudgingSessions: async (args) => {
-    const newEsj = await createExpoJudgingSession(args);
+    const newEsj: ExpoJudgingSession = await createExpoJudgingSession(args);
     set((state) => ({
       expoJudgingSessions: [...(state.expoJudgingSessions ?? []), newEsj],
     }));
