@@ -1,3 +1,3 @@
-import { post } from '../judgingSession';
+import { post as basePost } from '../judgingSession';
 
-export const expoJudgingSessionPost = post.extend({});
+export const post = basePost.extend({});
