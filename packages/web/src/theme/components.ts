@@ -195,30 +195,30 @@ export const components: ThemeComponents = {
   List: {
     variants: {
       card: {
-        item:{
-          position: "relative",
-          padding: '8px' ,
-          margin: '16px' ,
+        item: {
+          position: 'relative',
+          padding: 6,
+          margin: 8,
           listStyleType: 'none',
           border: '1px solid',
-          borderRadius:'8px',
-        }
+          borderRadius: '8px',
+        },
       },
-    }
+    },
   },
   Tag: {
     baseStyle: {
       container: {
-        background: colors.brandPrimary
-      }
+        background: colors.brandPrimary,
+      },
     },
     variants: {
-      success:{
+      success: {
         container: {
           background: colors.success,
-          color: colors.black
-        }
-      }
-    }
+          color: colors.black,
+        },
+      },
+    },
   },
 };
