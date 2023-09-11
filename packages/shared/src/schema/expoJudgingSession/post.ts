@@ -1,3 +1,3 @@
-import { post as basePost } from '../judgingSession';
+import z from 'zod';
 
-export const post = basePost.extend({});
+export const post = z.object({}).strict();

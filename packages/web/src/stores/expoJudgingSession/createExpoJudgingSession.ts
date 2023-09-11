@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 type CreateExpoJudgingSessionArgs = z.infer<typeof Schema.expoJudgingSession.post>;
 
-export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArgs) => {
+export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArgs = {}) => {
   try {
     const res = await axios.post<SerializedExpoJudgingSession>(`/api/expoJudgingSession`, { args });
 
