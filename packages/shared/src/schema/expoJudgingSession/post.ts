@@ -1,3 +1,3 @@
 import z from 'zod';
 
-export const post = z.object({}).strict();
+export const post = z.object({});
