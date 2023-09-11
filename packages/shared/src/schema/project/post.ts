@@ -16,7 +16,7 @@ export const post = z.object({
     .min(PostValidation.MIN_DESCRIPTION_LENGTH)
     .max(PostValidation.MAX_DESCRIPTION_LENGTH),
   location: z.string().trim().max(PostValidation.MAX_LOCATION_LENGTH).optional(),
-  repoLink: z
+  repoUrl: z
     .string()
     .includes('github.com' || 'bitbucket.com' || 'gitlabs.com')
     .url(),

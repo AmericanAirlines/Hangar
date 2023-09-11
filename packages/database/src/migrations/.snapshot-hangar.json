@@ -309,13 +309,13 @@
           "nullable": false,
           "mappedType": "text"
         },
-        "repoLink": {
-          "name": "repoLink",
+        "repoUrl": {
+          "name": "repoUrl",
           "type": "text",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "mappedType": "text"
         },
         "description": {

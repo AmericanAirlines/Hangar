@@ -23,8 +23,8 @@ export class Project extends Node<Project> {
   @Property({ columnType: 'text' })
   name: string;
 
-  @Property({ columnType: 'text', nullable: true })
-  repoLink: string;
+  @Property({ columnType: 'text' })
+  repoUrl: string;
 
   @Property({ columnType: 'text' })
   description: string;
@@ -41,12 +41,12 @@ export class Project extends Node<Project> {
   @Property({ columnType: 'int', hidden: true })
   activeJudgeCount: number = 0;
 
-  constructor({ name, description, repoLink, ...extraValues }: ProjectConstructorValues) {
+  constructor({ name, description, repoUrl, ...extraValues }: ProjectConstructorValues) {
     super(extraValues);
 
     this.name = name;
     this.description = description;
-    this.repoLink = repoLink;
+    this.repoUrl = repoUrl;
   }
 
   static getNextAvailableProjectExcludingProjects = getNextAvailableProjectExcludingProjects;

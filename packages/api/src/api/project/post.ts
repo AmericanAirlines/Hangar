@@ -26,9 +26,11 @@ export const post = async (req: Request, res: Response) => {
 
       project = new Project(data);
       project.contributors.add(lockedUser);
-      const hostRes = await axios.get(data.repoLink);
-      if (hostRes.status !== 200) {
-        throw new Error('oh no repoLink cannot be found');
+
+      const repoFetchRes = await axios.get(data.repoLink);
+      if (repoFetchRes.status !== 200) {
+        res.status(400).send('Repo URL could not be validated');
+        return;
       }
 
       em.persist(project);

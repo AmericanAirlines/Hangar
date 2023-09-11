@@ -6,6 +6,7 @@ const validProject = {
   description:
     'Some super cool project that has a long description that passes validation successfully',
   location: 'Outer Space',
+  repoURl: 'github.com',
 };
 
 describe('project post schema', () => {
@@ -75,5 +76,9 @@ describe('project post schema', () => {
         location: Array(PostValidation.MAX_LOCATION_LENGTH + 1).fill('A'),
       }).success,
     ).toBe(false);
+  });
+
+  it('validates a matching RepoUrl', () => {
+    expect(Schema.project.post.safeParse(validProject.repoURl).success).toBe(true);
   });
 });
