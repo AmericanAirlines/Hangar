@@ -9,6 +9,7 @@ import { project } from './project';
 import { user } from './user';
 import { admin } from './admin';
 import { event } from './event';
+import { prize } from './prize';
 
 export const api = Router();
 api.use(json());
@@ -28,12 +29,15 @@ api.use(
 api.use('/auth', auth);
 api.use('/event', event);
 api.use('/health', health);
+api.use('/prize', prize);
 
 // SELF-PROTECTED ROUTES
-api.use(slack);
 api.use('/admin', admin);
 api.use('/project', project);
 api.use('/user', user);
+
+// INGESTED ROUTERS
+api.use(slack);
 
 // Generic catch all for bad requests
 api.use((_req, res) => res.status(404).send({ error: 'API route not found' }));

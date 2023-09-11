@@ -1,4 +1,3 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -8,12 +7,7 @@ module.exports = {
   clearMocks: true,
   testPathIgnorePatterns: ['/node_modules/'],
   coverageDirectory: './coverage',
-  collectCoverageFrom: [
-    // To ignore an individual file add this on line one `/* istanbul ignore file */`
-    './src/**/*.ts',
-    '!./src/**/*.d.ts',
-    '!./src/@types/**',
-  ],
+  collectCoverageFrom: ['./src/**/*.ts', '!./src/**/*.d.ts', '!./src/@types/**'],
   // coverageThreshold: {
   //   global: {
   //     statements: 100,

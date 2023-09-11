@@ -5,6 +5,6 @@ export * from './ExpoJudgingSession';
 export * from './ExpoJudgingVote';
 export * from './Judge';
 export * from './JudgingSession';
-export * from './Project';
 export * from './Prize';
+export * from './Project';
 export * from './User';
