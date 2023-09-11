@@ -13,6 +13,7 @@ import {
   Fade,
   Link,
   Flex,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
@@ -32,6 +33,8 @@ export const NavBar: React.FC = () => {
   const router = useRouter();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const { user, doneLoading } = useUserStore();
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
     <>
       <HStack width="full">
@@ -39,7 +42,7 @@ export const NavBar: React.FC = () => {
           aria-label="Navigation Menu"
           colorScheme="whiteAlpha"
           icon={<HamburgerIcon />}
-          display={{ base: 'inline', lg: 'none' }}
+          hidden={!isMobile}
           onClick={onOpen}
           mr={3}
         />
@@ -51,7 +54,7 @@ export const NavBar: React.FC = () => {
           cursor="pointer"
           width="full"
         >
-          <HStack as="a" py={3} spacing={2} lineHeight={LOGO_HEIGHT}>
+          <Box py={3} lineHeight={LOGO_HEIGHT} cursor="pointer" mb={2}>
             <Image
               alt="logo"
               src={'/Logo.svg'}
@@ -59,18 +62,23 @@ export const NavBar: React.FC = () => {
               fallback={<Heading variant={'cta'}>{appName}</Heading>}
             />
             <Text fontWeight="bold" fontSize={LOGO_FONT_SIZE}></Text>
-          </HStack>
+          </Box>
         </Box>
 
         <Fade in={doneLoading}>
           <Flex gap={5} alignItems="center">
-            <Link
-              onClick={() => {
-                void router.push('/schedule');
-              }}
-            >
-              Schedule
-            </Link>
+            {!isMobile && (
+              <>
+                <Link
+                  onClick={() => {
+                    void router.push('/schedule');
+                  }}
+                >
+                  Schedule
+                </Link>
+              </>
+            )}
+
             {user?.firstName ? (
               <Box>
                 {user.firstName} {user.lastName}
@@ -78,20 +86,19 @@ export const NavBar: React.FC = () => {
             ) : (
               <>
                 <Button
-                  width="75%"
                   backgroundColor={colors.success}
-                  marginLeft="4px"
                   onClick={async () => {
                     await signInWithSlack();
                   }}
                 >
-                  Sign Up
+                  {`Sign Up${isMobile ? ' or Login' : ''}`}
                 </Button>
 
                 <Button
                   onClick={async () => {
                     await signInWithSlack();
                   }}
+                  hidden={isMobile}
                 >
                   Login
                 </Button>
