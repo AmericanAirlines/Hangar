@@ -7,6 +7,7 @@ type ExpoJudgingSessionStore = {
   expoJudgingSessions?: ExpoJudgingSession[];
   doneLoading: boolean;
   fetchExpoJudgingSessions: () => Promise<void>;
+  addExpoJudgingSessions: (esj: ExpoJudgingSession) => Promise<void>;
 };
 
 export const useExpoJudgingSessionStore = create<ExpoJudgingSessionStore>((set) => ({
@@ -34,5 +35,19 @@ export const useExpoJudgingSessionStore = create<ExpoJudgingSessionStore>((set) 
       }
     }
     set({ expoJudgingSessions, doneLoading: true });
+  },
+  addExpoJudgingSessions: async (esj: ExpoJudgingSession) => {
+    try {
+      set((state) => ({
+        expoJudgingSessions: state.expoJudgingSessions?.concat([esj]),
+        doneLoading: true,
+      }));
+    } catch (error) {
+      if (!axios.isAxiosError(error) || error.status !== 401) {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        // TODO: Show error toast
+      }
+    }
   },
 }));
