@@ -5,7 +5,7 @@ import { Tag, Flex, Heading, ListItem, Text, UnorderedList, FlexProps } from '@c
 
 import { Event } from '@hangar/shared';
 
-import { eventStyle } from './utils';
+import { eventStyle, EventStatus } from './utils';
 
 dayjs.extend(isBetween)
 
@@ -14,7 +14,7 @@ type EventProps = {
 };
 
 type BadgeProps = {
-  badge: 'IN PROGRESS' | 'PAST' | 'FUTURE'
+  badge: EventStatus
 };
 
 const BadgeContainerStyle: FlexProps = {
@@ -41,6 +41,7 @@ const ProgressBadge: React.FC<BadgeProps> = ({ badge }) =>
 const Event: React.FC<EventProps>  = ({ event }) => {
   const { name , description, start, end } = event;
   
+  const format = 'HH:mm a'
   const inProgress = dayjs().isBetween(start, end);
   const past = dayjs().isAfter(end);
   const badge = inProgress ? 'IN PROGRESS' : past ? 'PAST' : 'FUTURE';
@@ -60,7 +61,7 @@ const Event: React.FC<EventProps>  = ({ event }) => {
       </Text>
       
       <Text>
-        {start.format('HH:mm a')} - {end.format('HH:mm a')}
+        {start.format(format)} - {end.format(format)}
       </Text>
     
     </ListItem>
