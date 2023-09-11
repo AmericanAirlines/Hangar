@@ -1,10 +1,10 @@
 import { v4 } from 'uuid';
 import { Schema } from '../../../src';
 
-describe('judgingSession post schema', () => {
-  it('validates judgingSession correctly', () => {
+describe('judge post schema', () => {
+  it('validates judge correctly', () => {
     expect(
-      Schema.judgingSession.post.safeParse({
+      Schema.judge.post.safeParse({
         inviteCode: `${v4()}`,
       }).success,
     ).toBe(true);
@@ -13,14 +13,14 @@ describe('judgingSession post schema', () => {
   it('fails on incorrect uuid', () => {
     // one character long (37)
     expect(
-      Schema.judgingSession.post.safeParse({
+      Schema.judge.post.safeParse({
         inviteCode: `${v4()}-junk`,
       }).success,
     ).toBe(false);
 
     // incorrect type
     expect(
-      Schema.judgingSession.post.safeParse({
+      Schema.judge.post.safeParse({
         inviteCode: 45,
       }).success,
     ).toBe(false);

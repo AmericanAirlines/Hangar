@@ -10,7 +10,7 @@ export const post = async (req: Request, res: Response) => {
   const { errorHandled } = validatePayload({
     req,
     res,
-    schema: Schema.expoJudgingSession.expoJudgingSessionPost,
+    schema: Schema.expoJudgingSession.post,
   });
   if (errorHandled) return;
 
