@@ -1,36 +1,57 @@
 import React from 'react';
-import { Event, eventSchema, EventsList } from '../components/EventsList';
+import { NextPage } from 'next';
+import axios from 'axios';
+import dayjs from 'dayjs';
+import { useToast } from '@chakra-ui/react';
+import { UseToastOptions } from '@chakra-ui/toast';
+
+import { Event, SerializedEvent } from '@hangar/shared';
+
 import { PageContainer } from '../components/layout/PageContainer';
+import { EventsList } from '../components/EventsList';
 
-const fetchEvents = async () => {
-  const res = await fetch('/api/event');
+const FAILED_FETCH_TOAST: UseToastOptions = {
+  title: 'An error occurred.',
+  description: 'Unable to fetch events.',
+  status: 'error',
+  duration: 3000,
+  isClosable: true,
+};
 
-  if (res.ok) {
-    const data: Event[] = await res.json();
-    const events: Event[] = (data).map((event) => eventSchema.parse(event));
-    
-    return events;
-  }
-}
+const fetchEvents: () => Promise<Event[]> = async () =>
+  (await axios.get<SerializedEvent[]>('/api/event'))
+    .data.map((serializedEvent) => {
+      const { start, end, createdAt, updatedAt, ...rest } = serializedEvent;
+      return {
+        ...rest,
+        start: dayjs(start),
+        end: dayjs(end),
+        createdAt: dayjs(createdAt),
+        updatedAt: dayjs(updatedAt)
+      }
+    });
 
-const Schedule: React.FC = () => {
+const Schedule: NextPage = () => {
   const [events, setEvents] = React.useState<Event[]>([]);
+  const toast = useToast()
   
   React.useEffect(() => {
-    void fetchEvents().then( (events) => {
-      setEvents(events as Event[]);
-    });
+    const fetchAndSetEvents = async () => {
+      try {
+        setEvents(await fetchEvents());
+      }
+      catch {
+        toast(FAILED_FETCH_TOAST);
+      }
+    };
+    
+    void fetchAndSetEvents();
   }, []);
   
   return (
-    <div>
-      <PageContainer pageTitle={'Schedule'} heading={'Events'}>
-        {/* cspell:disable-next */}
-      </PageContainer>
-      <div style={{width:'350px'}}>
-        <EventsList {...{events}} />
-      </div>
-    </div>
+    <PageContainer pageTitle={'Schedule'} heading={'Events'}>
+      <EventsList {...{events}} />
+    </PageContainer>
   );
 }
 

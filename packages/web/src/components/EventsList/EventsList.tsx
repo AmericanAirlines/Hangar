@@ -1,55 +1,73 @@
 import React from 'react';
-import { Event, eventStyle } from './utils';
-import { Badge } from '@chakra-ui/react';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import { Tag, Flex, Heading, ListItem, Text, UnorderedList, FlexProps } from '@chakra-ui/react';
 
-const Event = ({ event }: { event: Event }) => {
-  
+import { Event } from '@hangar/shared';
+
+import { eventStyle } from './utils';
+
+dayjs.extend(isBetween)
+
+type EventProps = {
+  event: Event
+};
+
+type BadgeProps = {
+  badge: 'IN PROGRESS' | 'PAST' | 'FUTURE'
+};
+
+const BadgeContainerStyle: FlexProps = {
+  left:'0px',
+  justifyContent: "center",
+  position: "absolute",
+  width: "full",
+  mt: "-15px"
+};
+
+const ProgressBadge: React.FC<BadgeProps> = ({ badge }) =>
+  (badge=='IN PROGRESS') &&
+    <Tag variant={badge==='IN PROGRESS' ? 'success' : 'solid'}>
+      <Flex gap={2} direction={'row'}>
+        <Text>
+          {badge}
+        </Text>
+        <Text>
+          ⏰
+        </Text>
+      </Flex>
+    </Tag>
+
+const Event: React.FC<EventProps>  = ({ event }) => {
   const { name , description, start, end } = event;
-  const stringFormat: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: 'numeric' };
-  const formattedStart = new Date(start).toLocaleTimeString([], stringFormat);
-  const formattedEnd = new Date(end).toLocaleTimeString([], stringFormat);
   
-  const now = new Date();
-  const _start = new Date(start);
-  const _end = new Date(end);
-  const inProgress = _start < now && now < _end;
-  const past = now > _end;
-  const badge = inProgress ? 'IN PROGRESS' : past ? 'PAST' : '';
+  const inProgress = dayjs().isBetween(start, end);
+  const past = dayjs().isAfter(end);
+  const badge = inProgress ? 'IN PROGRESS' : past ? 'PAST' : 'FUTURE';
   
   return (
-    <li style={eventStyle(badge)}>
-      <h2>
-        {name}&nbsp;&nbsp;
-        
-        { (badge=='IN PROGRESS') &&
-          <Badge colorScheme="green" variant="solid" style={{ float:'right' }}>
-            {badge} &nbsp;&nbsp;
-            {/* clock icon */}
-            &#x23F0;
-          </Badge>
-        }
+    <ListItem style={eventStyle(badge)}>
+      <Flex {...BadgeContainerStyle}>
+        <ProgressBadge {...{badge}} />        
+      </Flex>
       
-      </h2>
+      <Heading as="h2" size="md">
+        {name}
+      </Heading>
       
-      <p>
+      <Text>
         {description}
-      </p>
+      </Text>
       
-      <p>
-        {formattedStart} - {formattedEnd}
-      </p>
-      
-      {/* { (badge!=='PAST')
-        ? <RegistrationModal />
-        : ''
-      } */}
+      <Text>
+        {start.format('HH:mm a')} - {end.format('HH:mm a')}
+      </Text>
     
-    </li>
+    </ListItem>
   );
 }
   
-export const EventsList: React.FC<{ events: Event[] }> = ({ events }) => (
-  <ul>
+export const EventsList: React.FC<{ events: Event[] }> = ({ events }) =>
+  <UnorderedList variant="card">
     {events.map( event => <Event {...{ event, key:event.id }} /> )}
-  </ul>
-);
+  </UnorderedList>

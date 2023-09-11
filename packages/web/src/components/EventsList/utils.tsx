@@ -1,27 +1,20 @@
-import { z } from 'zod';
-export interface Event {
-  id: string;
-  name: string;
-  description: string;
-  start: string;
-  end: string;
-}
-  
-export const eventSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string(),
-  start: z.string(),
-  end: z.string(),
-});
+import { colors } from '../../theme/colors'
 
-export const eventStyle =  (badge:string) => ({
-  color: badge!=='PAST'?'':'#666',
-  padding: '8px' ,
-  margin: '8px' ,
-  listStyleType: 'none',
-  border: '1px solid #444',
-  borderRadius:'8px',
-  background:badge!=='PAST'?'#222':'#111',
-  filter: badge!=='PAST'?'':'blur(1px)',
-})
+export const addHexTransparency = (hex:string|undefined, alpha:number) => {
+  const hexAlpha = Math.round(alpha * 255).toString(16);
+  return hex + hexAlpha;
+}
+
+export const eventStyle = ( badge:string ) => ({
+  
+  color: badge==='PAST'
+    ? addHexTransparency(colors.grayscale, .5)
+    : colors.grayscale,
+  
+  background: badge!=='PAST'
+    ? colors.brandPrimaryDark
+    : addHexTransparency(colors.brandPrimaryDark, .5),
+  
+  filter: badge!=='PAST' ? '' : 'blur(1px)',
+
+});
