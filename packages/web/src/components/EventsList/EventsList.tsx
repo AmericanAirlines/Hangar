@@ -26,7 +26,7 @@ const BadgeContainerStyle: FlexProps = {
 };
 
 const ProgressBadge: React.FC<BadgeProps> = ({ badge }) =>{
-  return (badge!=='IN PROGRESS') ? '' :
+  return (badge!=='IN PROGRESS') ? <></> :
     <Tag variant={badge==='IN PROGRESS' ? 'success' : 'solid'}>
       <Flex gap={2} direction={'row'}>
         <Text>
