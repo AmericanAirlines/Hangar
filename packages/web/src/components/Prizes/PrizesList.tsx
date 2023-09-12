@@ -22,12 +22,7 @@ const PrizeCard: React.FC<PrizeCardProps> = ({ prize }) => {
       <Heading as="h2" size="md">
         <Flex gap={2}>
           <Text>
-            { isBonus // eslint-disable-line 
-              ? BONUS
-              : position < RANKING.length
-                ? RANKING[position]
-                : null
-            }
+          { isBonus ? BONUS : RANKING[position] }
           </Text>
           <Text>
             {name}
