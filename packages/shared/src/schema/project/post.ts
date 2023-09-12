@@ -18,6 +18,16 @@ export const post = z.object({
   location: z.string().trim().max(PostValidation.MAX_LOCATION_LENGTH).optional(),
   repoUrl: z
     .string()
-    .includes('github.com' || 'bitbucket.com' || 'gitlabs.com')
-    .url(),
+    .trim()
+    .url()
+    .refine((url) => {
+      if (
+        url.startsWith('https://github.com/') ||
+        url.startsWith('https://bitbucket.com/') ||
+        url.startsWith('https://gitlabs.com/')
+      ) {
+        return true; // URL is valid
+      }
+      return false;
+    }),
 });

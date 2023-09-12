@@ -6,7 +6,7 @@ import { logger } from '../../utils/logger';
 export const get = async (req: Request, res: Response) => {
   const { entityManager } = req;
   try {
-    const prizes = await entityManager.find(Prize, {}, { orderBy: { position: QueryOrder.DESC } });
+    const prizes = await entityManager.find(Prize, {}, { orderBy: { position: QueryOrder.ASC } });
     res.send(prizes);
   } catch (error) {
     logger.error('Unable to fetch prizes from DB: ', error);
