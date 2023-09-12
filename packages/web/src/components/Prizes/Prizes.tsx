@@ -14,15 +14,14 @@ const FAILED_FETCH_TOAST: UseToastOptions = {
 };
 
 const fetchPrizes: () => Promise<Prize[]> = async () =>
-  (await axios.get<SerializedPrize[]>('/api/prize'))
-    .data.map((serializedPrize) => {
-      const { createdAt, updatedAt, ...rest } = serializedPrize;
-      return {
-        ...rest,
-        createdAt: dayjs(createdAt),
-        updatedAt: dayjs(updatedAt),
-      };
-    } );
+  (await axios.get<SerializedPrize[]>('/api/prize')).data.map((serializedPrize) => {
+    const { createdAt, updatedAt, ...rest } = serializedPrize;
+    return {
+      ...rest,
+      createdAt: dayjs(createdAt),
+      updatedAt: dayjs(updatedAt),
+    };
+  });
 
 export const Prizes: React.FC = () => {
   const [prizes, setPrizes] = React.useState<Prize[]>([]);
@@ -40,7 +39,5 @@ export const Prizes: React.FC = () => {
     void fetchAndSetPrizes();
   }, [toast]);
 
-  return (
-    <PrizesList {...{ prizes }} />
-  );
-}
+  return <PrizesList {...{ prizes }} />;
+};
