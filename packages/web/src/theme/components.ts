@@ -192,4 +192,33 @@ export const components: ThemeComponents = {
       },
     },
   },
+  List: {
+    variants: {
+      card: {
+        item: {
+          position: 'relative',
+          padding: 6,
+          margin: 8,
+          listStyleType: 'none',
+          border: '1px solid',
+          borderRadius: '8px',
+        },
+      },
+    },
+  },
+  Tag: {
+    baseStyle: {
+      container: {
+        background: colors.brandPrimary,
+      },
+    },
+    variants: {
+      success: {
+        container: {
+          background: colors.success,
+          color: colors.black,
+        },
+      },
+    },
+  },
 };

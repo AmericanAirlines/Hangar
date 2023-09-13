@@ -7,8 +7,10 @@ import {
   DrawerFooter,
   DrawerOverlay,
   Fade,
-  VStack,
+  Flex,
+  Link,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { signInWithSlack } from './NavBar';
 import { useUserStore } from '../../../../stores/user';
 
@@ -17,21 +19,23 @@ type NavDrawerProps = {
   onClose: any;
 };
 
-export const NavDrawer: React.FC<NavDrawerProps> = (props) => {
+export const NavDrawer: React.FC<NavDrawerProps> = ({ onClose, isOpen }) => {
+  const router = useRouter();
   const { user, doneLoading } = useUserStore();
 
   return (
-    <Drawer placement="left" size={'xs'} onClose={props.onClose} isOpen={props.isOpen}>
+    <Drawer placement="left" size={'xs'} onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerBody>
           <Fade in={doneLoading}>
-            <Box>
+            <Flex direction="column" gap={5} alignItems="center">
               {user?.firstName ? (
                 <Box alignContent={'center'}>Welcome back, {user.firstName}!</Box>
               ) : (
-                <VStack>
+                <>
                   <Button
+                    variant="cta"
                     onClick={async () => {
                       await signInWithSlack();
                     }}
@@ -45,9 +49,17 @@ export const NavDrawer: React.FC<NavDrawerProps> = (props) => {
                   >
                     Login
                   </Button>
-                </VStack>
+                </>
               )}
-            </Box>
+              <Link
+                onClick={() => {
+                  void router.push('/schedule');
+                  onClose();
+                }}
+              >
+                Schedule
+              </Link>
+            </Flex>
           </Fade>
         </DrawerBody>
 
