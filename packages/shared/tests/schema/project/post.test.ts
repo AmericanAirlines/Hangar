@@ -79,7 +79,7 @@ describe('project post schema', () => {
     ).toBe(false);
   });
 
-  it('does not validates a matching RepoUrl', () => {
+  it('does not validates an invalid repoUrl', () => {
     expect(
       Schema.project.post.safeParse({
         ...validProject,
