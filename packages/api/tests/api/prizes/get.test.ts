@@ -17,7 +17,7 @@ describe('prize GET handler', () => {
     expect(mockRequest.entityManager.find).toBeCalledWith(
       Prize,
       expect.objectContaining({}),
-      expect.objectContaining({ orderBy: { position: QueryOrder.DESC } }),
+      expect.objectContaining({ orderBy: { position: QueryOrder.ASC } }),
     );
     expect(mockResponse.send).toBeCalledWith(mockPrizes);
   });

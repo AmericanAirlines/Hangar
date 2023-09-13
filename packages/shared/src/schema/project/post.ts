@@ -20,14 +20,11 @@ export const post = z.object({
     .string()
     .trim()
     .url()
-    .refine((url) => {
-      if (
+    .refine(
+      (url) =>
         url.startsWith('https://github.com/') ||
         url.startsWith('https://bitbucket.com/') ||
-        url.startsWith('https://gitlabs.com/')
-      ) {
-        return true; // URL is valid
-      }
-      return false;
-    }),
+        url.startsWith('https://gitlabs.com/'),
+      'Not a support repo hosting platform',
+    ),
 });
