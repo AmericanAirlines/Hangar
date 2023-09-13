@@ -23,7 +23,6 @@ export const post = z.object({
     .refine(
       (url) =>
         url.startsWith('https://github.com/') ||
-        url.startsWith('https://bitbucket.com/') ||
         url.startsWith('https://gitlabs.com/'),
       'Not a support repo hosting platform',
     ),
