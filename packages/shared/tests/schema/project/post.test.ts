@@ -6,6 +6,7 @@ const validProject = {
   description:
     'Some super cool project that has a long description that passes validation successfully',
   location: 'Outer Space',
+  repoUrl: 'https://github.com/',
 };
 
 describe('project post schema', () => {
@@ -22,6 +23,7 @@ describe('project post schema', () => {
 
   it('trims relevant fields', () => {
     const project = {
+      ...validProject,
       location: ' Somewhere ',
       name: ' Someone ',
       description: ' Something something dark side ',
@@ -73,6 +75,15 @@ describe('project post schema', () => {
       Schema.project.post.safeParse({
         ...validProject,
         location: Array(PostValidation.MAX_LOCATION_LENGTH + 1).fill('A'),
+      }).success,
+    ).toBe(false);
+  });
+
+  it('does not validates an invalid repoUrl', () => {
+    expect(
+      Schema.project.post.safeParse({
+        ...validProject,
+        repoUrl: 'https://google.com',
       }).success,
     ).toBe(false);
   });
