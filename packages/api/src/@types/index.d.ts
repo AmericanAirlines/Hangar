@@ -1,5 +1,5 @@
 import type { EntityManager, PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { User, Admin } from '@hangar/database';
+import { User, Admin, Judge } from '@hangar/database';
 
 type Session = {
   id: string;
@@ -15,6 +15,7 @@ declare global {
        */
       user: User;
       admin: Admin;
+      judge: Judge;
       loggerSuffix: string;
     }
   }
