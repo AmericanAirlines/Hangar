@@ -7,8 +7,8 @@ describe('mockEnv', () => {
   });
 
   it('correctly overrides default values', () => {
-    const myOtherPalindrome = 'racecar';
-    mockEnv({ sessionSecret: myOtherPalindrome, nodeEnv: 'outerspace' });
+    const myOtherPalindrome = 'race car';
+    mockEnv({ sessionSecret: myOtherPalindrome, nodeEnv: 'outer space' });
     expect(env.sessionSecret).toBe(myOtherPalindrome);
   });
 

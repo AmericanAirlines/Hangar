@@ -10,7 +10,7 @@ const targetHost = 'http://localhost:3000';
  * A method to locally redirect an inbound callback from Slack's OAuth
  * from the reverse proxy host to localhost.
  *
- * This middelware will only execute in a development environment and
+ * This middleware will only execute in a development environment and
  * simply redirects to localhost so the domain associated with the request
  * is the same as the domain we'll send the client back to.
  *
