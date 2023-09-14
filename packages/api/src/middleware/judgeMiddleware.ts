@@ -5,7 +5,7 @@ import { Judge } from '@hangar/database';
  * Middleware that evaluates the judge's validity
  *
  * Paths:
- *  - Next function invoked: judge wa identified and matching onject mounted to request
+ *  - Next function invoked: judge was identified and matching object mounted to request
  *  - 400: Judge not found
  *  - 500: Error occurred trying to identify
  */
@@ -22,7 +22,7 @@ export const judgeMiddleware = async (req: Request, res: Response, next: NextFun
   if (judge) {
     req.judge = judge;
   } else {
-    //Judge does not exist in database
+    // Judge does not exist in database
     res.sendStatus(403);
     return;
   }
