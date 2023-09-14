@@ -19,13 +19,12 @@ export const judgeMiddleware = async (req: Request, res: Response, next: NextFun
     return;
   }
 
-  if (judge) {
-    req.judge = judge;
-  } else {
-    // Judge does not exist in database
+  if (!judge) {
+    // Judge does not exits in database
+
     res.sendStatus(403);
     return;
   }
-
+  req.judge = judge;
   next();
 };

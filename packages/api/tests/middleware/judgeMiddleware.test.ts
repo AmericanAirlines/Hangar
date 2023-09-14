@@ -4,11 +4,11 @@ import { createMockResponse } from '../testUtils/expressHelpers/createMockRespon
 
 describe('Judge Middleware', () => {
   it('validates that the user registered as a Judge', async () => {
-    const mockUser = { id: '1' };
+    const mockJudge = { id: '1' };
     const mockSession = { id: '2' };
     const mockReq = createMockRequest({ session: mockSession as any });
     const { entityManager } = mockReq;
-    entityManager.findOne.mockResolvedValueOnce(mockUser);
+    entityManager.findOne.mockResolvedValueOnce(mockJudge);
     const mockRes = createMockResponse();
     const mockNext = jest.fn();
 
@@ -18,6 +18,7 @@ describe('Judge Middleware', () => {
       expect.anything(),
       expect.objectContaining({ user: mockSession.id }),
     );
+    expect(mockReq.judge).toEqual(mockJudge);
     expect(mockRes.sendStatus).not.toHaveBeenCalled();
     expect(mockNext).toHaveBeenCalled();
   });
