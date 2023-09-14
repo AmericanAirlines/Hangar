@@ -7,7 +7,7 @@ import { Admin } from '@hangar/database';
  * Paths:
  *   - Next function invoked: user was identified and matching object mounted to request
  *   - 403:  Admin not present
- *   - 500: An error occured trying to identify the Admin
+ *   - 500: An error occurred trying to identify the Admin
  */
 export const adminMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   let userAdmin;
