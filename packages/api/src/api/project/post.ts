@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Project, User } from '@hangar/database';
 import { Schema } from '@hangar/shared';
 import { DriverException, LockMode } from '@mikro-orm/core';
+import axios from 'axios';
 import { logger } from '../../utils/logger';
 import { validatePayload } from '../../utils/validatePayload';
 
@@ -12,6 +13,12 @@ export const post = async (req: Request, res: Response) => {
   if (errorHandled) return;
 
   let project: Project | undefined;
+
+  const repoFetchRes = await axios.get(data.repoUrl);
+  if (repoFetchRes.status !== 200) {
+    res.status(400).send('Repo URL could not be validated');
+    return;
+  }
 
   try {
     await entityManager.transactional(async (em) => {
@@ -25,7 +32,6 @@ export const post = async (req: Request, res: Response) => {
 
       project = new Project(data);
       project.contributors.add(lockedUser);
-
       em.persist(project);
     });
   } catch (error) {

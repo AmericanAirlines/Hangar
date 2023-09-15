@@ -16,4 +16,12 @@ export const post = z.object({
     .min(PostValidation.MIN_DESCRIPTION_LENGTH)
     .max(PostValidation.MAX_DESCRIPTION_LENGTH),
   location: z.string().trim().max(PostValidation.MAX_LOCATION_LENGTH).optional(),
+  repoUrl: z
+    .string()
+    .trim()
+    .url()
+    .refine(
+      (url) => url.startsWith('https://github.com/') || url.startsWith('https://gitlabs.com/'),
+      'Not a support repo hosting platform',
+    ),
 });
