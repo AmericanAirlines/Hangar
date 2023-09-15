@@ -27,5 +27,5 @@ export const AlertResponse: React.FC<AlertResponseProps> = ({ error, description
     </AlertDescription>
 
     <Spacer />
-    <CloseButton onClick={() => closeAlert()} data-testid="alert-close-button" />
+    <CloseButton onClick={() => closeAlert()} />
   </Alert>

@@ -38,7 +38,7 @@ export const PopUpModal: React.FC<PopupModalProps> = props => {
   } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [ modalHeader, setModalHeader ] = useState(header);
-  const [ bodyText, setBodyText ] = useState<string | undefined>(undefined);
+  const [ bodyText, setBodyText ] = useState<string | undefined>();
   const [ isLoading, setIsLoading ] = useState(false);
   const [ confirmButtonVisible, setConfirmButtonVisible ] = useState(true);
   const  { openButtonProps, confirmProps } = popupProps({

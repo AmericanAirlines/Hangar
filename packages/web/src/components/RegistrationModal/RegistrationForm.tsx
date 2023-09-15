@@ -5,74 +5,81 @@ import {
   VStack,
   FormHelperText,
   FormLabel,
+  Box,
   Button,
   Textarea,
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
+  InputProps,
+  TextareaProps,
 } from '@chakra-ui/react';
 import { AlertResponse } from './AlertResponse';
-import { useRegistrationConfig, RegistrationFormProps, formProps } from '.';
+// import { useRegistrationConfig, RegistrationFormProps, FormProps } from '.';
+import { useRegistrationConfig } from './useRegistrationConfig';
+import { RegistrationFormProps, FormProps } from './utils';
+import { Hint } from './HintTooltip';
+import { statusColors } from '../../theme/colors';
+
+export const formProps:FormProps = (key,formik) => ({
+  variant: "filled",
+  type: "text",
+  value: formik.values[key],
+  isInvalid: !!formik.errors[key],
+  onChange: formik.handleChange,
+  onBlur: formik.handleBlur,
+});
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValues, onSubmit }) => {
   const { formik, alertDescription, alertProps } = useRegistrationConfig({ initialValues, onSubmit  })
-  const { nameProps , descriptionProps , locationProps } = formProps(formik)
+  const nameProps = formProps('name',formik) as InputProps;
+  const descriptionProps = formProps('description',formik) as TextareaProps;
+  const locationProps = formProps('location',formik) as InputProps;
+
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <VStack alignItems="stretch">
-        
-        <Alert status="info" rounded="2xl" marginBottom={8}>
-          <AlertIcon />
-          <AlertTitle mr={2}>
-            Important
-          </AlertTitle>
-          <AlertDescription>
-            You can come back and edit this after submitting
-          </AlertDescription>
-        </Alert>
-        
-        <FormControl id="name">
-          <FormLabel>
-            Name
-          </FormLabel>
-          <Input {...nameProps}/>
-          <FormHelperText color="red.500">
-            {formik.errors.name}&nbsp;
-          </FormHelperText>
-        </FormControl>
-        
-        <FormControl id="description">
-          <FormLabel>
-            Description
-          </FormLabel>
-          <Textarea {...descriptionProps} />
-          <FormHelperText color="red.500">
-            {formik.errors.description}&nbsp;
-          </FormHelperText>
-        </FormControl>
-        
-        <FormControl id="location">
-          <FormLabel>
-            Location
-          </FormLabel>
-          <Input {...locationProps} />
-          <FormHelperText>
-            Leave it blank if you don&apos;t know. You will be told this sometime before judging.
-          </FormHelperText>
-          <FormHelperText color="red.500">
-            {formik.errors.location}&nbsp;
-          </FormHelperText>
-        </FormControl>
-        
-        <Button type="submit" className="btn btn-primary btn-block mb-5">
-          Submit
-        </Button>
-        { (alertDescription === '')
-          ? <></>
-          : <AlertResponse {...alertProps} />
-        }
-      </VStack>
-    </form>
+    <Box>
+      <form onSubmit={formik.handleSubmit}>
+        <VStack alignItems="stretch">
+          
+          <FormControl id="name">
+            <FormLabel>
+              Name
+              <Hint>
+                A descriptive title for your app"
+              </Hint>
+            </FormLabel>
+            <Input {...nameProps} />
+            <FormHelperText color={statusColors.error}>
+              {formik.errors.name}&nbsp;
+            </FormHelperText>
+          </FormControl>
+          
+          <FormControl id="description">
+            <FormLabel>
+              Description
+              <Hint>
+                A detailed description of what your project does, why it was built, and who will use it.
+              </Hint>
+            </FormLabel>
+            <Textarea {...descriptionProps} />
+            <FormHelperText color={statusColors.error}>
+              {formik.errors.description}&nbsp;
+            </FormHelperText>
+          </FormControl>
+          
+          <FormControl id="location">
+            <FormLabel>
+              Location
+            </FormLabel>
+            <Input {...locationProps} />
+            <FormHelperText color={statusColors.error}>
+              {formik.errors.location}&nbsp;
+            </FormHelperText>
+          </FormControl>
+          
+          <Button type="submit">
+            Submit
+          </Button>
+          { (alertDescription !== '') && <AlertResponse {...alertProps} /> }
+        </VStack>
+      </form>
+    </Box>
   );
 };

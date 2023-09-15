@@ -2,43 +2,46 @@ import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { ZodError } from 'zod';
 import { Schema } from '@hangar/shared';
-import { RegistrationFormProps, RegistrationSchema } from '.';
+import { RegistrationFormProps, RegistrationSchema } from './utils';
 
-export const useRegistrationConfig = ({ initialValues, onSubmit }:RegistrationFormProps) => {
+export const useRegistrationConfig = ({ onSubmit }:RegistrationFormProps) => {
   const [serverError, setServerError] = useState(false);
   const [alertDescription, setAlertDescription] = useState('');
   const [validateWhileTyping, setValidateWhileTyping] = useState(false);
   
   const formik = useFormik<RegistrationSchema>({
-    initialValues: initialValues ?? {
+    initialValues: {
       name: '',
       description: '',
       location: '',
     },
     validate: (values) => {
       const errors: Partial<RegistrationSchema> = {};
-      try {
-        Schema.project.post.parse({
-          name: values.name,
-          description: values.description,
-          location: values.location,
-        })
-      }
-      catch (err) {
-        const { constructor:{name}, errors:e } = err as ZodError;
-        if (name==='ZodError') {
-          e.forEach( (error) => {
-            if (error.path) {
-              errors[error.path[0] as keyof RegistrationSchema] = error.message;
-            }
-          });
-        }
-      }
+      const p = Schema.project.post.safeParse({
+        name: values.name,
+        description: values.description,
+        location: values.location,
+      })
+      console.log(p.error.issues[0].message)
+      // console.log(p.error)
+      // try {
+      //   console.log({x})
+      // }
+      // catch (err) {
+      //   const { constructor:{name}, errors:e } = err as ZodError;
+      //   if (name==='ZodError') {
+      //     e.forEach( (error) => {
+      //       if (error.path) {
+      //         errors[error.path[0] as keyof RegistrationSchema] = error.message;
+      //       }
+      //     });
+      //   }
+      // }
       return errors;
     },
     async onSubmit(values) {
-      const res = await fetch(`/api/project/${initialValues?.id ?? ''}`, {
-        method: initialValues ? 'PUT' : 'POST',
+      const res = await fetch(`/api/project/`, {
+        method: 'POST',
         body: JSON.stringify({
           ...values,
           location: values.location!.trim(),
