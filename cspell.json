@@ -1,28 +1,37 @@
 {
   "ignorePaths": [
+    "cspell.json",
+    "Authors.md",
     "*.log",
-    "./patches",
-    "./*.code-workspace",
-    "**/*.svg",
+    "*.code-workspace",
+    "*.svg",
+    "*package.json",
+    "*.drawio",
     "**/coverage",
     "**/dist",
     "**/.next",
     "**/migrations",
     "**/node_modules",
-    "**/tsconfig*",
-    "**package.json"
+    "**/tsconfig*"
   ],
   "words": [
     "americanairlines",
-    "emerg",
     "chakra",
     "cooldown",
+    "emerg",
+    "fontsource",
     "gifs",
+    "hackathon",
+    "hackathons",
     "mikro",
     "mrkdwn",
     "msapplication",
     "tablist",
-    "xoxb"
+    "tacocat",
+    "unauthed",
+    "xoxb",
+    "xoxp",
+    "zustand"
   ],
-  "enabled": false
+  "enabled": true
 }

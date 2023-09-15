@@ -37,7 +37,7 @@ describe('localRedirect util', () => {
     );
   });
 
-  it('calls next when a redirect has already occured', () => {
+  it('calls next when a redirect has already occurred', () => {
     mockEnv({ nodeEnv: 'development' });
     const mockReq = { query: { wasRedirected: 'true' } };
     const mockRes = { redirect: jest.fn() };
