@@ -1,17 +1,19 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { Text } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { useAdminStore } from '../../stores/admin';
 
 const AdminDashboard: NextPage = () => {
+  const router = useRouter();
   const { admin, doneLoading } = useAdminStore((state) => state);
 
   React.useEffect(() => {
-    if (doneLoading && admin === undefined) {
-      window.location.href = '/';
+    if (doneLoading && !admin) {
+      void router.push('/');
     }
-  });
+  }, [admin, doneLoading, router]);
 
   return (
     <PageContainer
@@ -19,7 +21,7 @@ const AdminDashboard: NextPage = () => {
       heading={'Admin Dashboard'}
       isLoading={!doneLoading}
     >
-      <Text>{admin === undefined ? 'Redirecting...' : admin?.id}</Text>
+      <Text>{admin ? admin.id : 'Redirecting...'}</Text>
     </PageContainer>
   );
 };
