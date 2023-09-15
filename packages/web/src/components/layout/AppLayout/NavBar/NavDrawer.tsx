@@ -59,6 +59,14 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({ onClose, isOpen }) => {
               >
                 Schedule
               </Link>
+              <Link
+                onClick={() => {
+                  void router.push('/admin/dashboard');
+                  onClose();
+                }}
+              >
+                Admin Dashboard
+              </Link>
             </Flex>
           </Fade>
         </DrawerBody>

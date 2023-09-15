@@ -76,6 +76,13 @@ export const NavBar: React.FC = () => {
                 >
                   Schedule
                 </Link>
+                <Link
+                  onClick={() => {
+                    void router.push('/admin/dashboard');
+                  }}
+                >
+                  Admin Dashboard
+                </Link>
               </>
             )}
 
