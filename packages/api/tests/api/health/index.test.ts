@@ -14,7 +14,7 @@ describe('health route declarations', () => {
   it('registers the GET handler', async () => {
     await jest.isolateModulesAsync(async () => {
       // Import health for the first time AFTER the get method is mocked
-      const { health } = require('../../../src/api/health');
+      const { health } = await import('../../../src/api/health');
       const app = express();
       app.use(health);
 
