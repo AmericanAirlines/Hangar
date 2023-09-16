@@ -67,6 +67,16 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({ onClose, isOpen }) => {
               >
                 Admin Dashboard
               </Link>
+
+              {user && (
+                <Button
+                  onClick={() => {
+                    window.location.href = '/api/auth/logout';
+                  }}
+                >
+                  {`Logout`}
+                </Button>
+              )}
             </Flex>
           </Fade>
         </DrawerBody>

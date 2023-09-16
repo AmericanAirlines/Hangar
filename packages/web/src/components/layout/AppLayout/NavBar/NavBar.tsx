@@ -87,9 +87,18 @@ export const NavBar: React.FC = () => {
             )}
 
             {user?.firstName ? (
-              <Box>
-                {user.firstName} {user.lastName}
-              </Box>
+              <>
+                <Box>
+                  {user.firstName} {user.lastName}
+                </Box>
+                <Button
+                  onClick={() => {
+                    window.location.href = '/api/auth/logout';
+                  }}
+                >
+                  {`Logout`}
+                </Button>
+              </>
             ) : (
               <>
                 <Button
