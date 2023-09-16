@@ -39,7 +39,7 @@ describe('user post endpoint', () => {
 
     validatePayloadMock.mockReturnValueOnce({ errorHandled: true });
 
-    await put(mockReq as any, mockRes as Response);
+    await put(mockReq as any, mockRes as any);
 
     expect(mockUser.assign).not.toBeCalled();
   });
@@ -54,7 +54,7 @@ describe('user post endpoint', () => {
 
     validatePayloadMock.mockReturnValueOnce({ data: mockReq.body });
 
-    await put(mockReq as any, mockRes as Response);
+    await put(mockReq as any, mockRes as any);
 
     expect(mockEntityManager.persistAndFlush).toBeCalledTimes(1);
     expect(mockRes.sendStatus).toHaveBeenCalledWith(500);

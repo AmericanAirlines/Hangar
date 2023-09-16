@@ -2,13 +2,13 @@ import type { EntityManager, PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { User, Admin, Judge } from '@hangar/database';
 
 type Session = {
-  id: string;
+  id?: string;
 };
 
 declare global {
   namespace Express {
     export interface Request {
-      session: Session;
+      session: Session | null;
       entityManager: EntityManager<PostgreSqlDriver>;
       /**
        * These will only be populated if the corresponding middleware populates these values first

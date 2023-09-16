@@ -15,7 +15,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   fetchAdmin: async () => {
     let admin: Admin | undefined;
     try {
-      const res = await axios.get<SerializedAdmin>('api/admin/me');
+      const res = await axios.get<SerializedAdmin>('/api/admin/me');
       const { createdAt, updatedAt, ...rest } = res.data;
       admin = { ...rest, createdAt: dayjs(createdAt), updatedAt: dayjs(updatedAt) };
     } catch (error) {
