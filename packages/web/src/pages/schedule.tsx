@@ -44,7 +44,7 @@ const Schedule: NextPage = () => {
   }, [toast]);
 
   return (
-    <PageContainer pageTitle={'Schedule'} heading={'Events'}>
+    <PageContainer pageTitle={'Schedule'} heading={'Schedule'}>
       <EventsList {...{ events }} />
     </PageContainer>
   );
