@@ -1,4 +1,6 @@
 import { get } from '../../../src/api/auth/get';
+import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
+import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
 
 describe('auth SLACK', () => {
   it('redirects to correct url for happy path', async () => {
@@ -6,13 +8,12 @@ describe('auth SLACK', () => {
       '/api/auth/callback/slack',
     )}&client_id=undefined`;
 
-    const mockRedirect = jest.fn();
-    const mockReq = {};
-    const mockRes = { redirect: mockRedirect };
+    const mockReq = createMockRequest();
+    const mockRes = createMockResponse();
 
     await get(mockReq as any, mockRes as any);
 
-    expect(mockRedirect).toHaveBeenCalledTimes(1);
-    expect(mockRedirect).toHaveBeenCalledWith(fullLink);
+    expect(mockRes.redirect).toHaveBeenCalledTimes(1);
+    expect(mockRes.redirect).toHaveBeenCalledWith(fullLink);
   });
 });
