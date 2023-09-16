@@ -14,7 +14,7 @@ describe('slack callback declarations', () => {
   it('registers the callback handler', async () => {
     await jest.isolateModulesAsync(async () => {
       // Import callback for the first time AFTER the slack method is mocked
-      const { slack } = require('../../../../../src/api/auth/callback/slack');
+      const { slack } = await import('../../../../../src/api/auth/callback/slack');
 
       const app = express();
       app.use(slack);

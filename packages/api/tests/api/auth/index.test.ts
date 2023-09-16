@@ -14,7 +14,7 @@ describe('slack auth declarations', () => {
   it('registers the auth handler', async () => {
     await jest.isolateModulesAsync(async () => {
       // Import auth for the first time AFTER the slack method is mocked
-      const { auth } = require('../../../src/api/auth');
+      const { auth } = await import('../../../src/api/auth');
       const app = express();
       app.use(auth);
 
