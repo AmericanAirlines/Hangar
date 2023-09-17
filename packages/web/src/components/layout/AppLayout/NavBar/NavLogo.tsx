@@ -1,5 +1,5 @@
 import { Heading } from '@chakra-ui/react';
-import { appName } from '@hangar/shared';
+import { Config } from '@hangar/shared';
 import { useRouter } from 'next/router';
 
 const LOGO_HEIGHT = { base: '24px', sm: '28px', md: '40px' };
@@ -20,7 +20,7 @@ export const NavLogo: React.FC = () => {
         void router.push('/');
       }}
     >
-      {appName}
+      {Config.global.appName}
     </Heading>
   );
 };
