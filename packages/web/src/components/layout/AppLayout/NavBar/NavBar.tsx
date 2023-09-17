@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
-import { appName } from '@hangar/shared';
+import { Config } from '@hangar/shared';
 import { colors } from '../../../../theme';
 import { NavDrawer } from './NavDrawer';
 import { useUserStore } from '../../../../stores/user';
@@ -59,7 +59,7 @@ export const NavBar: React.FC = () => {
               alt="logo"
               src={'/Logo.svg'}
               height={LOGO_HEIGHT}
-              fallback={<Heading variant={'cta'}>{appName}</Heading>}
+              fallback={<Heading variant={'cta'}>{Config.global.appName}</Heading>}
             />
             <Text fontWeight="bold" fontSize={LOGO_FONT_SIZE}></Text>
           </Box>

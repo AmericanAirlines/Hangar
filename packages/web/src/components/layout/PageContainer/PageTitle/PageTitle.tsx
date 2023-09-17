@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { appName } from '@hangar/shared';
+import { Config } from '@hangar/shared';
 
 interface PageTitleProps {
   title: string;
@@ -7,7 +7,7 @@ interface PageTitleProps {
 
 export const pageTitleKey = 'title';
 export const ogPageTitleKey = 'ogTitle';
-export const defaultPageTitle = appName;
+export const defaultPageTitle = Config.global.appName;
 
 export const PageTitle: React.FC<PageTitleProps> = ({ title }) => (
   <Head>

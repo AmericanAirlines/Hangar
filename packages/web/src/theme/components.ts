@@ -198,9 +198,9 @@ export const components: ThemeComponents = {
         item: {
           position: 'relative',
           padding: 6,
-          margin: 8,
           listStyleType: 'none',
-          border: '1px solid',
+          border: 1,
+          borderStyle: 'solid',
           borderRadius: '8px',
         },
       },

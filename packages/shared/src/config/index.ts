@@ -1,1 +1,2 @@
-export * from './appInfo';
+export * from './global';
+export * from './homepage';
