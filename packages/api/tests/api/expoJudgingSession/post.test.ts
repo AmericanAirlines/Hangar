@@ -15,12 +15,12 @@ const validatePayloadMock = getMock(validatePayload);
 describe('expoJudgingSession post endpoint', () => {
   it('should create an ExpoJudgingSession, add a createdBy, and return a 200', async () => {
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false } as any);
-    const mockUser = { id: '1', toReference: jest.fn() };
-    const req = createMockRequest({ user: mockUser as any });
-    const { entityManager } = req;
+    const mockAdmin = { user: { id: 1 } };
+    const req = createMockRequest({ admin: mockAdmin as any });
+    const { entityManager, admin } = req;
     const res = createMockResponse();
     const mockExpoJudgingSession = {
-      createdBy: mockUser,
+      createdBy: admin?.user,
       inviteCode: '00000000-0000-0000-0000-00000000000',
     };
 
