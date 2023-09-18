@@ -1,36 +1,23 @@
 /* eslint-disable max-lines */
 import React from 'react';
 import {
-  Box,
   HStack,
-  Heading,
-  Image,
   Spacer,
-  Text,
-  Button,
   IconButton,
   useDisclosure,
   Fade,
-  Link,
   Flex,
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { useRouter } from 'next/router';
-import { appName } from '@hangar/shared';
-import { colors } from '../../../../theme';
 import { NavDrawer } from './NavDrawer';
 import { useUserStore } from '../../../../stores/user';
-
-const LOGO_HEIGHT = { base: '24px', sm: '28px', md: '40px' };
-const LOGO_FONT_SIZE = { base: '22px', md: '33px' };
-
-export async function signInWithSlack() {
-  window.location.href = '/api/auth/';
-}
+import { Login } from './NavElements/AuthButtons/Login';
+import { SignUp } from './NavElements/AuthButtons/SignUp';
+import { Schedule } from './NavElements/PageLinks/Schedule';
+import { NavLogo } from './NavLogo';
 
 export const NavBar: React.FC = () => {
-  const router = useRouter();
   const { onOpen, onClose, isOpen } = useDisclosure();
   const { user, doneLoading } = useUserStore();
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -38,70 +25,24 @@ export const NavBar: React.FC = () => {
   return (
     <>
       <HStack width="full">
-        <IconButton
-          aria-label="Navigation Menu"
-          colorScheme="whiteAlpha"
-          icon={<HamburgerIcon />}
-          hidden={!isMobile}
-          onClick={onOpen}
-          mr={3}
-        />
+        <IconButton aria-label="Navigation Menu" icon={<HamburgerIcon />} onClick={onOpen} />
 
-        <Box
-          onClick={() => {
-            void router.push('/');
-          }}
-          cursor="pointer"
-          width="full"
-        >
-          <Box py={3} lineHeight={LOGO_HEIGHT} cursor="pointer" mb={2}>
-            <Image
-              alt="logo"
-              src={'/Logo.svg'}
-              height={LOGO_HEIGHT}
-              fallback={<Heading variant={'cta'}>{appName}</Heading>}
-            />
-            <Text fontWeight="bold" fontSize={LOGO_FONT_SIZE}></Text>
-          </Box>
-        </Box>
+        <NavLogo />
 
         <Fade in={doneLoading}>
           <Flex gap={5} alignItems="center">
+            {/* PAGE LINKS – NON-MOBILE ONLY */}
             {!isMobile && (
               <>
-                <Link
-                  onClick={() => {
-                    void router.push('/schedule');
-                  }}
-                >
-                  Schedule
-                </Link>
+                <Schedule />
               </>
             )}
 
-            {user?.firstName ? (
-              <Box>
-                {user.firstName} {user.lastName}
-              </Box>
-            ) : (
+            {/* AUTH BUTTONS */}
+            {!user && (
               <>
-                <Button
-                  backgroundColor={colors.success}
-                  onClick={async () => {
-                    await signInWithSlack();
-                  }}
-                >
-                  {`Sign Up${isMobile ? ' or Login' : ''}`}
-                </Button>
-
-                <Button
-                  onClick={async () => {
-                    await signInWithSlack();
-                  }}
-                  hidden={isMobile}
-                >
-                  Login
-                </Button>
+                <SignUp mentionLogin={isMobile} />
+                {!isMobile && <Login />}
               </>
             )}
           </Flex>

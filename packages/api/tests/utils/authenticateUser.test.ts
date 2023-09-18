@@ -32,7 +32,7 @@ describe('authenticate user', () => {
     expect(loggerErrorSpy).not.toHaveBeenCalled();
     expect(res.redirect).toHaveBeenCalledTimes(1);
     expect(res.redirect).toHaveBeenCalledWith('/');
-    expect(mockSession.id).toEqual(mockUser.id);
+    expect(req.session?.id).toEqual(mockUser.id);
   });
 
   it('creates a user, updates the session, and redirects to the root', async () => {
@@ -53,7 +53,7 @@ describe('authenticate user', () => {
     expect(req.entityManager.persistAndFlush).toBeCalledTimes(1);
     expect(res.redirect).toHaveBeenCalledTimes(1);
     expect(res.redirect).toHaveBeenCalledWith('/');
-    expect(mockSession.id).toEqual(mockUser.id);
+    expect(req.session?.id).toEqual(mockUser.id);
   });
 
   it('redirects to an error page if something goes wrong', async () => {
@@ -64,6 +64,7 @@ describe('authenticate user', () => {
       firstName: 'a',
       lastName: 'b',
     };
+    req.entityManager.findOne.mockRejectedValueOnce(new Error('Something went wrong'));
 
     await authenticateUser({ data, req, res } as any);
 

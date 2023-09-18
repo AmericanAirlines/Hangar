@@ -132,13 +132,13 @@ export const scoreVotes = (
 
             // Determine whether the scoreImpact should be positive or negative
             // Current Project Advantage: potential positive decreases, potential negative increases
-            const advantageCoeficient =
+            const advantageCoefficient =
               currentProjectPercentile > previousProjectPercentile ? -1 : 1;
             const currentProjectScoreImpact =
-              advantageCoeficient *
+              advantageCoefficient *
               Math.round(100 * Math.abs(currentProjectPercentile - previousProjectPercentile));
             const previousProjectScoreImpact =
-              -advantageCoeficient *
+              -advantageCoefficient *
               Math.round(100 * Math.abs(currentProjectPercentile - previousProjectPercentile));
 
             // Apply score impact based on vote outcome

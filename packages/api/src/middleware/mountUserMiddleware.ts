@@ -31,7 +31,7 @@ const mountUser = async (req: Request, res: Response, next: NextFunction) => {
  *   - Next function invoked: user was identified and matching object mounted to request
  *   - 401: Invalid session caused by missing email
  *   - 403: Unknown user with a valid session
- *   - 500: An error occured trying to identify the user
+ *   - 500: An error occurred trying to identify the user
  */
 export const mountUserMiddleware = async (req: Request, res: Response, next: NextFunction) =>
   sessionMiddleware(req, res, () => mountUser(req, res, next));

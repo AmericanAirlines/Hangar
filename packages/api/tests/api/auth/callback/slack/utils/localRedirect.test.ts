@@ -1,5 +1,7 @@
 import { localRedirect } from '../../../../../../src/api/auth/callback/slack/utils/localRedirect';
 import { logger } from '../../../../../../src/utils/logger';
+import { createMockRequest } from '../../../../../testUtils/expressHelpers/createMockRequest';
+import { createMockResponse } from '../../../../../testUtils/expressHelpers/createMockResponse';
 import { mockEnv } from '../../../../../testUtils/mockEnv';
 
 const loggerWarnSpy = jest.spyOn(logger, 'warning');
@@ -7,8 +9,8 @@ const loggerWarnSpy = jest.spyOn(logger, 'warning');
 describe('localRedirect util', () => {
   it('only affects development environments', () => {
     mockEnv({ nodeEnv: 'production' });
-    const mockReq = { query: {} };
-    const mockRes = { redirect: jest.fn() };
+    const mockReq = createMockRequest();
+    const mockRes = createMockResponse();
     const mockNext = jest.fn();
 
     localRedirect(mockReq as any, mockRes as any, mockNext);
@@ -19,12 +21,12 @@ describe('localRedirect util', () => {
 
   it('logs a warning and redirects with a code', () => {
     mockEnv({ nodeEnv: 'development' });
-    const mockReq = {
+    const mockReq = createMockRequest({
       query: {
         code: 'test-code',
       },
-    };
-    const mockRes = { redirect: jest.fn() };
+    });
+    const mockRes = createMockResponse();
     const mockNext = jest.fn();
 
     localRedirect(mockReq as any, mockRes as any, mockNext);
@@ -37,10 +39,10 @@ describe('localRedirect util', () => {
     );
   });
 
-  it('calls next when a redirect has already occured', () => {
+  it('calls next when a redirect has already occurred', () => {
     mockEnv({ nodeEnv: 'development' });
-    const mockReq = { query: { wasRedirected: 'true' } };
-    const mockRes = { redirect: jest.fn() };
+    const mockReq = createMockRequest({ query: { wasRedirected: 'true' } });
+    const mockRes = createMockResponse();
     const mockNext = jest.fn();
 
     localRedirect(mockReq as any, mockRes as any, mockNext);
