@@ -4,6 +4,7 @@ import { Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { useAdminStore } from '../../stores/admin';
+import { AddExpoJudgingSession } from '../../components/AddExpoJudgingSession';
 
 const AdminDashboard: NextPage = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const AdminDashboard: NextPage = () => {
       heading={'Admin Dashboard'}
       isLoading={!doneLoading}
     >
-      <Text>{admin ? admin.id : 'Redirecting...'}</Text>
+      <Text>{admin ? <AddExpoJudgingSession /> : 'Redirecting...'}</Text>
     </PageContainer>
   );
 };
