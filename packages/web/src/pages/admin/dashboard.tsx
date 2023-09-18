@@ -22,9 +22,7 @@ const AdminDashboard: NextPage = () => {
       heading={'Admin Dashboard'}
       isLoading={!doneLoading}
     >
-      <Text>{admin ? admin.id : 'Redirecting...'}</Text>
-      {/* Check out the below line please :) I don't like it but don't know the best way to conditionally hide the dashboard */}
-      {admin ? <AddExpoJudgingSession /> : <></>}
+      <Text>{admin ? <AddExpoJudgingSession /> : 'Redirecting...'}</Text>
     </PageContainer>
   );
 };
