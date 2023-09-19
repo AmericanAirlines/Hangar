@@ -1,7 +1,9 @@
 {
   "env": {
-    "es6": true
+    "es6": true,
+    "jest": true
   },
+  "ignorePatterns": ["dist", "node_modules", "**/*.js"],
   "rules": {
     "@typescript-eslint/no-floating-promises": ["error"],
     "@typescript-eslint/no-require-imports": ["error"],
@@ -12,6 +14,7 @@
     "no-void": ["error", { "allowAsStatement": true }],
     "no-await-in-loop": ["off"],
     "max-lines": ["error", 100],
+    "no-plusplus": ["error"],
     "no-restricted-imports": [
       "error",
       {
@@ -33,5 +36,11 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/tests/**/*"],
+      "rules": { "@typescript-eslint/no-explicit-any": "off" }
+    }
+  ]
 }

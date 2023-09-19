@@ -16,7 +16,7 @@
     "ecmaVersion": 2018,
     "project": "./tsconfig.json"
   },
-  "ignorePatterns": ["node_modules", "**/*.js"],
+  "ignorePatterns": ["node_modules", "**/*.js", "src/migrations"],
   "rules": {
     "import/no-extraneous-dependencies": [
       "error",
