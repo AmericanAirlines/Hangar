@@ -37,7 +37,7 @@ export const useRegistrationConfig = ({ onSubmit }: RegistrationFormProps) => {
         method: 'POST',
         data: JSON.stringify({
           ...values,
-          location: (values?.location??'').trim(),
+          location: (values?.location ?? '').trim(),
         }),
         headers: { 'Content-Type': 'application/json' },
       });
