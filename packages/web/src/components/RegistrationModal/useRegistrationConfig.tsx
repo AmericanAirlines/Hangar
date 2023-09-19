@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
+import axios from 'axios';
 import { Schema } from '@hangar/shared';
 import { RegistrationFormProps, RegistrationSchema } from './utils';
 
@@ -32,20 +33,20 @@ export const useRegistrationConfig = ({ onSubmit }: RegistrationFormProps) => {
       return errors;
     },
     async onSubmit(values) {
-      const res = await fetch(`/api/project/`, {
+      const res = await axios(`/api/project`, {
         method: 'POST',
-        body: JSON.stringify({
+        data: JSON.stringify({
           ...values,
           location: values.location!.trim(),
         }),
         headers: { 'Content-Type': 'application/json' },
       });
-
-      setServerError(!res.ok);
+      
+      setServerError(res.status!==200);
       setAlertDescription(
-        res.ok ? 'You may close this modal now' : 'Something went wrong, please try again later...',
+        res.status===200 ? 'You may close this modal now' : 'Something went wrong, please try again later...',
       );
-      if (res.ok && onSubmit) {
+      if (res.status===200 && onSubmit) {
         onSubmit();
       }
     },

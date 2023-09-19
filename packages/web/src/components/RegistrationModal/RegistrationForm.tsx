@@ -5,7 +5,6 @@ import {
   VStack,
   FormHelperText,
   FormLabel,
-  Box,
   Button,
   Textarea,
   InputProps,
@@ -14,7 +13,7 @@ import {
 import { AlertResponse } from './AlertResponse';
 import { useRegistrationConfig } from './useRegistrationConfig';
 import { RegistrationFormProps, FormProps, RegistrationSchema, RegistrationFormik } from './utils';
-import { Hint } from './HintTooltip';
+import { HintTooltip } from '../HintTooltip';
 import { statusColors } from '../../theme/colors';
 
 const handleBlur = async (e: React.FocusEvent<HTMLInputElement>, formik: RegistrationFormik) => {
@@ -30,6 +29,7 @@ const handleBlur = async (e: React.FocusEvent<HTMLInputElement>, formik: Registr
   };
   await formik.validateForm(values);
 };
+
 const formProps: FormProps = (key, formik) => ({
   variant: 'filled',
   type: 'text',
@@ -45,13 +45,12 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
     onSubmit,
   });
   return (
-    <Box>
       <form onSubmit={formik.handleSubmit}>
         <VStack alignItems="stretch">
           <FormControl id="name">
             <FormLabel>
               Name
-              <Hint> A descriptive title for your app </Hint>
+              <HintTooltip> A descriptive title for your app </HintTooltip>
             </FormLabel>
             <Input {...(formProps('name', formik) as InputProps)} />
             <FormHelperText color={statusColors.error}>{formik.errors.name}&nbsp;</FormHelperText>
@@ -60,10 +59,10 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
           <FormControl id="description">
             <FormLabel>
               Description
-              <Hint>
+              <HintTooltip>
                 A detailed description of what your project does, why it was built, and who will use
                 it.
-              </Hint>
+              </HintTooltip>
             </FormLabel>
             <Textarea {...(formProps('description', formik) as TextareaProps)} />
             <FormHelperText color={statusColors.error}>
@@ -82,7 +81,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
           <FormControl id="repoUrl">
             <FormLabel>
               Repository URL
-              <Hint> Provide a full url including https </Hint>
+              <HintTooltip> Provide a full url including https </HintTooltip>
             </FormLabel>
             <Input {...(formProps('repoUrl', formik) as InputProps)} />
             <FormHelperText color={statusColors.error}>
@@ -94,6 +93,5 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
           {alertDescription !== '' && <AlertResponse {...alertProps} />}
         </VStack>
       </form>
-    </Box>
   );
 };

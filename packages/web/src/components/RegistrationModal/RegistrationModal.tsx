@@ -1,6 +1,6 @@
 import React from 'react';
 import { RegistrationForm } from './RegistrationForm';
-import { PopUpModal } from '../PopupModal';
+import { PopUpModal } from './PopupModal';
 
 const modalProps = {
   openModalText: 'Register',
