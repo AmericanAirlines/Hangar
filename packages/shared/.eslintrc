@@ -6,14 +6,5 @@
     "ecmaVersion": 2018,
     "project": "./tsconfig.json"
   },
-  "settings": { "import/resolver": { "node": { "extensions": [".js", ".ts"] } } },
-  "rules": {
-    "import/no-extraneous-dependencies": ["error"],
-    "object-curly-newline": ["off"],
-    "operator-linebreak": ["off"],
-    "import/order": ["error"],
-    "prefer-template": ["error"],
-    "import/extensions": ["error", "ignorePackages", { "js": "never", "ts": "never" }],
-    "import/no-cycle": ["off"]
-  }
+  "settings": { "import/resolver": { "node": { "extensions": [".js", ".ts"] } } }
 }

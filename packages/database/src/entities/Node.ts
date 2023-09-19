@@ -16,7 +16,8 @@ export abstract class Node<T extends AnyEntity> extends BaseEntity {
   constructor(extraFields: Partial<T> = {}) {
     super();
 
-    for (const [key, value] of Object.entries(extraFields) as [keyof T, T[keyof T]][]) {
+    for (let i = 0; i < Object.entries(extraFields).length; i += 1) {
+      const [key, value] = Object.entries(extraFields) as [keyof T, T[keyof T]];
       (this as unknown as T)[key] = value;
     }
   }

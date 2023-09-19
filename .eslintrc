@@ -10,11 +10,17 @@
     "@typescript-eslint/no-explicit-any": ["error"],
     "@typescript-eslint/no-non-null-assertion": ["error"],
     "curly": ["error"],
-    "import/prefer-default-export": ["off"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-await-in-loop": ["off"],
     "max-lines": ["error", 100],
     "no-plusplus": ["error"],
+    "import/order": ["error"],
+    "prefer-template": ["error"],
+    "import/no-extraneous-dependencies": ["error"],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      { "js": "never", "ts": "never", "tsx": "never" }
+    ],
     "no-restricted-imports": [
       "error",
       {
@@ -35,7 +41,11 @@
           }
         ]
       }
-    ]
+    ],
+    "object-curly-newline": ["off"],
+    "operator-linebreak": ["off"],
+    "import/prefer-default-export": ["off"],
+    "no-await-in-loop": ["off"]
   },
   "overrides": [
     {
