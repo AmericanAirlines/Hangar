@@ -2,7 +2,6 @@ import { NextPage } from 'next';
 import { Config } from '@hangar/shared';
 import { Flex, Heading, Text } from '@chakra-ui/react';
 import React from 'react';
-import { Box } from '@chakra-ui/react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Prizes } from '../components/Prizes';
 import { usePrizesStore } from '../stores/prizes';
