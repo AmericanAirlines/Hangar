@@ -23,7 +23,6 @@ export const popupProps = ({
   header,
 }: PopupProps) => {
   const onConfirmClick = async () => {
-
     setIsLoading(false);
     setConfirmButtonVisible(false);
   };
@@ -39,7 +38,6 @@ export const popupProps = ({
 
   const confirmProps = {
     isLoading,
-    // colorScheme: 'blue',
     onClick: onConfirmClick,
   };
   return { openButtonProps, confirmProps };
