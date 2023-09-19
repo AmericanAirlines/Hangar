@@ -6,7 +6,6 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { Prizes } from '../components/Prizes';
 import { RegistrationModal } from '../components/RegistrationModal';
 
-
 const Home: NextPage = () => (
   <PageContainer pageTitle={appName} heading={'Welcome to Hangar!'}>
     {/* cspell:disable-next */}

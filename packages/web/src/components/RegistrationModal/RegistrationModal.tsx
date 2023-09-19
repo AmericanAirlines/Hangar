@@ -10,6 +10,6 @@ const modalProps = {
 
 export const RegistrationModal: React.FC = () => (
   <PopUpModal {...modalProps}>
-    <RegistrationForm  />
+    <RegistrationForm />
   </PopUpModal>
 );

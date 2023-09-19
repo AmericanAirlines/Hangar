@@ -14,18 +14,15 @@ interface AlertResponseProps {
   closeAlert: () => void;
 }
 
-export const AlertResponse: React.FC<AlertResponseProps> = ({ error, description, closeAlert }) =>
+export const AlertResponse: React.FC<AlertResponseProps> = ({ error, description, closeAlert }) => (
   <Alert status={error ? 'error' : 'success'} rounded="2xl">
     <AlertIcon />
-    
-    <AlertTitle mr={2}>
-      {error ? 'Uh oh' : 'Success'}
-    </AlertTitle>
 
-    <AlertDescription>
-      {description}
-    </AlertDescription>
+    <AlertTitle mr={2}>{error ? 'Uh oh' : 'Success'}</AlertTitle>
+
+    <AlertDescription>{description}</AlertDescription>
 
     <Spacer />
     <CloseButton onClick={() => closeAlert()} />
   </Alert>
+);
