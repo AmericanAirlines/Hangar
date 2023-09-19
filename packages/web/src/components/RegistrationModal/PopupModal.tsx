@@ -24,7 +24,6 @@ export const PopUpModal: React.FC<PopupModalProps> = (props) => {
   const {
     openModalText,
     header,
-    // openButtonProps: openButtonPropsLocal,
     children,
   } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -36,11 +35,9 @@ export const PopUpModal: React.FC<PopupModalProps> = (props) => {
     setIsLoading,
     setModalHeader,
     setBodyText,
-    onClose,
     setConfirmButtonVisible,
     onOpen,
     isLoading,
-    // openButtonPropsLocal,
     header,
   });
 
