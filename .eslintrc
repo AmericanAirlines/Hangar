@@ -5,6 +5,8 @@
   "rules": {
     "@typescript-eslint/no-floating-promises": ["error"],
     "@typescript-eslint/no-require-imports": ["error"],
+    "@typescript-eslint/no-explicit-any": ["error"],
+    "@typescript-eslint/no-non-null-assertion": ["error"],
     "curly": ["error"],
     "import/prefer-default-export": ["off"],
     "no-void": ["error", { "allowAsStatement": true }],
