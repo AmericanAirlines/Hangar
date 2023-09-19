@@ -1,20 +1,15 @@
-import React from 'react';
+import { ListItem, Heading, Flex, Text } from '@chakra-ui/react';
 import { Prize } from '@hangar/shared';
-import { Flex, Heading, ListItem, Text, UnorderedList } from '@chakra-ui/react';
-import { colors } from '../../theme/colors';
+import { colors } from '../../theme';
 
 type PrizeCardProps = {
   prize: Prize;
 };
 
-type PrizesListProps = {
-  prizes: Prize[];
-};
-
 const RANKING = ['🥇', '🥈', '🥉'];
 const BONUS = '✨';
 
-const PrizeCard: React.FC<PrizeCardProps> = ({ prize }) => {
+export const PrizeCard: React.FC<PrizeCardProps> = ({ prize }) => {
   const { name, description, position, isBonus } = prize;
 
   return (
@@ -30,11 +25,3 @@ const PrizeCard: React.FC<PrizeCardProps> = ({ prize }) => {
     </ListItem>
   );
 };
-
-export const PrizesList: React.FC<PrizesListProps> = ({ prizes }) => (
-  <UnorderedList variant="card">
-    {prizes.map((prize) => (
-      <PrizeCard {...{ prize }} key={`prize-${prize.id}`} />
-    ))}
-  </UnorderedList>
-);

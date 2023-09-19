@@ -15,7 +15,7 @@ describe('slack route declarations', () => {
     mockInitSlack.mockReturnValueOnce({ app: slackApp, bolt: mockBolt } as any);
 
     await jest.isolateModulesAsync(async () => {
-      const { slack } = require('../../../src/api/slack');
+      const { slack } = await import('../../../src/api/slack');
       const app = express();
       app.use(slack);
 

@@ -4,11 +4,11 @@ import { createMockResponse } from '../testUtils/expressHelpers/createMockRespon
 
 describe('Admin Middleware', () => {
   it('validates that user is an Admin', async () => {
-    const mockUser = { id: '1' };
+    const mockAdmin = { id: '1' };
     const mockSession = { id: '2' }; // This ID is different for the purpose of test validity
     const req = createMockRequest({ session: mockSession as any });
     const { entityManager } = req;
-    entityManager.findOne.mockResolvedValueOnce(mockUser);
+    entityManager.findOne.mockResolvedValueOnce(mockAdmin);
     const mockRes = createMockResponse();
     const mockNext = jest.fn();
 

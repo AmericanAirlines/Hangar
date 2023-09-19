@@ -13,5 +13,6 @@ export const createMockRequest = (defaults?: Partial<MockRequest>) => ({
   loggerSuffix: '',
   user: undefined as unknown as User,
   body: undefined,
+  query: {},
   ...defaults,
 });

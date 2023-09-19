@@ -20,7 +20,7 @@ jest.mock('axios', () => ({
 jest.mock('../../../src/utils/validatePayload');
 const validatePayloadMock = getMock(validatePayload);
 
-describe('project post enpoint', () => {
+describe('project post endpoint', () => {
   it('should create a project, add a contributor, and return a 200', async () => {
     const data = { name: 'A cool project' };
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);

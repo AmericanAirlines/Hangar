@@ -5,7 +5,7 @@ import { validatePayload } from '../../utils/validatePayload';
 import { logger } from '../../utils/logger';
 
 export const post = async (req: Request, res: Response) => {
-  const { entityManager, user } = req;
+  const { entityManager, admin } = req;
 
   const { errorHandled } = validatePayload({
     req,
@@ -18,7 +18,7 @@ export const post = async (req: Request, res: Response) => {
 
   try {
     expoJudgingSession = new ExpoJudgingSession({
-      createdBy: user.toReference(),
+      createdBy: admin.user,
     });
     await entityManager.persistAndFlush(expoJudgingSession);
   } catch (error) {
