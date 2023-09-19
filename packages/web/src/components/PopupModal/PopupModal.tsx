@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, PropsWithChildren } from 'react';
 import {
   Button,
   ButtonProps,
@@ -14,15 +14,12 @@ import {
 } from '@chakra-ui/react';
 import { popupProps } from './utils';
 
-interface PopupModalProps {
+interface PopupModalProps extends PropsWithChildren {
   openModalText: String;
   header: String;
   hideCloseButton?: boolean;
   openButtonProps?: ButtonProps;
   onConfirm?: () => Promise<void>;
-  succussMessage?: string;
-  errorMessage?: string;
-  children?: React.ReactNode;
 }
 
 export const PopUpModal: React.FC<PopupModalProps> = props => {
@@ -33,8 +30,6 @@ export const PopUpModal: React.FC<PopupModalProps> = props => {
     hideCloseButton = false,
     children,
     onConfirm,
-    succussMessage,
-    errorMessage,
   } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [ modalHeader, setModalHeader ] = useState(header);
@@ -50,8 +45,6 @@ export const PopUpModal: React.FC<PopupModalProps> = props => {
     setConfirmButtonVisible,
     onOpen,
     isLoading,
-    succussMessage,
-    errorMessage,
     openButtonPropsLocal,
     header,
   })
@@ -77,17 +70,15 @@ export const PopUpModal: React.FC<PopupModalProps> = props => {
           
           <ModalFooter>
             <HStack justifyContent="flex-end">
-              { !hideCloseButton
-                ? <Button variant="ghost" onClick={onClose}>
-                    Close
-                  </Button>
-                : null
+              { hideCloseButton &&
+                <Button variant="ghost" onClick={onClose}>
+                  Close
+                </Button>
               }
-              { (onConfirm && confirmButtonVisible)
-                ? <Button {...confirmProps}>
-                    Confirm
-                  </Button>
-                : null
+              { !(onConfirm && confirmButtonVisible) && 
+                <Button {...confirmProps}>
+                  Confirm
+                </Button>
               }
             </HStack>
           </ModalFooter>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
-import { ZodError } from 'zod';
 import { Schema } from '@hangar/shared';
 import { RegistrationFormProps, RegistrationSchema } from './utils';
 
@@ -14,29 +13,22 @@ export const useRegistrationConfig = ({ onSubmit }:RegistrationFormProps) => {
       name: '',
       description: '',
       location: '',
+      repoUrl: '',
     },
+    validateOnChange : validateWhileTyping,
+    validateOnBlur: true,
     validate: (values) => {
       const errors: Partial<RegistrationSchema> = {};
-      const p = Schema.project.post.safeParse({
-        name: values.name,
-        description: values.description,
-        location: values.location,
-      })
-      console.log(p.error.issues[0].message)
-      // console.log(p.error)
-      // try {
-      //   console.log({x})
-      // }
-      // catch (err) {
-      //   const { constructor:{name}, errors:e } = err as ZodError;
-      //   if (name==='ZodError') {
-      //     e.forEach( (error) => {
-      //       if (error.path) {
-      //         errors[error.path[0] as keyof RegistrationSchema] = error.message;
-      //       }
-      //     });
-      //   }
-      // }
+      const parsed = Schema.project.post.safeParse( values );
+      
+      if (!parsed.success) {
+        parsed.error.issues.forEach((issue) => {
+          if (issue.path && (issue.path[0] as string) in values) {
+            errors[issue.path[0] as keyof RegistrationSchema] = issue.message;
+          }
+        });
+      }
+
       return errors;
     },
     async onSubmit(values) {
