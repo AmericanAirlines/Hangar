@@ -22,6 +22,7 @@
     "@hangar/shared": "*",
     "axios": "^1.2.5",
     "dayjs": "^1.11.9",
+    "formik": "^2.4.4",
     "framer-motion": "^7.1.0",
     "next": "^12.2.4",
     "prettier": "^2.4.0",
