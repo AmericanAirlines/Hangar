@@ -21,11 +21,7 @@ interface PopupModalProps extends PropsWithChildren {
 }
 
 export const PopUpModal: React.FC<PopupModalProps> = (props) => {
-  const {
-    openModalText,
-    header,
-    children,
-  } = props;
+  const { openModalText, header, children } = props;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [modalHeader, setModalHeader] = useState(header);
   const [bodyText, setBodyText] = useState<string | undefined>();
