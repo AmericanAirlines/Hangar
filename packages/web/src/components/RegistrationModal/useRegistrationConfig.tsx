@@ -41,12 +41,14 @@ export const useRegistrationConfig = ({ onSubmit }: RegistrationFormProps) => {
         }),
         headers: { 'Content-Type': 'application/json' },
       });
-      
-      setServerError(res.status!==200);
+
+      setServerError(res.status !== 200);
       setAlertDescription(
-        res.status===200 ? 'You may close this modal now' : 'Something went wrong, please try again later...',
+        res.status === 200
+          ? 'You may close this modal now'
+          : 'Something went wrong, please try again later...',
       );
-      if (res.status===200 && onSubmit) {
+      if (res.status === 200 && onSubmit) {
         onSubmit();
       }
     },

@@ -45,53 +45,49 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
     onSubmit,
   });
   return (
-      <form onSubmit={formik.handleSubmit}>
-        <VStack alignItems="stretch">
-          <FormControl id="name">
-            <FormLabel>
-              Name
-              <HintTooltip> A descriptive title for your app </HintTooltip>
-            </FormLabel>
-            <Input {...(formProps('name', formik) as InputProps)} />
-            <FormHelperText color={statusColors.error}>{formik.errors.name}&nbsp;</FormHelperText>
-          </FormControl>
+    <form onSubmit={formik.handleSubmit}>
+      <VStack alignItems="stretch">
+        <FormControl id="name">
+          <FormLabel>
+            Name
+            <HintTooltip> A descriptive title for your app </HintTooltip>
+          </FormLabel>
+          <Input {...(formProps('name', formik) as InputProps)} />
+          <FormHelperText color={statusColors.error}>{formik.errors.name}&nbsp;</FormHelperText>
+        </FormControl>
 
-          <FormControl id="description">
-            <FormLabel>
-              Description
-              <HintTooltip>
-                A detailed description of what your project does, why it was built, and who will use
-                it.
-              </HintTooltip>
-            </FormLabel>
-            <Textarea {...(formProps('description', formik) as TextareaProps)} />
-            <FormHelperText color={statusColors.error}>
-              {formik.errors.description}&nbsp;
-            </FormHelperText>
-          </FormControl>
+        <FormControl id="description">
+          <FormLabel>
+            Description
+            <HintTooltip>
+              A detailed description of what your project does, why it was built, and who will use
+              it.
+            </HintTooltip>
+          </FormLabel>
+          <Textarea {...(formProps('description', formik) as TextareaProps)} />
+          <FormHelperText color={statusColors.error}>
+            {formik.errors.description}&nbsp;
+          </FormHelperText>
+        </FormControl>
 
-          <FormControl id="location">
-            <FormLabel>Location</FormLabel>
-            <Input {...(formProps('location', formik) as InputProps)} />
-            <FormHelperText color={statusColors.error}>
-              {formik.errors.location}&nbsp;
-            </FormHelperText>
-          </FormControl>
+        <FormControl id="location">
+          <FormLabel>Location</FormLabel>
+          <Input {...(formProps('location', formik) as InputProps)} />
+          <FormHelperText color={statusColors.error}>{formik.errors.location}&nbsp;</FormHelperText>
+        </FormControl>
 
-          <FormControl id="repoUrl">
-            <FormLabel>
-              Repository URL
-              <HintTooltip> Provide a full url including https </HintTooltip>
-            </FormLabel>
-            <Input {...(formProps('repoUrl', formik) as InputProps)} />
-            <FormHelperText color={statusColors.error}>
-              {formik.errors.repoUrl}&nbsp;
-            </FormHelperText>
-          </FormControl>
+        <FormControl id="repoUrl">
+          <FormLabel>
+            Repository URL
+            <HintTooltip> Provide a full url including https </HintTooltip>
+          </FormLabel>
+          <Input {...(formProps('repoUrl', formik) as InputProps)} />
+          <FormHelperText color={statusColors.error}>{formik.errors.repoUrl}&nbsp;</FormHelperText>
+        </FormControl>
 
-          <Button type="submit"> Submit </Button>
-          {alertDescription !== '' && <AlertResponse {...alertProps} />}
-        </VStack>
-      </form>
+        <Button type="submit"> Submit </Button>
+        {alertDescription !== '' && <AlertResponse {...alertProps} />}
+      </VStack>
+    </form>
   );
 };
