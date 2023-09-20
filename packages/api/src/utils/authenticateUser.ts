@@ -32,7 +32,12 @@ export const authenticateUser = async ({ data, req, res }: AuthenticateArgs) => 
       req.session = { id: newUser.id };
     }
     
-    res.redirect( data.returnTo || '/' );
+    if (data.returnTo && data.returnTo.startsWith('/')) {
+      res.redirect( data.returnTo );
+    }
+    else{
+      res.redirect( '/' );
+    }
 
   } catch (error) {
     logger.error(error);
