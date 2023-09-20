@@ -26,15 +26,17 @@ export const get = async (req: Request, res: Response) => {
       client_secret: slackClientSecret,
       redirect_uri: slackCallbackUrl,
     });
-
+    
     const {
       given_name: firstName,
       family_name: lastName,
       email,
     } = jwt_decode<SlackTokenData>(fullToken.id_token as string);
 
+    const returnTo = new URL(slackCallbackUrl).searchParams.get('returnTo')?.toString()
+    
     // Replace this with Core OAuth flow
-    await authenticateUser({ req, res, data: { firstName, lastName, email } });
+    await authenticateUser({ req, res, data: { firstName, lastName, email, returnTo } });
   } catch (error) {
     logger.error(error);
     res.redirect(`/error?description=${encodeURIComponent('Bad Slack Auth Callback')}`);
