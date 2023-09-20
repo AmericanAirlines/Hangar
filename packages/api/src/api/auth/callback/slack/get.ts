@@ -1,10 +1,10 @@
 import { WebClient } from '@slack/web-api';
 import { Request, Response } from 'express';
 import jwt_decode from 'jwt-decode';
+import { Config } from '@hangar/shared';
 import { env } from '../../../../env';
 import { authenticateUser } from '../../../../utils/authenticateUser';
 import { logger } from '../../../../utils/logger';
-import { Config } from '@hangar/shared';
 
 export const codeQueryParam = 'code';
 export type SlackTokenData = {
