@@ -32,7 +32,7 @@ export const authenticateUser = async ({ data, req, res }: AuthenticateArgs) => 
       req.session = { id: newUser.id };
     }
     
-    res.redirect( data?.returnTo || '/' );
+    res.redirect( data.returnTo || '/' );
 
   } catch (error) {
     logger.error(error);

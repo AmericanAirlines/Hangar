@@ -72,4 +72,20 @@ describe('authenticate user', () => {
     expect(res.redirect).toHaveBeenCalledWith(expect.stringContaining('/error'));
     expect(loggerErrorSpy).toHaveBeenCalled();
   });
+  it('redirects to a landing page if returnTo is defined', async () => {
+    const mockSession = {} as any;
+    const req = createMockRequest({ session: mockSession });
+    const res = createMockResponse();
+    const data: OAuthUserData = {
+      email: 'x',
+      firstName: 'a',
+      lastName: 'b',
+      returnTo: '/test',
+    };
+
+    await authenticateUser({ data, req, res } as any);
+
+    expect(res.redirect).toHaveBeenCalledTimes(1);
+    expect(res.redirect).toHaveBeenCalledWith('/test');
+  });
 });

@@ -34,7 +34,7 @@ export const get = async (req: Request, res: Response) => {
       email,
     } = jwt_decode<SlackTokenData>(fullToken.id_token as string);
 
-    const returnTo = new URL(slackCallbackUrl).searchParams.get(Config.global.authReturnUriOverride)?.toString()
+    const returnTo = req.query[Config.global.authReturnUriOverride] as string | undefined
     
     // Replace this with Core OAuth flow
     await authenticateUser({ req, res, data: { firstName, lastName, email, returnTo } });
