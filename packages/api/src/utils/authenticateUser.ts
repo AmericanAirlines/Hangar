@@ -32,13 +32,8 @@ export const authenticateUser = async ({ data, req, res }: AuthenticateArgs) => 
       req.session = { id: newUser.id };
     }
 
-    if (data.returnTo) {
-      if (data.returnTo.startsWith('/')) {
-        const redirect = data.returnTo.split('/').map(slug=>slug.replace(/[^a-z0-9]/ig,'')).join('/')
-        res.redirect(redirect);
-      } else {
-        res.redirect('/');
-      }
+    if (data.returnTo && data.returnTo.startsWith('/')) {
+      res.redirect(data.returnTo);
     } else {
       res.redirect('/');
     }
