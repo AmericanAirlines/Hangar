@@ -1,4 +1,4 @@
 export const global = {
   appName: 'Hangar',
-  authReturnUriOverride: 'returnTo',
+  authReturnUriParamName: 'returnTo',
 };
