@@ -4,6 +4,7 @@ import jwt_decode from 'jwt-decode';
 import { env } from '../../../../env';
 import { authenticateUser } from '../../../../utils/authenticateUser';
 import { logger } from '../../../../utils/logger';
+import { Config } from '@hangar/shared';
 
 export const codeQueryParam = 'code';
 export type SlackTokenData = {
@@ -33,7 +34,7 @@ export const get = async (req: Request, res: Response) => {
       email,
     } = jwt_decode<SlackTokenData>(fullToken.id_token as string);
 
-    const returnTo = new URL(slackCallbackUrl).searchParams.get('returnTo')?.toString()
+    const returnTo = new URL(slackCallbackUrl).searchParams.get(Config.global.authReturnUriOverride)?.toString()
     
     // Replace this with Core OAuth flow
     await authenticateUser({ req, res, data: { firstName, lastName, email, returnTo } });
