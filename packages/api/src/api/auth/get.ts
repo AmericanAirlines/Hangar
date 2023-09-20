@@ -7,12 +7,12 @@ const slackAuthBaseUrl: string =
   'https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&';
 
 export const get = async (req: Request, res: Response) => {
-  const { [Config.global.authReturnUriOverride]:returnTo } = req.query as Record<string, string>;
+  const { [Config.global.authReturnUriOverride]: returnTo } = req.query as Record<string, string>;
 
   const queryArgs = new URLSearchParams({
     redirect_uri: `${slackCallbackUrl}?${Config.global.authReturnUriOverride}=${returnTo}`,
     client_id: env.slackClientID,
   }).toString();
-  
+
   res.redirect(`${slackAuthBaseUrl}${queryArgs}`);
 };

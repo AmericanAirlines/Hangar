@@ -31,14 +31,12 @@ export const authenticateUser = async ({ data, req, res }: AuthenticateArgs) => 
       await em.persistAndFlush(newUser);
       req.session = { id: newUser.id };
     }
-    
-    if (data.returnTo && data.returnTo.startsWith('/')) {
-      res.redirect( data.returnTo );
-    }
-    else{
-      res.redirect( '/' );
-    }
 
+    if (data.returnTo && data.returnTo.startsWith('/')) {
+      res.redirect(data.returnTo);
+    } else {
+      res.redirect('/');
+    }
   } catch (error) {
     logger.error(error);
     res.redirect('/error?description=Failed to resolve identity');
