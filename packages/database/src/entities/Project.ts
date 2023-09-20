@@ -1,14 +1,8 @@
 /* istanbul ignore file */
-import { Entity, Property, OneToMany, Collection, QueryResult, EntityDTO } from '@mikro-orm/core';
-import { EntityManager as em } from '@mikro-orm/postgresql';
+import { Entity, Property, OneToMany, Collection, EntityDTO } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 import { User } from './User';
-import {
-  decrementActiveJudgeCount,
-  incrementJudgeVisits,
-  getNextAvailableProjectExcludingProjects,
-} from '../entitiesUtils';
 
 export type ProjectDTO = EntityDTO<Project>;
 
@@ -48,25 +42,4 @@ export class Project extends Node<Project> {
     this.description = description;
     this.repoUrl = repoUrl;
   }
-
-  static getNextAvailableProjectExcludingProjects = getNextAvailableProjectExcludingProjects;
-
-  /* istanbul ignore next */
-  static async updateSelectedProject({
-    project,
-    entityManager,
-  }: {
-    project: Project;
-    entityManager: em;
-  }): Promise<QueryResult<Project>> {
-    return entityManager
-      .createQueryBuilder(Project)
-      .update({ activeJudgeCount: project.activeJudgeCount + 1 })
-      .where({ id: project.id })
-      .execute();
-  }
-
-  static decrementActiveJudgeCount = decrementActiveJudgeCount;
-
-  static incrementJudgeVisits = incrementJudgeVisits;
 }
