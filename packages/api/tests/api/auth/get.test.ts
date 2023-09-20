@@ -8,9 +8,9 @@ const slackAuthBaseUrl: string =
 
 const returnTo = '/api/expoJudgingSession';
 const redirect_uri = encodeURIComponent(
-  `/api/auth/callback/slack?${Config.global.authReturnUriOverride}=${returnTo}`,
+  `/api/auth/callback/slack?${Config.global.authReturnUriParamName}=${returnTo}`,
 );
-// const redirect_uri = `${slackCallbackUrl}=${Config.global.authReturnUriOverride}=${encodeURIComponent( '/api/auth/callback/slack')}`
+// const redirect_uri = `${slackCallbackUrl}=${Config.global.authReturnUriParamName}=${encodeURIComponent( '/api/auth/callback/slack')}`
 
 describe('auth SLACK', () => {
   it('redirects to correct url for happy path', async () => {
@@ -18,7 +18,7 @@ describe('auth SLACK', () => {
 
     const mockReq = createMockRequest({
       query: {
-        [Config.global.authReturnUriOverride]: returnTo,
+        [Config.global.authReturnUriParamName]: returnTo,
       },
     });
     const mockRes = createMockResponse();

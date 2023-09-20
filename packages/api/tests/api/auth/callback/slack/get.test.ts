@@ -36,7 +36,7 @@ describe('Slack auth callback', () => {
       webClientSpy.mockReturnValueOnce(mockWebClient as any);
       const returnToMock = '/api/expoJudgingSession';
       const mockReq = createMockRequest({
-        query: { code: 'mockCode', [Config.global.authReturnUriOverride]: returnToMock },
+        query: { code: 'mockCode', [Config.global.authReturnUriParamName]: returnToMock },
       });
 
       await get(mockReq as any, {} as any);
