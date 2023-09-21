@@ -14,31 +14,35 @@ export const post = async (req: Request, res: Response) => {
   });
   if (errorHandled) return;
 
-  const { currentProjectChosen, expoJudgingSessionId } = data
+  const { currentProjectChosen, expoJudgingSessionId } = data;
 
-  let expoJudgingSession: ExpoJudgingSession | undefined;
   try{
-    expoJudgingSession = await entityManager.findOne(ExpoJudgingSession, {id:expoJudgingSessionId}) ?? undefined
-  } catch (error) {
-    logger.error(error);
-    res.sendStatus(500);
-    return;
-  }
+    const expoJudgingSession = await entityManager.findOne(ExpoJudgingSession, {id:expoJudgingSessionId}) ?? undefined;
+    await entityManager.populate(judge,['expoJudgingSessions']);
+    const hasPermission = judge.expoJudgingSessions.getItems().some( ({id}) =>
+      id==expoJudgingSessionId
+    )
+    
+    if (!expoJudgingSession) {
+      res.sendStatus(404);
+      return;
+    }
 
-  if (!expoJudgingSession) {
-    res.sendStatus(403);
-    return;
-  }
-
-  try {
+    if(!hasPermission){
+      res.sendStatus(403);
+      return;
+    }
+    
     const expoJudgingVote = await judge.vote({
       entityManager,
       currentProjectChosen,
       judgingSession: expoJudgingSession,
     });
+    
     res.send(expoJudgingVote);
+
   } catch (error) {
-    logger.error(error);
+    logger.error('Error occurred while creating ExpoJudgingVote', error);
     res.sendStatus(500);
     return;
   }
