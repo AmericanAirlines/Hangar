@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Judge } from '@hangar/database';
 import { post } from '../../../src/api/judge/post';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
@@ -84,5 +85,25 @@ describe('judge post endpoint', () => {
 
     expect(req.entityManager.persistAndFlush).toBeCalled();
     expect(res.send).toHaveBeenLastCalledWith(mockJudge);
+  });
+  it('should return 500 when it fails to create a judge', async () => {
+    const mockUserReference = { id: '1' };
+
+    validatePayloadMock.mockReturnValueOnce({
+      errorHandled: false,
+      data: { inviteCode: 'xyz' },
+    } as any);
+    const req = createMockRequest({
+      user: { toReference: jest.fn().mockReturnValueOnce(mockUserReference) } as any,
+      query: { inviteCode: 'xyz' },
+    });
+    const res = createMockResponse();
+    req.entityManager.findOne.mockRejectedValueOnce('uh oh error occurred');
+
+    await post(req as any, res as any);
+
+    expect(Judge.prototype.constructor as jest.Mock).not.toHaveBeenCalled();
+
+    expect(res.sendStatus).toBeCalledWith(500);
   });
 });
