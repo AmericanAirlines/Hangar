@@ -23,7 +23,7 @@ describe('expo judging vote post schema', () => {
     expect(
       Schema.project.post.safeParse({
         ...validExpoJudgingVote,
-        expoJudgingSessionId: 'invalid',
+        expoJudgingSessionId: 1,
       }).success,
     ).toBe(false);
   });
