@@ -10,11 +10,8 @@ import { user } from './user';
 import { admin } from './admin';
 import { event } from './event';
 import { prize } from './prize';
-<<<<<<< HEAD
 import { judge } from './judge';
-=======
 import { expoJudgingSession } from './expoJudgingSession';
->>>>>>> v3
 
 export const api = Router();
 api.use(json());
