@@ -23,7 +23,7 @@ export type JudgeDTO = EntityDTO<Judge>;
 
 export type JudgeConstructorValues = ConstructorValues<
   Judge,
-  'currentProject' | 'previousProject' | 'expoJudgingSessions'
+  'currentProject' | 'previousProject' | 'expoJudgingSessions' | 'expoJudgingVotes'
 >;
 
 type ReleaseAndContinueArgs =
@@ -84,7 +84,7 @@ export class Judge extends Node<Judge> {
         { id: this.id },
         {
           populate: ['expoJudgingVotes'],
-          lockMode: LockMode.PESSIMISTIC_WRITE,
+          lockMode: LockMode.PESSIMISTIC_PARTIAL_WRITE, // Skip locked judges and handle below
         },
       );
 

@@ -1,4 +1,10 @@
-import { EntityManager, FilterQuery, FindOneOptions, LockMode } from '@mikro-orm/postgresql';
+import {
+  EntityManager,
+  FilterQuery,
+  FindOneOptions,
+  LockMode,
+  QueryOrder,
+} from '@mikro-orm/postgresql';
 import { Project } from '../../entities/Project';
 
 /**
@@ -14,24 +20,14 @@ export const getNextProject = async ({
   entityManager: EntityManager;
 }): Promise<Project | null> => {
   // Don't visit teams the judge has already visited or skipped
-  const query: FilterQuery<Project> = excludedProjectIds.length
-    ? { id: { $nin: excludedProjectIds } }
-    : {};
+  const query: FilterQuery<Project> = { id: { $nin: excludedProjectIds } };
 
   // Find the team with the fewest judgeVisits and the lowest activeJudgeCount
   const queryOptions: FindOneOptions<Project> = {
-    orderBy: { judgeVisits: 'ASC', activeJudgeCount: 'ASC' },
-    lockMode: LockMode.PESSIMISTIC_WRITE,
+    orderBy: { judgeVisits: QueryOrder.ASC, activeJudgeCount: QueryOrder.ASC },
+    lockMode: LockMode.PESSIMISTIC_READ, // Don't skip locked projects
   };
 
-  let project: Project | null = null;
-  await entityManager.transactional(async (em) => {
-    project = await em.findOne(Project, query, queryOptions);
-    if (project) {
-      project.activeJudgeCount += 1;
-      project.judgeVisits += 1;
-      em.persist(project);
-    }
-  });
+  const project = await entityManager.findOne(Project, query, queryOptions);
   return project;
 };
