@@ -6,6 +6,7 @@ import { authenticateUser } from '../../../../../src/utils/authenticateUser';
 import { mockEnv } from '../../../../testUtils/mockEnv';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
+import { Config } from '@hangar/shared';
 
 jest.mock('@slack/web-api');
 jest.mock('jwt-decode');
@@ -33,7 +34,10 @@ describe('Slack auth callback', () => {
       jwtDecodeMock.mockReturnValueOnce(mockUserData);
       const mockWebClient = { openid: { connect: { token: mockTokenMethod } } };
       webClientSpy.mockReturnValueOnce(mockWebClient as any);
-      const mockReq = createMockRequest({ query: { code: 'mockCode' } });
+      const returnToMock = '/api/expoJudgingSession';
+      const mockReq = createMockRequest({
+        query: { code: 'mockCode', [Config.global.authReturnUriParamName]: returnToMock },
+      });
 
       await get(mockReq as any, {} as any);
 
@@ -50,6 +54,7 @@ describe('Slack auth callback', () => {
             firstName: mockUserData.given_name,
             lastName: mockUserData.family_name,
             email: mockUserData.email,
+            returnTo: returnToMock,
           },
         }),
       );
