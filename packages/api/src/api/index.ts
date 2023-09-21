@@ -11,6 +11,7 @@ import { admin } from './admin';
 import { event } from './event';
 import { prize } from './prize';
 import { expoJudgingSession } from './expoJudgingSession';
+import { expoJudgingVote } from './expoJudgingVote';
 
 export const api = Router();
 api.use(json());
@@ -29,6 +30,7 @@ api.use(
 // UNPROTECTED ROUTES
 api.use('/auth', auth);
 api.use('/expoJudgingSession', expoJudgingSession);
+api.use('/expoJudgingVote', expoJudgingVote);
 api.use('/event', event);
 api.use('/health', health);
 api.use('/prize', prize);
