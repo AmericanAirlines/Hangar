@@ -1,5 +1,6 @@
 /* istanbul ignore file */
-import { Entity, Property, OneToMany, Collection, EntityDTO } from '@mikro-orm/core';
+import { Entity, Property, OneToMany, Collection, EntityDTO, raw } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 import { User } from './User';
@@ -11,6 +12,13 @@ export type ProjectConstructorValues = ConstructorValues<
   'contributors' | 'judgeVisits' | 'activeJudgeCount',
   'location'
 >;
+
+type ActiveJudgeCountModifierArgs = {
+  entityManager: EntityManager;
+};
+type UpdateActiveJudgeCountArgs = ActiveJudgeCountModifierArgs & {
+  action: 'increment' | 'decrement';
+};
 
 @Entity()
 export class Project extends Node<Project> {
@@ -41,5 +49,37 @@ export class Project extends Node<Project> {
     this.name = name;
     this.description = description;
     this.repoUrl = repoUrl;
+  }
+
+  async incrementActiveJudgeCount({ entityManager }: ActiveJudgeCountModifierArgs) {
+    await this.updateActiveJudgeCount({ entityManager, action: 'increment' });
+  }
+
+  async decrementActiveJudgeCount({ entityManager }: ActiveJudgeCountModifierArgs) {
+    await this.updateActiveJudgeCount({ entityManager, action: 'decrement' });
+  }
+
+  private async updateActiveJudgeCount({ entityManager, action }: UpdateActiveJudgeCountArgs) {
+    const qb = entityManager.createQueryBuilder(Project);
+    const activeJudgeCountColumnName =
+      entityManager.getMetadata(Project).properties.activeJudgeCount.name;
+    await qb
+      .update({
+        activeJudgeCount: raw(
+          `"${activeJudgeCountColumnName}" ${action === 'increment' ? '+' : '-'} 1`,
+        ),
+      })
+      .where({ id: this.id });
+  }
+
+  async incrementJudgeVisits({ entityManager }: ActiveJudgeCountModifierArgs) {
+    const qb = entityManager.createQueryBuilder(Project);
+    const judgeVisitsColumnName =
+      entityManager.getMetadata(Project).properties.activeJudgeCount.name;
+    await qb
+      .update({
+        judgeVisits: raw(`"${judgeVisitsColumnName}" + 1`),
+      })
+      .where({ id: this.id });
   }
 }
