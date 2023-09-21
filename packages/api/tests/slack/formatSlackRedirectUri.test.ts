@@ -12,6 +12,7 @@ describe('formatSlackRedirectUri', () => {
       `${baseUrl}/api/auth/callback/slack?${Config.global.authReturnUriParamName}=${returnTo}`,
     );
   });
+
   it('skips the returnTo if omitted', () => {
     const baseUrl = 'abc';
     mockEnv({ baseUrl });
