@@ -1,43 +1,24 @@
 import React from 'react';
-import axios from 'axios';
-import dayjs from 'dayjs';
-import { useToast, UseToastOptions } from '@chakra-ui/react';
-import { Prize, SerializedPrize } from '@hangar/shared';
-import { PrizesList } from './PrizesList';
+import { Flex, Heading, UnorderedList } from '@chakra-ui/react';
+import { usePrizesStore } from '../../stores/prizes';
+import { PrizeCard } from './PrizeCard';
 
-const FAILED_FETCH_TOAST: UseToastOptions = {
-  title: 'An error occurred.',
-  description: 'Unable to fetch prizes.',
-  status: 'error',
-  duration: 3000,
-  isClosable: true,
-};
+type PrizesProps = {};
 
-const fetchPrizes: () => Promise<Prize[]> = async () =>
-  (await axios.get<SerializedPrize[]>('/api/prize')).data.map((serializedPrize) => {
-    const { createdAt, updatedAt, ...rest } = serializedPrize;
-    return {
-      ...rest,
-      createdAt: dayjs(createdAt),
-      updatedAt: dayjs(updatedAt),
-    };
-  });
+export const Prizes: React.FC<PrizesProps> = () => {
+  const { prizes } = usePrizesStore();
 
-export const Prizes: React.FC = () => {
-  const [prizes, setPrizes] = React.useState<Prize[]>([]);
-  const toast = useToast();
+  if (!prizes?.length) return null;
 
-  React.useEffect(() => {
-    const fetchAndSetPrizes = async () => {
-      try {
-        setPrizes(await fetchPrizes());
-      } catch {
-        toast(FAILED_FETCH_TOAST);
-      }
-    };
+  return (
+    <Flex direction="column" gap={3}>
+      <Heading>Prizes</Heading>
 
-    void fetchAndSetPrizes();
-  }, [toast]);
-
-  return <PrizesList {...{ prizes }} />;
+      <UnorderedList variant="card" m={0} spacing={5}>
+        {prizes.map((prize) => (
+          <PrizeCard {...{ prize }} key={`prize-${prize.id}`} />
+        ))}
+      </UnorderedList>
+    </Flex>
+  );
 };

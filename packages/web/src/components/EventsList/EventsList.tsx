@@ -76,7 +76,7 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
 };
 
 export const EventsList: React.FC<{ events: Event[] }> = ({ events }) => (
-  <UnorderedList variant="card">
+  <UnorderedList variant="card" spacing={5} m={0}>
     {events.map((event) => (
       <EventCard {...{ event }} key={`event-${event.id}`} />
     ))}
