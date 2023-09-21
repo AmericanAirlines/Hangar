@@ -1,11 +1,9 @@
 import { Config } from '@hangar/shared';
 import { env } from '../env';
 
-type FormatSlackRedirectUriArgs =
-  | {
-      returnTo?: string;
-    }
-  | undefined;
+type FormatSlackRedirectUriArgs = {
+  returnTo?: string;
+};
 
 export const formatSlackRedirectUri = ({ returnTo }: FormatSlackRedirectUriArgs = {}) => {
   const returnToQuery = returnTo ? `?${Config.global.authReturnUriParamName}=${returnTo}` : '';
