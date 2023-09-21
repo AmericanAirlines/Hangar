@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Judge, JudgingSession } from '@hangar/database';
+import { ExpoJudgingSession, Judge } from '@hangar/database';
 import { Schema } from '@hangar/shared';
 import { DriverException } from '@mikro-orm/core';
 import { logger } from '../../utils/logger';
@@ -18,7 +18,7 @@ export const post = async (req: Request, res: Response) => {
   if (errorHandled) return;
 
   try {
-    const judgingSession = await req.entityManager.findOne(JudgingSession, {
+    const judgingSession = await req.entityManager.findOne(ExpoJudgingSession, {
       inviteCode: data.inviteCode,
     });
 

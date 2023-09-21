@@ -10,6 +10,7 @@ import { user } from './user';
 import { admin } from './admin';
 import { event } from './event';
 import { prize } from './prize';
+import { judge } from './judge';
 
 export const api = Router();
 api.use(json());
@@ -35,6 +36,7 @@ api.use('/prize', prize);
 api.use('/admin', admin);
 api.use('/project', project);
 api.use('/user', user);
+api.use('/judge', judge);
 
 // INGESTED ROUTERS
 api.use(slack);

@@ -5,6 +5,7 @@ export * from './Event';
 export * from './ExpoJudgingSession';
 export * from './ExpoJudgingVote';
 export * from './Judge';
+export { JudgingSessionDTO } from './JudgingSession';
 export * from './Prize';
 export * from './Project';
 export * from './User';

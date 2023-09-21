@@ -4,7 +4,6 @@ import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequ
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
 import { getMock } from '../../testUtils/getMock';
 import { validatePayload } from '../../../src/utils/validatePayload';
-import { EntityManager } from '@mikro-orm/knex';
 
 jest.mock('@hangar/database', () => ({
   Judge: jest.fn(),
@@ -23,6 +22,7 @@ describe('judge post endpoint', () => {
     await post(req as any, res as any);
 
     expect(validatePayloadMock).toBeCalledTimes(1);
+    expect(req.entityManager.findOne).not.toHaveBeenCalled();
   });
 
   it('should return 403 for an invalid inviteCode', async () => {
@@ -33,6 +33,7 @@ describe('judge post endpoint', () => {
 
     const req = createMockRequest({ query: { inviteCode: 'xyz' } });
     const res = createMockResponse();
+    req.entityManager.findOne.mockResolvedValueOnce(null);
 
     await post(req as any, res as any);
 
