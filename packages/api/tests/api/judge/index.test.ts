@@ -23,6 +23,7 @@ describe('/judge post endpoint registration', () => {
       const app = express();
       app.use(judge);
       const res = await supertest(app).post('');
+
       expect(mountUserMiddlewareMock).toBeCalledTimes(1);
       expect(res.status).toEqual(200);
     });
