@@ -27,4 +27,10 @@ describe('formatSlackRedirectUri', () => {
     const redirectUri = formatSlackRedirectUri({ returnTo: '' });
     expect(redirectUri).toEqual(`${baseUrl}/api/auth/callback/slack`);
   });
+
+  it('excludes a base url if it is not set', () => {
+    mockEnv({ baseUrl: undefined });
+    const redirectUri = formatSlackRedirectUri({ returnTo: '' });
+    expect(redirectUri).toEqual(`/api/auth/callback/slack`);
+  });
 });
