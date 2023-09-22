@@ -50,4 +50,19 @@ describe('localRedirect util', () => {
     expect(mockNext).toBeCalledTimes(1);
     expect(mockRes.redirect).not.toBeCalled();
   });
+
+  it('propagates query params', () => {
+    mockEnv({ nodeEnv: 'development' });
+    const fakeQueryParamName = 'bestFood';
+    const fakeQueryParamValue = 'pizza';
+    const mockReq = createMockRequest({ query: { [fakeQueryParamName]: fakeQueryParamValue } });
+    const mockRes = createMockResponse();
+    const mockNext = jest.fn();
+
+    localRedirect(mockReq as any, mockRes as any, mockNext);
+
+    expect(mockRes.redirect.mock.calls[0][0]).toEqual(
+      expect.stringContaining(`${fakeQueryParamName}=${fakeQueryParamValue}`),
+    );
+  });
 });

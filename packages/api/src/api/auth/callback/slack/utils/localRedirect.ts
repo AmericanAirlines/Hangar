@@ -1,5 +1,4 @@
 import { Handler } from 'express';
-import { codeQueryParam } from '../get';
 import { env } from '../../../../../env';
 import { logger } from '../../../../../utils/logger';
 
@@ -30,9 +29,8 @@ export const localRedirect: Handler = (req, res, next) => {
     return;
   }
 
-  const { [codeQueryParam]: code } = req.query;
   const query = new URLSearchParams({
-    code: code as string,
+    ...req.query,
     [redirectedQueryParam]: 'true',
   });
 
