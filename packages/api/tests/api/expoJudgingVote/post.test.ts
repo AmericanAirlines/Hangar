@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ExpoJudgingSession } from '@hangar/database';
 import { validatePayload } from '../../../src/utils/validatePayload';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
@@ -41,7 +42,7 @@ describe('ExpoJudgingVote', () => {
     expect(mockJudge.vote).toHaveBeenCalledWith({
       entityManager,
       currentProjectChosen: validReqData.currentProjectChosen,
-      judgingSession: mockExpoJudgingSession,
+      expoJudgingSession: mockExpoJudgingSession,
     });
     expect(res.send).toHaveBeenCalledWith(mockExpoJudgingVote);
   });

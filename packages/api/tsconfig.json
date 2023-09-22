@@ -9,14 +9,14 @@
     "noImplicitAny": true,
     "noEmit": true,
     "noEmitOnError": true,
+    "noUncheckedIndexedAccess": true,
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["esnext", "esnext.asynciterable", "dom"],
     "resolveJsonModule": true,
     "strict": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "noUncheckedIndexedAccess": true
+    "experimentalDecorators": true
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules"],

@@ -1,6 +1,15 @@
 /* eslint-disable max-lines */
-import { Entity, ManyToMany, OneToOne, Ref, Collection, EntityDTO } from '@mikro-orm/core';
-import { EntityManager as em } from '@mikro-orm/postgresql';
+import {
+  Entity,
+  ManyToMany,
+  OneToOne,
+  Ref,
+  Collection,
+  EntityDTO,
+  LockMode,
+  OneToMany,
+} from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { ExpoJudgingVote } from './ExpoJudgingVote';
 import { Project } from './Project';
@@ -8,13 +17,34 @@ import { Node } from './Node';
 import { User } from './User';
 import { JudgingSession } from './JudgingSession';
 import { ExpoJudgingSession } from './ExpoJudgingSession';
+import { getNextProject } from '../entitiesUtils';
 
 export type JudgeDTO = EntityDTO<Judge>;
 
 export type JudgeConstructorValues = ConstructorValues<
   Judge,
-  'currentProject' | 'previousProject' | 'expoJudgingSessions'
+  'currentProject' | 'previousProject' | 'expoJudgingSessions' | 'expoJudgingVotes'
 >;
+
+type ReleaseProjectAndContinueBaseArgs = {
+  entityManager: EntityManager;
+};
+type VoteAndReleaseProjectArgs = ReleaseProjectAndContinueBaseArgs & {
+  action: 'vote';
+  currentProjectChosen: boolean;
+  expoJudgingSession: ExpoJudgingSession;
+};
+type SkipOrContinueAndReleaseProjectArgs = ReleaseProjectAndContinueBaseArgs & {
+  action: 'continue' | 'skip';
+};
+type ReleaseAndContinueArgs = VoteAndReleaseProjectArgs | SkipOrContinueAndReleaseProjectArgs;
+
+export enum JudgeErrorCode {
+  UnableToLockJudge = 'Judge was locked by another process; unable to proceed',
+  CannotContinue = 'State of the Judge does not allow the continue action',
+  CannotSkip = 'No current project to skip',
+  MissingProjectForVote = 'Either current or past project was missing; cannot vote',
+}
 
 @Entity()
 export class Judge extends Node<Judge> {
@@ -36,82 +66,125 @@ export class Judge extends Node<Judge> {
   @ManyToMany({ entity: () => ExpoJudgingSession })
   expoJudgingSessions = new Collection<ExpoJudgingSession>(this);
 
-  async getNextProject({
-    entityManager,
-    visitedProjectIds,
-  }: {
-    entityManager: em;
-    visitedProjectIds: Ref<Project>[];
-  }): Promise<Project | undefined> {
-    const newProject = await Project.getNextAvailableProjectExcludingProjects({
-      excludedProjectIds: visitedProjectIds,
-      entityManager,
+  @OneToMany({ entity: () => ExpoJudgingVote, mappedBy: (ejv) => ejv.judge })
+  expoJudgingVotes = new Collection<ExpoJudgingVote>(this);
+
+  getNextProject = getNextProject;
+
+  /**
+   * Releases the current project for a team and decrements the relevant counters on the {@link Project `currentProject`},
+   * assigns a new `currentProject`, and increments it's relevant counters
+   *
+   * This method consists of a transaction so all actions succeed or none do
+   *
+   * @throws an error with a {@link JudgingErrorCode} if criteria relevant to an action is not met
+   *
+   * @param args {@link ReleaseProjectAndContinueBaseArgs}
+   */
+  private releaseProjectAndContinue(args: VoteAndReleaseProjectArgs): Promise<ExpoJudgingVote>;
+  private releaseProjectAndContinue(args: SkipOrContinueAndReleaseProjectArgs): Promise<undefined>;
+  private async releaseProjectAndContinue(args: ReleaseAndContinueArgs) {
+    const { entityManager } = args;
+    let vote: ExpoJudgingVote | undefined;
+    await entityManager.transactional(async (em) => {
+      // Lock the judge so we can ensure this execution is the only thing modifying the judge
+      const judge = await em.findOne(
+        Judge,
+        { id: this.id },
+        {
+          populate: ['expoJudgingVotes'],
+          lockMode: LockMode.PESSIMISTIC_PARTIAL_WRITE, // Skip locked judges and handle below
+        },
+      );
+
+      if (!judge) {
+        throw new Error('Unable to lock Judge', { cause: JudgeErrorCode.UnableToLockJudge });
+      }
+
+      // PRE-REQUISITE CHECKING
+      if (args.action === 'continue' && judge.previousProject) {
+        // Judge has a previous project so they MUST vote instead of continuing
+        throw new Error('Unable to continue when Judge has previous project', {
+          cause: JudgeErrorCode.CannotContinue,
+        });
+      } else if (args.action === 'skip' && !judge.currentProject) {
+        throw new Error('Unable to continue when Judge has previous project', {
+          cause: JudgeErrorCode.CannotSkip,
+        });
+      } else if (args.action === 'vote') {
+        // Action is a vote; create the new vote if relevant criteria is met
+        if (!judge.currentProject || !judge.previousProject) {
+          throw new Error(
+            'Current Project or previous Project was not defined during vote operation',
+            { cause: JudgeErrorCode.MissingProjectForVote },
+          );
+        }
+
+        // VOTE CREATION
+        vote = new ExpoJudgingVote({
+          judge: judge.toReference(),
+          previousProject: judge.previousProject,
+          currentProject: judge.currentProject,
+          currentProjectChosen: args.currentProjectChosen,
+          judgingSession: args.expoJudgingSession.toReference(),
+        });
+        em.persist(vote);
+      }
+
+      // Update the previous project (as needed) and release current project
+      if (judge.currentProject) {
+        if (args.action !== 'skip') {
+          // Only update the previous project when action is NOT skip
+          judge.previousProject = judge.currentProject;
+        }
+        await judge.currentProject.getEntity().decrementActiveJudgeCount({ entityManager });
+      }
+
+      // Get a new project for the judge and assign it
+      const nextProject = await judge.getNextProject({
+        entityManager,
+        excludedProjectIds: judge.expoJudgingVotes.getIdentifiers(),
+      });
+
+      if (nextProject) {
+        judge.currentProject = nextProject.toReference();
+        await nextProject.incrementActiveJudgeCount({ entityManager });
+        await nextProject.incrementJudgeVisits({ entityManager });
+      }
+
+      em.persist(judge);
     });
 
-    this.currentProject = newProject?.toReference(); // ? newProject.id : null;
-    await entityManager.persistAndFlush(this);
-    return newProject;
+    await entityManager.refresh(this);
+
+    if (args.action === 'vote') {
+      return vote as ExpoJudgingVote;
+    }
+    return undefined;
   }
 
-  async continue({ entityManager }: { entityManager: em }): Promise<void> {
-    await this.recordCurrentProjectAndSave({ entityManager, updatePrevious: true });
+  async continue({ entityManager }: { entityManager: EntityManager }): Promise<void> {
+    await this.releaseProjectAndContinue({ entityManager, action: 'continue' });
   }
 
-  async skip({ entityManager }: { entityManager: em }): Promise<void> {
-    const updatePrevious = false;
-    await this.recordCurrentProjectAndSave({ entityManager, updatePrevious });
+  async skip({ entityManager }: { entityManager: EntityManager }): Promise<void> {
+    await this.releaseProjectAndContinue({ entityManager, action: 'skip' });
   }
 
   async vote({
     entityManager,
     currentProjectChosen,
-    judgingSession,
+    expoJudgingSession,
   }: {
-    entityManager: em;
+    entityManager: EntityManager;
     currentProjectChosen: boolean;
-    judgingSession: JudgingSession;
-  }): Promise<void> {
-    if (!this.currentProject || !this.previousProject) {
-      throw new Error('Current Project or previous Project was not defined during vote operation');
-    }
-    // Create a new vote object with the outcome of the vote
-    await entityManager.persistAndFlush(
-      new ExpoJudgingVote({
-        judge: this.toReference(),
-        previousProject: this.previousProject,
-        currentProject: this.currentProject,
-        currentProjectChosen,
-        judgingSession: judgingSession.toReference(),
-      }),
-    );
-    await this.recordCurrentProjectAndSave({ entityManager, updatePrevious: true });
-  }
-
-  async recordCurrentProjectAndSave({
-    entityManager,
-    updatePrevious = true,
-  }: {
-    entityManager: em;
-    updatePrevious: boolean;
-  }): Promise<void> {
-    if (!this.currentProject) {
-      throw new Error('Current Project was not defined during save operation');
-    }
-
-    if (updatePrevious) {
-      this.previousProject = this.currentProject;
-    }
-
-    if (this.currentProject) {
-      const currentProject = await entityManager.findOne(Project, { id: this.currentProject.id });
-
-      if (currentProject) {
-        await Project.decrementActiveJudgeCount({ project: currentProject, entityManager });
-        await Project.incrementJudgeVisits({ project: currentProject, entityManager });
-      }
-
-      this.currentProject = undefined;
-      await entityManager.persistAndFlush(this);
-    }
+    expoJudgingSession: JudgingSession;
+  }): Promise<ExpoJudgingVote> {
+    return this.releaseProjectAndContinue({
+      entityManager,
+      action: 'vote',
+      currentProjectChosen,
+      expoJudgingSession,
+    });
   }
 }

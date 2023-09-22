@@ -36,7 +36,7 @@ export const post = async (req: Request, res: Response) => {
     const expoJudgingVote = await judge.vote({
       entityManager,
       currentProjectChosen,
-      judgingSession: expoJudgingSession,
+      expoJudgingSession,
     });
 
     res.send(expoJudgingVote);
