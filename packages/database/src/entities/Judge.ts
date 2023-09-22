@@ -81,9 +81,9 @@ export class Judge extends Node<Judge> {
    *
    * @param args {@link ReleaseAndContinueBaseArgs}
    */
-  private releaseAndContinue(args: VoteReleaseAndContinueArgs): Promise<ExpoJudgingVote>;
-  private releaseAndContinue(args: SkipOrContinueArgs): Promise<undefined>;
-  private async releaseAndContinue(args: ReleaseAndContinueArgs) {
+  private releaseProjectAndContinue(args: VoteReleaseAndContinueArgs): Promise<ExpoJudgingVote>;
+  private releaseProjectAndContinue(args: SkipOrContinueArgs): Promise<undefined>;
+  private async releaseProjectAndContinue(args: ReleaseAndContinueArgs) {
     const { entityManager } = args;
     let vote: ExpoJudgingVote | undefined;
     await entityManager.transactional(async (em) => {
@@ -164,11 +164,11 @@ export class Judge extends Node<Judge> {
   }
 
   async continue({ entityManager }: { entityManager: EntityManager }): Promise<void> {
-    await this.releaseAndContinue({ entityManager, action: 'continue' });
+    await this.releaseProjectAndContinue({ entityManager, action: 'continue' });
   }
 
   async skip({ entityManager }: { entityManager: EntityManager }): Promise<void> {
-    await this.releaseAndContinue({ entityManager, action: 'skip' });
+    await this.releaseProjectAndContinue({ entityManager, action: 'skip' });
   }
 
   async vote({
@@ -180,7 +180,7 @@ export class Judge extends Node<Judge> {
     currentProjectChosen: boolean;
     expoJudgingSession: JudgingSession;
   }): Promise<ExpoJudgingVote> {
-    return this.releaseAndContinue({
+    return this.releaseProjectAndContinue({
       entityManager,
       action: 'vote',
       currentProjectChosen,
