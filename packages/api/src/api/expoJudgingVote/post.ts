@@ -6,7 +6,6 @@ import { logger } from '../../utils/logger';
 
 export const post = async (req: Request, res: Response) => {
   const { entityManager, judge } = req;
-  
   const { errorHandled, data } = validatePayload({
     req,
     res,
@@ -18,15 +17,15 @@ export const post = async (req: Request, res: Response) => {
   
   try{
     const expoJudgingSession = await entityManager.findOne(ExpoJudgingSession, {id:expoJudgingSessionId}) ?? undefined;
-    await entityManager.populate(judge,['expoJudgingSessions']);
-    const hasPermission = judge.expoJudgingSessions.getItems().some( ({id}) =>
-      id===expoJudgingSessionId
-    )
-    
     if (!expoJudgingSession) {
       res.sendStatus(404);
       return;
     }
+    
+    await entityManager.populate(judge,['expoJudgingSessions']);
+    const hasPermission = judge.expoJudgingSessions.getItems().some( ({id}) =>
+      id===expoJudgingSessionId
+    )
     
     if(!hasPermission) {
       res.sendStatus(403);
