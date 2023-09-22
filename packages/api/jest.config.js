@@ -7,7 +7,12 @@ module.exports = {
   clearMocks: true,
   testPathIgnorePatterns: ['/node_modules/'],
   coverageDirectory: './coverage',
-  collectCoverageFrom: ['./src/**/*.ts', '!./src/@types/**', '!./src/env.ts', '!./src/slack/*'],
+  collectCoverageFrom: [
+    './src/**/*.ts',
+    '!./src/@types/**',
+    '!./src/env.ts',
+    '!./src/slack/index.ts',
+  ],
   coverageThreshold: {
     global: {
       statements: 100,
