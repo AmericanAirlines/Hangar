@@ -13,7 +13,7 @@ import { Project } from '../../entities/Project';
  * @returns A {@link Project} if one could be found
  */
 export const getNextProject = async ({
-  excludedProjectIds = [],
+  excludedProjectIds,
   entityManager,
 }: {
   excludedProjectIds: string[];

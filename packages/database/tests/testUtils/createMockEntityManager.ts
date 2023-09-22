@@ -4,7 +4,14 @@ type MockEntityManagerDefaults = Partial<jest.Mocked<EntityManager>>;
 type MockedEntityManager = jest.Mocked<
   Pick<
     EntityManager,
-    'find' | 'findOne' | 'findOneOrFail' | 'flush' | 'persist' | 'persistAndFlush' | 'transactional'
+    | 'find'
+    | 'findOne'
+    | 'findOneOrFail'
+    | 'flush'
+    | 'persist'
+    | 'persistAndFlush'
+    | 'refresh'
+    | 'transactional'
   >
 >;
 
@@ -18,6 +25,7 @@ export const createMockEntityManager = (
     flush: jest.fn(),
     persist: jest.fn(),
     persistAndFlush: jest.fn(),
+    refresh: jest.fn(),
     transactional: jest.fn(),
     ...defaults,
   };
