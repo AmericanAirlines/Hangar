@@ -8,8 +8,9 @@ describe('formatSlackRedirectUri', () => {
     mockEnv({ baseUrl });
     const returnTo = '/api/health';
     const redirectUri = formatSlackRedirectUri({ returnTo });
+    const encodedQueryValue = encodeURIComponent(returnTo);
     expect(redirectUri).toEqual(
-      `${baseUrl}/api/auth/callback/slack?${Config.global.authReturnUriParamName}=${returnTo}`,
+      `${baseUrl}/api/auth/callback/slack?${Config.global.authReturnUriParamName}=${encodedQueryValue}`,
     );
   });
 

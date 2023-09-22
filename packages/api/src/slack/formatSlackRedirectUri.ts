@@ -6,6 +6,12 @@ type FormatSlackRedirectUriArgs = {
 };
 
 export const formatSlackRedirectUri = ({ returnTo }: FormatSlackRedirectUriArgs = {}) => {
-  const returnToQuery = returnTo ? `?${Config.global.authReturnUriParamName}=${returnTo}` : '';
+  const params = new URLSearchParams();
+  if (returnTo) {
+    params.append(Config.global.authReturnUriParamName, returnTo);
+  }
+
+  const paramsString = params.toString();
+  const returnToQuery = paramsString ? `?${paramsString}` : '';
   return `${env.baseUrl ?? ''}/api/auth/callback/slack${returnToQuery}`;
 };
