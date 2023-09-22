@@ -1,16 +1,17 @@
 import * as Slack from '@slack/web-api';
+import { Config } from '@hangar/shared';
 import jwt_decode from 'jwt-decode';
 import { SlackTokenData, get } from '../../../../../src/api/auth/callback/slack/get';
 import { getMock } from '../../../../testUtils/getMock';
 import { authenticateUser } from '../../../../../src/utils/authenticateUser';
-import { mockEnv } from '../../../../testUtils/mockEnv';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
-import { Config } from '@hangar/shared';
+import { formatSlackRedirectUri } from '../../../../../src/slack/formatSlackRedirectUri';
 
 jest.mock('@slack/web-api');
 jest.mock('jwt-decode');
 jest.mock('../../../../../src/utils/authenticateUser');
+jest.mock('../../../../../src/slack/formatSlackRedirectUri');
 
 const mockToken = {
   ok: true,
@@ -21,6 +22,7 @@ const mockToken = {
 const jwtDecodeMock = getMock(jwt_decode);
 const webClientSpy = jest.spyOn(Slack, 'WebClient');
 const authenticateUserMock = getMock(authenticateUser);
+const formatSlackRedirectUriMock = getMock(formatSlackRedirectUri);
 
 describe('Slack auth callback', () => {
   describe('handler', () => {
@@ -38,6 +40,8 @@ describe('Slack auth callback', () => {
       const mockReq = createMockRequest({
         query: { code: 'mockCode', [Config.global.authReturnUriParamName]: returnToMock },
       });
+      const mockRedirectUri = 'pancakes';
+      formatSlackRedirectUriMock.mockReturnValueOnce(mockRedirectUri);
 
       await get(mockReq as any, {} as any);
 
@@ -45,7 +49,7 @@ describe('Slack auth callback', () => {
       expect(mockTokenMethod).toHaveBeenCalledWith(
         expect.objectContaining({
           code: mockReq.query.code,
-          redirect_uri: expect.stringContaining('/api/auth/callback/slack'),
+          redirect_uri: mockRedirectUri,
         }),
       );
       expect(authenticateUserMock).toHaveBeenCalledWith(
@@ -70,25 +74,6 @@ describe('Slack auth callback', () => {
       await get(mockReq as any, mockRes as any);
 
       expect(mockRes.redirect).toBeCalledWith(expect.stringContaining('error'));
-    });
-  });
-
-  describe('callback URL', () => {
-    it('uses baseUrl if it exists', async () => {
-      await jest.isolateModulesAsync(async () => {
-        const mockBaseUrl = 'https://aa.com';
-        mockEnv({ baseUrl: mockBaseUrl });
-        const { slackCallbackUrl } = await import('../../../../../src/api/auth/callback/slack/get');
-        expect(slackCallbackUrl).toBe(`${mockBaseUrl}/api/auth/callback/slack`);
-      });
-    });
-
-    it('defaults to an empty string if baseUrl is undefined', async () => {
-      await jest.isolateModulesAsync(async () => {
-        mockEnv();
-        const { slackCallbackUrl } = await import('../../../../../src/api/auth/callback/slack/get');
-        expect(slackCallbackUrl).toBe(`/api/auth/callback/slack`);
-      });
     });
   });
 });
