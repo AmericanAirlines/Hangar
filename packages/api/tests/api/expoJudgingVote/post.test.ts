@@ -51,7 +51,6 @@ describe('ExpoJudgingVote', () => {
     const res = createMockResponse();
     const { entityManager } = req;
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data: validReqData } as any);
-    // entityManager.findOne.mockResolvedValueOnce(null);
 
     await post(req as any, res as any);
 
