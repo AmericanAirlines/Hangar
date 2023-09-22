@@ -26,18 +26,18 @@ export type JudgeConstructorValues = ConstructorValues<
   'currentProject' | 'previousProject' | 'expoJudgingSessions' | 'expoJudgingVotes'
 >;
 
-type ReleaseAndContinueBaseArgs = {
+type ReleaseProjectAndContinueBaseArgs = {
   entityManager: EntityManager;
 };
-type VoteReleaseAndContinueArgs = ReleaseAndContinueBaseArgs & {
+type VoteAndReleaseProjectArgs = ReleaseProjectAndContinueBaseArgs & {
   action: 'vote';
   currentProjectChosen: boolean;
   expoJudgingSession: ExpoJudgingSession;
 };
-type SkipOrContinueArgs = ReleaseAndContinueBaseArgs & {
+type SkipOrContinueAndReleaseProjectArgs = ReleaseProjectAndContinueBaseArgs & {
   action: 'continue' | 'skip';
 };
-type ReleaseAndContinueArgs = VoteReleaseAndContinueArgs | SkipOrContinueArgs;
+type ReleaseAndContinueArgs = VoteAndReleaseProjectArgs | SkipOrContinueAndReleaseProjectArgs;
 
 export enum JudgeErrorCode {
   UnableToLockJudge = 'Judge was locked by another process; unable to proceed',
@@ -79,10 +79,10 @@ export class Judge extends Node<Judge> {
    *
    * @throws an error with a {@link JudgingErrorCode} if criteria relevant to an action is not met
    *
-   * @param args {@link ReleaseAndContinueBaseArgs}
+   * @param args {@link ReleaseProjectAndContinueBaseArgs}
    */
-  private releaseProjectAndContinue(args: VoteReleaseAndContinueArgs): Promise<ExpoJudgingVote>;
-  private releaseProjectAndContinue(args: SkipOrContinueArgs): Promise<undefined>;
+  private releaseProjectAndContinue(args: VoteAndReleaseProjectArgs): Promise<ExpoJudgingVote>;
+  private releaseProjectAndContinue(args: SkipOrContinueAndReleaseProjectArgs): Promise<undefined>;
   private async releaseProjectAndContinue(args: ReleaseAndContinueArgs) {
     const { entityManager } = args;
     let vote: ExpoJudgingVote | undefined;
