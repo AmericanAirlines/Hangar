@@ -1,5 +1,5 @@
 import { z } from 'zod';
 
-export const put = z.object({
-  inviteCode: z.string().uuid().optional(),
+export const commonSchema = z.object({
+  inviteCode: z.string().uuid(),
 });

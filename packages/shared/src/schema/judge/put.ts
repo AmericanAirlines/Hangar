@@ -1,5 +1,6 @@
 import { z } from 'zod';
+import { commonSchema } from './common';
 
 export const put = z.object({
-  inviteCode: z.string().uuid(),
+  ...commonSchema.shape,
 });
