@@ -4,7 +4,7 @@ import { commonSchema } from '../../../src/schema/judge';
 
 describe('validate post schema', () => {
   it('should merge correctly with commonSchema', () => {
-    const mergedSchema = commonSchema.merge(Schema.judge.post);
+    const mergedSchema = commonSchema.merge(Schema.judge.put);
     expect(
       mergedSchema.safeParse({
         inviteCode: `${v4()}`,
