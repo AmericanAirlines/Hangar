@@ -1,11 +1,12 @@
 import { v4 } from 'uuid';
 import { Schema } from '../../../src';
+import { commonSchema } from '../../../src/schema/judge';
 
-describe('Post Schema', () => {
-  it('should merge correctly with commonSchema', () => {
-    // const mergedSchema = commonSchema.merge(post);
+describe('validate post schema', () => {
+  it(' checks fo', () => {
+    const mergedSchema = commonSchema.merge(Schema.judge.post);
     expect(
-      Schema.judge.post.safeParse({
+      mergedSchema.safeParse({
         inviteCode: `${v4()}`,
       }).success,
     ).toBe(true);
