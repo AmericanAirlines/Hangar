@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { Judge } from '@hangar/database';
+import { ExpoJudgingSessionContext, Judge } from '@hangar/database';
 import { put } from '../../../src/api/judge/put';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
@@ -8,6 +8,7 @@ import { validatePayload } from '../../../src/utils/validatePayload';
 
 jest.mock('@hangar/database', () => ({
   Judge: jest.fn(),
+  ExpoJudgingSessionContext: jest.fn(),
 }));
 
 jest.mock('../../../src/utils/validatePayload');
@@ -62,7 +63,7 @@ describe('judge put endpoint', () => {
       errorHandled: false,
       data: { inviteCode: 'xyz' },
     } as any);
-    const mockJudge = { expoJudgingSessions: { add: jest.fn() } };
+    const mockJudge = { expoJudgingSessionContexts: { add: jest.fn() } };
 
     const req = createMockRequest({
       query: { inviteCode: 'xyz' },
@@ -73,11 +74,15 @@ describe('judge put endpoint', () => {
     req.entityManager.findOne.mockReturnValueOnce(mockExpoJudgingSession as any);
 
     const res = createMockResponse();
+    const mockExpoJudgingSessionContext = {};
+    (ExpoJudgingSessionContext.prototype.constructor as jest.Mock).mockReturnValueOnce(
+      mockExpoJudgingSessionContext,
+    );
 
     await put(req as any, res as any);
 
     expect(req.entityManager.findOne).toBeCalledTimes(1);
-    expect(mockJudge.expoJudgingSessions.add).toBeCalledWith(mockExpoJudgingSession);
+    expect(mockJudge.expoJudgingSessionContexts.add).toBeCalledWith(mockExpoJudgingSessionContext);
     expect(req.entityManager.persistAndFlush).toBeCalledTimes(1);
     expect(res.send).toHaveBeenLastCalledWith(mockJudge);
   });
