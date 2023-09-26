@@ -77,6 +77,18 @@
 
    To run migrations locally, use `yarn migrate` from the root. If you ever want to replace your db contents with a fresh setup, run `yarn db:fresh`.
 
+   If you need to make a new migration, simply run `yarn workspace @hangar/database migration:create`. There are also scripts for running the `up` and `down` commands: `migration:up` and `migration:down` respectively.
+
+   ##### Reverting a migration locally
+
+   After creating a migration locally that needs to be reverted, follow the process below to revert your local DB state:
+
+   - Run `yarn @hangar/database migration:down`
+   - Delete the new migration
+   - Run `yarn @hangar/database snapshot:reset`
+     - ⚠️ This will overwrite ANY changes made to your DB structure, not just the last migration
+   - Begin the migration creation process again
+
    #### Updating Mikro-ORM
 
    The process to update all packages is a little painful because ALL Mikro-ORM dependencies across BOTH packages must be kept in sync. Run both commands below (after modifying the version to match whatever target needed)
@@ -96,17 +108,17 @@
    ⚠️ **WARNING**: Make sure to follow these steps closely. Making an error below has the potential to overwrite production data if your token allows for write access.
 
    1. Open TablePlus (no need to connect to a DB)
-   1. Go to `File > Backup` (Windows steps TBD), choose your **production** database connection
-   1. Select the prod database
-   1. Make sure the Postgres version is `PostgreSQL 14.0` and set the options to be `--no-owner` and `--format=custom`
-   1. Click `Start Backup`
-   1. (_OPTIONAL_) Drop all current data to ensure your local copy is an exact replica, otherwise some local data may persist
+   2. Go to `File > Backup` (Windows steps TBD), choose your **production** database connection
+   3. Select the prod database
+   4. Make sure the Postgres version is `PostgreSQL 14.0` and set the options to be `--no-owner` and `--format=custom`
+   5. Click `Start Backup`
+   6. (_OPTIONAL_) Drop all current data to ensure your local copy is an exact replica, otherwise some local data may persist
       1. Open a connection to your **local** database, select all tables and functions (`command + a` on macOS), right click, and choose "Delete"
-      1. When prompted, check the option for `Cascade` and click `OK`
-   1. Wait for the backup to finish and then go to `File > Restore` (Windows steps TBD), choose your **local** database connection
-   1. Remove all flags from the left hand side (primarily, `--single-transaction` which will cause your restore to fail on conflict)
-   1. Select your database on the right hand side
-   1. Click `Start restore`
+      2. When prompted, check the option for `Cascade` and click `OK`
+   7. Wait for the backup to finish and then go to `File > Restore` (Windows steps TBD), choose your **local** database connection
+   8. Remove all flags from the left hand side (primarily, `--single-transaction` which will cause your restore to fail on conflict)
+   9. Select your database on the right hand side
+   10. Click `Start restore`
 
    #### Restarting Table Sequences
 
