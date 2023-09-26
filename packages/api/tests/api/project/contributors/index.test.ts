@@ -18,7 +18,7 @@ describe('/project put endpoint registration', () => {
 
       const app = express();
       app.use(contributors);
-      const res = await supertest(app).put('')//.send({});
+      const res = await supertest(app).put(''); //.send({});
       expect(res.status).toEqual(200);
     });
   });

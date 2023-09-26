@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 import { Entity, Property, OneToMany, Collection, EntityDTO, raw } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/postgresql';
+import { v4 } from 'uuid';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 import { User } from './User';
-import { v4 } from 'uuid';
 
 export type ProjectDTO = EntityDTO<Project>;
 

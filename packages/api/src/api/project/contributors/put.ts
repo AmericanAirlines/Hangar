@@ -8,7 +8,11 @@ import { validatePayload } from '../../../utils/validatePayload';
 export const put = async (req: Request, res: Response) => {
   const { entityManager, user } = req;
 
-  const { errorHandled, data } = validatePayload({ req, res, schema: Schema.project.contributors.put });
+  const { errorHandled, data } = validatePayload({
+    req,
+    res,
+    schema: Schema.project.contributors.put,
+  });
   if (errorHandled) return;
 
   const project = await entityManager.findOneOrFail(Project, { id: data.projectId });
