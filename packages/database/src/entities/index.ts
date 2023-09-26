@@ -3,6 +3,7 @@ export * from './Admin';
 export * from './AppConfig';
 export * from './Event';
 export * from './ExpoJudgingSession';
+export * from './ExpoJudgingSessionContext';
 export * from './ExpoJudgingVote';
 export * from './Judge';
 export { JudgingSessionDTO } from './JudgingSession';

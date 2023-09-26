@@ -532,24 +532,6 @@
           "primary": false,
           "nullable": false,
           "mappedType": "bigint"
-        },
-        "currentProject": {
-          "name": "currentProject",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "bigint"
-        },
-        "previousProject": {
-          "name": "previousProject",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": true,
-          "mappedType": "bigint"
         }
       },
       "name": "Judge",
@@ -561,24 +543,6 @@
           ],
           "composite": false,
           "keyName": "Judge_user_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
-            "currentProject"
-          ],
-          "composite": false,
-          "keyName": "Judge_currentProject_unique",
-          "primary": false,
-          "unique": true
-        },
-        {
-          "columnNames": [
-            "previousProject"
-          ],
-          "composite": false,
-          "keyName": "Judge_previousProject_unique",
           "primary": false,
           "unique": true
         },
@@ -604,32 +568,6 @@
             "id"
           ],
           "referencedTableName": "public.User",
-          "updateRule": "cascade"
-        },
-        "Judge_currentProject_foreign": {
-          "constraintName": "Judge_currentProject_foreign",
-          "columnNames": [
-            "currentProject"
-          ],
-          "localTableName": "public.Judge",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.Project",
-          "deleteRule": "set null",
-          "updateRule": "cascade"
-        },
-        "Judge_previousProject_foreign": {
-          "constraintName": "Judge_previousProject_foreign",
-          "columnNames": [
-            "previousProject"
-          ],
-          "localTableName": "public.Judge",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.Project",
-          "deleteRule": "set null",
           "updateRule": "cascade"
         }
       },
@@ -721,72 +659,6 @@
             "id"
           ],
           "referencedTableName": "public.User",
-          "updateRule": "cascade"
-        }
-      },
-      "nativeEnums": {}
-    },
-    {
-      "columns": {
-        "judge": {
-          "name": "judge",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "bigint"
-        },
-        "expoJudgingSession": {
-          "name": "expoJudgingSession",
-          "type": "bigint",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "bigint"
-        }
-      },
-      "name": "Judge_expoJudgingSessions",
-      "schema": "public",
-      "indexes": [
-        {
-          "keyName": "Judge_expoJudgingSessions_pkey",
-          "columnNames": [
-            "judge",
-            "expoJudgingSession"
-          ],
-          "composite": true,
-          "primary": true,
-          "unique": true
-        }
-      ],
-      "checks": [],
-      "foreignKeys": {
-        "Judge_expoJudgingSessions_judge_foreign": {
-          "constraintName": "Judge_expoJudgingSessions_judge_foreign",
-          "columnNames": [
-            "judge"
-          ],
-          "localTableName": "public.Judge_expoJudgingSessions",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.Judge",
-          "deleteRule": "cascade",
-          "updateRule": "cascade"
-        },
-        "Judge_expoJudgingSessions_expoJudgingSession_foreign": {
-          "constraintName": "Judge_expoJudgingSessions_expoJudgingSession_foreign",
-          "columnNames": [
-            "expoJudgingSession"
-          ],
-          "localTableName": "public.Judge_expoJudgingSessions",
-          "referencedColumnNames": [
-            "id"
-          ],
-          "referencedTableName": "public.ExpoJudgingSession",
-          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },
@@ -932,6 +804,286 @@
             "id"
           ],
           "referencedTableName": "public.ExpoJudgingSession",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "judge": {
+          "name": "judge",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "expoJudgingSession": {
+          "name": "expoJudgingSession",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "currentProject": {
+          "name": "currentProject",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "bigint"
+        },
+        "previousProject": {
+          "name": "previousProject",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "ExpoJudgingSessionContext",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "ExpoJudgingSessionContext_judge_expoJudgingSession_unique",
+          "columnNames": [
+            "judge",
+            "expoJudgingSession"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "ExpoJudgingSessionContext_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "ExpoJudgingSessionContext_judge_foreign": {
+          "constraintName": "ExpoJudgingSessionContext_judge_foreign",
+          "columnNames": [
+            "judge"
+          ],
+          "localTableName": "public.ExpoJudgingSessionContext",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Judge",
+          "updateRule": "cascade"
+        },
+        "ExpoJudgingSessionContext_expoJudgingSession_foreign": {
+          "constraintName": "ExpoJudgingSessionContext_expoJudgingSession_foreign",
+          "columnNames": [
+            "expoJudgingSession"
+          ],
+          "localTableName": "public.ExpoJudgingSessionContext",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.ExpoJudgingSession",
+          "updateRule": "cascade"
+        },
+        "ExpoJudgingSessionContext_currentProject_foreign": {
+          "constraintName": "ExpoJudgingSessionContext_currentProject_foreign",
+          "columnNames": [
+            "currentProject"
+          ],
+          "localTableName": "public.ExpoJudgingSessionContext",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "ExpoJudgingSessionContext_previousProject_foreign": {
+          "constraintName": "ExpoJudgingSessionContext_previousProject_foreign",
+          "columnNames": [
+            "previousProject"
+          ],
+          "localTableName": "public.ExpoJudgingSessionContext",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "judge": {
+          "name": "judge",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "expoJudgingSessionContext": {
+          "name": "expoJudgingSessionContext",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "Judge_expoJudgingSessionContexts",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "Judge_expoJudgingSessionContexts_pkey",
+          "columnNames": [
+            "judge",
+            "expoJudgingSessionContext"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Judge_expoJudgingSessionContexts_judge_foreign": {
+          "constraintName": "Judge_expoJudgingSessionContexts_judge_foreign",
+          "columnNames": [
+            "judge"
+          ],
+          "localTableName": "public.Judge_expoJudgingSessionContexts",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Judge",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "Judge_expoJudgingSessionContexts_expoJudgingSessi_dd190_foreign": {
+          "constraintName": "Judge_expoJudgingSessionContexts_expoJudgingSessi_dd190_foreign",
+          "columnNames": [
+            "expoJudgingSessionContext"
+          ],
+          "localTableName": "public.Judge_expoJudgingSessionContexts",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.ExpoJudgingSessionContext",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "expoJudgingSession": {
+          "name": "expoJudgingSession",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "project": {
+          "name": "project",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "ExpoJudgingSession_projects",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "ExpoJudgingSession_projects_pkey",
+          "columnNames": [
+            "expoJudgingSession",
+            "project"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "ExpoJudgingSession_projects_expoJudgingSession_foreign": {
+          "constraintName": "ExpoJudgingSession_projects_expoJudgingSession_foreign",
+          "columnNames": [
+            "expoJudgingSession"
+          ],
+          "localTableName": "public.ExpoJudgingSession_projects",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.ExpoJudgingSession",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "ExpoJudgingSession_projects_project_foreign": {
+          "constraintName": "ExpoJudgingSession_projects_project_foreign",
+          "columnNames": [
+            "project"
+          ],
+          "localTableName": "public.ExpoJudgingSession_projects",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },
