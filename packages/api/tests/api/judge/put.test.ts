@@ -25,6 +25,22 @@ describe('judge put endpoint', () => {
     expect(req.entityManager.findOne).not.toHaveBeenCalled();
   });
 
+  it('should return 403 for an invalid inviteCode', async () => {
+    validatePayloadMock.mockReturnValueOnce({
+      errorHandled: false,
+      data: { inviteCode: 'xyz' },
+    } as any);
+
+    const req = createMockRequest({ query: { inviteCode: 'xyz' } });
+    const res = createMockResponse();
+    req.entityManager.findOne.mockResolvedValueOnce(null);
+
+    await put(req as any, res as any);
+
+    expect(req.entityManager.findOne).toBeCalledTimes(1);
+    expect(res.sendStatus).toHaveBeenLastCalledWith(403);
+  });
+
   it('should return a 409 if the user is already a judge', async () => {
     validatePayloadMock.mockReturnValueOnce({
       errorHandled: false,
