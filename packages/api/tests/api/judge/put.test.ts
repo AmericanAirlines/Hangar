@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Judge } from '@hangar/database';
 import { put } from '../../../src/api/judge/put';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
@@ -76,12 +77,12 @@ describe('judge put endpoint', () => {
     await put(req as any, res as any);
 
     expect(req.entityManager.findOne).toBeCalledTimes(1);
-
+    expect(mockJudge.expoJudgingSessions.add).toBeCalledWith(mockExpoJudgingSession);
     expect(req.entityManager.persistAndFlush).toBeCalledTimes(1);
     expect(res.send).toHaveBeenLastCalledWith(mockJudge);
   });
 
-  it('should return 500 when it fails to create a judge', async () => {
+  it('should return 500 when it fails to update a judge', async () => {
     const mockUserReference = { id: '1' };
 
     validatePayloadMock.mockReturnValueOnce({

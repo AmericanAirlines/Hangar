@@ -38,6 +38,6 @@ export const put = async (req: Request, res: Response) => {
     }
 
     res.sendStatus(500);
-    logger.error('Failed to create a judge', error);
+    logger.error('Failed to update a judge', error);
   }
 };
