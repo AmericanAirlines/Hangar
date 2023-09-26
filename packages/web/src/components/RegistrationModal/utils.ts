@@ -45,7 +45,13 @@ export const popupProps = ({
 
 export type RegistrationSchema = Omit<
   SerializedProject,
-  'id' | 'contributors' | 'judgeVisits' | 'activeJudgeCount' | 'createdAt' | 'updatedAt' | 'inviteCode'
+  | 'id'
+  | 'contributors'
+  | 'judgeVisits'
+  | 'activeJudgeCount'
+  | 'createdAt'
+  | 'updatedAt'
+  | 'inviteCode'
 >;
 export type RegistrationFormik = FormikProps<RegistrationSchema>;
 
