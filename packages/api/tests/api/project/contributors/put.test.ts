@@ -98,6 +98,7 @@ describe('project contributors put endpoint', () => {
     await put(req as any, res as any);
 
     expect(validatePayloadMock).toBeCalledTimes(1);
+    expect(req.entityManager.transactional).not.toBeCalled();
   });
 
   it('should return 404 if the project does not exist', async () => {
