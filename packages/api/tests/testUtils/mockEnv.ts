@@ -3,6 +3,7 @@ import { env } from '../../src/env';
 type Env = Partial<Record<keyof typeof env, string>>;
 
 const defaults: Env = {
+  nodeEnv: 'test',
   sessionSecret: 'tacocat',
 };
 

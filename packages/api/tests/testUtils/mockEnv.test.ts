@@ -16,6 +16,6 @@ describe('mockEnv', () => {
     // NOTE: This test must execute last
     // Normally a test should never do this
     expect(env.sessionSecret).toBe('tacocat');
-    expect(env.nodeEnv).toBe(undefined);
+    expect(env.nodeEnv).toBe('test');
   });
 });

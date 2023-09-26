@@ -1,14 +1,9 @@
 /* istanbul ignore file */
-import { Entity, Property, OneToMany, Collection, QueryResult, EntityDTO } from '@mikro-orm/core';
-import { EntityManager as em } from '@mikro-orm/postgresql';
+import { Entity, Property, OneToMany, Collection, EntityDTO, raw } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 import { User } from './User';
-import {
-  decrementActiveJudgeCount,
-  incrementJudgeVisits,
-  getNextAvailableProjectExcludingProjects,
-} from '../entitiesUtils';
 
 export type ProjectDTO = EntityDTO<Project>;
 
@@ -17,6 +12,13 @@ export type ProjectConstructorValues = ConstructorValues<
   'contributors' | 'judgeVisits' | 'activeJudgeCount',
   'location'
 >;
+
+type ActiveJudgeCountModifierArgs = {
+  entityManager: EntityManager;
+};
+type UpdateActiveJudgeCountArgs = ActiveJudgeCountModifierArgs & {
+  action: 'increment' | 'decrement';
+};
 
 @Entity()
 export class Project extends Node<Project> {
@@ -49,24 +51,35 @@ export class Project extends Node<Project> {
     this.repoUrl = repoUrl;
   }
 
-  static getNextAvailableProjectExcludingProjects = getNextAvailableProjectExcludingProjects;
-
-  /* istanbul ignore next */
-  static async updateSelectedProject({
-    project,
-    entityManager,
-  }: {
-    project: Project;
-    entityManager: em;
-  }): Promise<QueryResult<Project>> {
-    return entityManager
-      .createQueryBuilder(Project)
-      .update({ activeJudgeCount: project.activeJudgeCount + 1 })
-      .where({ id: project.id })
-      .execute();
+  async incrementActiveJudgeCount({ entityManager }: ActiveJudgeCountModifierArgs) {
+    await this.updateActiveJudgeCount({ entityManager, action: 'increment' });
   }
 
-  static decrementActiveJudgeCount = decrementActiveJudgeCount;
+  async decrementActiveJudgeCount({ entityManager }: ActiveJudgeCountModifierArgs) {
+    await this.updateActiveJudgeCount({ entityManager, action: 'decrement' });
+  }
 
-  static incrementJudgeVisits = incrementJudgeVisits;
+  private async updateActiveJudgeCount({ entityManager, action }: UpdateActiveJudgeCountArgs) {
+    const qb = entityManager.createQueryBuilder(Project);
+    const activeJudgeCountColumnName =
+      entityManager.getMetadata(Project).properties.activeJudgeCount.name;
+    await qb
+      .update({
+        activeJudgeCount: raw(
+          `"${activeJudgeCountColumnName}" ${action === 'increment' ? '+' : '-'} 1`,
+        ),
+      })
+      .where({ id: this.id });
+  }
+
+  async incrementJudgeVisits({ entityManager }: ActiveJudgeCountModifierArgs) {
+    const qb = entityManager.createQueryBuilder(Project);
+    const judgeVisitsColumnName =
+      entityManager.getMetadata(Project).properties.activeJudgeCount.name;
+    await qb
+      .update({
+        judgeVisits: raw(`"${judgeVisitsColumnName}" + 1`),
+      })
+      .where({ id: this.id });
+  }
 }

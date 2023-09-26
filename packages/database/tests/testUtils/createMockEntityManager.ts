@@ -1,18 +1,32 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 
 type MockEntityManagerDefaults = Partial<jest.Mocked<EntityManager>>;
+type MockedEntityManager = jest.Mocked<
+  Pick<
+    EntityManager,
+    | 'find'
+    | 'findOne'
+    | 'findOneOrFail'
+    | 'flush'
+    | 'persist'
+    | 'persistAndFlush'
+    | 'refresh'
+    | 'transactional'
+  >
+>;
 
-export const createMockEntityManager = (defaults?: MockEntityManagerDefaults) => {
+export const createMockEntityManager = (
+  defaults?: MockEntityManagerDefaults,
+): MockedEntityManager => {
   const em = {
-    getConnection: jest.fn().mockReturnValue({ isConnected: jest.fn().mockReturnValue(true) }),
     find: jest.fn(),
     findOne: jest.fn(),
     findOneOrFail: jest.fn(),
     flush: jest.fn(),
     persist: jest.fn(),
     persistAndFlush: jest.fn(),
+    refresh: jest.fn(),
     transactional: jest.fn(),
-    populate: jest.fn(),
     ...defaults,
   };
 

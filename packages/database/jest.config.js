@@ -7,7 +7,7 @@ module.exports = {
   clearMocks: true,
   testPathIgnorePatterns: ['/node_modules/'],
   coverageDirectory: './coverage',
-  collectCoverageFrom: ['./src/**/*.ts', '!./src/**/*.d.ts', '!./src/@types/**'],
+  collectCoverageFrom: ['./src/**/*.ts', '!./src/seeds', '!./src/migrations'],
   // coverageThreshold: {
   //   global: {
   //     statements: 100,
