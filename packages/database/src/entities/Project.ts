@@ -4,13 +4,14 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
 import { User } from './User';
+import { v4 } from 'uuid';
 
 export type ProjectDTO = EntityDTO<Project>;
 
 export type ProjectConstructorValues = ConstructorValues<
   Project,
   'contributors' | 'judgeVisits' | 'activeJudgeCount',
-  'location'
+  'location' | 'inviteCode'
 >;
 
 type ActiveJudgeCountModifierArgs = {
@@ -22,6 +23,9 @@ type UpdateActiveJudgeCountArgs = ActiveJudgeCountModifierArgs & {
 
 @Entity()
 export class Project extends Node<Project> {
+  @Property({ unique: true })
+  inviteCode: string = v4();
+
   @Property({ columnType: 'text' })
   name: string;
 
