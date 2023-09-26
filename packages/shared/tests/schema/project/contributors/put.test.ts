@@ -3,7 +3,7 @@ import { Schema } from '../../../../src';
 
 const validPut = {
   projectId: '1',
-  inviteCode: `${v4()}`,
+  inviteCode: v4(),
 };
 
 describe('project contributors put schema', () => {
