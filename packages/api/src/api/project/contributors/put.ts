@@ -13,7 +13,7 @@ export const put = async (req: Request, res: Response) => {
 
   const project = await entityManager.findOneOrFail(Project, { id: data.projectId });
   if (project.inviteCode !== data.inviteCode) {
-    res.status(400).send('Invalid invite code');
+    res.sendStatus(404);
     return;
   }
 

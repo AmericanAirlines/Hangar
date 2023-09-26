@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { put } from './put';
 
-export const members = Router();
+export const contributors = Router();
 
-members.post('', put);
+contributors.put('', put);

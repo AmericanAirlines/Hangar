@@ -1,2 +1,2 @@
 export * from './post';
-export * from './put';
+export * as contributors from './contributors';

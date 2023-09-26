@@ -10,8 +10,8 @@ export type ProjectDTO = EntityDTO<Project>;
 
 export type ProjectConstructorValues = ConstructorValues<
   Project,
-  'contributors' | 'judgeVisits' | 'activeJudgeCount',
-  'location' | 'inviteCode'
+  'contributors' | 'judgeVisits' | 'activeJudgeCount' | 'inviteCode',
+  'location'
 >;
 
 type ActiveJudgeCountModifierArgs = {
@@ -23,7 +23,7 @@ type UpdateActiveJudgeCountArgs = ActiveJudgeCountModifierArgs & {
 
 @Entity()
 export class Project extends Node<Project> {
-  @Property({ unique: true })
+  @Property({ columnType: 'text', unique: true })
   inviteCode: string = v4();
 
   @Property({ columnType: 'text' })
