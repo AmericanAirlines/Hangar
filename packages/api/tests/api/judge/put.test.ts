@@ -63,14 +63,14 @@ describe('judge put endpoint', () => {
       errorHandled: false,
       data: { inviteCode: 'xyz' },
     } as any);
-    const mockJudge = { expoJudgingSessionContexts: { add: jest.fn() } };
+    const mockJudge = { toReference: jest.fn(), expoJudgingSessionContexts: { add: jest.fn() } };
 
     const req = createMockRequest({
       query: { inviteCode: 'xyz' },
       judge: mockJudge as any,
     });
 
-    const mockExpoJudgingSession = { garbage: true };
+    const mockExpoJudgingSession = { toReference: jest.fn() };
     req.entityManager.findOne.mockReturnValueOnce(mockExpoJudgingSession as any);
 
     const res = createMockResponse();
