@@ -11,7 +11,7 @@ const validPayload = { projectId: '1', inviteCode: '00000000-0000-0000-0000-0000
 const mockUser = { id: '1' };
 
 describe('project contributors put endpoint', () => {
-  it('should add a contributor to a project and return a projects contributors', async () => {
+  it('adds a contributor to a project and return a projects contributors', async () => {
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data: validPayload } as any);
     const req = createMockRequest({ user: mockUser, ...validPayload } as any);
     const res = createMockResponse();
