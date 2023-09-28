@@ -6,6 +6,7 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { Prizes } from '../components/Prizes';
 import { RegistrationModal } from '../components/RegistrationModal';
 import { usePrizesStore } from '../stores/prizes';
+import { GenericToast } from '../components/layout/AppLayout/GenericToast/GenericToast';
 
 const Home: NextPage = () => {
   const { doneLoading: prizesFetched } = usePrizesStore();
@@ -23,6 +24,8 @@ const Home: NextPage = () => {
     >
       <Box>
         <RegistrationModal />
+        {/* For testing */}
+        <GenericToast></GenericToast>
       </Box>
       <Flex direction="column" gap={5}>
         {Config.homepage.welcome.content.map((text) => (
