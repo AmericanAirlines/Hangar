@@ -300,6 +300,15 @@
           "default": "clock_timestamp()",
           "mappedType": "datetime"
         },
+        "inviteCode": {
+          "name": "inviteCode",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
         "name": {
           "name": "name",
           "type": "text",
@@ -358,6 +367,15 @@
       "name": "Project",
       "schema": "public",
       "indexes": [
+        {
+          "columnNames": [
+            "inviteCode"
+          ],
+          "composite": false,
+          "keyName": "Project_inviteCode_unique",
+          "primary": false,
+          "unique": true
+        },
         {
           "columnNames": [
             "location"
