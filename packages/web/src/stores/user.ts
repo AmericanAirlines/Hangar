@@ -2,6 +2,7 @@ import { SerializedUser, User } from '@hangar/shared';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import create from 'zustand';
+import { useCustomToast } from '../components/utils/CustomToast';
 
 type UserStore = {
   user?: User;
@@ -23,6 +24,10 @@ export const useUserStore = create<UserStore>((set) => ({
         // eslint-disable-next-line no-console
         console.error(error);
         // TODO: Show error toast
+        useCustomToast.getState().openErrorToast({
+          title: 'Failed to fetch user details',
+          description: (error as Error).message,
+        });
       }
     }
     set({ user, doneLoading: true });
