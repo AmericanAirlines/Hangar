@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20230926015657 extends Migration {
+export class Migration20230929015657 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table "ExpoJudgingSessionContext" ("id" bigserial primary key, "createdAt" timestamptz not null default clock_timestamp(), "updatedAt" timestamptz not null default clock_timestamp(), "judge" bigint not null, "expoJudgingSession" bigint not null, "currentProject" bigint null, "previousProject" bigint null);');
