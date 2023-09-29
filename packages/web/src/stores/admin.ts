@@ -2,6 +2,7 @@ import { SerializedAdmin, Admin } from '@hangar/shared';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import create from 'zustand';
+import { openErrorToast } from '../components/utils/CustomToast';
 
 type AdminStore = {
   admin?: Admin;
@@ -22,7 +23,10 @@ export const useAdminStore = create<AdminStore>((set) => ({
       if (!axios.isAxiosError(error) || error.status !== 401) {
         // eslint-disable-next-line no-console
         console.error(error);
-        // TODO: Show error toast
+        openErrorToast({
+          title: 'Failed to fetch admin details',
+          description: (error as Error).message,
+        });
       }
     }
     set({ admin, doneLoading: true });
