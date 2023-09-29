@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ExpoJudgingSession, Judge } from '@hangar/database';
+import { ExpoJudgingSessionContext, ExpoJudgingSession, Judge } from '@hangar/database';
 import { Schema } from '@hangar/shared';
 import { DriverException } from '@mikro-orm/core';
 import { logger } from '../../utils/logger';
@@ -18,17 +18,22 @@ export const post = async (req: Request, res: Response) => {
   if (errorHandled) return;
 
   try {
-    const judgingSession = await req.entityManager.findOne(ExpoJudgingSession, {
+    const expoJudgingSession = await req.entityManager.findOne(ExpoJudgingSession, {
       inviteCode: data.inviteCode,
     });
 
-    if (!judgingSession) {
+    if (!expoJudgingSession) {
       res.sendStatus(403);
       return;
     }
 
     const judge = new Judge({ user: user.toReference() });
-    judge.expoJudgingSessions.add(judgingSession);
+    judge.expoJudgingSessionContexts.add(
+      new ExpoJudgingSessionContext({
+        judge: judge.toReference(),
+        expoJudgingSession: expoJudgingSession.toReference(),
+      }),
+    );
 
     await entityManager.persistAndFlush(judge);
 

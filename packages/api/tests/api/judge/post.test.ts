@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { Judge } from '@hangar/database';
+import { ExpoJudgingSessionContext, Judge } from '@hangar/database';
 import { post } from '../../../src/api/judge/post';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
@@ -8,6 +8,7 @@ import { validatePayload } from '../../../src/utils/validatePayload';
 
 jest.mock('@hangar/database', () => ({
   Judge: jest.fn(),
+  ExpoJudgingSessionContext: jest.fn(),
 }));
 
 jest.mock('../../../src/utils/validatePayload');
@@ -69,12 +70,16 @@ describe('judge post endpoint', () => {
       query: { inviteCode: 'xyz' },
     });
 
-    const mockExpoJudgingSession = { garbage: true };
+    const mockExpoJudgingSession = { toReference: jest.fn() };
     req.entityManager.findOne.mockReturnValueOnce(mockExpoJudgingSession as any);
 
     const res = createMockResponse();
-    const mockJudge = { expoJudgingSessions: { add: jest.fn() } };
+    const mockJudge = { toReference: jest.fn(), expoJudgingSessionContexts: { add: jest.fn() } };
     (Judge.prototype.constructor as jest.Mock).mockReturnValueOnce(mockJudge);
+    const mockEjsContext = {};
+    (ExpoJudgingSessionContext.prototype.constructor as jest.Mock).mockReturnValueOnce(
+      mockEjsContext,
+    );
 
     await post(req as any, res as any);
 
@@ -82,6 +87,8 @@ describe('judge post endpoint', () => {
     expect(Judge.prototype.constructor as jest.Mock).toHaveBeenCalledWith({
       user: mockUserReference,
     });
+
+    expect(mockJudge.expoJudgingSessionContexts.add).toBeCalledWith(mockEjsContext);
 
     expect(req.entityManager.persistAndFlush).toBeCalled();
     expect(res.send).toHaveBeenLastCalledWith(mockJudge);

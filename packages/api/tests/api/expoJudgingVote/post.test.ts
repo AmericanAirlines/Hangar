@@ -16,8 +16,8 @@ const mockExpoJudgingVote = { id: '1' };
 const mockJudge: any = {
   id: '1',
   vote: jest.fn().mockResolvedValue(mockExpoJudgingVote),
-  expoJudgingSessions: {
-    getItems: jest.fn(() => [{ id: mockExpoJudgingSession.id }]),
+  expoJudgingSessionContexts: {
+    getItems: jest.fn(() => [{ expoJudgingSession: { id: mockExpoJudgingSession.id } }]),
   },
 };
 
@@ -38,7 +38,7 @@ describe('ExpoJudgingVote', () => {
     expect(entityManager.findOne).toHaveBeenCalledWith(ExpoJudgingSession, {
       id: validReqData.expoJudgingSessionId,
     });
-    expect(entityManager.populate).toHaveBeenCalledWith(req.judge, ['expoJudgingSessions']);
+    expect(entityManager.populate).toHaveBeenCalledWith(req.judge, ['expoJudgingSessionContexts']);
     expect(mockJudge.vote).toHaveBeenCalledWith({
       entityManager,
       currentProjectChosen: validReqData.currentProjectChosen,
@@ -80,7 +80,7 @@ describe('ExpoJudgingVote', () => {
     expect(entityManager.findOne).toHaveBeenCalledWith(ExpoJudgingSession, {
       id: mockBody.expoJudgingSessionId,
     });
-    expect(entityManager.populate).toHaveBeenCalledWith(req.judge, ['expoJudgingSessions']);
+    expect(entityManager.populate).toHaveBeenCalledWith(req.judge, ['expoJudgingSessionContexts']);
     expect(mockJudge.vote).not.toHaveBeenCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
