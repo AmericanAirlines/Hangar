@@ -79,6 +79,8 @@
 
    If you need to make a new migration, simply run `yarn workspace @hangar/database migration:create`. There are also scripts for running the `up` and `down` commands: `migration:up` and `migration:down` respectively.
 
+   If you need to incorporate a new migration from a recently merged feature branch, run ` yarn db:seed`; `db:seed` will perform the `migration:up` action and seed the db, potentially including data relevant to the new migration.
+
    ##### Reverting a migration locally
 
    After creating a migration locally that needs to be reverted, follow the process below to revert your local DB state:
