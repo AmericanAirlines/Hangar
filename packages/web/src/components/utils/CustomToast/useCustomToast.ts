@@ -12,7 +12,7 @@ type CustomToastStore = {
   openSuccessToast: (args: OpenSuccessToastArgs) => void;
 };
 
-const useCustomToast = create<CustomToastStore>((set) => ({
+export const useCustomToast = create<CustomToastStore>((set) => ({
   toastValues: undefined,
   openErrorToast: (args) => {
     set({ toastValues: { ...defaultErrorToastProps, ...args } });
