@@ -23,7 +23,6 @@ const Home: NextPage = () => {
     >
       <Box>
         <RegistrationModal />
-        {/* For testing */}
       </Box>
       <Flex direction="column" gap={5}>
         {Config.homepage.welcome.content.map((text) => (

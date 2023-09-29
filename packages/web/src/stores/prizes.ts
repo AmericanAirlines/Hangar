@@ -16,7 +16,6 @@ export const usePrizesStore = create<PrizesStore>((set) => ({
   fetchPrizes: async () => {
     let prizes: Prize[] | undefined;
     try {
-      throw new Error('Whoops');
       const res = await axios.get<SerializedPrize[]>('/api/prize');
       prizes = res.data.map(({ createdAt, updatedAt, ...rest }) => ({
         ...rest,

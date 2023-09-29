@@ -22,7 +22,7 @@ export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArg
       // eslint-disable-next-line no-console
       console.error(error);
       openErrorToast({
-        title: 'Failed to create Expo Judging Session details',
+        title: 'Failed to create Expo Judging Session',
         description: (error as Error).message,
       });
     }
