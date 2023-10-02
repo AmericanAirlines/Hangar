@@ -1,4 +1,4 @@
-import { Entity, EntityDTO, OneToOne, Unique, Ref } from '@mikro-orm/core';
+import { Entity, EntityDTO, OneToOne, Unique, Ref, ManyToOne } from '@mikro-orm/core';
 import { Judge } from './Judge';
 import { Project } from './Project';
 import { ExpoJudgingSession } from './ExpoJudgingSession';
@@ -10,7 +10,7 @@ type ConstructorArgs = Pick<ExpoJudgingSessionContext, 'judge' | 'expoJudgingSes
 @Entity()
 @Unique({ properties: ['judge', 'expoJudgingSession'] })
 export class ExpoJudgingSessionContext extends Node<ExpoJudgingSessionContext> {
-  @OneToOne({ entity: () => Judge, ref: true, unique: false })
+  @ManyToOne({ entity: () => Judge, ref: true, unique: false })
   judge: Ref<Judge>;
 
   @OneToOne({ entity: () => ExpoJudgingSession, ref: true, unique: false })

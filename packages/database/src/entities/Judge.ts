@@ -59,7 +59,7 @@ export class Judge extends Node<Judge> {
   @OneToOne({ entity: () => User, ref: true, unique: true })
   user: Ref<User>;
 
-  @ManyToMany({ entity: () => ExpoJudgingSessionContext })
+  @OneToMany({ entity: () => ExpoJudgingSessionContext, mappedBy: (ejsc) => ejsc.judge })
   expoJudgingSessionContexts = new Collection<ExpoJudgingSessionContext>(this);
 
   @OneToMany({ entity: () => ExpoJudgingVote, mappedBy: (ejv) => ejv.judge })
