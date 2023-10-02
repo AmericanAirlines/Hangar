@@ -12,27 +12,27 @@ import {
 import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { ExpoJudgingVote } from './ExpoJudgingVote';
-import { Project } from './Project';
 import { Node } from './Node';
 import { User } from './User';
 import { JudgingSession } from './JudgingSession';
 import { ExpoJudgingSession } from './ExpoJudgingSession';
 import { getNextProject } from '../entitiesUtils';
+import { ExpoJudgingSessionContext } from './ExpoJudgingSessionContext';
 
 export type JudgeDTO = EntityDTO<Judge>;
 
 export type JudgeConstructorValues = ConstructorValues<
   Judge,
-  'currentProject' | 'previousProject' | 'expoJudgingSessions' | 'expoJudgingVotes'
+  'expoJudgingSessionContexts' | 'expoJudgingVotes'
 >;
 
 type ReleaseProjectAndContinueBaseArgs = {
   entityManager: EntityManager;
+  expoJudgingSession: ExpoJudgingSession;
 };
 type VoteAndReleaseProjectArgs = ReleaseProjectAndContinueBaseArgs & {
   action: 'vote';
   currentProjectChosen: boolean;
-  expoJudgingSession: ExpoJudgingSession;
 };
 type SkipOrContinueAndReleaseProjectArgs = ReleaseProjectAndContinueBaseArgs & {
   action: 'continue' | 'skip';
@@ -46,6 +46,8 @@ export enum JudgeErrorCode {
   MissingProjectForVote = 'Either current or past project was missing; cannot vote',
 }
 
+type SkipOrContinueArgs = { entityManager: EntityManager; expoJudgingSession: ExpoJudgingSession };
+
 @Entity()
 export class Judge extends Node<Judge> {
   constructor({ user }: JudgeConstructorValues) {
@@ -57,14 +59,8 @@ export class Judge extends Node<Judge> {
   @OneToOne({ entity: () => User, ref: true, unique: true })
   user: Ref<User>;
 
-  @OneToOne({ entity: () => Project, nullable: true, ref: true })
-  currentProject?: Ref<Project>;
-
-  @OneToOne({ entity: () => Project, nullable: true, ref: true })
-  previousProject?: Ref<Project>;
-
-  @ManyToMany({ entity: () => ExpoJudgingSession })
-  expoJudgingSessions = new Collection<ExpoJudgingSession>(this);
+  @ManyToMany({ entity: () => ExpoJudgingSessionContext })
+  expoJudgingSessionContexts = new Collection<ExpoJudgingSessionContext>(this);
 
   @OneToMany({ entity: () => ExpoJudgingVote, mappedBy: (ejv) => ejv.judge })
   expoJudgingVotes = new Collection<ExpoJudgingVote>(this);
@@ -84,36 +80,35 @@ export class Judge extends Node<Judge> {
   private releaseProjectAndContinue(args: VoteAndReleaseProjectArgs): Promise<ExpoJudgingVote>;
   private releaseProjectAndContinue(args: SkipOrContinueAndReleaseProjectArgs): Promise<undefined>;
   private async releaseProjectAndContinue(args: ReleaseAndContinueArgs) {
-    const { entityManager } = args;
+    const { entityManager, expoJudgingSession } = args;
     let vote: ExpoJudgingVote | undefined;
     await entityManager.transactional(async (em) => {
       // Lock the judge so we can ensure this execution is the only thing modifying the judge
-      const judge = await em.findOne(
-        Judge,
-        { id: this.id },
+      const context = await em.findOne(
+        ExpoJudgingSessionContext,
+        { judge: this.id, expoJudgingSession: expoJudgingSession.id },
         {
-          populate: ['expoJudgingVotes'],
           lockMode: LockMode.PESSIMISTIC_PARTIAL_WRITE, // Skip locked judges and handle below
         },
       );
 
-      if (!judge) {
+      if (!context) {
         throw new Error('Unable to lock Judge', { cause: JudgeErrorCode.UnableToLockJudge });
       }
 
       // PRE-REQUISITE CHECKING
-      if (args.action === 'continue' && judge.previousProject) {
+      if (args.action === 'continue' && context.previousProject) {
         // Judge has a previous project so they MUST vote instead of continuing
         throw new Error('Unable to continue when Judge has previous project', {
           cause: JudgeErrorCode.CannotContinue,
         });
-      } else if (args.action === 'skip' && !judge.currentProject) {
+      } else if (args.action === 'skip' && !context.currentProject) {
         throw new Error('Unable to continue when Judge has previous project', {
           cause: JudgeErrorCode.CannotSkip,
         });
       } else if (args.action === 'vote') {
         // Action is a vote; create the new vote if relevant criteria is met
-        if (!judge.currentProject || !judge.previousProject) {
+        if (!context.currentProject || !context.previousProject) {
           throw new Error(
             'Current Project or previous Project was not defined during vote operation',
             { cause: JudgeErrorCode.MissingProjectForVote },
@@ -122,9 +117,9 @@ export class Judge extends Node<Judge> {
 
         // VOTE CREATION
         vote = new ExpoJudgingVote({
-          judge: judge.toReference(),
-          previousProject: judge.previousProject,
-          currentProject: judge.currentProject,
+          judge: this.toReference(),
+          previousProject: context.previousProject,
+          currentProject: context.currentProject,
           currentProjectChosen: args.currentProjectChosen,
           judgingSession: args.expoJudgingSession.toReference(),
         });
@@ -132,27 +127,41 @@ export class Judge extends Node<Judge> {
       }
 
       // Update the previous project (as needed) and release current project
-      if (judge.currentProject) {
+      if (context.currentProject) {
         if (args.action !== 'skip') {
           // Only update the previous project when action is NOT skip
-          judge.previousProject = judge.currentProject;
+          context.previousProject = context.currentProject;
         }
-        await judge.currentProject.getEntity().decrementActiveJudgeCount({ entityManager });
+        await context.currentProject.getEntity().decrementActiveJudgeCount({ entityManager });
       }
 
+      const allExcludedProjectIds = this.expoJudgingVotes
+        .getItems()
+        .reduce(
+          (allIds, { currentProject, previousProject }) => [
+            ...allIds,
+            currentProject.id,
+            previousProject.id,
+          ],
+          [] as string[],
+        );
+      const uniqueExcludedProjectIds = Array.from(new Set(allExcludedProjectIds));
       // Get a new project for the judge and assign it
-      const nextProject = await judge.getNextProject({
+      const nextProject = await this.getNextProject({
         entityManager,
-        excludedProjectIds: judge.expoJudgingVotes.getIdentifiers(),
+        excludedProjectIds: uniqueExcludedProjectIds,
       });
 
       if (nextProject) {
-        judge.currentProject = nextProject.toReference();
+        context.currentProject = nextProject.toReference();
         await nextProject.incrementActiveJudgeCount({ entityManager });
         await nextProject.incrementJudgeVisits({ entityManager });
+      } else {
+        // No remaining projects left to assign
+        context.currentProject = undefined;
       }
 
-      em.persist(judge);
+      em.persist(context);
     });
 
     await entityManager.refresh(this);
@@ -163,12 +172,12 @@ export class Judge extends Node<Judge> {
     return undefined;
   }
 
-  async continue({ entityManager }: { entityManager: EntityManager }): Promise<void> {
-    await this.releaseProjectAndContinue({ entityManager, action: 'continue' });
+  async continue({ entityManager, expoJudgingSession }: SkipOrContinueArgs): Promise<void> {
+    await this.releaseProjectAndContinue({ entityManager, action: 'continue', expoJudgingSession });
   }
 
-  async skip({ entityManager }: { entityManager: EntityManager }): Promise<void> {
-    await this.releaseProjectAndContinue({ entityManager, action: 'skip' });
+  async skip({ entityManager, expoJudgingSession }: SkipOrContinueArgs): Promise<void> {
+    await this.releaseProjectAndContinue({ entityManager, action: 'skip', expoJudgingSession });
   }
 
   async vote({

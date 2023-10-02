@@ -30,7 +30,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.2.0",
     "zod": "^3.22.2",
-    "zustand": "^3.6.9"
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

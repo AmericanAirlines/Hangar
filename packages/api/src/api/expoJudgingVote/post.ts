@@ -23,10 +23,10 @@ export const post = async (req: Request, res: Response) => {
       return;
     }
 
-    await entityManager.populate(judge, ['expoJudgingSessions']);
-    const hasPermission = judge.expoJudgingSessions
+    await entityManager.populate(judge, ['expoJudgingSessionContexts']);
+    const hasPermission = judge.expoJudgingSessionContexts
       .getItems()
-      .some(({ id }) => id === expoJudgingSessionId);
+      .some(({ expoJudgingSession: ejs }) => ejs.id === expoJudgingSessionId);
 
     if (!hasPermission) {
       res.sendStatus(403);
