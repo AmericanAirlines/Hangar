@@ -3,6 +3,8 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { create } from 'zustand';
 import { openErrorToast } from '../components/utils/CustomToast';
+import { useAdminStore } from './admin';
+import { useJudgeStore } from './judge';
 
 type UserStore = {
   user?: User;
@@ -31,5 +33,9 @@ export const useUserStore = create<UserStore>((set) => ({
       }
     }
     set({ user, doneLoading: true });
+
+    // Load user-dependent stores
+    void useAdminStore.getState().fetchAdmin();
+    void useJudgeStore.getState().fetchJudge();
   },
 }));
