@@ -6,7 +6,7 @@ export const get = async (req: Request, res: Response) => {
   const {
     judge,
     entityManager: em,
-    query: { id: ejsId },
+    params: { id: ejsId },
   } = req;
 
   try {

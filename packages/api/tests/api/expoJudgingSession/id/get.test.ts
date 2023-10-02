@@ -13,7 +13,7 @@ describe('expoJudgingSession/id GET handler', () => {
     const mockJudge = {
       expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
     };
-    const req = createMockRequest({ query: { id: mockId }, judge: mockJudge as any });
+    const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
     const mockEjs = {};
     req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
 
@@ -44,7 +44,7 @@ describe('expoJudgingSession/id GET handler', () => {
     const mockJudge = {
       expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
     };
-    const req = createMockRequest({ query: { id: mockId }, judge: mockJudge as any });
+    const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
     const mockEjs = {};
     req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
 
