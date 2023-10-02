@@ -12,7 +12,7 @@
     "build": "yarn run build:deps && lerna run --scope @hangar/api --scope @hangar/web build --parallel --stream",
     "build:deps": "lerna run --scope @hangar/database --scope @hangar/shared --scope @hangar/web build --stream --concurrency=1",
     "build:deps:ifneeded": "node scripts/depsExist.js > /dev/null || yarn build:deps",
-    "migrate": "yarn workspace @hangar/database migrate",
+    "migrate": "yarn workspace @hangar/database migration:up",
     "db:fresh": "yarn workspace @hangar/database mikro-orm migration:fresh",
     "db:seed": "yarn db:fresh --seed DatabaseSeeder",
     "typecheck": "lerna run typecheck --concurrency=1 --stream --no-bail",
