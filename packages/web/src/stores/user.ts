@@ -1,7 +1,7 @@
 import { SerializedUser, User } from '@hangar/shared';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import create from 'zustand';
+import { create } from 'zustand';
 import { openErrorToast } from '../components/utils/CustomToast';
 
 type UserStore = {
@@ -20,7 +20,7 @@ export const useUserStore = create<UserStore>((set) => ({
       const { createdAt, updatedAt, ...rest } = res.data;
       user = { ...rest, createdAt: dayjs(createdAt), updatedAt: dayjs(updatedAt) };
     } catch (error) {
-      if (!axios.isAxiosError(error) || error.status !== 401) {
+      if (!axios.isAxiosError(error) || ![401, 403].includes(error.response?.status as number)) {
         // eslint-disable-next-line no-console
         console.error(error);
 
