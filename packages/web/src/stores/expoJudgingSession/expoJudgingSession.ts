@@ -1,5 +1,5 @@
 import { ExpoJudgingSession } from '@hangar/shared';
-import create from 'zustand';
+import { create } from 'zustand';
 import { fetchExpoJudgingSessions } from './fetchExpoJudgingSessions';
 import { createExpoJudgingSession } from './createExpoJudgingSession';
 
