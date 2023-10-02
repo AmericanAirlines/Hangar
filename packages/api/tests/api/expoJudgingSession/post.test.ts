@@ -22,15 +22,20 @@ describe('expoJudgingSession post endpoint', () => {
     const mockExpoJudgingSession = {
       createdBy: admin?.user,
       inviteCode: '00000000-0000-0000-0000-00000000000',
+      projects: { set: jest.fn() },
     };
 
     (ExpoJudgingSession.prototype.constructor as jest.Mock).mockReturnValueOnce(
       mockExpoJudgingSession,
     );
+    const mockProjects = [] as any[];
+    req.entityManager.find.mockResolvedValueOnce(mockProjects);
 
     await post(req as any, res as any);
 
     expect(ExpoJudgingSession.prototype.constructor as jest.Mock).toHaveBeenCalledTimes(1);
+    expect(mockExpoJudgingSession.projects.set).toBeCalledWith(mockProjects);
+    expect(req.entityManager.find).toBeCalledTimes(1);
     expect(entityManager.persistAndFlush).toBeCalledWith(mockExpoJudgingSession);
     expect(res.send).toHaveBeenCalledWith(mockExpoJudgingSession);
   });

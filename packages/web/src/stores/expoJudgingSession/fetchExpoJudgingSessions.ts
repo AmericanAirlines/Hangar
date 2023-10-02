@@ -1,6 +1,7 @@
 import { ExpoJudgingSession, SerializedExpoJudgingSession } from '@hangar/shared';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { openErrorToast } from '../../components/utils/CustomToast';
 
 export const fetchExpoJudgingSessions = async () => {
   try {
@@ -17,7 +18,10 @@ export const fetchExpoJudgingSessions = async () => {
     if (!axios.isAxiosError(error) || error.status !== 401) {
       // eslint-disable-next-line no-console
       console.error(error);
-      // TODO: Show error toast
+      openErrorToast({
+        title: 'Failed to fetch Expo Judging Session details',
+        description: (error as Error).message,
+      });
     }
   }
 

@@ -53,9 +53,17 @@ export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
     this.judgingSession = judgingSession;
   }
 
-  static async tabulate({ entityManager }: { entityManager: em }): Promise<ProjectResult[]> {
-    const allVotes = await entityManager.find(ExpoJudgingVote, {});
-    const projects = await entityManager.find(Project, {});
+  static async tabulate({
+    entityManager,
+    expoJudgingSession,
+  }: {
+    entityManager: em;
+    expoJudgingSession: ExpoJudgingSession;
+  }): Promise<ProjectResult[]> {
+    const allVotes = await entityManager.find(ExpoJudgingVote, {
+      judgingSession: expoJudgingSession,
+    });
+    const projects = (await expoJudgingSession.projects.load()).getItems();
     const numProjects = projects.length;
 
     // Initialize score keeping

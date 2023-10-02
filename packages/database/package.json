@@ -14,7 +14,8 @@
     "migrate": "mikro-orm migration:up",
     "seed": "yarn mikro-orm migration:fresh --seed DatabaseSeeder",
     "typecheck": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "yarn test --coverage"
   },
   "keywords": [],
   "author": "",

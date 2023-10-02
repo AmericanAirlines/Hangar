@@ -1,15 +1,18 @@
 import { Request, Response } from 'express';
+import { Config } from '@hangar/shared';
 import { env } from '../../env';
-import { slackCallbackUrl } from './callback/slack/get';
+import { formatSlackRedirectUri } from '../../slack/formatSlackRedirectUri';
 
 const slackAuthBaseUrl: string =
   'https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&';
-const queryArgs = new URLSearchParams({
-  redirect_uri: slackCallbackUrl,
-  client_id: env.slackClientID,
-});
-const fullLink = `${slackAuthBaseUrl}${queryArgs.toString()}`;
 
 export const get = async (req: Request, res: Response) => {
-  res.redirect(fullLink);
+  const { [Config.global.authReturnUriParamName]: returnTo } = req.query as Record<string, string>;
+
+  const queryArgs = new URLSearchParams({
+    redirect_uri: formatSlackRedirectUri({ returnTo }),
+    client_id: env.slackClientID,
+  }).toString();
+
+  res.redirect(`${slackAuthBaseUrl}${queryArgs}`);
 };

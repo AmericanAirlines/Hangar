@@ -1,18 +1,34 @@
+import { Config } from '@hangar/shared';
 import { get } from '../../../src/api/auth/get';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
+import { formatSlackRedirectUri } from '../../../src/slack/formatSlackRedirectUri';
+import { getMock } from '../../testUtils/getMock';
+
+const slackAuthBaseUrl: string =
+  'https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&';
+
+const returnTo = '/api/expoJudgingSession';
+
+jest.mock('../../../src/slack/formatSlackRedirectUri');
+const formatSlackRedirectUriMock = getMock(formatSlackRedirectUri);
 
 describe('auth SLACK', () => {
   it('redirects to correct url for happy path', async () => {
-    const fullLink = `https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&response_type=code&redirect_uri=${encodeURIComponent(
-      '/api/auth/callback/slack',
-    )}&client_id=undefined`;
+    const redirectUri = 'waffles';
+    formatSlackRedirectUriMock.mockReturnValueOnce(redirectUri);
+    const fullLink = `${slackAuthBaseUrl}redirect_uri=${redirectUri}&client_id=undefined`;
 
-    const mockReq = createMockRequest();
+    const mockReq = createMockRequest({
+      query: {
+        [Config.global.authReturnUriParamName]: returnTo,
+      },
+    });
     const mockRes = createMockResponse();
 
     await get(mockReq as any, mockRes as any);
 
+    expect(formatSlackRedirectUriMock).toBeCalledWith(expect.objectContaining({ returnTo }));
     expect(mockRes.redirect).toHaveBeenCalledTimes(1);
     expect(mockRes.redirect).toHaveBeenCalledWith(fullLink);
   });
