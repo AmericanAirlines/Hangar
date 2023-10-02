@@ -1,8 +1,8 @@
 import { Prize, SerializedPrize } from '@hangar/shared';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import create from 'zustand';
-import { useCustomToast } from '../components/utils/CustomToast';
+import { create } from 'zustand';
+import { openErrorToast } from '../components/utils/CustomToast';
 
 type PrizesStore = {
   prizes?: Prize[];
@@ -23,11 +23,11 @@ export const usePrizesStore = create<PrizesStore>((set) => ({
         updatedAt: dayjs(updatedAt),
       }));
     } catch (error) {
-      if (!axios.isAxiosError(error) || error.status !== 401) {
+      if (!axios.isAxiosError(error)) {
         // eslint-disable-next-line no-console
         console.error(error);
 
-        useCustomToast.getState().openErrorToast({
+        openErrorToast({
           title: 'Failed to fetch prizes',
           description: (error as Error).message,
         });

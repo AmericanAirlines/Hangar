@@ -6,9 +6,11 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { Prizes } from '../components/Prizes';
 import { RegistrationModal } from '../components/RegistrationModal';
 import { usePrizesStore } from '../stores/prizes';
+import { useUserStore } from '../stores/user';
 
 const Home: NextPage = () => {
   const { doneLoading: prizesFetched } = usePrizesStore();
+  const { user } = useUserStore();
 
   React.useEffect(() => {
     const { prizes } = usePrizesStore.getState();
@@ -21,9 +23,10 @@ const Home: NextPage = () => {
       heading={Config.homepage.welcome.title}
       isLoading={!prizesFetched}
     >
-      <Box>
+      <Box hidden={!user || !!user.project}>
         <RegistrationModal />
       </Box>
+
       <Flex direction="column" gap={5}>
         {Config.homepage.welcome.content.map((text) => (
           <Text key={text.substring(0, 15)} fontSize="xl">
