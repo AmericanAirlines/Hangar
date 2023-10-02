@@ -10,7 +10,7 @@ type ConstructorArgs = Pick<ExpoJudgingSessionContext, 'judge' | 'expoJudgingSes
 @Entity()
 @Unique({ properties: ['judge', 'expoJudgingSession'] })
 export class ExpoJudgingSessionContext extends Node<ExpoJudgingSessionContext> {
-  @ManyToOne({ entity: () => Judge, ref: true, unique: false })
+  @ManyToOne({ entity: () => Judge, ref: true })
   judge: Ref<Judge>;
 
   @OneToOne({ entity: () => ExpoJudgingSession, ref: true, unique: false })

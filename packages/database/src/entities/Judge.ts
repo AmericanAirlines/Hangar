@@ -1,14 +1,5 @@
 /* eslint-disable max-lines */
-import {
-  Entity,
-  ManyToMany,
-  OneToOne,
-  Ref,
-  Collection,
-  EntityDTO,
-  LockMode,
-  OneToMany,
-} from '@mikro-orm/core';
+import { Entity, OneToOne, Ref, Collection, EntityDTO, LockMode, OneToMany } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { ExpoJudgingVote } from './ExpoJudgingVote';
