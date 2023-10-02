@@ -1,14 +1,5 @@
 /* eslint-disable max-lines */
-import {
-  Entity,
-  ManyToMany,
-  OneToOne,
-  Ref,
-  Collection,
-  EntityDTO,
-  LockMode,
-  OneToMany,
-} from '@mikro-orm/core';
+import { Entity, OneToOne, Ref, Collection, EntityDTO, LockMode, OneToMany } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { ExpoJudgingVote } from './ExpoJudgingVote';
@@ -59,7 +50,7 @@ export class Judge extends Node<Judge> {
   @OneToOne({ entity: () => User, ref: true, unique: true })
   user: Ref<User>;
 
-  @ManyToMany({ entity: () => ExpoJudgingSessionContext })
+  @OneToMany({ entity: () => ExpoJudgingSessionContext, mappedBy: (ejsc) => ejsc.judge })
   expoJudgingSessionContexts = new Collection<ExpoJudgingSessionContext>(this);
 
   @OneToMany({ entity: () => ExpoJudgingVote, mappedBy: (ejv) => ejv.judge })
