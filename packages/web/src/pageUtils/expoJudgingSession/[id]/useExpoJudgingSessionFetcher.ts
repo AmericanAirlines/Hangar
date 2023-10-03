@@ -1,11 +1,13 @@
 import React from 'react';
+import { z } from 'zod';
 import { useRouter } from 'next/router';
-import { ExpoJudgingSession } from '@hangar/shared';
+import { ExpoJudgingSession, Schema } from '@hangar/shared';
 import { fetchExpoJudgingSession } from './fetchExpoJudgingSession';
 import { handleFetchError } from './handleFetchErrors';
 import { openErrorToast } from '../../../components/utils/CustomToast';
 
 const idRegexp = /^[a-z0-9]*$/i;
+const inviteCodeQueryParamKey: keyof z.infer<typeof Schema.judge.post> = 'inviteCode';
 
 /**
  * A React hook for fetching an ExpoJudgingSession
@@ -37,7 +39,7 @@ export const useExpoJudgingSessionFetcher = () => {
       });
 
       const originalUrl = router.asPath;
-      const { inviteCode, ...remainingQueryParams } = router.query;
+      const { [inviteCodeQueryParamKey]: inviteCode, ...remainingQueryParams } = router.query;
       if (inviteCode) {
         // Prevent subsequent fetches from using the invite code again
         router.query = remainingQueryParams;
