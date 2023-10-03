@@ -19,17 +19,16 @@ export const get = async (req: Request, res: Response) => {
 
     await em.populate(judge, ['expoJudgingSessionContexts']);
 
-    const validSession = judge.expoJudgingSessionContexts
+    const validEjsContext = judge.expoJudgingSessionContexts
       .getItems()
-      .filter((ejsc) => ejsc.expoJudgingSession.id === ejsId);
+      .find((ejsc) => ejsc.expoJudgingSession.id === ejsId);
 
-    if (validSession.length) {
-      const currentTeam = validSession[0]?.currentProject;
-      const prevTeam = validSession[0]?.previousProject;
+    if (validEjsContext) {
+      const { currentProject, previousProject } = validEjsContext;
 
-      res.send({ currentTeam, prevTeam });
+      res.send({ currentProject, previousProject });
     } else {
-      res.sendStatus(404);
+      res.sendStatus(403);
     }
   } catch (error) {
     logger.error('Failed to query Expo Judging Session', error);

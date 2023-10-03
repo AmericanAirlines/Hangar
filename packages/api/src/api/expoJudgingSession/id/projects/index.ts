@@ -2,6 +2,6 @@ import { Router } from 'express';
 import { judgeMiddleware } from '../../../../middleware/judgeMiddleware';
 import { get } from './get';
 
-export const teams = Router();
+export const projects = Router();
 
-teams.get('', judgeMiddleware, get);
+projects.get('', judgeMiddleware, get);
