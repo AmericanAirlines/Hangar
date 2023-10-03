@@ -13,7 +13,7 @@ type ExpoJudgingStore = {
   expoJudgingSessionId: string;
   currentProject?: Project;
   previousProject?: Project;
-  continue: () => Promise<void>;
+  continueToNext: () => Promise<void>;
   skip: () => Promise<void>;
   vote: (args: VoteArgs) => Promise<void>;
 };
@@ -25,7 +25,7 @@ export const useExpoJudging = create<ExpoJudgingStore>((set) => ({
   expoJudgingSessionId: '',
   currentProject: undefined,
   previousProject: undefined,
-  continue: async () => {
+  continueToNext: async () => {
     openSuccessToast({ title: 'Continued' });
   },
   skip: async () => {
