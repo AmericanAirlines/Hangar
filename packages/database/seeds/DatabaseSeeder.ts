@@ -5,8 +5,9 @@ import { AdminSeeder } from './seeders/AdminSeeder';
 import { EventSeeder } from './seeders/EventSeeder';
 import { PrizeSeeder } from './seeders/PrizeSeeder';
 import { JudgeSeeder } from './seeders/JudgeSeeder';
+import { ProjectSeeder } from './seeders/ProjectSeeder';
 
 export class DatabaseSeeder extends Seeder {
   run = async (em: EntityManager): Promise<any> =>
-    this.call(em, [UserSeeder, AdminSeeder, JudgeSeeder, EventSeeder, PrizeSeeder]);
+    this.call(em, [UserSeeder, AdminSeeder, JudgeSeeder, EventSeeder, PrizeSeeder, ProjectSeeder]);
 }
