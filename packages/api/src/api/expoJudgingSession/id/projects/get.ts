@@ -3,7 +3,6 @@ import { ExpoJudgingSession } from '@hangar/database';
 import { logger } from '../../../../utils/logger';
 
 export const get = async (req: Request, res: Response) => {
-  // sone functionality
   const {
     judge,
     entityManager: em,
