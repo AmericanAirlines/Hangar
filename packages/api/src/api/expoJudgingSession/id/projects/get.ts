@@ -30,7 +30,7 @@ export const get = async (req: Request, res: Response) => {
       res.sendStatus(403);
     }
   } catch (error) {
-    logger.error('Failed to query Expo Judging Session', error);
+    logger.error('Failed to query Expo Judging Session Context', error);
     res.sendStatus(500);
   }
 };

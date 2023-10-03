@@ -4,4 +4,4 @@ import { get } from './get';
 
 export const projects = Router();
 
-projects.get('', judgeMiddleware, get);
+projects.get('', get);

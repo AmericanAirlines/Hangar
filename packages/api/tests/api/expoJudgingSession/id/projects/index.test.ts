@@ -9,11 +9,6 @@ jest.mock('../../../../../src/api/expoJudgingSession/id/projects/get', () => ({
   get: createMockHandler(),
 }));
 
-jest.mock('../../../../../src/middleware/judgeMiddleware', () => ({
-  judgeMiddleware: createMockNext(),
-}));
-
-const judgeMiddlewareMock = getMock(judgeMiddleware);
 
 describe('id router', () => {
   it('registers the get handler', async () => {
@@ -24,7 +19,6 @@ describe('id router', () => {
 
       const res = await supertest(app).get('');
       expect(res.status).toEqual(200);
-      expect(judgeMiddlewareMock).toBeCalledTimes(1);
     });
   });
 });
