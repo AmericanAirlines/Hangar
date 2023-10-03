@@ -3,6 +3,9 @@ import { useRouter } from 'next/router';
 import { ExpoJudgingSession } from '@hangar/shared';
 import { fetchExpoJudgingSession } from './fetchExpoJudgingSession';
 import { handleFetchError } from './handleFetchErrors';
+import { openErrorToast } from '../../../components/utils/CustomToast';
+
+const idRegexp = /^[a-z0-9]*$/i;
 
 /**
  * A React hook for fetching an ExpoJudgingSession
@@ -23,8 +26,14 @@ export const useExpoJudgingSessionFetcher = () => {
     const fetchEjs = async () => {
       initialFetchMadeRef.current = true;
 
+      const expoJudgingSessionId = router.query.id as string;
+      if (!idRegexp.test(expoJudgingSessionId)) {
+        // Mitigate the risk of a SSRF
+        openErrorToast({ title: 'Invalid Expo Judging Session ID' });
+        return;
+      }
       const response = await fetchExpoJudgingSession({
-        expoJudgingSessionId: router.query.id as string,
+        expoJudgingSessionId,
       });
 
       const originalUrl = router.asPath;
