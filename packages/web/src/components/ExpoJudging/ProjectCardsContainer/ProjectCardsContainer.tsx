@@ -11,9 +11,9 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
 
   const isAtStart = !previousProject && !currentProject;
 
-  const start = async () => {
+  const start = () => {
     setIsLoading(true);
-    await continueToNext();
+    void continueToNext();
   };
 
   return (
@@ -29,7 +29,7 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
           {/* TODO: Create a proper Start component and add it here */}
           <Flex direction="column" gap={5}>
             <Heading>Start Judging</Heading>
-            <Button isLoading={isLoading} onClick={() => start()}>
+            <Button isLoading={isLoading} onClick={start}>
               Continue
             </Button>
           </Flex>
