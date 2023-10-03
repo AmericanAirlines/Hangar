@@ -9,7 +9,6 @@ jest.mock('../../../../../src/api/expoJudgingSession/id/projects/get', () => ({
   get: createMockHandler(),
 }));
 
-
 describe('id router', () => {
   it('registers the get handler', async () => {
     await jest.isolateModulesAsync(async () => {
