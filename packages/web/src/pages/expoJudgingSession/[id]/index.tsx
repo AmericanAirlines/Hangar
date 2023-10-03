@@ -3,41 +3,48 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { ExpoJudgingSession } from '@hangar/shared';
 import { PageContainer } from '../../../components/layout/PageContainer';
-import { fetchJudgingSession } from '../../../utils/fetchJudgingSession';
+import { fetchExpoJudgingSession } from '../../../pageUtils/expoJudgingSession/[id]/fetchExpoJudgingSession';
+import { handleFetchError } from '../../../pageUtils/expoJudgingSession/[id]/handleFetchErrors';
 
 const ExpoJudgingSessionDetails: NextPage = () => {
   const initialFetchMadeRef = React.useRef(false);
-  const inviteCodeHandledRef = React.useRef(false);
-  const [ejsFetchComplete, setEjsFetchComplete] = React.useState(false);
   const [expoJudgingSession, setExpoJudgingSession] = React.useState<ExpoJudgingSession>();
   const router = useRouter();
-
-  React.useEffect(() => {
-    if (ejsFetchComplete && !inviteCodeHandledRef.current && router.isReady) {
-      // Router is ready to be reviewed and we haven't yet handled the query params
-      inviteCodeHandledRef.current = true;
-      if (router.query) {
-        /* empty */
-      }
-    }
-  }, [ejsFetchComplete, router.isReady, router.query]);
 
   React.useEffect(() => {
     const fetchEjs = async () => {
       initialFetchMadeRef.current = true;
 
-      setExpoJudgingSession(
-        await fetchJudgingSession({
-          expoJudgingSessionId: router.query.id as string,
-          showError: !router.query.inviteCode,
-        }),
-      );
+      const response = await fetchExpoJudgingSession({
+        expoJudgingSessionId: router.query.id as string,
+      });
 
-      setEjsFetchComplete(true);
+      const { inviteCode, ...remainingQueryParams } = router.query;
+      if (inviteCode) {
+        // Update the URL to remove the invite code if it's present
+        void router.push({ query: remainingQueryParams }, undefined, { shallow: true });
+      }
+
+      if ('status' in response) {
+        const { status } = response;
+        handleFetchError({
+          router,
+          status,
+          inviteCode: inviteCode as string,
+          onJudgeAccessSuccess: () => {
+            // Try again; failure will redirect to home with error toast
+            void fetchEjs();
+          },
+        });
+        return;
+      }
+
+      // Happy Path; EJS exists and page is ready
+      setExpoJudgingSession(response);
     };
 
     if (!initialFetchMadeRef.current && router.isReady) void fetchEjs();
-  }, [router.isReady, router.query.id, router.query.inviteCode]);
+  }, [router]);
 
   return (
     <PageContainer
