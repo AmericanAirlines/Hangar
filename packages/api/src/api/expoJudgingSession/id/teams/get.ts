@@ -18,9 +18,21 @@ export const get = async (req: Request, res: Response) => {
     }
 
     await em.populate(judge, ['expoJudgingSessionContexts']);
-    // 1) search for currentTeam and nextTeam in expoJudgingSessionContexts
-    const allTeams = judge.expoJudgingSessionContexts.getItems();
-  } catch {
-    // error
+
+    const validSession = judge.expoJudgingSessionContexts
+      .getItems()
+      .filter((ejsc) => ejsc.expoJudgingSession.id === ejsId);
+
+    if (validSession.length) {
+      const currentTeam = validSession[0]?.currentProject;
+      const prevTeam = validSession[0]?.previousProject;
+
+      res.send({ currentTeam, prevTeam });
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    logger.error('Failed to query Expo Judging Session', error);
+    res.sendStatus(500);
   }
 };
