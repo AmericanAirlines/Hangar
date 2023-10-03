@@ -6,7 +6,11 @@ type VoteArgs = {
   currentTeamChosen: boolean;
 };
 
+type InitArgs = Pick<ExpoJudgingStore, 'expoJudgingSessionId'>;
+
 type ExpoJudgingStore = {
+  init: (args: InitArgs) => void;
+  expoJudgingSessionId: string;
   currentProject?: Project;
   previousProject?: Project;
   continue: () => Promise<void>;
@@ -14,7 +18,11 @@ type ExpoJudgingStore = {
   vote: (args: VoteArgs) => Promise<void>;
 };
 
-export const useExpoJudging = create<ExpoJudgingStore>(() => ({
+export const useExpoJudging = create<ExpoJudgingStore>((set) => ({
+  init: ({ expoJudgingSessionId }) => {
+    set({ expoJudgingSessionId });
+  },
+  expoJudgingSessionId: '',
   currentProject: undefined,
   previousProject: undefined,
   continue: async () => {
