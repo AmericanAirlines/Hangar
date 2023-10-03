@@ -1,11 +1,16 @@
 import React from 'react';
-import { Code } from '@chakra-ui/react';
 import { NextPage } from 'next';
 import { PageContainer } from '../../../components/layout/PageContainer';
 import { useExpoJudgingSessionFetcher } from '../../../pageUtils/expoJudgingSession/[id]/useExpoJudgingSessionFetcher';
+import { ProjectCardsContainer, useExpoJudging } from '../../../components/ExpoJudging';
 
 const ExpoJudgingSessionDetails: NextPage = () => {
   const { expoJudgingSession } = useExpoJudgingSessionFetcher();
+  React.useEffect(() => {
+    if (expoJudgingSession) {
+      useExpoJudging.getState().init({ expoJudgingSessionId: expoJudgingSession.id });
+    }
+  }, [expoJudgingSession]);
 
   return (
     <PageContainer
@@ -13,9 +18,7 @@ const ExpoJudgingSessionDetails: NextPage = () => {
       heading={'Expo Judging'}
       isLoading={!expoJudgingSession}
     >
-      <Code whiteSpace="pre" p={5}>
-        {JSON.stringify(expoJudgingSession, null, 2)}
-      </Code>
+      <ProjectCardsContainer />
     </PageContainer>
   );
 };
