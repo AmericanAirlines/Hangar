@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Application } from 'express';
 import { App, Context, ExpressReceiver, LogLevel } from '@slack/bolt';

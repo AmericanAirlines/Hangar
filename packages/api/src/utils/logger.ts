@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import * as winston from 'winston';
 
 // If `LOG_LEVEL` is not specified, default to `debug` for non-production or `warning` for production
