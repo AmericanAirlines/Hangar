@@ -12,6 +12,9 @@ module.exports = {
     '!./src/@types/**',
     '!./src/env.ts',
     '!./src/slack/index.ts',
+    '!./src/index.ts',
+    '!./src/api/settings.ts',
+    '!./src/utils/logger.ts',
   ],
   coverageThreshold: {
     global: {

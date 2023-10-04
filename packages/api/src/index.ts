@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import express from 'express';
 import { web } from '@hangar/web';
 import { env } from './env';
