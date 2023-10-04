@@ -9,7 +9,7 @@ export const get = async (req: Request, res: Response) => {
     const expoJudgingSessions = await entityManager.find(
       ExpoJudgingSession,
       {},
-      { orderBy: { createdAt: QueryOrder.DESC } },
+      { orderBy: { createdAt: QueryOrder.ASC } },
     );
     res.send(expoJudgingSessions);
   } catch (error) {

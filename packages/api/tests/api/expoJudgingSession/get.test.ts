@@ -17,7 +17,7 @@ describe('expoJudgingSession GET handler', () => {
     expect(mockRequest.entityManager.find).toBeCalledWith(
       ExpoJudgingSession,
       expect.objectContaining({}),
-      expect.objectContaining({ orderBy: { createdAt: QueryOrder.DESC } }),
+      expect.objectContaining({ orderBy: { createdAt: QueryOrder.ASC } }),
     );
     expect(mockResponse.send).toBeCalledWith(mockExpoJudgingSessions);
   });
