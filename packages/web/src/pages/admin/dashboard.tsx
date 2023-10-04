@@ -1,28 +1,27 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { useAdminStore } from '../../stores/admin';
-import { AddExpoJudgingSession } from '../../components/AddExpoJudgingSession';
+import { ExpoJudgingSessionList } from '../../components/Admin';
 
 const AdminDashboard: NextPage = () => {
   const router = useRouter();
-  const { admin, doneLoading } = useAdminStore((state) => state);
+  const { admin, doneLoading: adminDoneLoading } = useAdminStore((state) => state);
 
   React.useEffect(() => {
-    if (doneLoading && !admin) {
+    if (adminDoneLoading && !admin) {
       void router.push('/');
     }
-  }, [admin, doneLoading, router]);
+  }, [admin, adminDoneLoading, router]);
 
   return (
     <PageContainer
       pageTitle={'Admin Dashboard'}
       heading={'Admin Dashboard'}
-      isLoading={!doneLoading}
+      isLoading={!adminDoneLoading}
     >
-      <Text>{admin ? <AddExpoJudgingSession /> : 'Redirecting...'}</Text>
+      <ExpoJudgingSessionList />
     </PageContainer>
   );
 };
