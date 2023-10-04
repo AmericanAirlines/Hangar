@@ -1,20 +1,16 @@
 import React from 'react';
-import axios from 'axios';
 import { Button } from '@chakra-ui/react';
 import { ExpoJudgingSession } from '@hangar/shared';
 import { openErrorToast, openSuccessToast } from '../utils/CustomToast';
+import { useExpoJudgingSessionStore } from '../../stores/expoJudgingSession';
 
-const postExpoJudgingSession: () => Promise<ExpoJudgingSession> = async () => {
-  const res: ExpoJudgingSession = await axios.post('/api/expoJudgingSession');
-  return res;
-};
-
-export const AddExpoJudgingSession: React.FC = () => {
+export const AddExpoJudgingSessionButton: React.FC = () => {
+  const { addExpoJudgingSession } = useExpoJudgingSessionStore();
   let expoJudgingSession: ExpoJudgingSession | undefined;
 
   const tryPostExpoJudgingSession = async () => {
     try {
-      expoJudgingSession = await postExpoJudgingSession();
+      await addExpoJudgingSession();
       openSuccessToast({
         title: 'Success!',
         description: 'Expo Judging Session successfully created.',

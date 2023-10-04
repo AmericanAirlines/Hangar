@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Center, Flex, Heading, Text } from '@chakra-ui/react';
 import { useExpoJudgingSessionStore } from '../../../stores/expoJudgingSession';
 import { colors } from '../../../theme';
-import { AddExpoJudgingSession } from '../../AddExpoJudgingSessionButton';
+import { AddExpoJudgingSessionButton } from '../../AddExpoJudgingSessionButton';
 import { ExpoJudgingSessionActionsMenu } from './ExpoJudgingSessionActionsMenu';
 import { ExpoJudgingSessionListItemSkeleton } from './ExpoJudgingSessionListItemSkeleton';
 
@@ -41,7 +41,7 @@ export const ExpoJudgingSessionList: React.FC<ExpoJudgingSessionListProps> = () 
           gap={3}
         >
           <Heading>Expo Judging Sessions</Heading>
-          <AddExpoJudgingSession />
+          <AddExpoJudgingSessionButton />
         </Flex>
 
         <Flex direction="column" gap={10} alignItems="space-between" justifyContent="center">
