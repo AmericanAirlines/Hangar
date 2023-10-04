@@ -15,7 +15,14 @@ export const ExpoJudgingSessionList: React.FC<ExpoJudgingSessionListProps> = () 
     void useExpoJudgingSessionStore.getState().fetchExpoJudgingSessions();
   }, []);
 
-  const skeletons = new Array(4).fill(<ExpoJudgingSessionListItemSkeleton />);
+  const skeletons = React.useMemo(() => {
+    const numSkeletons = 4;
+    const skeletonsWithKeys: JSX.Element[] = [];
+    for (let i = 0; i < numSkeletons; i += 1) {
+      skeletonsWithKeys.push(<ExpoJudgingSessionListItemSkeleton key={`esj-skeleton-${i}`} />);
+    }
+    return skeletonsWithKeys;
+  }, []);
   const noSessions = (
     <Center w="full" p={5}>
       <Text>No Expo Judging Sessions</Text>
