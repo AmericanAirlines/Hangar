@@ -1,5 +1,7 @@
 import { wait } from '../../src/utils/wait';
 
+jest.useFakeTimers();
+
 describe('wait function', () => {
   it('waits for specified time', async () => {
     const delay = 1000;
