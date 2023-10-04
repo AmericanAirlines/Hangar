@@ -1,1 +1,1 @@
-export * from './AddExpoJudgingSession';
+export * from './AddExpoJudgingSessionButton';
