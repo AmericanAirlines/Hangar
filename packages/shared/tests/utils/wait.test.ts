@@ -7,7 +7,7 @@ describe('wait function', () => {
 
     const waitPromise = wait(delay).then(mockFunc);
 
-    jest.advanceTimersByTime(delay);
+    jest.useFakeTimers();
 
     await waitPromise;
 
