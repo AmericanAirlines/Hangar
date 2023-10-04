@@ -8,12 +8,12 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/'],
   coverageDirectory: './coverage',
   collectCoverageFrom: ['./src/**/*.ts'],
-  // coverageThreshold: {
-  //   global: {
-  //     statements: 100,
-  //     branches: 100,
-  //     functions: 100,
-  //     lines: 100,
-  //   },
-  // },
+  coverageThreshold: {
+    global: {
+      statements: 100,
+      branches: 100,
+      functions: 100,
+      lines: 100,
+    },
+  },
 };

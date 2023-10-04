@@ -1,7 +1,6 @@
 import express from 'express';
 import supertest from 'supertest';
 import { createMockHandler } from '../../../../testUtils/expressHelpers/createMockHandler';
-import { createMockNext } from '../../../../testUtils/expressHelpers/createMockNext';
 
 jest.mock('../../../../../src/api/expoJudgingSession/id/projects/get', () => ({
   get: createMockHandler(),
