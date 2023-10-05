@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { get } from './get';
 
-export const Continue = Router();
+export const resume = Router();
 
-Continue.get('', get);
+resume.get('', get);

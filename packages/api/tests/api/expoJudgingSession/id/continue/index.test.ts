@@ -6,13 +6,13 @@ jest.mock('../../../../../src/api/expoJudgingSession/id/continue/get', () => ({
   get: createMockHandler(),
 }));
 
-describe('Continue router', () => {
+describe('resume router', () => {
   it('registers the get route', async () => {
     await jest.isolateModulesAsync(async () => {
-      const { Continue } = await import('../../../../../src/api/expoJudgingSession/id/continue');
+      const { resume } = await import('../../../../../src/api/expoJudgingSession/id/continue');
 
       const app = express();
-      app.use(Continue);
+      app.use(resume);
       const res = await supertest(app).get('');
       expect(res.status).toEqual(200);
     });
