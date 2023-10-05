@@ -1,4 +1,3 @@
-import { ExpoJudgingSession } from '@hangar/database';
 import { post } from '../../../../../src/api/expoJudgingSession/id/skip/post';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
