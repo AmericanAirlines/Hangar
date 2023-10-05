@@ -29,7 +29,7 @@ export const get = async (req: Request, res: Response) => {
     await judge.continue({ entityManager: em, expoJudgingSession: ejs });
     res.sendStatus(204);
   } catch (error) {
-    logger.error('Failed to Continue Project', error);
+    logger.error('Failed to resume Project', error);
     res.sendStatus(500);
   }
 };
