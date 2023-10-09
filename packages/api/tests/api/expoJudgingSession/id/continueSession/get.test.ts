@@ -1,17 +1,17 @@
-import { get } from '../../../../../src/api/expoJudgingSession/id/resume/get';
+import { get } from '../../../../../src/api/expoJudgingSession/id/continueSession/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
 import { logger } from '../../../../../src/utils/logger';
 
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-describe('expoJudgingSession/id/resume GET handler', () => {
-  it('calls the resume method on the judge entity', async () => {
+describe('expoJudgingSession/id/continueSession GET handler', () => {
+  it('calls the continueSession method on the judge entity', async () => {
     const mockId = '123';
     const mockExpoJudgingSessionContexts = [{ expoJudgingSession: { id: mockId } }];
-    const mockResume = jest.fn();
+    const mockContinueSession = jest.fn();
     const mockJudge = {
-      continue: mockResume,
+      continue: mockContinueSession,
       expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
     };
     const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
@@ -22,7 +22,7 @@ describe('expoJudgingSession/id/resume GET handler', () => {
 
     await get(req as any, res as any);
 
-    expect(mockResume).toHaveBeenCalledWith({
+    expect(mockContinueSession).toHaveBeenCalledWith({
       entityManager: req.entityManager,
       expoJudgingSession: mockEjs,
     });
