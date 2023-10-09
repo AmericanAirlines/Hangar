@@ -1,17 +1,17 @@
-import { post } from '../../../../../src/api/expoJudgingSession/id/skip/post';
+import { get } from '../../../../../src/api/expoJudgingSession/id/continueSession/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
 import { logger } from '../../../../../src/utils/logger';
 
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-describe('expoJudgingSession/id/skip POST handler', () => {
-  it('calls the skip method on the judge entity', async () => {
+describe('expoJudgingSession/id/continueSession GET handler', () => {
+  it('calls the continue Session method on the judge entity', async () => {
     const mockId = '123';
     const mockExpoJudgingSessionContexts = [{ expoJudgingSession: { id: mockId } }];
-    const mockSkip = jest.fn();
+    const mockContinueSession = jest.fn();
     const mockJudge = {
-      skip: mockSkip,
+      continue: mockContinueSession,
       expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
     };
     const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
@@ -20,9 +20,9 @@ describe('expoJudgingSession/id/skip POST handler', () => {
 
     const res = createMockResponse();
 
-    await post(req as any, res as any);
+    await get(req as any, res as any);
 
-    expect(mockSkip).toHaveBeenCalledWith({
+    expect(mockContinueSession).toHaveBeenCalledWith({
       entityManager: req.entityManager,
       expoJudgingSession: mockEjs,
     });
@@ -33,7 +33,7 @@ describe('expoJudgingSession/id/skip POST handler', () => {
     const req = createMockRequest();
     const res = createMockResponse();
 
-    await post(req as any, res as any);
+    await get(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(404);
   });
@@ -50,7 +50,7 @@ describe('expoJudgingSession/id/skip POST handler', () => {
 
     const res = createMockResponse();
 
-    await post(req as any, res as any);
+    await get(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
@@ -60,7 +60,7 @@ describe('expoJudgingSession/id/skip POST handler', () => {
     req.entityManager.findOne.mockRejectedValueOnce('An error occurred');
     const res = createMockResponse();
 
-    await post(req as any, res as any);
+    await get(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(500);
     expect(loggerErrorSpy).toHaveBeenCalled();
