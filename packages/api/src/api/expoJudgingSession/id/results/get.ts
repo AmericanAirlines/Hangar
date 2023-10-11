@@ -27,7 +27,6 @@ export const get = async (req: Request, res: Response) => {
     }
 
     // before calling the tabulate method we need to get all the votes for the judging session.
-    const allVotes = await em.find(ExpoJudgingVote, { id: ejsId as string });
 
     // still need to call tabulate method on the votes fetched for the judging session
     const results = await ExpoJudgingVote.tabulate({ entityManager: em, expoJudgingSession: ejs });
