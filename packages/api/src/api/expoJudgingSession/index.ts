@@ -10,3 +10,4 @@ export const expoJudgingSession = Router();
 expoJudgingSession.post('', adminMiddleware, post);
 expoJudgingSession.get('', adminMiddleware, get);
 expoJudgingSession.use('/:id', judgeMiddleware, id);
+expoJudgingSession.use('/:id', adminMiddleware, id);
