@@ -6,7 +6,7 @@ import { logger } from '../../../../../src/utils/logger';
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 
 describe('expoJudgingSession/id/results GET handler', () => {
-  it('calls the tabulate method on the judge entity', async () => {
+  it('calls the tabulate method on the ExpoJudgingVote entity', async () => {
     const mockId = '123';
     const mockExpoJudgingSessionContexts = [{ expoJudgingSession: { id: mockId } }];
     const mockTabulate = jest.fn();
