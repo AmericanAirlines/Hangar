@@ -4,10 +4,11 @@ import { createMockRequest } from '../../../../testUtils/expressHelpers/createMo
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
 import { logger } from '../../../../../src/utils/logger';
 import { getMock } from '../../../../testUtils/getMock';
+
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 
 jest.mock('@hangar/database/src/entities/ExpoJudgingVote');
-const mockExpoJudgingVote = getMock({ tabulate: ExpoJudgingVote.tabulate });
+const mockExpoJudgingVote = getMock(ExpoJudgingVote.tabulate);
 
 describe('expoJudgingSession/id/results GET handler', () => {
   it('calls the tabulate method on the ExpoJudgingVote entity', async () => {
@@ -31,7 +32,7 @@ describe('expoJudgingSession/id/results GET handler', () => {
 
     await get(req as any, res as any);
 
-    expect(mockTabulate).toHaveBeenCalledWith({
+    expect(mockExpoJudgingVote).toHaveBeenCalledWith({
       entityManager: req.entityManager,
       expoJudgingSession: mockEjs,
     });
