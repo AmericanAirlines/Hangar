@@ -31,6 +31,7 @@ export const get = async (req: Request, res: Response) => {
     // still need to call tabulate method on the votes fetched for the judging session
     const results = await ExpoJudgingVote.tabulate({ entityManager: em, expoJudgingSession: ejs });
     res.send(results);
+    res.sendStatus(204);
   } catch (error) {
     logger.error('Failed to fetch all votes', error);
     res.sendStatus(500);

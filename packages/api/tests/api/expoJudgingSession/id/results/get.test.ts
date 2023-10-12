@@ -1,20 +1,29 @@
+import { ExpoJudgingVote } from '@hangar/database';
 import { get } from '../../../../../src/api/expoJudgingSession/id/results/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
 import { logger } from '../../../../../src/utils/logger';
-
+import { getMock } from '../../../../testUtils/getMock';
 const loggerErrorSpy = jest.spyOn(logger, 'error');
+
+jest.mock('@hangar/database/src/entities/ExpoJudgingVote');
+const mockExpoJudgingVote = getMock({ tabulate: ExpoJudgingVote.tabulate });
 
 describe('expoJudgingSession/id/results GET handler', () => {
   it('calls the tabulate method on the ExpoJudgingVote entity', async () => {
     const mockId = '123';
+    const results = [] as any;
     const mockExpoJudgingSessionContexts = [{ expoJudgingSession: { id: mockId } }];
-    const mockTabulate = jest.fn();
+    // const mockExpoJudgingVote = {
+    //   tabulate: mockTabulate,
+    // };
     const mockJudge = {
-      tabulate: mockTabulate,
       expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
     };
-    const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
+    const req = createMockRequest({
+      params: { id: mockId },
+      judge: mockJudge as any,
+    });
     const mockEjs = {};
     req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
 
@@ -26,6 +35,7 @@ describe('expoJudgingSession/id/results GET handler', () => {
       entityManager: req.entityManager,
       expoJudgingSession: mockEjs,
     });
+    expect(res.send).toHaveBeenCalledWith(results);
     expect(res.sendStatus).toHaveBeenCalledWith(204);
   });
 
