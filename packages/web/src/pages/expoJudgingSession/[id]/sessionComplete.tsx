@@ -24,7 +24,6 @@ const centeredLargeIcon = {
 };
 const animation = `${bob} infinite 2s linear`;
 
-
 const SessionComplete: NextPage = () => {
   const [ trigger1 , Cannon1 ] = useConfetti()
   const [ trigger2 , Cannon2 ] = useConfetti()

@@ -14,7 +14,6 @@ type CannonProps = {
     right?:boolean ,
 }
 
-
 // manage quantity, bounds, and offsets
 export const Confetti:React.FC<ConfettiProps> = p => {
   const [{ quantity , xSpread , xOffset , ySpread , yOffset , zSpread , zOffset }] = useState( () => ({
@@ -68,22 +67,3 @@ export const useCannons = ({ stagger=1000 , quantity=4 }) => {
   }
   return  [ handleFire , cannons ]
 }
-
-
-
-// ///////
-// //
-// const [ handleFire , Cannons ] = useCannons({stagger:1000,quantity:4})
-// <button onClick={handleFire}>fire</button>
-// {Cannons}
-// // 
-// ///////
-
-// ///////
-// //
-// const [ trigger2 , Cannon2 ] = useConfetti()
-// <button onClick={()=>{trigger1();trigger2()}}>celebrate</button>
-// <Cannon1 />
-// <Cannon2 right/>
-// //
-// ///////
