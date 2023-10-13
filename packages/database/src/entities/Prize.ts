@@ -1,7 +1,8 @@
 /* istanbul ignore file */
-import { Entity, Property, EntityDTO } from '@mikro-orm/core';
+import { Entity, Property, EntityDTO, Ref, ManyToOne } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Node } from './Node';
+import { Project } from './Project';
 
 export type PrizeDTO = EntityDTO<Prize>;
 
@@ -21,11 +22,15 @@ export class Prize extends Node<Prize> {
   @Property({ columnType: 'boolean' })
   isBonus: boolean;
 
+  @ManyToOne({ entity: () => Project, nullable: true, ref: true })
+  winner?: Ref<Project>;
+
   constructor({
     name,
     position,
     description,
     isBonus = false,
+    winner,
     ...extraValues
   }: PrizeConstructorValues) {
     super(extraValues);
@@ -33,5 +38,6 @@ export class Prize extends Node<Prize> {
     this.name = name;
     this.position = position;
     this.isBonus = isBonus;
+    this.winner = winner;
   }
 }
