@@ -3,29 +3,27 @@ import { get } from '../../../../../src/api/expoJudgingSession/id/results/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
 import { logger } from '../../../../../src/utils/logger';
-import { getMock } from '../../../../testUtils/getMock';
 
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-jest.mock('@hangar/database/src/entities/ExpoJudgingVote');
-const mockExpoJudgingVote = getMock(ExpoJudgingVote.tabulate);
+// jest.mock('@hangar/database/src/entities/ExpoJudgingVote');
+// const mockExpoJudgingVote = getMock(ExpoJudgingVote.tabulate);
 
 describe('expoJudgingSession/id/results GET handler', () => {
   it('calls the tabulate method on the ExpoJudgingVote entity', async () => {
     const mockId = '123';
-    const results = [] as any;
+    const results = [{}];
     const mockExpoJudgingSessionContexts = [{ expoJudgingSession: { id: mockId } }];
-    // const mockExpoJudgingVote = {
-    //   tabulate: mockTabulate,
-    // };
+
     const mockJudge = {
       expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
     };
+    const mockExpoJudgingVote = jest.spyOn(ExpoJudgingVote, 'tabulate');
     const req = createMockRequest({
       params: { id: mockId },
       judge: mockJudge as any,
     });
-    const mockEjs = {};
+    const mockEjs = { id: mockId };
     req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
 
     const res = createMockResponse();
@@ -37,7 +35,6 @@ describe('expoJudgingSession/id/results GET handler', () => {
       expoJudgingSession: mockEjs,
     });
     expect(res.send).toHaveBeenCalledWith(results);
-    expect(res.sendStatus).toHaveBeenCalledWith(204);
   });
 
   it('returns a 404 status if the ejs cannot be found', async () => {
