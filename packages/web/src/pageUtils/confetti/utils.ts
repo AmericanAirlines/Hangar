@@ -39,16 +39,18 @@ export const nextFrame = ({
   velocity,
   rotation,
 }: {
-  position: any;
-  velocity: any;
-  rotation: any;
+  position: React.MutableRefObject<{ x:number, y:number, z:number }>;
+  velocity: React.MutableRefObject<{ x:number, y:number, z:number }|{}>;
+  rotation: React.MutableRefObject<number[]>;
 }) => {
   if (Object.values(velocity.current).some((x) => (x as number) > 0))
-    position.current = applyVelocity(position.current, velocity.current);
+    {
+      position.current = applyVelocity(position.current, velocity.current as { x:number, y:number, z:number }) as { x:number, y:number, z:number }; // eslint-disable-line no-param-reassign
+    }
 
-  if (!(velocity.current.y > 0) && position.current.y > 0)
-    position.current = applyGravity(position.current);
+  if (!(((velocity.current as {y:number}).y) > 0) && position.current.y > 0)
+    {position.current = applyGravity(position.current);} // eslint-disable-line no-param-reassign
 
-  velocity.current = reduceVelocity(velocity.current);
-  rotation.current = rotateRandomly(rotation.current);
+  velocity.current = reduceVelocity(velocity.current as { x:number, y:number, z:number }); // eslint-disable-line no-param-reassign
+  rotation.current = rotateRandomly(rotation.current); // eslint-disable-line no-param-reassign
 };

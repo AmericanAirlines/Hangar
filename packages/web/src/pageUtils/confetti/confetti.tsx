@@ -1,5 +1,5 @@
+import { useEffect, useState } from 'react';
 import { rng } from './utils';
-import { useEffect, useRef, useState } from 'react';
 import { Confetto } from './confetto';
 
 type ConfettiProps = {
@@ -28,9 +28,10 @@ export const Confetti: React.FC<ConfettiProps> = (p) => {
   return !quantity ? (
     <></>
   ) : (
-    new Array(Math.round(quantity)).fill(1).map(() => {
-      return (
-        <Confetto
+    <>{
+    new Array(Math.round(quantity)).fill(1).map((x,i) => {
+        const key = x+i;
+        return <Confetto key={key}
           {...{
             ...p,
             tick: 50,
@@ -41,8 +42,8 @@ export const Confetti: React.FC<ConfettiProps> = (p) => {
             },
           }}
         />
-      );
-    })
+        })
+    }</>
   );
 };
 export const useConfetti = () => {
@@ -54,25 +55,26 @@ export const useConfetti = () => {
 };
 
 export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
-  const [trigger, Confetti] = useConfetti();
+  const [trigger, Confettiii] = useConfetti();
   useEffect(() => {
     setTimeout(() => {
       if (trigger) {
         trigger();
       }
     }, delay);
-  }, []);
-  return <Confetti {...p} />;
+  }, [trigger, delay]);
+  return <Confettiii {...p} />;
 };
 
 export const useCannons = ({ stagger = 1000, quantity = 4 }) => {
   const [[, cannons], setCannons] = useState([0, new Array(quantity).fill(undefined)]);
   const handleFire = () => {
-    setCannons(([count, cannons]) => [
+    setCannons(([count, cannnnons]) => [
       count + quantity,
-      cannons.map((c, i) => (
-        <Cannon key={count * i} {...{ delay: stagger * i, right: i % 2 === 0 }} />
-      )),
+      cannnnons.map((c, i) => {
+        const key = count * i;
+        return <Cannon key={key} {...{ delay: stagger * i, right: i % 2 === 0 }} />
+      }),
     ]);
   };
   return [handleFire, cannons];

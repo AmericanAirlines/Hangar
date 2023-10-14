@@ -1,5 +1,5 @@
-import { rng, randomShape, mapPositionToCss, nextFrame } from './utils';
 import { useEffect, useRef, useState } from 'react';
+import { rng, randomShape, mapPositionToCss, nextFrame } from './utils';
 
 type ConfettoProps = {
   tick?: number;
@@ -21,14 +21,15 @@ export const Confetto: React.FC<ConfettoProps> = ({
   zAxisClamp = 1.3,
 }) => {
   // state management
-  const [shape] = useState(randomShape),
-    [, advance] = useState(0),
-    position = useRef({ x: 0, y: 0, z: rng(0, 20) / 10 }),
-    velocity = useRef(initialVelocity || { x: 0, y: 0, z: 0 }),
-    rotation = useRef([0, 0, 0, 0]);
+  const [shape] = useState(randomShape);
+    const [, advance] = useState(0);
+    const position = useRef({ x: 0, y: 0, z: rng(0, 20) / 10 });
+    const velocity = useRef(initialVelocity || { x: 0, y: 0, z: 0 });
+    const rotation = useRef([0, 0, 0, 0]);
 
   // animation loop
   useEffect(() => {
+    let id: NodeJS.Timeout;
     const next = () => {
       if (!(velocity.current.y > 0) && !(position.current.y > 0)) {
         clearTimeout(id);
@@ -40,19 +41,19 @@ export const Confetto: React.FC<ConfettoProps> = ({
 
       id = setTimeout(next, tick);
     };
-    let id = setTimeout(next, tick);
+    id = setTimeout(next, tick);
     return () => clearTimeout(id);
-  }, []);
+  }, [tick]);
 
   // css
-  const biezer = velocity.current.y > 0 ? 'ease-out' : 'linear',
-    frameDuration = velocity.current.y > 0 ? tick : 250,
-    { left, bottom, scale } = Object.entries(position.current)
+  const biezer = velocity.current.y > 0 ? 'ease-out' : 'linear';
+    const frameDuration = velocity.current.y > 0 ? tick : 250;
+    const { left, bottom, scale } = Object.entries(position.current)
       .map(mapPositionToCss)
       .reduce((a, [k, v]) => ({ ...a, [k as string]: v }), {} as ConfettoPosition);
 
-  const clampedScale = Math.min(Math.max(scale, -zAxisClamp), zAxisClamp),
-    style = {
+  const clampedScale = Math.min(Math.max(scale, -zAxisClamp), zAxisClamp);
+    const style = {
       ...shape,
       position: 'fixed',
       bottom,
@@ -66,5 +67,5 @@ export const Confetto: React.FC<ConfettoProps> = ({
     } as React.CSSProperties;
 
   // render
-  return position.current.y > 0 && <div {...{ style }} />;
+  return position.current.y > 0 ?<div {...{ style }} /> : <></>;
 };
