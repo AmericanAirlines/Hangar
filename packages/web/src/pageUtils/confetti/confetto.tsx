@@ -22,10 +22,10 @@ export const Confetto: React.FC<ConfettoProps> = ({
 }) => {
   // state management
   const [shape] = useState(randomShape);
-    const [, advance] = useState(0);
-    const position = useRef({ x: 0, y: 0, z: rng(0, 20) / 10 });
-    const velocity = useRef(initialVelocity || { x: 0, y: 0, z: 0 });
-    const rotation = useRef([0, 0, 0, 0]);
+  const [, advance] = useState(0);
+  const position = useRef({ x: 0, y: 0, z: rng(0, 20) / 10 });
+  const velocity = useRef(initialVelocity || { x: 0, y: 0, z: 0 });
+  const rotation = useRef([0, 0, 0, 0]);
 
   // animation loop
   useEffect(() => {
@@ -47,25 +47,25 @@ export const Confetto: React.FC<ConfettoProps> = ({
 
   // css
   const biezer = velocity.current.y > 0 ? 'ease-out' : 'linear';
-    const frameDuration = velocity.current.y > 0 ? tick : 250;
-    const { left, bottom, scale } = Object.entries(position.current)
-      .map(mapPositionToCss)
-      .reduce((a, [k, v]) => ({ ...a, [k as string]: v }), {} as ConfettoPosition);
+  const frameDuration = velocity.current.y > 0 ? tick : 250;
+  const { left, bottom, scale } = Object.entries(position.current)
+    .map(mapPositionToCss)
+    .reduce((a, [k, v]) => ({ ...a, [k as string]: v }), {} as ConfettoPosition);
 
   const clampedScale = Math.min(Math.max(scale, -zAxisClamp), zAxisClamp);
-    const style = {
-      ...shape,
-      position: 'fixed',
-      bottom,
-      ...(right ? { right: left } : { left }),
-      perspective: 1000,
-      backfaceVisibility: 'hidden',
-      transition: `all ${frameDuration}ms ${biezer}`,
-      opacity: position.current.y > 200 ? 1 : position.current.y / 800,
-      transform: `scale(${clampedScale}) rotate3d(${rotation.current.join(', ')}deg)`,
-      transformStyle: 'preserve-3d',
-    } as React.CSSProperties;
+  const style = {
+    ...shape,
+    position: 'fixed',
+    bottom,
+    ...(right ? { right: left } : { left }),
+    perspective: 1000,
+    backfaceVisibility: 'hidden',
+    transition: `all ${frameDuration}ms ${biezer}`,
+    opacity: position.current.y > 200 ? 1 : position.current.y / 800,
+    transform: `scale(${clampedScale}) rotate3d(${rotation.current.join(', ')}deg)`,
+    transformStyle: 'preserve-3d',
+  } as React.CSSProperties;
 
   // render
-  return position.current.y > 0 ?<div {...{ style }} /> : <></>;
+  return position.current.y > 0 ? <div {...{ style }} /> : <></>;
 };

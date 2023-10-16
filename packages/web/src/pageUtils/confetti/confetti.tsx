@@ -28,22 +28,25 @@ export const Confetti: React.FC<ConfettiProps> = (p) => {
   return !quantity ? (
     <></>
   ) : (
-    <>{
-    new Array(Math.round(quantity)).fill(1).map((x,i) => {
-        const key = x+i;
-        return <Confetto key={key}
-          {...{
-            ...p,
-            tick: 50,
-            velocity: {
-              x: rng(xOffset, xSpread),
-              y: rng(yOffset, ySpread),
-              z: rng(0, zSpread * 10) / 100 - zOffset,
-            },
-          }}
-        />
-        })
-    }</>
+    <>
+      {new Array(Math.round(quantity)).fill(1).map((x, i) => {
+        const key = x + i;
+        return (
+          <Confetto
+            key={key}
+            {...{
+              ...p,
+              tick: 50,
+              velocity: {
+                x: rng(xOffset, xSpread),
+                y: rng(yOffset, ySpread),
+                z: rng(0, zSpread * 10) / 100 - zOffset,
+              },
+            }}
+          />
+        );
+      })}
+    </>
   );
 };
 export const useConfetti = () => {
@@ -73,7 +76,7 @@ export const useCannons = ({ stagger = 1000, quantity = 4 }) => {
       count + quantity,
       cannnnons.map((c, i) => {
         const key = count * i;
-        return <Cannon key={key} {...{ delay: stagger * i, right: i % 2 === 0 }} />
+        return <Cannon key={key} {...{ delay: stagger * i, right: i % 2 === 0 }} />;
       }),
     ]);
   };
