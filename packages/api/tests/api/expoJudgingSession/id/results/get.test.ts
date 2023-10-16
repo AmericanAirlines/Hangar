@@ -1,4 +1,4 @@
-import { ExpoJudgingVote } from '@hangar/database';
+import { ExpoJudgingVote, insufficientVoteCountError } from '@hangar/database';
 import { get } from '../../../../../src/api/expoJudgingSession/id/results/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
@@ -37,6 +37,25 @@ describe('expoJudgingSession/id/results GET handler', () => {
     await get(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(404);
+  });
+
+  it('return 409 if there are insufficient votes', async () => {
+    const mockId = '123';
+
+    const tabulate = jest.spyOn(ExpoJudgingVote, 'tabulate');
+
+    tabulate.mockRejectedValueOnce(new Error('', { cause: insufficientVoteCountError }));
+    const req = createMockRequest({
+      params: { id: mockId },
+    });
+    const mockEjs = { id: mockId };
+    req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
+
+    const res = createMockResponse();
+
+    await get(req as any, res as any);
+
+    expect(res.sendStatus).toHaveBeenCalledWith(409);
   });
 
   it('returns a 500 if something goes wrong', async () => {

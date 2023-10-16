@@ -18,7 +18,7 @@ export const get = async (req: Request, res: Response) => {
     const results = await ExpoJudgingVote.tabulate({ entityManager: em, expoJudgingSession: ejs });
     res.send(results);
   } catch (error) {
-    if ((error as Error).name === insufficientVoteCountError) {
+    if ((error as Error).cause === insufficientVoteCountError) {
       res.sendStatus(409);
       return;
     }
