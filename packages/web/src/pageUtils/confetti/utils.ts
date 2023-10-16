@@ -39,11 +39,7 @@ export const nextFrame = (args: {
   velocity: React.MutableRefObject<{ x: number; y: number; z: number } | {}>;
   rotation: React.MutableRefObject<number[]>;
 }) => {
-  const {
-    position,
-    velocity,
-    rotation,
-  } = args;
+  const { position, velocity, rotation } = args;
   if (Object.values(velocity.current).some((x) => (x as number) > 0)) {
     position.current = applyVelocity(
       position.current,
