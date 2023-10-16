@@ -46,7 +46,7 @@ export const Confetto: React.FC<ConfettoProps> = ({
   }, [tick]);
 
   // css
-  const biezer = velocity.current.y > 0 ? 'ease-out' : 'linear';
+  const bezier = velocity.current.y > 0 ? 'ease-out' : 'linear';
   const frameDuration = velocity.current.y > 0 ? tick : 250;
   const { left, bottom, scale } = Object.entries(position.current)
     .map(mapPositionToCss)
@@ -60,7 +60,7 @@ export const Confetto: React.FC<ConfettoProps> = ({
     ...(right ? { right: left } : { left }),
     perspective: 1000,
     backfaceVisibility: 'hidden',
-    transition: `all ${frameDuration}ms ${biezer}`,
+    transition: `all ${frameDuration}ms ${bezier}`,
     opacity: position.current.y > 200 ? 1 : position.current.y / 800,
     transform: `scale(${clampedScale}) rotate3d(${rotation.current.join(', ')}deg)`,
     transformStyle: 'preserve-3d',

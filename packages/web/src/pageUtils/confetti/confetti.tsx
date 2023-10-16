@@ -58,7 +58,7 @@ export const useConfetti = () => {
 };
 
 export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
-  const [trigger, Confettiii] = useConfetti();
+  const [trigger, confetti] = useConfetti();
   useEffect(() => {
     setTimeout(() => {
       if (trigger) {
@@ -66,15 +66,15 @@ export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
       }
     }, delay);
   }, [trigger, delay]);
-  return <Confettiii {...p} />;
+  return confetti(p);
 };
 
 export const useCannons = ({ stagger = 1000, quantity = 4 }) => {
   const [[, cannons], setCannons] = useState([0, new Array(quantity).fill(undefined)]);
   const handleFire = () => {
-    setCannons(([count, cannnnons]) => [
+    setCannons(([count, Cannons]) => [
       count + quantity,
-      cannnnons.map((c, i) => {
+      Cannons.map((c, i) => {
         const key = count * i;
         return <Cannon key={key} {...{ delay: stagger * i, right: i % 2 === 0 }} />;
       }),
