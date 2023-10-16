@@ -7,7 +7,7 @@ export const env = setEnv({
   required: {
     nodeEnv: 'NODE_ENV',
     port: 'PORT',
-    baseUrl: 'BASE_URL',
+    baseUrl: 'NEXT_PUBLIC_BASE_URL',
     sessionSecret: 'SESSION_SECRET',
     slackBotToken: 'SLACK_BOT_TOKEN',
     slackSigningSecret: 'SLACK_SIGNING_SECRET',

@@ -8,9 +8,10 @@ type CreateExpoJudgingSessionArgs = z.infer<typeof Schema.expoJudgingSession.pos
 
 export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArgs = {}) => {
   try {
-    const { data } = await axios.post<SerializedExpoJudgingSession>(`/api/expoJudgingSession`, {
+    const { data } = await axios.post<SerializedExpoJudgingSession>(
+      `/api/expoJudgingSession`,
       args,
-    });
+    );
     const { createdAt, updatedAt, ...rest } = data;
     return {
       ...rest,
