@@ -1,11 +1,11 @@
-import { get } from '../../../../../src/api/expoJudgingSession/id/continueSession/get';
+import { post } from '../../../../../src/api/expoJudgingSession/id/continueSession/post';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
 import { logger } from '../../../../../src/utils/logger';
 
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-describe('expoJudgingSession/id/continueSession GET handler', () => {
+describe('expoJudgingSession/id/continueSession post handler', () => {
   it('calls the continue Session method on the judge entity', async () => {
     const mockId = '123';
     const mockExpoJudgingSessionContexts = [{ expoJudgingSession: { id: mockId } }];
@@ -20,7 +20,7 @@ describe('expoJudgingSession/id/continueSession GET handler', () => {
 
     const res = createMockResponse();
 
-    await get(req as any, res as any);
+    await post(req as any, res as any);
 
     expect(mockContinueSession).toHaveBeenCalledWith({
       entityManager: req.entityManager,
@@ -33,7 +33,7 @@ describe('expoJudgingSession/id/continueSession GET handler', () => {
     const req = createMockRequest();
     const res = createMockResponse();
 
-    await get(req as any, res as any);
+    await post(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(404);
   });
@@ -50,7 +50,7 @@ describe('expoJudgingSession/id/continueSession GET handler', () => {
 
     const res = createMockResponse();
 
-    await get(req as any, res as any);
+    await post(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
@@ -60,7 +60,7 @@ describe('expoJudgingSession/id/continueSession GET handler', () => {
     req.entityManager.findOne.mockRejectedValueOnce('An error occurred');
     const res = createMockResponse();
 
-    await get(req as any, res as any);
+    await post(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(500);
     expect(loggerErrorSpy).toHaveBeenCalled();

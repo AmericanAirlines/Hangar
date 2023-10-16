@@ -2,7 +2,7 @@ import { ExpoJudgingSession } from '@hangar/database';
 import { Request, Response } from 'express';
 import { logger } from '../../../../utils/logger';
 
-export const get = async (req: Request, res: Response) => {
+export const post = async (req: Request, res: Response) => {
   const {
     judge,
     entityManager: em,
@@ -29,6 +29,8 @@ export const get = async (req: Request, res: Response) => {
     await judge.continue({ entityManager: em, expoJudgingSession: ejs });
     res.sendStatus(204);
   } catch (error) {
+    // TODO: Error handling for various continue client errors
+
     logger.error('Failed to continue Project', error);
     res.sendStatus(500);
   }
