@@ -65,7 +65,7 @@ export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
         trigger();
       }
     }, delay);
-  }, [trigger, delay]);
+  }, []); // eslint-disable-line
   return confetti(p);
 };
 
