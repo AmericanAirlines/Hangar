@@ -51,16 +51,4 @@ describe('/expoJudgingSession post endpoint registration', () => {
       expect(mockAdminMiddleware).toBeCalledTimes(1);
     });
   });
-
-  // it('uses adminMiddleware and registers the GET route for the handler', async () => {
-  //   await jest.isolateModulesAsync(async () => {
-  //     const { expoJudgingSession } = await import('../../../src/api/expoJudgingSession');
-
-  //     const app = express();
-  //     app.use(expoJudgingSession);
-  //     const res = await supertest(app).get('/123');
-  //     expect(res.status).toEqual(200);
-  //     expect(mockJudgeMiddleware).toBeCalledTimes(1);
-  //   });
-  // });
 });

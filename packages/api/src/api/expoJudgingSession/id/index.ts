@@ -11,11 +11,9 @@ export const id = Router({ mergeParams: true });
 
 id.use('/results', adminMiddleware, results);
 
-// Unprotected routes
-id.get('', get);
-
 // Judge routes
 id.use(judgeMiddleware);
+id.get('', get);
 id.use('/projects', projects);
 id.use('/skip', skip);
 id.use('/continueSession', continueSession);
