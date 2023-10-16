@@ -7,8 +7,8 @@ import { Node } from './Node';
 import { User } from './User';
 import { JudgingSession } from './JudgingSession';
 import { ExpoJudgingSession } from './ExpoJudgingSession';
-import { getNextProject } from '../entitiesUtils';
 import { ExpoJudgingSessionContext } from './ExpoJudgingSessionContext';
+import { getNextProject } from '../entitiesUtils';
 
 export type JudgeDTO = EntityDTO<Judge>;
 
@@ -56,7 +56,7 @@ export class Judge extends Node<Judge> {
   @OneToMany({ entity: () => ExpoJudgingVote, mappedBy: (ejv) => ejv.judge })
   expoJudgingVotes = new Collection<ExpoJudgingVote>(this);
 
-  getNextProject = getNextProject;
+  static getNextProject = getNextProject;
 
   /**
    * Releases the current project for a team and decrements the relevant counters on the {@link Project `currentProject`},
@@ -71,9 +71,9 @@ export class Judge extends Node<Judge> {
   private releaseProjectAndContinue(args: VoteAndReleaseProjectArgs): Promise<ExpoJudgingVote>;
   private releaseProjectAndContinue(args: SkipOrContinueAndReleaseProjectArgs): Promise<undefined>;
   private async releaseProjectAndContinue(args: ReleaseAndContinueArgs) {
-    const { entityManager, expoJudgingSession } = args;
+    const { entityManager: rootEntityManager, expoJudgingSession } = args;
     let vote: ExpoJudgingVote | undefined;
-    await entityManager.transactional(async (em) => {
+    await rootEntityManager.transactional(async (em) => {
       // Lock the judge so we can ensure this execution is the only thing modifying the judge
       const context = await em.findOne(
         ExpoJudgingSessionContext,
@@ -123,9 +123,11 @@ export class Judge extends Node<Judge> {
           // Only update the previous project when action is NOT skip
           context.previousProject = context.currentProject;
         }
-        await context.currentProject.getEntity().decrementActiveJudgeCount({ entityManager });
+        const currentProject = await context.currentProject.load();
+        await currentProject.decrementActiveJudgeCount({ entityManager: em });
       }
 
+      await this.expoJudgingVotes.load();
       const allExcludedProjectIds = this.expoJudgingVotes
         .getItems()
         .reduce(
@@ -138,15 +140,15 @@ export class Judge extends Node<Judge> {
         );
       const uniqueExcludedProjectIds = Array.from(new Set(allExcludedProjectIds));
       // Get a new project for the judge and assign it
-      const nextProject = await this.getNextProject({
-        entityManager,
+      const nextProject = await Judge.getNextProject({
+        entityManager: em,
         excludedProjectIds: uniqueExcludedProjectIds,
       });
 
       if (nextProject) {
         context.currentProject = nextProject.toReference();
-        await nextProject.incrementActiveJudgeCount({ entityManager });
-        await nextProject.incrementJudgeVisits({ entityManager });
+        await nextProject.incrementActiveJudgeCount({ entityManager: em });
+        await nextProject.incrementJudgeVisits({ entityManager: em });
       } else {
         // No remaining projects left to assign
         context.currentProject = undefined;
@@ -155,7 +157,7 @@ export class Judge extends Node<Judge> {
       em.persist(context);
     });
 
-    await entityManager.refresh(this);
+    await rootEntityManager.refresh(this);
 
     if (args.action === 'vote') {
       return vote as ExpoJudgingVote;

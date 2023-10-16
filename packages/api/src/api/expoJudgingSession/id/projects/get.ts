@@ -16,7 +16,10 @@ export const get = async (req: Request, res: Response) => {
       res.sendStatus(404);
     }
 
-    await em.populate(judge, ['expoJudgingSessionContexts']);
+    await em.populate(judge, [
+      'expoJudgingSessionContexts.previousProject',
+      'expoJudgingSessionContexts.currentProject',
+    ]);
 
     const validEjsContext = judge.expoJudgingSessionContexts
       .getItems()
