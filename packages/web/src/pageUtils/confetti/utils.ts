@@ -34,26 +34,27 @@ export const reduceVelocity = ({ x, y, z }: { x: number; y: number; z: number })
     .map(([k, v]: [string, number]) => [k, Math.floor(10 * v) / 10])
     .reduce((a, [k, v]) => ({ ...a, [k as keyof typeof a]: (v as number) > 0 ? v : 0 }), {});
 
-export const nextFrame = ({
-  position,
-  velocity,
-  rotation,
-}: {
+export const nextFrame = (args: {
   position: React.MutableRefObject<{ x: number; y: number; z: number }>;
   velocity: React.MutableRefObject<{ x: number; y: number; z: number } | {}>;
   rotation: React.MutableRefObject<number[]>;
 }) => {
+  const {
+    position,
+    velocity,
+    rotation,
+  } = args;
   if (Object.values(velocity.current).some((x) => (x as number) > 0)) {
     position.current = applyVelocity(
       position.current,
       velocity.current as { x: number; y: number; z: number },
-    ) as { x: number; y: number; z: number }; // eslint-disable-line no-param-reassign
+    ) as { x: number; y: number; z: number };
   }
 
   if (!((velocity.current as { y: number }).y > 0) && position.current.y > 0) {
     position.current = applyGravity(position.current);
-  } // eslint-disable-line no-param-reassign
+  }
 
-  velocity.current = reduceVelocity(velocity.current as { x: number; y: number; z: number }); // eslint-disable-line no-param-reassign
-  rotation.current = rotateRandomly(rotation.current); // eslint-disable-line no-param-reassign
+  velocity.current = reduceVelocity(velocity.current as { x: number; y: number; z: number });
+  rotation.current = rotateRandomly(rotation.current);
 };
