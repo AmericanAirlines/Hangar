@@ -35,7 +35,7 @@ const SessionComplete: NextPage = () => {
   useEffect(() => {
     trigger1();
     trigger2();
-  }, [trigger1, trigger2]);
+  }, []); // eslint-disable-line
 
   return (
     <PageContainer pageTitle={'Session Complete'} heading={'You did it!'}>
