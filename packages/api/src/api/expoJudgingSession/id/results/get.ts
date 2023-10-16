@@ -1,4 +1,4 @@
-import { ExpoJudgingSession, ExpoJudgingVote } from '@hangar/database';
+import { ExpoJudgingSession, ExpoJudgingVote, insufficientVoteCountError } from '@hangar/database';
 import { Request, Response } from 'express';
 import { logger } from '../../../../utils/logger';
 
@@ -6,7 +6,6 @@ export const get = async (req: Request, res: Response) => {
   const {
     entityManager: em,
     params: { id: ejsId },
-    judge,
   } = req;
 
   try {
@@ -16,20 +15,14 @@ export const get = async (req: Request, res: Response) => {
       return;
     }
 
-    await em.populate(judge, ['expoJudgingSessionContexts']);
-    const hasAccess = judge.expoJudgingSessionContexts
-      .getItems()
-      .some((ejsc) => ejsc.expoJudgingSession.id === ejsId);
-
-    if (!hasAccess) {
-      res.sendStatus(403);
-      return;
-    }
     const results = await ExpoJudgingVote.tabulate({ entityManager: em, expoJudgingSession: ejs });
-
     res.send(results);
   } catch (error) {
-    logger.error('Failed to fetch all votes', error);
+    if ((error as Error).name === insufficientVoteCountError) {
+      res.sendStatus(409);
+      return;
+    }
+    logger.error('Failed to calculate results', error);
     res.sendStatus(500);
   }
 };
