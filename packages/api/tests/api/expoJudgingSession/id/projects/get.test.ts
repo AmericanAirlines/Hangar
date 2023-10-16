@@ -28,7 +28,10 @@ describe('expoJudgingSession/id/projects GET handler', () => {
     expect(req.entityManager.findOne).toBeCalledWith(ExpoJudgingSession, { id: mockId });
     expect(req.entityManager.populate).toBeCalledWith(
       mockJudge,
-      expect.arrayContaining(['expoJudgingSessionContexts']),
+      expect.arrayContaining([
+        'expoJudgingSessionContexts.currentProject',
+        'expoJudgingSessionContexts.previousProject',
+      ]),
     );
     expect(res.send).toHaveBeenCalledWith({ currentProject, previousProject });
   });
