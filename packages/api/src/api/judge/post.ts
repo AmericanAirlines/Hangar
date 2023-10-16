@@ -37,7 +37,8 @@ export const post = async (req: Request, res: Response) => {
 
     await entityManager.persistAndFlush(judge);
 
-    res.send(judge);
+    res.redirect('/judgingIntro');
+
   } catch (error) {
     if ((error as DriverException).code === '23505') {
       res.sendStatus(409);
