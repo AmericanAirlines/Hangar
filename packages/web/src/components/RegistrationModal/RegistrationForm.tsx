@@ -10,6 +10,7 @@ import {
   InputProps,
   TextareaProps,
 } from '@chakra-ui/react';
+import { Config } from '@hangar/shared';
 import { AlertResponse } from './AlertResponse';
 import { useRegistrationConfig } from './useRegistrationConfig';
 import { RegistrationFormProps, FormProps, RegistrationSchema, RegistrationFormik } from './utils';
@@ -71,7 +72,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
         </FormControl>
 
         <FormControl id="location">
-          <FormLabel>Location</FormLabel>
+          <FormLabel>{Config.project.locationLabel}</FormLabel>
           <Input {...(formProps('location', formik) as InputProps)} />
           <FormHelperText color={statusColors.error}>{formik.errors.location}&nbsp;</FormHelperText>
         </FormControl>
