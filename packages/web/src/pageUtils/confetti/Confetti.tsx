@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { rng, Vector } from './utils';
 import { Confetto } from './Confetto';
-import React from 'react';
 
 type ConfettiProps = {
   tick?: number;
