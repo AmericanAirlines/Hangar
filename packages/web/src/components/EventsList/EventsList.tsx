@@ -1,84 +1,33 @@
-import { Event } from '@hangar/shared';
 import React from 'react';
+import { Event } from '@hangar/shared';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { Tag, Flex, Heading, ListItem, Text, UnorderedList, FlexProps } from '@chakra-ui/react';
-import { eventStyle, EventStatus } from './utils';
+import { UnorderedList } from '@chakra-ui/react';
+import { EventCard } from './EventCard';
 
 dayjs.extend(isBetween);
 
-type EventCardProps = {
-  event: Event;
-};
+export const EventsList: React.FC<{ events: Event[] }> = ({ events }) => {
+  const nextEventCardRef = React.useRef<HTMLLIElement>(null);
 
-type BadgeProps = {
-  badge: EventStatus;
-};
-
-const BadgeContainerStyle: FlexProps = {
-  top: 0,
-  left: 0,
-  justifyContent: 'center',
-  position: 'absolute',
-  width: 'full',
-  mt: '-12px',
-};
-
-const ProgressBadge: React.FC<BadgeProps> = ({ badge }) =>
-  badge !== 'IN PROGRESS' ? (
-    <></>
-  ) : (
-    <Tag variant={badge === 'IN PROGRESS' ? 'success' : 'solid'}>
-      <Flex gap={2} direction={'row'}>
-        <Text>{badge}</Text>
-        <Text>🕑</Text>
-      </Flex>
-    </Tag>
+  const nextEventId = React.useMemo(
+    () => events.find((event) => dayjs().isBefore(event.end))?.id, // Grab the id of the first event that isn't in the past
+    [events],
   );
-
-const EventCard: React.FC<EventCardProps> = ({ event }) => {
-  const cardRef = React.useRef<HTMLLIElement>(null);
-  const { name, description, start, end } = event;
-  const inProgress = dayjs().isBetween(start, end);
 
   React.useEffect(() => {
-    if (inProgress) {
-      cardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-  }, [inProgress]);
-
-  const format = 'h:mm a';
-  const past = dayjs().isAfter(end);
-  let badge: EventStatus = 'IN PROGRESS';
-  if (past) {
-    badge = 'PAST';
-  } else if (!inProgress) {
-    badge = 'FUTURE';
-  }
+    nextEventCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [nextEventId]);
 
   return (
-    <ListItem style={eventStyle(badge)} ref={cardRef}>
-      <Flex {...BadgeContainerStyle}>
-        <ProgressBadge {...{ badge }} />
-      </Flex>
-
-      <Heading as="h2" size="md">
-        {name}
-      </Heading>
-
-      <Text>{description}</Text>
-
-      <Text>
-        {start.format(format)} - {end.format(format)}
-      </Text>
-    </ListItem>
+    <UnorderedList variant="card" spacing={5} m={0}>
+      {events.map((event) => (
+        <EventCard
+          {...{ event }}
+          key={`event-${event.id}`}
+          containerRef={nextEventId === event.id ? nextEventCardRef : undefined}
+        />
+      ))}
+    </UnorderedList>
   );
 };
-
-export const EventsList: React.FC<{ events: Event[] }> = ({ events }) => (
-  <UnorderedList variant="card" spacing={5} m={0}>
-    {events.map((event) => (
-      <EventCard {...{ event }} key={`event-${event.id}`} />
-    ))}
-  </UnorderedList>
-);

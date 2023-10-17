@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { get } from './get';
+import { post } from './post';
 
-export const continueSession = Router();
+export const continueSession = Router({ mergeParams: true });
 
-continueSession.get('', get);
+continueSession.post('', post);

@@ -1,32 +1,33 @@
-import { get } from '../../../../../src/api/expoJudgingSession/id/continueSession/get';
+import { ExpoJudgingVote, insufficientVoteCountError } from '@hangar/database';
+import { get } from '../../../../../src/api/expoJudgingSession/id/results/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
 import { logger } from '../../../../../src/utils/logger';
 
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-describe('expoJudgingSession/id/continueSession GET handler', () => {
-  it('calls the continue Session method on the judge entity', async () => {
+describe('expoJudgingSession/id/results GET handler', () => {
+  it('calls the tabulate method on the ExpoJudgingVote entity', async () => {
     const mockId = '123';
-    const mockExpoJudgingSessionContexts = [{ expoJudgingSession: { id: mockId } }];
-    const mockContinueSession = jest.fn();
-    const mockJudge = {
-      continue: mockContinueSession,
-      expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
-    };
-    const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
-    const mockEjs = {};
+
+    const tabulate = jest.spyOn(ExpoJudgingVote, 'tabulate');
+    const mockResults: any[] = [];
+    tabulate.mockResolvedValueOnce(mockResults);
+    const req = createMockRequest({
+      params: { id: mockId },
+    });
+    const mockEjs = { id: mockId };
     req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
 
     const res = createMockResponse();
 
     await get(req as any, res as any);
 
-    expect(mockContinueSession).toHaveBeenCalledWith({
+    expect(tabulate).toHaveBeenCalledWith({
       entityManager: req.entityManager,
       expoJudgingSession: mockEjs,
     });
-    expect(res.sendStatus).toHaveBeenCalledWith(204);
+    expect(res.send).toHaveBeenCalledWith(mockResults);
   });
 
   it('returns a 404 status if the ejs cannot be found', async () => {
@@ -38,21 +39,23 @@ describe('expoJudgingSession/id/continueSession GET handler', () => {
     expect(res.sendStatus).toHaveBeenCalledWith(404);
   });
 
-  it('returns a 403 status if judge does not have access', async () => {
+  it('return 409 if there are insufficient votes', async () => {
     const mockId = '123';
-    const mockExpoJudgingSessionContexts = [] as any[];
-    const mockJudge = {
-      expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
-    };
-    const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
-    const mockEjs = {};
+
+    const tabulate = jest.spyOn(ExpoJudgingVote, 'tabulate');
+
+    tabulate.mockRejectedValueOnce(new Error('', { cause: insufficientVoteCountError }));
+    const req = createMockRequest({
+      params: { id: mockId },
+    });
+    const mockEjs = { id: mockId };
     req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
 
     const res = createMockResponse();
 
     await get(req as any, res as any);
 
-    expect(res.sendStatus).toHaveBeenCalledWith(403);
+    expect(res.sendStatus).toHaveBeenCalledWith(409);
   });
 
   it('returns a 500 if something goes wrong', async () => {

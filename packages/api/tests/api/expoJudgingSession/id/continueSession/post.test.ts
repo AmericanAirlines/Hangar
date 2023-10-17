@@ -1,20 +1,17 @@
-import { ExpoJudgingSession } from '@hangar/database';
-import { get } from '../../../../../src/api/expoJudgingSession/id/projects/get';
+import { post } from '../../../../../src/api/expoJudgingSession/id/continueSession/post';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
 import { logger } from '../../../../../src/utils/logger';
 
 const loggerErrorSpy = jest.spyOn(logger, 'error');
 
-describe('expoJudgingSession/id/projects GET handler', () => {
-  it('queries and returns the current and prev projects', async () => {
+describe('expoJudgingSession/id/continueSession post handler', () => {
+  it('calls the continue Session method on the judge entity', async () => {
     const mockId = '123';
-    const currentProject = 'xyz';
-    const previousProject = 'pqr';
-    const mockExpoJudgingSessionContexts = [
-      { expoJudgingSession: { id: mockId }, currentProject, previousProject },
-    ];
+    const mockExpoJudgingSessionContexts = [{ expoJudgingSession: { id: mockId } }];
+    const mockContinueSession = jest.fn();
     const mockJudge = {
+      continue: mockContinueSession,
       expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
     };
     const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
@@ -23,29 +20,25 @@ describe('expoJudgingSession/id/projects GET handler', () => {
 
     const res = createMockResponse();
 
-    await get(req as any, res as any);
+    await post(req as any, res as any);
 
-    expect(req.entityManager.findOne).toBeCalledWith(ExpoJudgingSession, { id: mockId });
-    expect(req.entityManager.populate).toBeCalledWith(
-      mockJudge,
-      expect.arrayContaining([
-        'expoJudgingSessionContexts.currentProject',
-        'expoJudgingSessionContexts.previousProject',
-      ]),
-    );
-    expect(res.send).toHaveBeenCalledWith({ currentProject, previousProject });
+    expect(mockContinueSession).toHaveBeenCalledWith({
+      entityManager: req.entityManager,
+      expoJudgingSession: mockEjs,
+    });
+    expect(res.sendStatus).toHaveBeenCalledWith(204);
   });
 
   it('returns a 404 status if the ejs cannot be found', async () => {
     const req = createMockRequest();
     const res = createMockResponse();
 
-    await get(req as any, res as any);
+    await post(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(404);
   });
 
-  it('returns a 403 status if there is no current and prev team', async () => {
+  it('returns a 403 status if judge does not have access', async () => {
     const mockId = '123';
     const mockExpoJudgingSessionContexts = [] as any[];
     const mockJudge = {
@@ -57,7 +50,7 @@ describe('expoJudgingSession/id/projects GET handler', () => {
 
     const res = createMockResponse();
 
-    await get(req as any, res as any);
+    await post(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
@@ -67,7 +60,7 @@ describe('expoJudgingSession/id/projects GET handler', () => {
     req.entityManager.findOne.mockRejectedValueOnce('An error occurred');
     const res = createMockResponse();
 
-    await get(req as any, res as any);
+    await post(req as any, res as any);
 
     expect(res.sendStatus).toHaveBeenCalledWith(500);
     expect(loggerErrorSpy).toHaveBeenCalled();
