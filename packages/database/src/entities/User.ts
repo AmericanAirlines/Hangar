@@ -16,7 +16,7 @@ export class User extends Node<User> {
   @Property({ columnType: 'text' })
   lastName: string;
 
-  @Property({ columnType: 'text', unique: true })
+  @Property({ columnType: 'text', unique: true, hidden: true })
   email: string;
 
   @ManyToOne({ entity: () => Project, nullable: true, ref: true })
