@@ -23,7 +23,7 @@ type UpdateActiveJudgeCountArgs = ActiveJudgeCountModifierArgs & {
 
 @Entity()
 export class Project extends Node<Project> {
-  @Property({ columnType: 'text', unique: true })
+  @Property({ columnType: 'text', unique: true, hidden: true })
   inviteCode: string = v4();
 
   @Property({ columnType: 'text' })

@@ -59,7 +59,7 @@ export class Judge extends Node<Judge> {
   static getNextProject = getNextProject;
 
   /**
-   * Releases the current project for a team and decrements the relevant counters on the {@link Project `currentProject`},
+   * Releases the current project for a project and decrements the relevant counters on the {@link Project `currentProject`},
    * assigns a new `currentProject`, and increments it's relevant counters
    *
    * This method consists of a transaction so all actions succeed or none do

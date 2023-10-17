@@ -18,7 +18,7 @@ jest.mock('../../src/entities/ExpoJudgingVote', () => ({
 
 describe('Judge', () => {
   describe('continue', () => {
-    it('successfully gets a new team, updates it, and persists all changes', async () => {
+    it('successfully gets a new project, updates it, and persists all changes', async () => {
       const mockEntityManager = createMockEntityManager();
       const rootJudge = new Judge({ user: { id: '1' } as any });
       (rootJudge.id as any) = '1';
@@ -70,7 +70,7 @@ describe('Judge', () => {
   });
 
   describe('skip', () => {
-    it('skips the current team and does not assign them to the previous project', async () => {
+    it('skips the current project and does not assign them to the previous project', async () => {
       const mockEntityManager = createMockEntityManager();
       const rootJudge = new Judge({ user: { id: '1' } as any });
       (rootJudge.id as any) = '1';
@@ -205,7 +205,7 @@ describe('Judge', () => {
     });
 
     describe('skip', () => {
-      it('throws an error if there is not a current team to skip', async () => {
+      it('throws an error if there is not a current project to skip', async () => {
         const mockEntityManager = createMockEntityManager();
         const judge = new Judge({ user: { id: '1' } as any });
         (judge.id as any) = '1';

@@ -2,19 +2,20 @@ import React from 'react';
 import { Button, Flex, Heading } from '@chakra-ui/react';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useExpoJudging } from '../hooks/useExpoJudging';
+import { PageSpinner } from '../../layout/PageSpinner';
 
 type ProjectCardsContainerProps = {};
 
 export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () => {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const { previousProject, currentProject, continueToNext } = useExpoJudging();
+  const { isLoading, previousProject, currentProject, continueToNext } = useExpoJudging();
 
   const isAtStart = !previousProject && !currentProject;
 
   const start = () => {
-    setIsLoading(true);
     void continueToNext();
   };
+
+  if (isLoading) return <PageSpinner />;
 
   return (
     <Flex

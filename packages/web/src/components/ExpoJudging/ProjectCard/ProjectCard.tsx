@@ -9,16 +9,16 @@ type ProjectCardProps = {
 export const ProjectCard: React.FC<ProjectCardProps> = ({ type }) => {
   const { currentProject, previousProject, vote, skip, continueToNext } = useExpoJudging();
 
-  const isPreviousTeam = type === 'Previous';
-  const isCurrentTeam = type === 'Current';
-  const isFirstTeam = isCurrentTeam && !previousProject;
+  const isPreviousProject = type === 'Previous';
+  const isCurrentProject = type === 'Current';
+  const isFirstProject = isCurrentProject && !previousProject;
 
-  const project = isCurrentTeam ? currentProject : previousProject;
+  const project = isCurrentProject ? currentProject : previousProject;
 
   if (!project) return null;
 
   return (
-    <Flex direction="column" gap={5} position="relative">
+    <Flex direction="column" gap={10} position="relative" flex={1}>
       <Flex position="absolute" w="full" top={-3} left={0} justifyContent="center">
         <Tag>{`${type} Project`}</Tag>
       </Flex>
@@ -30,14 +30,16 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ type }) => {
         </Flex>
       </Box>
 
-      {!isFirstTeam || isPreviousTeam ? (
-        <Button onClick={() => vote({ currentTeamChosen: isCurrentTeam })}>Vote for Team</Button>
+      {!isFirstProject || isPreviousProject ? (
+        <Button onClick={() => vote({ currentProjectChosen: isCurrentProject })}>
+          Vote for Project
+        </Button>
       ) : (
         <Button onClick={() => continueToNext()}>Continue</Button>
       )}
-      {isCurrentTeam && (
+      {isCurrentProject && (
         <Button variant="ghost" onClick={() => skip()}>
-          Skip Team
+          Skip Project
         </Button>
       )}
     </Flex>

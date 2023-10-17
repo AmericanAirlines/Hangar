@@ -51,5 +51,5 @@ export const post = async (req: Request, res: Response) => {
     return;
   }
 
-  res.send(project);
+  res.send(project); // TODO: Include invite code
 };
