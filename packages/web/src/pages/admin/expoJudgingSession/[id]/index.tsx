@@ -1,9 +1,8 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { Box } from '@chakra-ui/react';
+import { Box, UnorderedList, ListItem, Heading, Flex, Text } from '@chakra-ui/react';
 import { PageContainer } from '../../../../components/layout/PageContainer';
 import { useExpoJudgingSessionFetcher } from '../../../../pageUtils/expoJudgingSession/[id]/useExpoJudgingSessionFetcher';
-// import { useExpoJudging } from '../../../../components/ExpoJudging';
 import { ExpoJudgingSessionResult, fetchExpoJudgingSessionResults } from '../../../../pageUtils/expoJudgingSession/[id]/fetchExpoJudgingSessionResults';
 import { openErrorToast } from '../../../../components/utils/CustomToast';
 
@@ -52,17 +51,22 @@ const ExpoJudgingSessionDetails: NextPage = () => {
       heading={'Expo Judging'}
       isLoading={!expoJudgingSessionResults}
     >
-      {expoJudgingSessionResults&&expoJudgingSessionResults.map((result) => (
-          <Box key={result.id}>
-            <Box>
-              {result.name}
+      <UnorderedList variant="card" m={0} spacing={5}>
+        {expoJudgingSessionResults&&expoJudgingSessionResults.map((result) => (
+            <Box key={result.id}>
+                  <ListItem>
+                    <Heading as="h2" size="md">
+                      <Flex gap={2}>
+                        <Text>Project {result.name}</Text>
+                      </Flex>
+                    </Heading>
+
+                    <Text>Score: {result.score}</Text>
+                  </ListItem>
             </Box>
-            <Box>
-              {result.score}
-            </Box>
-          </Box>
-        )
-      )}
+          )
+        )}
+      </UnorderedList>
     </PageContainer>
   );
 };
