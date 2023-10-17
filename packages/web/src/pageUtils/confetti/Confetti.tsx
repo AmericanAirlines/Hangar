@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { rng, Vector } from './utils';
 import { Confetto } from './Confetto';
+import React from 'react';
 
 type ConfettiProps = {
   tick?: number;
@@ -51,10 +52,11 @@ export const Confetti: React.FC<ConfettiProps> = (p) => {
 };
 export const useConfetti = () => {
   const [key, setKey] = useState(0);
-  return [
-    () => setKey((t) => t + 1),
-    (p: ConfettiProps) => (!key ? <></> : <Confetti {...{ ...p, key }} />),
-  ] as [() => void, React.FC<ConfettiProps>];
+  const trigger = React.useCallback(() => setKey((t) => t + 1), []);
+  return [trigger, (p: ConfettiProps) => (!key ? <></> : <Confetti {...{ ...p, key }} />)] as [
+    () => void,
+    React.FC<ConfettiProps>,
+  ];
 };
 
 export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
@@ -65,7 +67,7 @@ export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
         trigger();
       }
     }, delay);
-  }, []); // eslint-disable-line
+  }, [delay, trigger]);
   return confetti(p);
 };
 

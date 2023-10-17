@@ -35,7 +35,7 @@ const SessionComplete: NextPage = () => {
   useEffect(() => {
     trigger1();
     trigger2();
-  }, []); // eslint-disable-line
+  }, [trigger1, trigger2]);
 
   return (
     <PageContainer
