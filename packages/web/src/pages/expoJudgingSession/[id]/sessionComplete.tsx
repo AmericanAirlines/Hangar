@@ -38,14 +38,20 @@ const SessionComplete: NextPage = () => {
   }, []); // eslint-disable-line
 
   return (
-    <PageContainer pageTitle={'Session Complete'} heading={'You did it!'} subHeading={"You've judged all projects"}>
-      <Box style={{cursor:'default'}}>
+    <PageContainer
+      pageTitle={'Session Complete'}
+      heading={'You did it!'}
+      subHeading={"You've judged all projects"}
+    >
+      <Box style={{ cursor: 'default' }}>
         <Box animation={animation} style={{ ...centered, ...largeIcon }}>
           😃
         </Box>
         <Cannon1 />
         <Cannon2 right />
-        <Box style={{...centered,opacity:.3,margin:'8px'}}>You can safely close your browser</Box>
+        <Box style={{ ...centered, opacity: 0.3, margin: '8px' }}>
+          You can safely close your browser
+        </Box>
         <Button
           style={centered}
           onClick={() => {

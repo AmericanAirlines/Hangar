@@ -24,15 +24,12 @@ export const applyGravity = (pos: Point) => ({
   z: pos.z + rng(-1, 3) / 10,
 });
 
-export const applyVelocity = (
-  pos: Point,
-  vel: Vector,
-) =>
+export const applyVelocity = (pos: Point, vel: Vector) =>
   Object.entries(pos)
     .map(([k, v]: [string, number]) => [k, (10 * (v + vel[k as keyof typeof vel])) / 10])
     .reduce((a, [k, v]) => ({ ...a, [k as keyof typeof a]: v }), {});
 
-export const reduceVelocity = ({ x, y, z }:Vector) =>
+export const reduceVelocity = ({ x, y, z }: Vector) =>
   Object.entries({ x: x * 0.8, y: y * 0.7, z })
     .map(([k, v]: [string, number]) => [k, Math.floor(10 * v) / 10])
     .reduce((a, [k, v]) => ({ ...a, [k as keyof typeof a]: (v as number) > 0 ? v : 0 }), {});
@@ -44,10 +41,7 @@ export const nextFrame = (args: {
 }) => {
   const { position, velocity, rotation } = args;
   if (Object.values(velocity.current).some((x) => (x as number) > 0)) {
-    position.current = applyVelocity(
-      position.current,
-      velocity.current as Vector,
-    ) as Point;
+    position.current = applyVelocity(position.current, velocity.current as Vector) as Point;
   }
 
   if (!((velocity.current as { y: number }).y > 0) && position.current.y > 0) {
