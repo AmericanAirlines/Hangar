@@ -14,14 +14,15 @@ export type ExpoJudgingSessionResult = {
 
 export const fetchExpoJudgingSessionResults = async ({
   expoJudgingSessionId,
-}: FetchExpoJudgingSessionArgs): Promise<ExpoJudgingSessionResult[] | FetchExpoJudgingSessionError> => {
+}: FetchExpoJudgingSessionArgs): Promise<
+  ExpoJudgingSessionResult[] | FetchExpoJudgingSessionError
+> => {
   try {
-    const res = await axios.get< ExpoJudgingSessionResult[]>(
+    const res = await axios.get<ExpoJudgingSessionResult[]>(
       `/api/expoJudgingSession/${expoJudgingSessionId}/results`,
     );
     const { data } = res;
     return data;
-    
   } catch (error) {
     const defaultError: FetchExpoJudgingSessionError = { status: 500 };
     if (isAxiosError(error)) {
