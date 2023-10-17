@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { rng, randomShape, mapPositionToCss, nextFrame, vector } from './utils';
+import { rng, randomShape, mapPositionToCss, nextFrame, Vector } from './utils';
 
 type ConfettoProps = {
   tick?: number;
-  velocity?: vector;
+  velocity?: Vector;
   right?: boolean;
   zAxisClamp?: number;
 };
@@ -51,7 +51,6 @@ export const Confetto: React.FC<ConfettoProps> = ({
   const { left, bottom, scale } = Object.entries(position.current)
     .map(mapPositionToCss)
     .reduce((a, [k, v]) => ({ ...a, [k as string]: v }), {} as ConfettoPosition);
-
   const clampedScale = Math.min(Math.max(scale, -zAxisClamp), zAxisClamp);
   const style = {
     ...shape,

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { rng, vector } from './utils';
+import { rng, Vector } from './utils';
 import { Confetto } from './Confetto';
 
 type ConfettiProps = {
   tick?: number;
-  velocity?: vector;
+  velocity?: Vector;
   right?: boolean;
   zAxisClamp?: number;
 };

@@ -1,5 +1,5 @@
-export type point = { x: number; y: number; z: number };
-export type vector = { x: number; y: number; z: number };
+export type Point = { x: number; y: number; z: number };
+export type Vector = { x: number; y: number; z: number };
 
 export const rng = (lb: number, ub: number) => Math.floor(Math.random() * ub) + lb;
 
@@ -18,42 +18,42 @@ export const mapPositionToCss = ([k, v]: [string, number]) => [
   Math.floor(v * 10) / 10 + (k === 'z' ? '' : `px`),
 ];
 
-export const applyGravity = (pos: point) => ({
+export const applyGravity = (pos: Point) => ({
   y: pos.y - 20,
   x: pos.x + rng(-40, 81),
   z: pos.z + rng(-1, 3) / 10,
 });
 
 export const applyVelocity = (
-  pos: point,
-  vel: vector,
+  pos: Point,
+  vel: Vector,
 ) =>
   Object.entries(pos)
     .map(([k, v]: [string, number]) => [k, (10 * (v + vel[k as keyof typeof vel])) / 10])
     .reduce((a, [k, v]) => ({ ...a, [k as keyof typeof a]: v }), {});
 
-export const reduceVelocity = ({ x, y, z }:vector) =>
+export const reduceVelocity = ({ x, y, z }:Vector) =>
   Object.entries({ x: x * 0.8, y: y * 0.7, z })
     .map(([k, v]: [string, number]) => [k, Math.floor(10 * v) / 10])
     .reduce((a, [k, v]) => ({ ...a, [k as keyof typeof a]: (v as number) > 0 ? v : 0 }), {});
 
 export const nextFrame = (args: {
-  position: React.MutableRefObject<point>;
-  velocity: React.MutableRefObject<vector | {}>;
+  position: React.MutableRefObject<Point>;
+  velocity: React.MutableRefObject<Vector | {}>;
   rotation: React.MutableRefObject<number[]>;
 }) => {
   const { position, velocity, rotation } = args;
   if (Object.values(velocity.current).some((x) => (x as number) > 0)) {
     position.current = applyVelocity(
       position.current,
-      velocity.current as vector,
-    ) as point;
+      velocity.current as Vector,
+    ) as Point;
   }
 
   if (!((velocity.current as { y: number }).y > 0) && position.current.y > 0) {
     position.current = applyGravity(position.current);
   }
 
-  velocity.current = reduceVelocity(velocity.current as vector);
+  velocity.current = reduceVelocity(velocity.current as Vector);
   rotation.current = rotateRandomly(rotation.current);
 };
