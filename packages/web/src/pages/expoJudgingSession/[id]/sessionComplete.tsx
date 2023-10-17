@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { Box, Button, keyframes } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { PageContainer } from '../../../components/layout/PageContainer';
-import { useConfetti } from '../../../pageUtils/confetti/Confetti';
+import { useConfetti } from '../../../pageUtils/Confetti/Confetti';
 
 const bob = keyframes`
   0% {
