@@ -33,9 +33,10 @@ const SessionComplete: NextPage = () => {
   const [trigger2, Cannon2] = useConfetti();
 
   useEffect(() => {
+    // onMount (only ever run once)
     trigger1();
     trigger2();
-  }, []); // eslint-disable-line
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <PageContainer

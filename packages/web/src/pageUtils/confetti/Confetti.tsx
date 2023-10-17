@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { rng, Vector } from './utils';
 import { Confetto } from './Confetto';
 
@@ -53,8 +53,10 @@ export const useConfetti = () => {
   const [key, setKey] = useState(0);
   return [
     () => setKey((t) => t + 1),
-    (p: ConfettiProps) => (!key ? <></> : <Confetti {...{ ...p, key }} />),
-  ] as [() => void, React.FC<ConfettiProps>];
+    useCallback((p)=>{
+      return (!key ? <></> : <Confetti {...{ ...p, key }} />)
+    },[key]),
+  ] as [() => void, (p: ConfettiProps) => JSX.Element];
 };
 
 export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
@@ -65,7 +67,7 @@ export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
         trigger();
       }
     }, delay);
-  }, []); // eslint-disable-line
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   return confetti(p);
 };
 
