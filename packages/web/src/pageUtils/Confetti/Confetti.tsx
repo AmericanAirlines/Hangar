@@ -53,9 +53,7 @@ export const useConfetti = () => {
   const [key, setKey] = useState(0);
   return [
     () => setKey((t) => t + 1),
-    useCallback((p)=>{
-      return (!key ? <></> : <Confetti {...{ ...p, key }} />)
-    },[key]),
+    useCallback((p) => (!key ? <></> : <Confetti {...{ ...p, key }} />), [key]),
   ] as [() => void, (p: ConfettiProps) => JSX.Element];
 };
 
@@ -67,7 +65,7 @@ export const Cannon: React.FC<CannonProps> = ({ delay, ...p }) => {
         trigger();
       }
     }, delay);
-  }, []);// eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   return confetti(p);
 };
 

@@ -36,7 +36,7 @@ const SessionComplete: NextPage = () => {
     // onMount (only ever run once)
     trigger1();
     trigger2();
-  }, []);// eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <PageContainer
