@@ -48,10 +48,10 @@ const SessionComplete: NextPage = () => {
         <Button
           style={centered}
           onClick={() => {
-            void router.push('/judging');
+            void router.push('/');
           }}
         >
-          Continue
+          Return to Home
         </Button>
       </Box>
     </PageContainer>

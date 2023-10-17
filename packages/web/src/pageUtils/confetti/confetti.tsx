@@ -14,8 +14,8 @@ type CannonProps = {
   right?: boolean;
 };
 
-// manage quantity, bounds, and offsets
 export const Confetti: React.FC<ConfettiProps> = (p) => {
+  // manage quantity, bounds, and offsets
   const [{ quantity, xSpread, xOffset, ySpread, yOffset, zSpread, zOffset }] = useState(() => ({
     quantity: window.innerWidth / 40,
     xSpread: window.innerWidth / 6,
