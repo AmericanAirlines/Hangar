@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import { Button, Flex, Heading } from '@chakra-ui/react';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useExpoJudging } from '../hooks/useExpoJudging';
@@ -7,7 +8,16 @@ import { PageSpinner } from '../../layout/PageSpinner';
 type ProjectCardsContainerProps = {};
 
 export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () => {
-  const { isLoading, previousProject, currentProject, continueToNext } = useExpoJudging();
+  const router = useRouter();
+  const { isLoading, previousProject, currentProject, continueToNext, expoJudgingSessionId } =
+    useExpoJudging();
+
+  React.useEffect(() => {
+    if (previousProject && !currentProject) {
+      // Judging has finished
+      void router.push(`/expoJudgingSession/${expoJudgingSessionId}/sessionComplete`);
+    }
+  }, [previousProject, currentProject, router, expoJudgingSessionId]);
 
   const isAtStart = !previousProject && !currentProject;
 
@@ -19,7 +29,7 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
 
   return (
     <Flex
-      direction={{ base: 'column', sm: 'row' }}
+      direction={{ base: 'column', md: 'row' }}
       alignItems="top"
       justifyContent="center"
       gap={20}

@@ -71,7 +71,14 @@ export const useExpoJudging = create<ExpoJudgingStore>((set, getState) => ({
     } catch (error) {
       openErrorToast({ title: 'Failed to fetch projects' });
     }
-    openSuccessToast({ title: 'Vote cast' });
     await getState().fetchProjects();
+    if (getState().currentProject) {
+      // Show a success on each vote as long as voting is not over
+      openSuccessToast({
+        title: 'Vote cast',
+        description: 'Time to head to your next project 👇',
+        id: 'voted',
+      });
+    }
   },
 }));
