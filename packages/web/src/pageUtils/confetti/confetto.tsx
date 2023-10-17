@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { rng, randomShape, mapPositionToCss, nextFrame } from './utils';
+import { rng, randomShape, mapPositionToCss, nextFrame, vector } from './utils';
 
 type ConfettoProps = {
   tick?: number;
-  velocity?: { x: number; y: number; z: number };
+  velocity?: vector;
   right?: boolean;
   zAxisClamp?: number;
 };

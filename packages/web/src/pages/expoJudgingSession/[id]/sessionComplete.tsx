@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { Box, Button, keyframes } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { PageContainer } from '../../../components/layout/PageContainer';
-import { useConfetti } from '../../../pageUtils/confetti/confetti';
+import { useConfetti } from '../../../pageUtils/confetti/Confetti';
 
 const bob = keyframes`
   0% {
@@ -38,13 +38,14 @@ const SessionComplete: NextPage = () => {
   }, []); // eslint-disable-line
 
   return (
-    <PageContainer pageTitle={'Session Complete'} heading={'You did it!'}>
-      <Box>
+    <PageContainer pageTitle={'Session Complete'} heading={'You did it!'} subHeading={"You've judged all projects"}>
+      <Box style={{cursor:'default'}}>
         <Box animation={animation} style={{ ...centered, ...largeIcon }}>
           😃
         </Box>
         <Cannon1 />
         <Cannon2 right />
+        <Box style={{...centered,opacity:.3,margin:'8px'}}>You can safely close your browser</Box>
         <Button
           style={centered}
           onClick={() => {
