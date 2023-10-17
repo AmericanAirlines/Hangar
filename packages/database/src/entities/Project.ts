@@ -73,7 +73,8 @@ export class Project extends Node<Project> {
           `"${activeJudgeCountColumnName}" ${action === 'increment' ? '+' : '-'} 1`,
         ),
       })
-      .where({ id: this.id });
+      .where({ id: this.id })
+      .execute();
   }
 
   async incrementJudgeVisits({ entityManager }: ActiveJudgeCountModifierArgs) {
@@ -84,6 +85,7 @@ export class Project extends Node<Project> {
       .update({
         judgeVisits: raw(`"${judgeVisitsColumnName}" + 1`),
       })
-      .where({ id: this.id });
+      .where({ id: this.id })
+      .execute();
   }
 }

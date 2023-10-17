@@ -7,8 +7,9 @@ const mockProjectValues = {
   toReference: jest.fn(),
   incrementActiveJudgeCount: jest.fn(),
   incrementJudgeVisits: jest.fn(),
-  getEntity: jest.fn().mockReturnThis(),
+  $: jest.fn().mockReturnThis(),
   decrementActiveJudgeCount: jest.fn(),
+  load: jest.fn().mockReturnThis(),
 };
 
 jest.mock('../../src/entities/ExpoJudgingVote', () => ({
@@ -17,22 +18,23 @@ jest.mock('../../src/entities/ExpoJudgingVote', () => ({
 
 describe('Judge', () => {
   describe('continue', () => {
-    it('successfully gets a new team, updates it, and persists all changes', async () => {
+    it('successfully gets a new project, updates it, and persists all changes', async () => {
       const mockEntityManager = createMockEntityManager();
       const rootJudge = new Judge({ user: { id: '1' } as any });
       (rootJudge.id as any) = '1';
       const mockProject = { ...mockProjectValues };
-      rootJudge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
+      Judge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
       const mockExpoJudgingVotes = [{ currentProject: { id: '5' }, previousProject: { id: '5' } }];
       (rootJudge.expoJudgingVotes as any) = {
         getItems: jest.fn().mockReturnValueOnce(mockExpoJudgingVotes),
+        load: jest.fn(),
       };
 
       // Mock the judge that gets locked
-      const judge = {
+      const context = {
         id: '2',
       };
-      mockEntityManager.findOne.mockResolvedValueOnce(judge);
+      mockEntityManager.findOne.mockResolvedValueOnce(context);
       const mockExpoJudgingSession = { id: '5' };
 
       await rootJudge.continue({
@@ -51,8 +53,8 @@ describe('Judge', () => {
         expect.objectContaining({ lockMode: 4 }),
       );
 
-      expect(rootJudge.getNextProject).toHaveBeenCalledTimes(1);
-      expect(rootJudge.getNextProject).toHaveBeenCalledWith(
+      expect(Judge.getNextProject).toHaveBeenCalledTimes(1);
+      expect(Judge.getNextProject).toHaveBeenCalledWith(
         expect.objectContaining({
           entityManager: mockEntityManager,
           excludedProjectIds: [
@@ -63,37 +65,39 @@ describe('Judge', () => {
 
       expect(mockProject.incrementActiveJudgeCount).toHaveBeenCalledTimes(1);
       expect(mockProject.incrementJudgeVisits).toHaveBeenCalledTimes(1);
-      expect(mockEntityManager.persist).toBeCalledWith(judge);
+      expect(mockEntityManager.persist).toBeCalledWith(context);
     });
   });
 
   describe('skip', () => {
-    it('skips the current team and does not assign them to the previous project', async () => {
+    it('skips the current project and does not assign them to the previous project', async () => {
       const mockEntityManager = createMockEntityManager();
       const rootJudge = new Judge({ user: { id: '1' } as any });
       (rootJudge.id as any) = '1';
       const mockProject = { ...mockProjectValues };
-      rootJudge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
+      Judge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
       (rootJudge.expoJudgingVotes as any) = {
         getItems: jest.fn().mockReturnValueOnce([]),
+        load: jest.fn(),
       };
 
       // Mock the judge that gets locked
       const mockOriginalCurrentProject = { ...mockProjectValues };
-      const judge = {
+      const context = {
         id: '2',
+
         currentProject: mockOriginalCurrentProject,
         previousProject: undefined,
       };
-      mockEntityManager.findOne.mockResolvedValueOnce(judge);
+      mockEntityManager.findOne.mockResolvedValueOnce(context);
 
       await rootJudge.skip({
         entityManager: mockEntityManager as any,
         expoJudgingSession: { id: '5', toReference: jest.fn() } as any,
       });
 
-      expect(judge.currentProject).not.toEqual(mockOriginalCurrentProject);
-      expect(judge.previousProject).toBeUndefined();
+      expect(context.currentProject).not.toEqual(mockOriginalCurrentProject);
+      expect(context.previousProject).toBeUndefined();
     });
 
     it('updates the currentProject to be undefined when no remaining projects can be found', async () => {});
@@ -106,22 +110,23 @@ describe('Judge', () => {
       (rootJudge.id as any) = '1';
       rootJudge.toReference = jest.fn();
       const mockProject = { ...mockProjectValues };
-      rootJudge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
+      Judge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
       (rootJudge.expoJudgingVotes as any) = {
         getItems: jest.fn().mockReturnValueOnce([]),
+        load: jest.fn(),
       };
 
       // Mock the judge that gets locked
       const mockProjectReference = 'next project';
       mockProject.toReference.mockReturnValueOnce(mockProjectReference);
       const currentProject = { ...mockProjectValues };
-      const judge = {
+      const context = {
         id: '2',
         previousProject: { ...mockProjectValues },
         currentProject,
         toReference: jest.fn(() => ({ id: '2' })),
       };
-      mockEntityManager.findOne.mockResolvedValueOnce(judge);
+      mockEntityManager.findOne.mockResolvedValueOnce(context);
 
       const mockVote = {};
       (ExpoJudgingVote.prototype.constructor as jest.Mock).mockReturnValueOnce(mockVote);
@@ -145,18 +150,18 @@ describe('Judge', () => {
         expect.objectContaining({ lockMode: 4 }),
       );
 
-      expect(rootJudge.getNextProject).toHaveBeenCalledTimes(1);
-      expect(rootJudge.getNextProject).toHaveBeenCalledWith(
+      expect(Judge.getNextProject).toHaveBeenCalledTimes(1);
+      expect(Judge.getNextProject).toHaveBeenCalledWith(
         expect.objectContaining({
           entityManager: mockEntityManager,
         }),
       );
-      expect(judge.previousProject).toBe(currentProject);
-      expect(judge.currentProject).toBe(mockProjectReference);
+      expect(context.previousProject).toBe(currentProject);
+      expect(context.currentProject).toBe(mockProjectReference);
 
       expect(mockProject.incrementActiveJudgeCount).toHaveBeenCalledTimes(1);
       expect(mockProject.incrementJudgeVisits).toHaveBeenCalledTimes(1);
-      expect(mockEntityManager.persist).toBeCalledWith(judge);
+      expect(mockEntityManager.persist).toBeCalledWith(context);
       expect(mockEntityManager.persist).toBeCalledWith(mockVote);
     });
   });
@@ -200,7 +205,7 @@ describe('Judge', () => {
     });
 
     describe('skip', () => {
-      it('throws an error if there is not a current team to skip', async () => {
+      it('throws an error if there is not a current project to skip', async () => {
         const mockEntityManager = createMockEntityManager();
         const judge = new Judge({ user: { id: '1' } as any });
         (judge.id as any) = '1';

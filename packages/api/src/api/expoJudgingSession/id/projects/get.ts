@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { SerializedExpoJudgingSessionProjects } from '@hangar/shared';
 import { ExpoJudgingSession } from '@hangar/database';
 import { logger } from '../../../../utils/logger';
 
@@ -16,16 +17,21 @@ export const get = async (req: Request, res: Response) => {
       res.sendStatus(404);
     }
 
-    await em.populate(judge, ['expoJudgingSessionContexts']);
+    const contexts = await judge.expoJudgingSessionContexts.load({
+      populate: ['currentProject.contributors', 'previousProject.contributors'],
+    });
 
-    const validEjsContext = judge.expoJudgingSessionContexts
+    const validEjsContext = contexts
       .getItems()
       .find((ejsc) => ejsc.expoJudgingSession.id === ejsId);
 
     if (validEjsContext) {
       const { currentProject, previousProject } = validEjsContext;
-
-      res.send({ currentProject, previousProject });
+      const ejsProjects: SerializedExpoJudgingSessionProjects = {
+        currentProject: currentProject?.$.serialize(),
+        previousProject: previousProject?.$.serialize(),
+      };
+      res.send(ejsProjects);
     } else {
       res.sendStatus(403);
     }
