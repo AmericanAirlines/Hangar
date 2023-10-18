@@ -143,7 +143,7 @@ export class Judge extends Node<Judge> {
         );
 
       if (currentProjectId) {
-        // If there's a current project; make sure to ignore that too
+        // If there's a current project, make sure to ignore that too
         allExcludedProjectIds.push(currentProjectId);
       }
       const uniqueExcludedProjectIds = Array.from(new Set(allExcludedProjectIds));
