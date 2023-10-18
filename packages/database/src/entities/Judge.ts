@@ -130,7 +130,7 @@ export class Judge extends Node<Judge> {
         await currentProject.decrementActiveJudgeCount({ entityManager: em });
       }
 
-      await this.expoJudgingVotes.load();
+      await this.expoJudgingVotes.load({ where: { judgingSession: expoJudgingSession.id } });
       const allExcludedProjectIds = this.expoJudgingVotes
         .getItems()
         .reduce(

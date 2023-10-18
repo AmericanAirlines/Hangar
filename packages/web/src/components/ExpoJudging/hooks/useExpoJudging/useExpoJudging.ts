@@ -26,7 +26,13 @@ type ExpoJudgingStore = {
 
 export const useExpoJudging = create<ExpoJudgingStore>((set, getState) => ({
   init: ({ expoJudgingSessionId }) => {
-    set({ expoJudgingSessionId, isLoading: true });
+    set({
+      expoJudgingSessionId,
+      isLoading: true,
+      // Clear old state
+      previousProject: undefined,
+      currentProject: undefined,
+    });
     void getState().fetchProjects();
   },
   isLoading: true,
@@ -77,7 +83,6 @@ export const useExpoJudging = create<ExpoJudgingStore>((set, getState) => ({
       openSuccessToast({
         title: 'Vote cast',
         description: 'Time to head to your next project 👇',
-        id: 'voted',
       });
     }
   },

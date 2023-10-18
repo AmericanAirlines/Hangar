@@ -23,8 +23,15 @@ describe('Judge', () => {
       const rootJudge = new Judge({ user: { id: '1' } as any });
       (rootJudge.id as any) = '1';
       const mockProject = { ...mockProjectValues };
+      const mockExpoJudgingSession = { id: '5' };
       Judge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
-      const mockExpoJudgingVotes = [{ currentProject: { id: '5' }, previousProject: { id: '5' } }];
+      const mockExpoJudgingVotes = [
+        {
+          currentProject: { id: '5' },
+          previousProject: { id: '5' },
+          judgingSession: mockExpoJudgingSession,
+        },
+      ];
       (rootJudge.expoJudgingVotes as any) = {
         getItems: jest.fn().mockReturnValueOnce(mockExpoJudgingVotes),
         load: jest.fn(),
@@ -35,7 +42,6 @@ describe('Judge', () => {
         id: '2',
       };
       mockEntityManager.findOne.mockResolvedValueOnce(context);
-      const mockExpoJudgingSession = { id: '5' };
 
       await rootJudge.continue({
         entityManager: mockEntityManager as any,
@@ -61,6 +67,10 @@ describe('Judge', () => {
             mockExpoJudgingVotes[0]?.currentProject.id, // Duplicate-free
           ],
         }),
+      );
+      // It only includes relevant votes
+      expect(rootJudge.expoJudgingVotes.load).toBeCalledWith(
+        expect.objectContaining({ where: { judgingSession: mockExpoJudgingSession.id } }),
       );
 
       expect(mockProject.incrementActiveJudgeCount).toHaveBeenCalledTimes(1);
