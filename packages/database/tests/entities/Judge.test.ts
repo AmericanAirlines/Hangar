@@ -85,7 +85,6 @@ describe('Judge', () => {
       const mockOriginalCurrentProject = { ...mockProjectValues };
       const context = {
         id: '2',
-
         currentProject: mockOriginalCurrentProject,
         previousProject: undefined,
       };
@@ -98,6 +97,14 @@ describe('Judge', () => {
 
       expect(context.currentProject).not.toEqual(mockOriginalCurrentProject);
       expect(context.previousProject).toBeUndefined();
+      expect(Judge.getNextProject).toHaveBeenCalledWith(
+        expect.objectContaining({
+          entityManager: mockEntityManager,
+          excludedProjectIds: [
+            mockOriginalCurrentProject.id, // Also ignores the current project if it exists
+          ],
+        }),
+      );
     });
 
     it('updates the currentProject to be undefined when no remaining projects can be found', async () => {});
