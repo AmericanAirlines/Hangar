@@ -11,7 +11,6 @@ import {
   TextareaProps,
 } from '@chakra-ui/react';
 import { Config } from '@hangar/shared';
-import { AlertResponse } from './AlertResponse';
 import { useRegistrationConfig } from './useRegistrationConfig';
 import { RegistrationFormProps, FormProps, RegistrationSchema, RegistrationFormik } from './utils';
 import { HintTooltip } from '../HintTooltip';
@@ -41,7 +40,7 @@ const formProps: FormProps = (key, formik) => ({
 });
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValues, onSubmit }) => {
-  const { formik, alertDescription, alertProps } = useRegistrationConfig({
+  const { formik, isLoading } = useRegistrationConfig({
     initialValues,
     onSubmit,
   });
@@ -51,7 +50,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
         <FormControl id="name">
           <FormLabel>
             Name
-            <HintTooltip> A descriptive title for your app </HintTooltip>
+            <HintTooltip>A descriptive title for your app</HintTooltip>
           </FormLabel>
           <Input {...(formProps('name', formik) as InputProps)} />
           <FormHelperText color={statusColors.error}>{formik.errors.name}&nbsp;</FormHelperText>
@@ -80,14 +79,15 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
         <FormControl id="repoUrl">
           <FormLabel>
             Repository URL
-            <HintTooltip> Provide a full url including https </HintTooltip>
+            <HintTooltip>Provide a full url including https</HintTooltip>
           </FormLabel>
           <Input {...(formProps('repoUrl', formik) as InputProps)} />
           <FormHelperText color={statusColors.error}>{formik.errors.repoUrl}&nbsp;</FormHelperText>
         </FormControl>
 
-        <Button type="submit"> Submit </Button>
-        {alertDescription !== '' && <AlertResponse {...alertProps} />}
+        <Button type="submit" isLoading={isLoading}>
+          Submit
+        </Button>
       </VStack>
     </form>
   );

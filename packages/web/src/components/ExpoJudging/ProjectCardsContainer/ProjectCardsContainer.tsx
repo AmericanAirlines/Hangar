@@ -20,12 +20,13 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
   }, [previousProject, currentProject, router, expoJudgingSessionId]);
 
   const isAtStart = !previousProject && !currentProject;
+  const isAtEnd = previousProject && !currentProject;
 
   const start = () => {
     void continueToNext();
   };
 
-  if (isLoading) return <PageSpinner />;
+  if (isLoading || isAtEnd) return <PageSpinner />;
 
   return (
     <Flex

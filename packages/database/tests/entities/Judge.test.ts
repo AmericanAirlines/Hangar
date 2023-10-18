@@ -23,8 +23,15 @@ describe('Judge', () => {
       const rootJudge = new Judge({ user: { id: '1' } as any });
       (rootJudge.id as any) = '1';
       const mockProject = { ...mockProjectValues };
+      const mockExpoJudgingSession = { id: '5' };
       Judge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
-      const mockExpoJudgingVotes = [{ currentProject: { id: '5' }, previousProject: { id: '5' } }];
+      const mockExpoJudgingVotes = [
+        {
+          currentProject: { id: '5' },
+          previousProject: { id: '5' },
+          judgingSession: mockExpoJudgingSession,
+        },
+      ];
       (rootJudge.expoJudgingVotes as any) = {
         getItems: jest.fn().mockReturnValueOnce(mockExpoJudgingVotes),
         load: jest.fn(),
@@ -35,7 +42,6 @@ describe('Judge', () => {
         id: '2',
       };
       mockEntityManager.findOne.mockResolvedValueOnce(context);
-      const mockExpoJudgingSession = { id: '5' };
 
       await rootJudge.continue({
         entityManager: mockEntityManager as any,
@@ -62,6 +68,10 @@ describe('Judge', () => {
           ],
         }),
       );
+      // It only includes relevant votes
+      expect(rootJudge.expoJudgingVotes.load).toBeCalledWith(
+        expect.objectContaining({ where: { judgingSession: mockExpoJudgingSession.id } }),
+      );
 
       expect(mockProject.incrementActiveJudgeCount).toHaveBeenCalledTimes(1);
       expect(mockProject.incrementJudgeVisits).toHaveBeenCalledTimes(1);
@@ -85,7 +95,6 @@ describe('Judge', () => {
       const mockOriginalCurrentProject = { ...mockProjectValues };
       const context = {
         id: '2',
-
         currentProject: mockOriginalCurrentProject,
         previousProject: undefined,
       };
@@ -98,6 +107,14 @@ describe('Judge', () => {
 
       expect(context.currentProject).not.toEqual(mockOriginalCurrentProject);
       expect(context.previousProject).toBeUndefined();
+      expect(Judge.getNextProject).toHaveBeenCalledWith(
+        expect.objectContaining({
+          entityManager: mockEntityManager,
+          excludedProjectIds: [
+            mockOriginalCurrentProject.id, // Also ignores the current project if it exists
+          ],
+        }),
+      );
     });
 
     it('updates the currentProject to be undefined when no remaining projects can be found', async () => {});
