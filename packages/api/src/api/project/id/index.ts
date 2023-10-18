@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { get } from './get';
 
-export const details = Router({ mergeParams: true });
+export const id = Router({ mergeParams: true });
 
-details.get('', get);
+id.get('', get);

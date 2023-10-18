@@ -1,24 +1,20 @@
 import { Project } from '@hangar/database';
 import { Request, Response } from 'express';
 import { logger } from '../../../utils/logger';
-import { validatePayload } from '../../../utils/validatePayload';
-import { errorMonitor } from 'events';
 
 export const get = async (req: Request, res: Response) => {
-  const { entityManager, user } = req;
-  const { errorHandled, id } = validatePayload({
-    req,
-    res,
-  });
-
-    // need to add functionality
-
-  if (errorHandled) return;
+  const {
+    entityManager,
+    params: { id: projectId },
+  } = req;
   try {
-    // need to add functionality
-
-  }catch(){
-    // need to add functionality
-
+    const project = await entityManager.findOne(Project, { id: projectId as string });
+    if (!project) {
+      res.sendStatus(404);
+    }
+    res.send(project?.id);
+  } catch (error) {
+    logger.error('Unable to fetch project details from dB', error);
+    res.sendStatus(500);
   }
 };
