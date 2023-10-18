@@ -48,8 +48,8 @@ export const ProjectRegistrationButton: React.FC = () => {
         <ModalOverlay />
         <ModalContent pb={4} mx={3}>
           <ModalHeader>Project Registration</ModalHeader>
-
           <ModalCloseButton />
+
           <ModalBody>
             <RegistrationForm onSubmit={onClose} />
           </ModalBody>
