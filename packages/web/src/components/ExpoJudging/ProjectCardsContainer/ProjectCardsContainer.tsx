@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Flex, Heading } from '@chakra-ui/react';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useExpoJudging } from '../hooks/useExpoJudging';
+import JudgingIntro from '../../../pages/judgingIntro';
 
 type ProjectCardsContainerProps = {};
 
@@ -26,13 +27,14 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
     >
       {isAtStart ? (
         <>
-          {/* TODO: Create a proper Start component and add it here */}
-          <Flex direction="column" gap={5}>
+          <JudgingIntro />
+
+          {/* <Flex direction="column" gap={5}>
             <Heading>Start Judging</Heading>
             <Button isLoading={isLoading} onClick={start}>
               Continue
             </Button>
-          </Flex>
+          </Flex> */}
         </>
       ) : (
         <>
