@@ -115,6 +115,111 @@
           "default": "clock_timestamp()",
           "mappedType": "datetime"
         },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
+        "weight": {
+          "name": "weight",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "scaleMin": {
+          "name": "scaleMin",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "scaleMax": {
+          "name": "scaleMax",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "scaleDescription": {
+          "name": "scaleDescription",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        }
+      },
+      "name": "Criteria",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "Criteria_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
         "name": {
           "name": "name",
           "type": "text",
@@ -1058,6 +1163,468 @@
             "id"
           ],
           "referencedTableName": "public.Project",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "inviteCode": {
+          "name": "inviteCode",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "createdBy": {
+          "name": "createdBy",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "CriteriaJudgingSession",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "inviteCode"
+          ],
+          "composite": false,
+          "keyName": "CriteriaJudgingSession_inviteCode_unique",
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "CriteriaJudgingSession_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "CriteriaJudgingSession_createdBy_foreign": {
+          "constraintName": "CriteriaJudgingSession_createdBy_foreign",
+          "columnNames": [
+            "createdBy"
+          ],
+          "localTableName": "public.CriteriaJudgingSession",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.User",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "judge": {
+          "name": "judge",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "criteriaJudgingSession": {
+          "name": "criteriaJudgingSession",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "project": {
+          "name": "project",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "CriteriaJudgingSubmission",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "CriteriaJudgingSubmission_judge_criteriaJudgingSes_95c60_unique",
+          "columnNames": [
+            "judge",
+            "criteriaJudgingSession",
+            "project"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "CriteriaJudgingSubmission_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "CriteriaJudgingSubmission_judge_foreign": {
+          "constraintName": "CriteriaJudgingSubmission_judge_foreign",
+          "columnNames": [
+            "judge"
+          ],
+          "localTableName": "public.CriteriaJudgingSubmission",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Judge",
+          "updateRule": "cascade"
+        },
+        "CriteriaJudgingSubmission_criteriaJudgingSession_foreign": {
+          "constraintName": "CriteriaJudgingSubmission_criteriaJudgingSession_foreign",
+          "columnNames": [
+            "criteriaJudgingSession"
+          ],
+          "localTableName": "public.CriteriaJudgingSubmission",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.CriteriaJudgingSession",
+          "updateRule": "cascade"
+        },
+        "CriteriaJudgingSubmission_project_foreign": {
+          "constraintName": "CriteriaJudgingSubmission_project_foreign",
+          "columnNames": [
+            "project"
+          ],
+          "localTableName": "public.CriteriaJudgingSubmission",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "bigint",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamptz",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "length": 6,
+          "default": "clock_timestamp()",
+          "mappedType": "datetime"
+        },
+        "submission": {
+          "name": "submission",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "criteria": {
+          "name": "criteria",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "score": {
+          "name": "score",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "CriteriaScore",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "CriteriaScore_submission_criteria_unique",
+          "columnNames": [
+            "submission",
+            "criteria"
+          ],
+          "composite": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "CriteriaScore_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "CriteriaScore_submission_foreign": {
+          "constraintName": "CriteriaScore_submission_foreign",
+          "columnNames": [
+            "submission"
+          ],
+          "localTableName": "public.CriteriaScore",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.CriteriaJudgingSubmission",
+          "updateRule": "cascade"
+        },
+        "CriteriaScore_criteria_foreign": {
+          "constraintName": "CriteriaScore_criteria_foreign",
+          "columnNames": [
+            "criteria"
+          ],
+          "localTableName": "public.CriteriaScore",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Criteria",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "criteriaJudgingSession": {
+          "name": "criteriaJudgingSession",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "project": {
+          "name": "project",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "CriteriaJudgingSession_projects",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "CriteriaJudgingSession_projects_pkey",
+          "columnNames": [
+            "criteriaJudgingSession",
+            "project"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "CriteriaJudgingSession_projects_criteriaJudgingSession_foreign": {
+          "constraintName": "CriteriaJudgingSession_projects_criteriaJudgingSession_foreign",
+          "columnNames": [
+            "criteriaJudgingSession"
+          ],
+          "localTableName": "public.CriteriaJudgingSession_projects",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.CriteriaJudgingSession",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "CriteriaJudgingSession_projects_project_foreign": {
+          "constraintName": "CriteriaJudgingSession_projects_project_foreign",
+          "columnNames": [
+            "project"
+          ],
+          "localTableName": "public.CriteriaJudgingSession_projects",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Project",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
+        "criteriaJudgingSession": {
+          "name": "criteriaJudgingSession",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "criteria": {
+          "name": "criteria",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "CriteriaJudgingSession_criteriaList",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "CriteriaJudgingSession_criteriaList_pkey",
+          "columnNames": [
+            "criteriaJudgingSession",
+            "criteria"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "CriteriaJudgingSession_criteriaList_criteriaJudgi_f06ac_foreign": {
+          "constraintName": "CriteriaJudgingSession_criteriaList_criteriaJudgi_f06ac_foreign",
+          "columnNames": [
+            "criteriaJudgingSession"
+          ],
+          "localTableName": "public.CriteriaJudgingSession_criteriaList",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.CriteriaJudgingSession",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "CriteriaJudgingSession_criteriaList_criteria_foreign": {
+          "constraintName": "CriteriaJudgingSession_criteriaList_criteria_foreign",
+          "columnNames": [
+            "criteria"
+          ],
+          "localTableName": "public.CriteriaJudgingSession_criteriaList",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Criteria",
           "deleteRule": "cascade",
           "updateRule": "cascade"
         }
