@@ -28,7 +28,7 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
 
     res.sendStatus(204);
   } catch (error) {
-    logger.error('Failed to skip project', error);
+    logger.error('Failed to get access', error);
     res.sendStatus(500);
   }
   next();
