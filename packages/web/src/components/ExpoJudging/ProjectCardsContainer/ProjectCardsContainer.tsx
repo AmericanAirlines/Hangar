@@ -30,8 +30,8 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
 
   return (
     <Flex
-      direction={{ base: 'column', md: 'row' }}
-      alignItems="top"
+      direction={{ base: 'column', md: 'row-reverse' }}
+      alignItems="stretch"
       justifyContent="center"
       gap={20}
       w="100%"
