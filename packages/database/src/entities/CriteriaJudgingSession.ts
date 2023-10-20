@@ -4,7 +4,10 @@ import { Criteria } from './Criteria';
 import { ConstructorValues } from '../types/ConstructorValues';
 
 export type CriteriaJudgingSessionDTO = EntityDTO<CriteriaJudgingSession>;
-type ConstructorArgs = ConstructorValues<CriteriaJudgingSession, 'criteriaList' | 'projects'>;
+type ConstructorArgs = ConstructorValues<
+  CriteriaJudgingSession,
+  'criteriaList' | 'projects' | 'inviteCode'
+>;
 
 @Entity()
 export class CriteriaJudgingSession extends JudgingSession {
