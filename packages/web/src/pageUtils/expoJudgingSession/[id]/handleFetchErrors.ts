@@ -1,7 +1,8 @@
 import { NextRouter } from 'next/router';
-import { Config, wait } from '@hangar/shared';
+import { wait } from '@hangar/shared';
 import { openErrorToast, openInfoToast } from '../../../components/utils/CustomToast';
 import { createOrUpdateJudge } from './createOrUpdateJudge';
+import { signInWithSlack } from '../../../components/layout/AppLayout/NavBar/NavElements/AuthButtons/utils';
 
 type HandleFetchErrorArgs = {
   router: NextRouter;
@@ -24,13 +25,9 @@ export const handleFetchError = async ({
   }
 
   if (status === 401) {
-    const returnToQuery = new URLSearchParams({
-      [Config.global.authReturnUriParamName]: originalUrl,
-    }).toString();
-
     openInfoToast({ title: 'Redirecting to login' });
     await wait(2500);
-    window.location.href = `/api/auth?${returnToQuery}`;
+    void signInWithSlack({ returnTo: originalUrl });
     return;
   }
 
