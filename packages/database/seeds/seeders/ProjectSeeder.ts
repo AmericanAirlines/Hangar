@@ -2,11 +2,12 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { ProjectFactory } from '../factories/ProjectFactory';
-import { Judge, Project, User } from '../../src';
+import { Judge, User } from '../../src';
 
-const random = (seed:number) => ( function(seed) {
+const random = (seed:number) => ( function x(s) {
   return () => {
-      var n = Math.sin(seed++);
+      s += 1
+      const n = Math.sin(s);
       return n - Math.floor(n)
   };
 })(seed);
@@ -27,14 +28,15 @@ export class ProjectSeeder extends Seeder {
       // one project for every 3 non-judge users, leaving some non-judge users without a project also
       const projects = projectFactory.make(Math.floor((availableUsers.length-2)/3));
 
-      const rng = function(fn) {
+      const rng = function x(fn) {
         const lowerBound = 0;
         const upperBound = projects.length+1;
         return () => Math.floor( fn()*upperBound ) + lowerBound
       }(random(1));
 
       // assign some non-judge users a project
-      availableUsers.forEach( (user) => {
+      availableUsers.forEach( (u) => {
+        const user = u;
         const project = projects[rng()];
         // some users will not have a project
         if (!project)return;

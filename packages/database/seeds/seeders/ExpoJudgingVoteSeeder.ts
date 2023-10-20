@@ -2,14 +2,16 @@
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
-import { Project, ExpoJudgingSession, ExpoJudgingSessionContext, ExpoJudgingVote, Judge } from '../../src';
+import { Project, ExpoJudgingSession, ExpoJudgingVote, Judge } from '../../src';
 
-const random = (seed) => ( function(seed) {
+const random = (seed:number) => ( function x(s) {
   return () => {
-      var n = Math.sin(seed++);
-      return Math.floor(n - Math.floor(n))
+      s += 1
+      const n = Math.sin(s);
+      return n - Math.floor(n)
   };
 })(seed);
+
 const randomVote = ((seed) => {
   const rng = random(seed);
   return () => {
@@ -20,13 +22,14 @@ const randomVote = ((seed) => {
 
 const shuffle = (array, seed) => {
   const rng = random(seed);
-  let currentIndex = array.length,  randomIndex;
+  let currentIndex = array.length
+  let randomIndex;
   const newArray = [...array];
   // While there remain elements to shuffle:
   while (currentIndex !== 0) {
     // Pick a remaining element:
     randomIndex = Math.floor(rng() * currentIndex);
-    currentIndex--;
+    currentIndex -= 1;
     // And swap it with the current element.
     [newArray[currentIndex], newArray[randomIndex]] = [
       newArray[randomIndex], newArray[currentIndex]];
@@ -40,7 +43,7 @@ export class ExpoJudgingVoteSeeder extends Seeder {
       try{
         const projects = shuffle( await em.find(Project, {}), 1 );
         const judges = await em.find(Judge, {id:{$ne:'1'}});
-        for (let i = 0; i < judges.length; i++) {
+        for (let i = 0; i < judges.length; i+=1) {
           const judge = judges[i];
           const expoJudgingSession = await em.findOne(ExpoJudgingSession, { id: '1' });
         
@@ -61,7 +64,8 @@ export class ExpoJudgingVoteSeeder extends Seeder {
         }
       }
       catch(e){
-        console.log(e)
+        // eslint-disable-next-line no-console
+        console.error(e,'Failed to create votes');
       }
     }
   };

@@ -11,10 +11,8 @@ export class ExpoJudgingSessionContextSeeder extends Seeder {
         const judges = await em.find(Judge, {id:{$ne:'1'}});
         const expoJudgingSession:ExpoJudgingSession[] = await em.find(ExpoJudgingSession, {});
 
-        judges.forEach( async (judge,i) => {
+        judges.forEach( async (judge) => {
           
-          if(i===1)
-          console.log(JSON.stringify(judge))
           if (!expoJudgingSession[0]) return;
           
           judge.expoJudgingSessionContexts.add(
