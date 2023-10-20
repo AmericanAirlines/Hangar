@@ -1,4 +1,3 @@
-// import { ExpoJudgingSession, SerializedExpoJudgingSession,  } from '@hangar/shared';
 import axios, { AxiosResponse, isAxiosError } from 'axios';
 
 type FetchExpoJudgingSessionArgs = {
@@ -21,8 +20,7 @@ export const fetchExpoJudgingSessionResults = async ({
     const res = await axios.get<ExpoJudgingSessionResult[]>(
       `/api/expoJudgingSession/${expoJudgingSessionId}/results`,
     );
-    const { data } = res;
-    return data;
+    return res.data;
   } catch (error) {
     const defaultError: FetchExpoJudgingSessionError = { status: 500 };
     if (isAxiosError(error)) {

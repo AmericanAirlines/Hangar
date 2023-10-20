@@ -33,14 +33,11 @@ const ExpoJudgingSessionDetails: NextPage = () => {
           }
           return;
         }
-        if (Array.isArray(results)) {
-          if (results) {
-            if (results.length === 0) {
-              openErrorToast({ title: 'No results found' });
-            }
-            setExpoJudgingSessionResults(results);
-          }
+
+        if (results.length === 0) {
+          openErrorToast({ title: 'No results found' });
         }
+        setExpoJudgingSessionResults(results);
       }
     };
     if (expoJudgingSession) {
@@ -50,8 +47,8 @@ const ExpoJudgingSessionDetails: NextPage = () => {
 
   return (
     <PageContainer
-      pageTitle={'Expo Judging'}
-      heading={'Expo Judging'}
+      pageTitle={'Expo Judging Overview'}
+      heading={'Expo Judging Overview'}
       isLoading={!expoJudgingSessionResults}
     >
       <UnorderedList variant="card" m={0} spacing={5}>
