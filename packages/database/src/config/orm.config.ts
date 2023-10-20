@@ -22,13 +22,6 @@ export const getBaseConfig = (): Options<PostgreSqlDriver> => {
   const env = getEnv();
   return {
     driver: PostgreSqlDriver,
-    ...(env.disableDatabaseSSL
-      ? {}
-      : {
-          driverOptions: {
-            connection: { ssl: true },
-          },
-        }),
     clientUrl: env.databaseUrl,
     user: env.databaseUser,
     password: env.databasePassword,
@@ -40,6 +33,13 @@ export const getBaseConfig = (): Options<PostgreSqlDriver> => {
     loadStrategy: LoadStrategy.JOINED,
     extensions: [Migrator],
     highlighter: new SqlHighlighter(),
+    ...(env.disableDatabaseSSL
+      ? {}
+      : {
+          driverOptions: {
+            connection: { ssl: true, ca: '' },
+          },
+        }),
   };
 };
 
