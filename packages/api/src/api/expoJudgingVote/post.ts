@@ -6,6 +6,7 @@ import { logger } from '../../utils/logger';
 
 export const post = async (req: Request, res: Response) => {
   const { entityManager, judge } = req;
+  console.log(req.body)
   const { errorHandled, data } = validatePayload({
     req,
     res,
@@ -24,6 +25,7 @@ export const post = async (req: Request, res: Response) => {
     }
 
     await entityManager.populate(judge, ['expoJudgingSessionContexts']);
+    console.log('a',judge.expoJudgingSessionContexts.getItems())
     const hasPermission = judge.expoJudgingSessionContexts
       .getItems()
       .some(({ expoJudgingSession: ejs }) => ejs.id === expoJudgingSessionId);
