@@ -20,17 +20,18 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
   }, [previousProject, currentProject, router, expoJudgingSessionId]);
 
   const isAtStart = !previousProject && !currentProject;
+  const isAtEnd = previousProject && !currentProject;
 
   const start = () => {
     void continueToNext();
   };
 
-  if (isLoading) return <PageSpinner />;
+  if (isLoading || isAtEnd) return <PageSpinner />;
 
   return (
     <Flex
-      direction={{ base: 'column', md: 'row' }}
-      alignItems="top"
+      direction={{ base: 'column', md: 'row-reverse' }}
+      alignItems="stretch"
       justifyContent="center"
       gap={20}
       w="100%"

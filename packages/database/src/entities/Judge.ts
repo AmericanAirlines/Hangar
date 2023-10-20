@@ -117,6 +117,9 @@ export class Judge extends Node<Judge> {
         em.persist(vote);
       }
 
+      // Save a copy of the current project's ID to ignore it when looking for a new project
+      const currentProjectId = context.currentProject?.id;
+
       // Update the previous project (as needed) and release current project
       if (context.currentProject) {
         if (args.action !== 'skip') {
@@ -127,7 +130,7 @@ export class Judge extends Node<Judge> {
         await currentProject.decrementActiveJudgeCount({ entityManager: em });
       }
 
-      await this.expoJudgingVotes.load();
+      await this.expoJudgingVotes.load({ where: { judgingSession: expoJudgingSession.id } });
       const allExcludedProjectIds = this.expoJudgingVotes
         .getItems()
         .reduce(
@@ -138,7 +141,13 @@ export class Judge extends Node<Judge> {
           ],
           [] as string[],
         );
+
+      if (currentProjectId) {
+        // If there's a current project, make sure to ignore that too
+        allExcludedProjectIds.push(currentProjectId);
+      }
       const uniqueExcludedProjectIds = Array.from(new Set(allExcludedProjectIds));
+
       // Get a new project for the judge and assign it
       const nextProject = await Judge.getNextProject({
         entityManager: em,

@@ -19,7 +19,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ type }) => {
   if (!project) return null;
 
   return (
-    <Flex direction="column" gap={10} position="relative" flex={1}>
+    <Flex direction="column" justifyContent="space-between" gap={10} position="relative" flex={1}>
       <Flex position="absolute" w="full" top={-3} left={0} justifyContent="center">
         <Tag>{`${type} Project`}</Tag>
       </Flex>
@@ -35,18 +35,20 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ type }) => {
         </Flex>
       </Box>
 
-      {!isFirstProject || isPreviousProject ? (
-        <Button onClick={() => vote({ currentProjectChosen: isCurrentProject })}>
-          Vote for Project
-        </Button>
-      ) : (
-        <Button onClick={() => continueToNext()}>Continue</Button>
-      )}
-      {isCurrentProject && (
-        <Button variant="ghost" onClick={() => skip()}>
-          Skip Project
-        </Button>
-      )}
+      <Flex direction="column" w="full" gap={5} minHeight="100px">
+        {!isFirstProject || isPreviousProject ? (
+          <Button onClick={() => vote({ currentProjectChosen: isCurrentProject })}>
+            Vote for Project
+          </Button>
+        ) : (
+          <Button onClick={() => continueToNext()}>Continue</Button>
+        )}
+        {isCurrentProject && (
+          <Button variant="ghost" onClick={() => skip()}>
+            Skip Project
+          </Button>
+        )}
+      </Flex>
     </Flex>
   );
 };

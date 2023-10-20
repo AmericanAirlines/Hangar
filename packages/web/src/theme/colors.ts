@@ -29,4 +29,4 @@ export const colors: Colors = {
   black: '#131313',
   muted: '#7B8085',
   ...statusColors,
-};
+} as const;
