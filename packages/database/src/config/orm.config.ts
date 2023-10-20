@@ -37,7 +37,7 @@ export const getBaseConfig = (): Options<PostgreSqlDriver> => {
       ? {}
       : {
           driverOptions: {
-            connection: { ssl: true, ca: '' },
+            connection: { ssl: true },
           },
         }),
   };
