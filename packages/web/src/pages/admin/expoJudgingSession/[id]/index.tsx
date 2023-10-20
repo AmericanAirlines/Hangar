@@ -13,6 +13,7 @@ const ExpoJudgingSessionDetails: NextPage = () => {
   const { expoJudgingSession } = useExpoJudgingSessionFetcher();
   const [expoJudgingSessionResults, setExpoJudgingSessionResults] =
     React.useState<ExpoJudgingSessionResult[]>();
+
   React.useEffect(() => {
     const getExpoJudgingSessionResults = async () => {
       if (expoJudgingSession) {
