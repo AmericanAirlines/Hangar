@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { useRouter } from 'next/router';
 import { ExpoJudgingSession, Schema } from '@hangar/shared';
 import { fetchExpoJudgingSession } from './fetchExpoJudgingSession';
-import { handleFetchError } from './handleFetchErrors';
+import { handleFetchError } from '../../judgingSession/handleFetchErrors';
 import { openErrorToast } from '../../../components/utils/CustomToast';
 
 const idRegexp = /^[a-z0-9]*$/i;
