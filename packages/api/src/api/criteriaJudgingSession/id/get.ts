@@ -4,29 +4,12 @@ import { logger } from '../../../utils/logger';
 
 export const get = async (req: Request, res: Response) => {
   const {
-    judge,
     entityManager: em,
     params: { id: cjsId },
   } = req;
 
   try {
-    const cjs = await em.findOne(CriteriaJudgingSession, { id: cjsId as string });
-    if (!cjs) {
-      res.sendStatus(404);
-      return;
-    }
-
-    await em.populate(judge, ['criteriaJudgingSessions'], {
-      where: { criteriaJudgingSessions: { id: cjsId } },
-    });
-    const hasAccess = judge.criteriaJudgingSessions
-      .getItems()
-      .some((session) => session.id === cjsId);
-
-    if (!hasAccess) {
-      res.sendStatus(403);
-      return;
-    }
+    const cjs = await em.findOneOrFail(CriteriaJudgingSession, { id: cjsId as string });
 
     res.send(cjs);
   } catch (error) {
