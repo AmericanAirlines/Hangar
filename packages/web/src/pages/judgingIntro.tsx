@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { BsFill1CircleFill, BsFill2CircleFill, BsFill3CircleFill } from 'react-icons/bs';
 import { PageContainer } from '../components/layout/PageContainer';
 import { useExpoJudgingSessionFetcher } from '../pageUtils/expoJudgingSession/[id]/useExpoJudgingSessionFetcher';
+import { colors } from '../theme/colors';
 
 const JudgingIntro = () => {
   const { expoJudgingSession } = useExpoJudgingSessionFetcher();
@@ -23,15 +24,15 @@ const JudgingIntro = () => {
         <Box>
           <List spacing={4}>
             <ListItem fontSize={20}>
-              <ListIcon as={BsFill1CircleFill} color="green.500" boxSize={6} />
+              <ListIcon as={BsFill1CircleFill} color={colors.brandPrimary} boxSize={6} />
               Locate the project you need to judge and listen to their amazing pitch.
             </ListItem>
             <ListItem fontSize={20}>
-              <ListIcon as={BsFill2CircleFill} color="green.500" boxSize={6} />
+              <ListIcon as={BsFill2CircleFill} color={colors.brandPrimary} boxSize={6} />
               After you heard the pitch and judged the project, quickly find you next one.
             </ListItem>
             <ListItem fontSize={20}>
-              <ListIcon as={BsFill3CircleFill} color="green.500" boxSize={6} />
+              <ListIcon as={BsFill3CircleFill} color={colors.brandPrimary} boxSize={6} />
               Continue judging projects until there&apos;s no more teams to judge or until judging
               has ended.
             </ListItem>
