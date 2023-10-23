@@ -5,7 +5,7 @@ import { Flex, FormControl, FormLabel, Input, Link, Text, Textarea } from '@chak
 import { Schema } from '@hangar/shared';
 import { useCriteriaJudgingSessionFormStore } from '../useCriteriaJudgingSessionForm';
 import { FormHelperHint } from '../../../Forms';
-import { FormStyleContext } from '../formStyleContext';
+import { FormStyleContext } from '../FormStyleContext';
 import { colors } from '../../../../theme';
 
 export type CriteriaFieldsProps = ReturnType<typeof useCriteriaJudgingSessionFormStore> & {
