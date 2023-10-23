@@ -1,5 +1,14 @@
 /* eslint-disable max-lines */
-import { Entity, OneToOne, Ref, Collection, EntityDTO, LockMode, OneToMany } from '@mikro-orm/core';
+import {
+  Entity,
+  OneToOne,
+  Ref,
+  Collection,
+  EntityDTO,
+  LockMode,
+  OneToMany,
+  ManyToMany,
+} from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { ExpoJudgingVote } from './ExpoJudgingVote';
@@ -9,12 +18,13 @@ import { JudgingSession } from './JudgingSession';
 import { ExpoJudgingSession } from './ExpoJudgingSession';
 import { ExpoJudgingSessionContext } from './ExpoJudgingSessionContext';
 import { getNextProject } from '../entitiesUtils';
+import { CriteriaJudgingSession } from './CriteriaJudgingSession';
 
 export type JudgeDTO = EntityDTO<Judge>;
 
 export type JudgeConstructorValues = ConstructorValues<
   Judge,
-  'expoJudgingSessionContexts' | 'expoJudgingVotes'
+  'expoJudgingSessionContexts' | 'expoJudgingVotes' | 'criteriaJudgingSessions'
 >;
 
 type ReleaseProjectAndContinueBaseArgs = {
@@ -55,6 +65,9 @@ export class Judge extends Node<Judge> {
 
   @OneToMany({ entity: () => ExpoJudgingVote, mappedBy: (ejv) => ejv.judge })
   expoJudgingVotes = new Collection<ExpoJudgingVote>(this);
+
+  @ManyToMany({ entity: () => CriteriaJudgingSession })
+  criteriaJudgingSessions = new Collection<CriteriaJudgingSession>(this);
 
   static getNextProject = getNextProject;
 

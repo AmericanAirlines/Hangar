@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { ExpoJudgingSessionContext, Judge } from '@hangar/database';
+import { CriteriaJudgingSession, ExpoJudgingSessionContext, Judge } from '@hangar/database';
 import { post } from '../../../src/api/judge/post';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
@@ -39,7 +39,7 @@ describe('judge post endpoint', () => {
 
     await post(req as any, res as any);
 
-    expect(req.entityManager.findOne).toBeCalledTimes(1);
+    expect(req.entityManager.findOne).toBeCalledTimes(2);
     expect(res.sendStatus).toHaveBeenLastCalledWith(403);
   });
 
@@ -93,6 +93,42 @@ describe('judge post endpoint', () => {
     expect(req.entityManager.persistAndFlush).toBeCalled();
     expect(res.send).toHaveBeenLastCalledWith(mockJudge);
   });
+
+  it('looks for a matching criteria judging session if an expo judging session cannot be found', async () => {
+    const mockUserReference = { id: '1' };
+
+    validatePayloadMock.mockReturnValueOnce({
+      errorHandled: false,
+      data: { inviteCode: 'xyz' },
+    } as any);
+    const req = createMockRequest({
+      user: { toReference: jest.fn().mockReturnValueOnce(mockUserReference) } as any,
+      query: { inviteCode: 'xyz' },
+    });
+
+    const mockCriteriaJudgingSession = { toReference: jest.fn() };
+    req.entityManager.findOne
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(mockCriteriaJudgingSession as any);
+
+    const res = createMockResponse();
+    const mockJudge = { toReference: jest.fn(), criteriaJudgingSessions: { add: jest.fn() } };
+    (Judge.prototype.constructor as jest.Mock).mockReturnValueOnce(mockJudge);
+
+    await post(req as any, res as any);
+
+    expect(req.entityManager.findOne).toBeCalledTimes(2);
+    expect(req.entityManager.findOne).toBeCalledWith(CriteriaJudgingSession, expect.anything());
+    expect(Judge.prototype.constructor as jest.Mock).toHaveBeenCalledWith({
+      user: mockUserReference,
+    });
+
+    expect(mockJudge.criteriaJudgingSessions.add).toBeCalledWith(mockCriteriaJudgingSession);
+
+    expect(req.entityManager.persistAndFlush).toBeCalled();
+    expect(res.send).toHaveBeenLastCalledWith(mockJudge);
+  });
+
   it('should return 500 when it fails to create a judge', async () => {
     const mockUserReference = { id: '1' };
 
