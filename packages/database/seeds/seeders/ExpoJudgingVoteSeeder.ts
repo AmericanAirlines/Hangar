@@ -36,7 +36,7 @@ export class ExpoJudgingVoteSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {
     if (env.primaryUserIsAdmin) {
       try {
-        const projects = shuffle(await em.find(Project, {}), 1);
+        const projects = shuffle(await em.find(Project, {}), '1');
         const judges = await em.find(Judge, { id: { $ne: '1' } });
         for (let i = 0; i < judges.length; i += 1) {
           const judge = judges[i];
