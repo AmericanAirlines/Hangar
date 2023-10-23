@@ -9,4 +9,4 @@ export const id = Router({ mergeParams: true });
 // Judge routes
 id.use(judgeMiddleware, criteriaJudgingSessionMiddleware);
 id.get('', get);
-id.get('/projects', projects);
+id.use('/projects', projects);
