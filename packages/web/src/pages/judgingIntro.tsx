@@ -28,7 +28,7 @@ const JudgingIntro = () => {
             </ListItem>
             <ListItem fontSize={20}>
               <ListIcon as={BsFill2CircleFill} color="green.500" boxSize={6} />
-              After you heard the pitch and judged the project, quickly find you next one.
+              {`After you've heard the pitch, get your next project and repeat the process.`}
             </ListItem>
             <ListItem fontSize={20}>
               <ListIcon as={BsFill3CircleFill} color="green.500" boxSize={6} />
