@@ -21,6 +21,9 @@ export async function fetchJudgingSession(
 export async function fetchJudgingSession(
   args: FetchJudgingSessionArgs & { sessionType: 'criteria' },
 ): Promise<CriteriaJudgingSession | FetchJudgingSessionError>;
+export async function fetchJudgingSession(
+  args: FetchJudgingSessionArgs,
+): Promise<CriteriaJudgingSession | ExpoJudgingSession | FetchJudgingSessionError>;
 export async function fetchJudgingSession({
   judgingSessionId,
   sessionType,

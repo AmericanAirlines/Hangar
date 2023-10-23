@@ -45,10 +45,10 @@ export function useJudgingSessionFetcher({ sessionType }: UseJudgingSessionFetch
         openErrorToast({ title: 'Invalid Judging Session ID' });
         return;
       }
+
       const response = await fetchJudgingSession({
+        sessionType,
         judgingSessionId,
-        // eslint-disable-next-line object-shorthand
-        sessionType: 'criteria',
       });
 
       const originalUrl = router.asPath;
