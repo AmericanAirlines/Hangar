@@ -10,29 +10,32 @@ import {
   useClipboard,
 } from '@chakra-ui/react';
 import { BsChevronDown } from 'react-icons/bs';
-import { ExpoJudgingSession } from '@hangar/shared';
+import { ExpoJudgingSession, CriteriaJudgingSession } from '@hangar/shared';
 import { openSuccessToast } from '../../utils/CustomToast';
 import { env } from '../../../env';
 
-type ExpoJudgingSessionActionsMenuProps = {
-  expoJudgingSession: ExpoJudgingSession;
+type JudgingSessionActionsMenuProps = {
+  judgingSession: ExpoJudgingSession | CriteriaJudgingSession;
 };
 
 const menuItemStyle: MenuItemProps = {
   py: 3,
 };
 
-export const ExpoJudgingSessionActionsMenu: React.FC<ExpoJudgingSessionActionsMenuProps> = ({
-  expoJudgingSession,
+export const JudgingSessionActionsMenu: React.FC<JudgingSessionActionsMenuProps> = ({
+  judgingSession,
 }) => {
   const router = useRouter();
+  const judgingSessionType =
+    'criteriaList' in judgingSession ? 'criteriaJudgingSession' : 'expoJudgingSession';
+
   const invitePath = React.useMemo(() => {
     const inviteCodeQueryKey = 'inviteCode';
     const inviteCodeQueryString = new URLSearchParams({
-      [inviteCodeQueryKey]: expoJudgingSession.inviteCode,
+      [inviteCodeQueryKey]: judgingSession.inviteCode,
     }).toString();
-    return `/expoJudgingSession/${expoJudgingSession.id}?${inviteCodeQueryString}`;
-  }, [expoJudgingSession]);
+    return `/${judgingSessionType}/${judgingSession.id}?${inviteCodeQueryString}`;
+  }, [judgingSession, judgingSessionType]);
   const { onCopy } = useClipboard(`${env.baseUrl}${invitePath}`);
 
   return (
@@ -63,7 +66,7 @@ export const ExpoJudgingSessionActionsMenu: React.FC<ExpoJudgingSessionActionsMe
         <MenuItem
           {...menuItemStyle}
           onClick={() => {
-            void router.push(`/admin/expoJudgingSession/${expoJudgingSession.id}/results`);
+            void router.push(`/admin/${judgingSessionType}/${judgingSession.id}/results`);
           }}
         >
           See Results

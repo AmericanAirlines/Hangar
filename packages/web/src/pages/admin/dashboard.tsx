@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { useAdminStore } from '../../stores/admin';
-import { ExpoJudgingSessionList } from '../../components/Admin';
+import { JudgingSessionList } from '../../components/Admin';
 
 const AdminDashboard: NextPage = () => {
   const router = useRouter();
@@ -21,7 +21,7 @@ const AdminDashboard: NextPage = () => {
       heading={'Admin Dashboard'}
       isLoading={!adminDoneLoading}
     >
-      <ExpoJudgingSessionList />
+      <JudgingSessionList />
     </PageContainer>
   );
 };
