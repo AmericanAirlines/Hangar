@@ -1,11 +1,13 @@
 import React from 'react';
 import { Text, IconButton, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { ExpoJudgingSession } from '@hangar/shared';
+import { useRouter } from 'next/router';
 import { BsThreeDots } from 'react-icons/bs';
 import { openErrorToast, openSuccessToast } from '../../../utils/CustomToast';
 import { useExpoJudgingSessionStore } from '../../../../stores/expoJudgingSession';
 
 export const JudgingSessionOptionsButton: React.FC = () => {
+  const router = useRouter();
   const { addExpoJudgingSession } = useExpoJudgingSessionStore();
   let expoJudgingSession: ExpoJudgingSession | undefined;
 
@@ -34,7 +36,12 @@ export const JudgingSessionOptionsButton: React.FC = () => {
           <Text>Create Expo Judging Session</Text>
         </MenuItem>
 
-        <MenuItem py={3}>
+        <MenuItem
+          py={3}
+          onClick={() => {
+            void router.push('/admin/createCriteriaJudgingSession');
+          }}
+        >
           <Text>Create Criteria Judging Session</Text>
         </MenuItem>
       </MenuList>
