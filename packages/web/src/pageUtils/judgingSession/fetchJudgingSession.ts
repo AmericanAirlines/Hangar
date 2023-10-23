@@ -11,6 +11,7 @@ export type FetchJudgingSessionArgs = {
   sessionType: 'expo' | 'criteria';
 };
 type FetchJudgingSessionError = Pick<AxiosResponse, 'status'>;
+
 /**
  * Fetches and de-serializes a judging session with a given type
  */
