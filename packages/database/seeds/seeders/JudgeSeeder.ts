@@ -27,13 +27,14 @@ export class JudgeSeeder extends Seeder {
       while (makeJudges > 0) {
         const user = users[Math.floor(Math.random() * users.length)];
         
-        if (!user || usedUsers.indexOf(user.id)>-1) {continue;}
-        usedUsers.push(user.id)
-        
-        const judge = new Judge({ user: user.toReference() });
+        if (!(!user || usedUsers.indexOf(user.id)>-1)) {
+          usedUsers = [...usedUsers,user.id]
+          
+          const judge = new Judge({ user: user.toReference() });
 
-        em.persist(judge);
-        makeJudges-=1;
+          em.persist(judge);
+          makeJudges-=1;
+        }
 
       }
     } catch(e) {

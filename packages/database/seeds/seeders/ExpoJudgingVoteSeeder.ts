@@ -1,30 +1,23 @@
-// @ts-nocheck
+/* eslint-disable class-methods-use-this */
 import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
 import { Project, ExpoJudgingSession, ExpoJudgingVote, Judge } from '../../src';
-
-const random = (seed:number) => ( function x(s) {
-  return () => {
-      s += 1
-      const n = Math.sin(s);
-      return n - Math.floor(n)
-  };
-})(seed);
+import { createSeededRandomGenerator } from '../utils';
 
 const randomVote = ((seed) => {
-  const rng = random(seed);
+  const rng = createSeededRandomGenerator(seed);
   return () => {
     const n = rng();
     return n > 0.5
   };
-})(1)
+})('1')
 
-const shuffle = (array, seed) => {
-  const rng = random(seed);
+const shuffle = <T>(array: T[], seed: string | undefined): T[] => {
+  const rng = createSeededRandomGenerator(seed);
   let currentIndex = array.length
   let randomIndex;
-  const newArray = [...array];
+  const newArray: T[] = [...array];
   // While there remain elements to shuffle:
   while (currentIndex !== 0) {
     // Pick a remaining element:
@@ -32,7 +25,7 @@ const shuffle = (array, seed) => {
     currentIndex -= 1;
     // And swap it with the current element.
     [newArray[currentIndex], newArray[randomIndex]] = [
-      newArray[randomIndex], newArray[currentIndex]];
+        newArray[randomIndex] as T, newArray[currentIndex] as T];
   }
   return newArray;
 }
@@ -47,12 +40,13 @@ export class ExpoJudgingVoteSeeder extends Seeder {
           const judge = judges[i];
           const expoJudgingSession = await em.findOne(ExpoJudgingSession, { id: '1' });
         
-          const currentProject = projects.pop();
-          const previousProject = projects.pop();
+          const currentProject = projects.pop()?.toReference();
+          const previousProject = projects.pop()?.toReference();
           
           if (!currentProject || !previousProject) return; // no projects to vote on
-          await em.populate(judge, ['expoJudgingSessionContexts']);
+          if (!judge || !expoJudgingSession) return;
           
+          await em.populate(judge, ['expoJudgingSessionContexts']);
           const vote = new ExpoJudgingVote({
             judge: judge.toReference(),
             previousProject,
