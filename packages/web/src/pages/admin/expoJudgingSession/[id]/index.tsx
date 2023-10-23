@@ -2,7 +2,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import { Box, UnorderedList, ListItem, Heading, Flex, Text } from '@chakra-ui/react';
 import { PageContainer } from '../../../../components/layout/PageContainer';
-import { useExpoJudgingSessionFetcher } from '../../../../pageUtils/expoJudgingSession/[id]/useExpoJudgingSessionFetcher';
+import { useJudgingSessionFetcher } from '../../../../pageUtils/judgingSession';
 import {
   ExpoJudgingSessionResult,
   fetchExpoJudgingSessionResults,
@@ -10,7 +10,7 @@ import {
 import { openErrorToast } from '../../../../components/utils/CustomToast';
 
 const ExpoJudgingSessionDetails: NextPage = () => {
-  const { expoJudgingSession } = useExpoJudgingSessionFetcher();
+  const { expoJudgingSession } = useJudgingSessionFetcher({ sessionType: 'expo' });
   const [expoJudgingSessionResults, setExpoJudgingSessionResults] =
     React.useState<ExpoJudgingSessionResult[]>();
 

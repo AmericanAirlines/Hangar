@@ -15,7 +15,7 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
   React.useEffect(() => {
     if (previousProject && !currentProject) {
       // Judging has finished
-      void router.push(`/expoJudgingSession/${expoJudgingSessionId}/sessionComplete`);
+      void router.push(`/judgingSessionComplete`);
     }
   }, [previousProject, currentProject, router, expoJudgingSessionId]);
 

@@ -1280,6 +1280,72 @@
     },
     {
       "columns": {
+        "judge": {
+          "name": "judge",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        },
+        "criteriaJudgingSession": {
+          "name": "criteriaJudgingSession",
+          "type": "bigint",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "bigint"
+        }
+      },
+      "name": "Judge_criteriaJudgingSessions",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "Judge_criteriaJudgingSessions_pkey",
+          "columnNames": [
+            "judge",
+            "criteriaJudgingSession"
+          ],
+          "composite": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "Judge_criteriaJudgingSessions_judge_foreign": {
+          "constraintName": "Judge_criteriaJudgingSessions_judge_foreign",
+          "columnNames": [
+            "judge"
+          ],
+          "localTableName": "public.Judge_criteriaJudgingSessions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.Judge",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "Judge_criteriaJudgingSessions_criteriaJudgingSession_foreign": {
+          "constraintName": "Judge_criteriaJudgingSessions_criteriaJudgingSession_foreign",
+          "columnNames": [
+            "criteriaJudgingSession"
+          ],
+          "localTableName": "public.Judge_criteriaJudgingSessions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.CriteriaJudgingSession",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {}
+    },
+    {
+      "columns": {
         "id": {
           "name": "id",
           "type": "bigint",

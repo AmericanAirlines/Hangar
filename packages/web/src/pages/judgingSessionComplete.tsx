@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { NextPage } from 'next';
 import { Box, Button, keyframes } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { PageContainer } from '../../../components/layout/PageContainer';
-import { useConfetti } from '../../../pageUtils/Confetti/Confetti';
+import { PageContainer } from '../components/layout/PageContainer';
+import { useConfetti } from '../pageUtils/Confetti/Confetti';
 
 const bob = keyframes`
   0% {
@@ -40,7 +40,7 @@ const SessionComplete: NextPage = () => {
 
   return (
     <PageContainer
-      pageTitle={'Session Complete'}
+      pageTitle={'Judging Session Complete'}
       heading={'You did it!'}
       subHeading={"You've judged all projects"}
     >
