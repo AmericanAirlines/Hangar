@@ -91,7 +91,7 @@ describe('judge post endpoint', () => {
     expect(mockJudge.expoJudgingSessionContexts.add).toBeCalledWith(mockEjsContext);
 
     expect(req.entityManager.persistAndFlush).toBeCalled();
-    expect(res.redirect).toHaveBeenLastCalledWith('/judgingIntro');
+    expect(res.send).toHaveBeenLastCalledWith(mockJudge);
   });
   it('should return 500 when it fails to create a judge', async () => {
     const mockUserReference = { id: '1' };
