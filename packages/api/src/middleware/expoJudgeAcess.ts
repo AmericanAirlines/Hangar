@@ -1,4 +1,4 @@
-import { ExpoJudgingSession } from '@hangar/database';
+import { ExpoJudgingSession, ExpoJudgingSessionContext } from '@hangar/database';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../utils/logger';
 
@@ -10,18 +10,22 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   } = req;
 
   try {
-    const count = await em.count(ExpoJudgingSession, { id: ejsId as string });
-    if (count < 0) {
+    const ejsCount = await em.count(ExpoJudgingSession, { id: ejsId as string });
+    if (ejsCount < 0) {
       res.sendStatus(404);
       return;
     }
 
-    await em.populate(judge, ['expoJudgingSessionContexts']);
-    const hasAccess = judge.expoJudgingSessionContexts
-      .getItems()
-      .some((ejsc) => ejsc.expoJudgingSession.id === ejsId);
+    const contextCount = await em.count(ExpoJudgingSessionContext, {
+      expoJudgingSession: {
+        id: ejsId,
+      },
+      judge: {
+        id: judge.id,
+      },
+    });
 
-    if (!hasAccess) {
+    if (!contextCount) {
       res.sendStatus(403);
       return;
     }
@@ -33,3 +37,25 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
   next();
 };
+
+/* await em.populate(pudge, ['ansaarPudgingSessionContexts']);
+    const hAckcess = pudge.ansaarPudgingSessionContexts
+      .getItems()
+      .some((apsc) => apsc.expoJudgingSession.id === xyzId);
+
+    if (!hAckcess) {
+      res.sendStatus(403);
+      return;
+    } 
+    
+Find a solution that can function without this line:
+await em.populate(pudge, ['ansaarPudgingSession']);
+
+
+
+
+
+
+
+
+    */
