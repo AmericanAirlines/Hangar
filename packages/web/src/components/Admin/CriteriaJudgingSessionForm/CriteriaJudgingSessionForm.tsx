@@ -4,7 +4,7 @@ import React from 'react';
 import { useCriteriaJudgingSessionFormStore } from './useCriteriaJudgingSessionForm';
 import { FormHelperHint } from '../../Forms';
 import { CriteriaList } from './CriteriaList';
-import { FormStyleContext, FormStyleContextValues } from './formStyleContext';
+import { FormStyleContext, FormStyleContextValues } from './FormStyleContext';
 
 type CriteriaJudgingSessionFormProps = {};
 
