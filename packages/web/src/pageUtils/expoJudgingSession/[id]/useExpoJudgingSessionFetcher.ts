@@ -2,7 +2,7 @@ import React from 'react';
 import { z } from 'zod';
 import { useRouter } from 'next/router';
 import { ExpoJudgingSession, Schema } from '@hangar/shared';
-import { fetchExpoJudgingSession } from './fetchExpoJudgingSession';
+import { fetchJudgingSession } from '../../judgingSession/fetchJudgingSession';
 import { handleFetchError } from '../../judgingSession/handleFetchErrors';
 import { openErrorToast } from '../../../components/utils/CustomToast';
 
@@ -34,8 +34,9 @@ export const useExpoJudgingSessionFetcher = () => {
         openErrorToast({ title: 'Invalid Expo Judging Session ID' });
         return;
       }
-      const response = await fetchExpoJudgingSession({
-        expoJudgingSessionId,
+      const response = await fetchJudgingSession({
+        judgingSessionId: expoJudgingSessionId,
+        sessionType: 'expo',
       });
 
       const originalUrl = router.asPath;
