@@ -9,7 +9,7 @@ type CriteriaJudgingSessionStore = {
   fetchCriteriaJudgingSessions: () => Promise<void>;
   addCriteriaJudgingSession: (
     ...args: Parameters<typeof createCriteriaJudgingSession>
-  ) => Promise<void>;
+  ) => Promise<undefined | CriteriaJudgingSession>;
 };
 
 export const useCriteriaJudgingSessionStore = create<CriteriaJudgingSessionStore>((set) => ({
@@ -36,5 +36,7 @@ export const useCriteriaJudgingSessionStore = create<CriteriaJudgingSessionStore
         ],
       }));
     }
+
+    return newCriteriaJudgingSession;
   },
 }));

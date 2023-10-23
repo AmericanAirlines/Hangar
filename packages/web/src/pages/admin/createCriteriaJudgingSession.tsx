@@ -1,6 +1,7 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { PageContainer } from '../../components/layout/PageContainer';
+import { CriteriaJudgingSessionForm } from '../../components/Admin/CriteriaJudgingSessionForm';
 
 const CreateCriteriaJudgingSession: NextPage = () => {
   React.useEffect(() => {}, []);
@@ -10,7 +11,7 @@ const CreateCriteriaJudgingSession: NextPage = () => {
       pageTitle="Create Criteria Judging Session"
       heading={'Create Criteria Judging Session'}
     >
-      Hello world
+      <CriteriaJudgingSessionForm />
     </PageContainer>
   );
 };
