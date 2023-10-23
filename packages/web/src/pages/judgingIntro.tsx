@@ -32,8 +32,7 @@ const JudgingIntro = () => {
             </ListItem>
             <ListItem fontSize={20}>
               <ListIcon as={BsFill3CircleFill} color="green.500" boxSize={6} />
-              Continue judging projects until there&apos;s no more teams to judge or until judging
-              has ended.
+              {`Continue judging projects as long as time allows or until there are no more projects to judge.`}
             </ListItem>
           </List>
         </Box>
