@@ -29,5 +29,5 @@ export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArg
     }
   }
 
-  return {} as ExpoJudgingSession;
+  return undefined;
 };

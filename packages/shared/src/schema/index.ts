@@ -1,3 +1,5 @@
+export * as criteria from './criteria';
+export * as criteriaJudgingSession from './criteriaJudgingSession';
 export * as project from './project';
 export * as user from './user';
 export * as judge from './judge';

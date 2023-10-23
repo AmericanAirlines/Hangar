@@ -19,10 +19,10 @@ export const getNextProject = async ({
   excludedProjectIds: string[];
   entityManager: EntityManager;
 }): Promise<Project | null> => {
-  // Don't visit teams the judge has already visited or skipped
+  // Don't visit projects the judge has already visited or skipped
   const query: FilterQuery<Project> = { id: { $nin: excludedProjectIds } };
 
-  // Find the team with the fewest judgeVisits and the lowest activeJudgeCount
+  // Find the project with the fewest judgeVisits and the lowest activeJudgeCount
   const queryOptions: FindOneOptions<Project> = {
     orderBy: { judgeVisits: QueryOrder.ASC, activeJudgeCount: QueryOrder.ASC },
     lockMode: LockMode.PESSIMISTIC_READ, // Don't skip locked projects

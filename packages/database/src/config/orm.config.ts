@@ -33,6 +33,13 @@ export const getBaseConfig = (): Options<PostgreSqlDriver> => {
     loadStrategy: LoadStrategy.JOINED,
     extensions: [Migrator],
     highlighter: new SqlHighlighter(),
+    ...(env.disableDatabaseSSL
+      ? {}
+      : {
+          driverOptions: {
+            connection: { ssl: true },
+          },
+        }),
   };
 };
 
