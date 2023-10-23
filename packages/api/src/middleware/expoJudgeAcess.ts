@@ -37,25 +37,3 @@ export const post = async (req: Request, res: Response, next: NextFunction) => {
   }
   next();
 };
-
-/* await em.populate(pudge, ['ansaarPudgingSessionContexts']);
-    const hAckcess = pudge.ansaarPudgingSessionContexts
-      .getItems()
-      .some((apsc) => apsc.expoJudgingSession.id === xyzId);
-
-    if (!hAckcess) {
-      res.sendStatus(403);
-      return;
-    } 
-    
-Find a solution that can function without this line:
-await em.populate(pudge, ['ansaarPudgingSession']);
-
-
-
-
-
-
-
-
-    */

@@ -16,7 +16,7 @@ describe('expoJudgingSession/id/continueSession post handler', () => {
     };
     const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
     const mockEjs = {};
-    req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
+    req.entityManager.findOneOrFail.mockResolvedValueOnce(mockEjs);
 
     const res = createMockResponse();
 
@@ -27,32 +27,6 @@ describe('expoJudgingSession/id/continueSession post handler', () => {
       expoJudgingSession: mockEjs,
     });
     expect(res.sendStatus).toHaveBeenCalledWith(204);
-  });
-
-  it('returns a 404 status if the ejs cannot be found', async () => {
-    const req = createMockRequest();
-    const res = createMockResponse();
-
-    await post(req as any, res as any);
-
-    expect(res.sendStatus).toHaveBeenCalledWith(404);
-  });
-
-  it('returns a 403 status if judge does not have access', async () => {
-    const mockId = '123';
-    const mockExpoJudgingSessionContexts = [] as any[];
-    const mockJudge = {
-      expoJudgingSessionContexts: { getItems: jest.fn(() => mockExpoJudgingSessionContexts) },
-    };
-    const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
-    const mockEjs = {};
-    req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
-
-    const res = createMockResponse();
-
-    await post(req as any, res as any);
-
-    expect(res.sendStatus).toHaveBeenCalledWith(403);
   });
 
   it('returns a 500 if something goes wrong', async () => {
