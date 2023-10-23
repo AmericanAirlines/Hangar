@@ -14,32 +14,31 @@ export class JudgeSeeder extends Seeder {
         em.persist(judge);
       } catch {
         // eslint-disable-next-line no-console
-        console.error('a','Failed to create judge for primary user');
+        console.error('a', 'Failed to create judge for primary user');
       }
     }
     try {
       // find all other users
-      const users = await em.find(User, { id: { $ne: '1' }});
+      const users = await em.find(User, { id: { $ne: '1' } });
       // create a judge for some users, ensure the judges are fewer
       // than all users minus the primary user and one base user
-      let makeJudges = Math.min(judgesToMake, users.length-1)
-      let usedUsers = ['1']
+      let makeJudges = Math.min(judgesToMake, users.length - 1);
+      let usedUsers = ['1'];
       while (makeJudges > 0) {
         const user = users[Math.floor(Math.random() * users.length)];
-        
-        if (!(!user || usedUsers.indexOf(user.id)>-1)) {
-          usedUsers = [...usedUsers,user.id]
-          
+
+        if (!(!user || usedUsers.indexOf(user.id) > -1)) {
+          usedUsers = [...usedUsers, user.id];
+
           const judge = new Judge({ user: user.toReference() });
 
           em.persist(judge);
-          makeJudges-=1;
+          makeJudges -= 1;
         }
-
       }
-    } catch(e) {
+    } catch (e) {
       // eslint-disable-next-line no-console
-      console.error(e,'Failed to create additional judges');
+      console.error(e, 'Failed to create additional judges');
     }
   };
 }

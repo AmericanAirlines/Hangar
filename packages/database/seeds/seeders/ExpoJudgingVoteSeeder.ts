@@ -9,13 +9,13 @@ const randomVote = ((seed) => {
   const rng = createSeededRandomGenerator(seed);
   return () => {
     const n = rng();
-    return n > 0.5
+    return n > 0.5;
   };
-})('1')
+})('1');
 
 const shuffle = <T>(array: T[], seed: string | undefined): T[] => {
   const rng = createSeededRandomGenerator(seed);
-  let currentIndex = array.length
+  let currentIndex = array.length;
   let randomIndex;
   const newArray: T[] = [...array];
   // While there remain elements to shuffle:
@@ -25,27 +25,29 @@ const shuffle = <T>(array: T[], seed: string | undefined): T[] => {
     currentIndex -= 1;
     // And swap it with the current element.
     [newArray[currentIndex], newArray[randomIndex]] = [
-        newArray[randomIndex] as T, newArray[currentIndex] as T];
+      newArray[randomIndex] as T,
+      newArray[currentIndex] as T,
+    ];
   }
   return newArray;
-}
+};
 
 export class ExpoJudgingVoteSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {
     if (env.primaryUserIsAdmin) {
-      try{
-        const projects = shuffle( await em.find(Project, {}), 1 );
-        const judges = await em.find(Judge, {id:{$ne:'1'}});
-        for (let i = 0; i < judges.length; i+=1) {
+      try {
+        const projects = shuffle(await em.find(Project, {}), 1);
+        const judges = await em.find(Judge, { id: { $ne: '1' } });
+        for (let i = 0; i < judges.length; i += 1) {
           const judge = judges[i];
           const expoJudgingSession = await em.findOne(ExpoJudgingSession, { id: '1' });
-        
+
           const currentProject = projects.pop()?.toReference();
           const previousProject = projects.pop()?.toReference();
-          
+
           if (!currentProject || !previousProject) return; // no projects to vote on
           if (!judge || !expoJudgingSession) return;
-          
+
           await em.populate(judge, ['expoJudgingSessionContexts']);
           const vote = new ExpoJudgingVote({
             judge: judge.toReference(),
@@ -56,10 +58,9 @@ export class ExpoJudgingVoteSeeder extends Seeder {
           });
           em.persist(vote);
         }
-      }
-      catch(e){
+      } catch (e) {
         // eslint-disable-next-line no-console
-        console.error(e,'Failed to create votes');
+        console.error(e, 'Failed to create votes');
       }
     }
   };

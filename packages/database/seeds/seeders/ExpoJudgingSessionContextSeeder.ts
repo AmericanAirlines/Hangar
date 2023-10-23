@@ -9,13 +9,12 @@ export class ExpoJudgingSessionContextSeeder extends Seeder {
     if (env.primaryUserIsAdmin) {
       try {
         // non primary user judges
-        const judges = await em.find(Judge, {id:{$ne:'1'}});
-        const expoJudgingSession:ExpoJudgingSession[] = await em.find(ExpoJudgingSession, {});
+        const judges = await em.find(Judge, { id: { $ne: '1' } });
+        const expoJudgingSession: ExpoJudgingSession[] = await em.find(ExpoJudgingSession, {});
 
-        judges.forEach( async (judge) => {
-          
+        judges.forEach(async (judge) => {
           if (!expoJudgingSession[0]) return;
-          
+
           judge.expoJudgingSessionContexts.add(
             new ExpoJudgingSessionContext({
               judge: judge.toReference(),
@@ -23,7 +22,7 @@ export class ExpoJudgingSessionContextSeeder extends Seeder {
             }),
           );
           await em.populate(judge, ['expoJudgingSessionContexts']);
-          
+
           em.persist(judge);
         });
       } catch {
