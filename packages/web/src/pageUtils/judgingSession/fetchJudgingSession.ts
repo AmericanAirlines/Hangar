@@ -6,19 +6,18 @@ import {
 import axios, { AxiosResponse, isAxiosError } from 'axios';
 import dayjs from 'dayjs';
 
-type FetchJudgingSessionArgs = {
+export type FetchJudgingSessionArgs = {
   judgingSessionId: string;
   sessionType: 'expo' | 'criteria';
 };
 type FetchJudgingSessionError = Pick<AxiosResponse, 'status'>;
-
 /**
  * Fetches and de-serializes a judging session with a given type
  */
-export function fetchJudgingSession(
+export async function fetchJudgingSession(
   args: FetchJudgingSessionArgs & { sessionType: 'expo' },
 ): Promise<ExpoJudgingSession | FetchJudgingSessionError>;
-export function fetchJudgingSession(
+export async function fetchJudgingSession(
   args: FetchJudgingSessionArgs & { sessionType: 'criteria' },
 ): Promise<CriteriaJudgingSession | FetchJudgingSessionError>;
 export async function fetchJudgingSession({
