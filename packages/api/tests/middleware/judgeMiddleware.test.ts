@@ -24,7 +24,7 @@ describe('Judge Middleware', () => {
   });
 
   it('sends a 403 status when user is a Judge', async () => {
-    const mockReq = createMockRequest();
+    const mockReq = createMockRequest({ session: { id: '1' } });
     const mockRes = createMockResponse();
     const mockNext = jest.fn();
 
@@ -33,8 +33,18 @@ describe('Judge Middleware', () => {
     expect(mockNext).not.toHaveBeenCalled();
   });
 
+  it('sends a 401 status when user does not have a valid session', async () => {
+    const mockReq = createMockRequest();
+    const mockRes = createMockResponse();
+    const mockNext = jest.fn();
+
+    await judgeMiddleware(mockReq as any, mockRes as any, mockNext);
+    expect(mockRes.sendStatus).toHaveBeenCalledWith(401);
+    expect(mockNext).not.toHaveBeenCalled();
+  });
+
   it('sends a 500 status when an error occurs', async () => {
-    const mockReq = createMockRequest({ user: { id: '1' } as any });
+    const mockReq = createMockRequest({ session: { id: '1' } });
     mockReq.entityManager.findOne = jest.fn().mockRejectedValueOnce(new Error('uh oh'));
     const mockRes = createMockResponse();
     const mockNext = jest.fn();

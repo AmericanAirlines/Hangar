@@ -1,6 +1,10 @@
 /* istanbul ignore file */
 export * from './Admin';
 export * from './AppConfig';
+export * from './Criteria';
+export * from './CriteriaJudgingSession';
+export * from './CriteriaJudgingSubmission';
+export * from './CriteriaScore';
 export * from './Event';
 export * from './ExpoJudgingSession';
 export * from './ExpoJudgingSessionContext';

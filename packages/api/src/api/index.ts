@@ -13,6 +13,7 @@ import { prize } from './prize';
 import { judge } from './judge';
 import { expoJudgingSession } from './expoJudgingSession';
 import { expoJudgingVote } from './expoJudgingVote';
+import { criteriaJudgingSession } from './criteriaJudgingSession';
 
 export const api = Router();
 api.use(json());
@@ -30,7 +31,6 @@ api.use(
 
 // UNPROTECTED ROUTES
 api.use('/auth', auth);
-api.use('/expoJudgingSession', expoJudgingSession);
 api.use('/expoJudgingVote', expoJudgingVote);
 api.use('/event', event);
 api.use('/health', health);
@@ -38,9 +38,11 @@ api.use('/prize', prize);
 
 // SELF-PROTECTED ROUTES
 api.use('/admin', admin);
+api.use('/criteriaJudgingSession', criteriaJudgingSession);
+api.use('/expoJudgingSession', expoJudgingSession);
+api.use('/judge', judge);
 api.use('/project', project);
 api.use('/user', user);
-api.use('/judge', judge);
 
 // INGESTED ROUTERS
 api.use(slack);

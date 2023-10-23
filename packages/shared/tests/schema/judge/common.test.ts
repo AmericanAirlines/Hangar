@@ -8,16 +8,15 @@ describe('Judge put/post common schema', () => {
         inviteCode: `${v4()}`,
       }).success,
     ).toBe(true);
+
+    expect(
+      commonSchema.safeParse({
+        inviteCode: 'some secret',
+      }).success,
+    ).toBe(true);
   });
 
   it('fails on an incorrect uuid', () => {
-    // one character long(37)
-    expect(
-      commonSchema.safeParse({
-        inviteCode: `${v4()} - junk`,
-      }).success,
-    ).toBe(false);
-
     // incorrect type
     expect(
       commonSchema.safeParse({

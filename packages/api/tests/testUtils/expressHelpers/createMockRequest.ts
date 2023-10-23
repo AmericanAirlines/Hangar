@@ -14,5 +14,6 @@ export const createMockRequest = (defaults?: Partial<MockRequest>) => ({
   user: undefined as unknown as User,
   body: undefined,
   query: {},
+  params: {},
   ...defaults,
 });

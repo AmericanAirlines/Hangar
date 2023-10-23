@@ -13,8 +13,16 @@ jest.mock('../../../src/api/expoJudgingSession/get', () => ({
   get: createMockHandler(),
 }));
 
+jest.mock('../../../src/api/expoJudgingSession/id', () => ({
+  id: createMockHandler(),
+}));
+
 jest.mock('../../../src/middleware/adminMiddleware', () => ({
   adminMiddleware: createMockNext(),
+}));
+
+jest.mock('../../../src/middleware/judgeMiddleware', () => ({
+  judgeMiddleware: createMockNext(),
 }));
 
 const mockAdminMiddleware = getMock(adminMiddleware);

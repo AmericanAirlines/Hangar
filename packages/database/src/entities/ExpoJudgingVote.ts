@@ -8,6 +8,8 @@ import { scoreVotes, ProjectResult, ProjectScore } from '../entitiesUtils/scoreV
 import { ExpoJudgingSession } from './ExpoJudgingSession';
 import { Judge } from './Judge';
 
+export { ProjectResult, ProjectScore } from '../entitiesUtils/scoreVotes';
+
 const shuffle = <T extends (ExpoJudgingVote | Project)[]>(arr: T) =>
   arr.sort(() => Math.random() - 0.5) as T;
 
@@ -80,9 +82,9 @@ export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
 
     // If the number of calibration votes is >= 50% of the votes for the project; throw error
     if (avgNumVotesPerProject === 0 || votesNeededForCalibration / avgNumVotesPerProject >= 0.75) {
-      const error = new Error('Insufficient vote count for judging');
-      error.name = insufficientVoteCountError;
-      throw error;
+      throw new Error('Insufficient vote count for judging', {
+        cause: insufficientVoteCountError,
+      });
     }
 
     // Pass over the data in random order to obtain an unbiased baseline

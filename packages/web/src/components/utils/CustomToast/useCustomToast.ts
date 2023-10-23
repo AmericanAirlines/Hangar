@@ -2,6 +2,7 @@ import { UseToastOptions } from '@chakra-ui/react';
 import { create } from 'zustand';
 import { defaultErrorToastProps } from './defaultErrorToastProps';
 import { defaultSuccessToastProps } from './defaultSuccessToastProps';
+import { defaultInfoToastProps } from './defaultInfoToastProps';
 
 type OpenErrorToastArgs = UseToastOptions;
 type OpenSuccessToastArgs = UseToastOptions;
@@ -10,6 +11,7 @@ type CustomToastStore = {
   toastValues?: UseToastOptions;
   openErrorToast: (args: OpenErrorToastArgs) => void;
   openSuccessToast: (args: OpenSuccessToastArgs) => void;
+  openInfoToast: (args: OpenSuccessToastArgs) => void;
 };
 
 export const useCustomToast = create<CustomToastStore>((set) => ({
@@ -20,6 +22,9 @@ export const useCustomToast = create<CustomToastStore>((set) => ({
   openSuccessToast: (args) => {
     set({ toastValues: { ...defaultSuccessToastProps, ...args } });
   },
+  openInfoToast: (args) => {
+    set({ toastValues: { ...defaultInfoToastProps, ...args } });
+  },
 }));
 
-export const { openErrorToast, openSuccessToast } = useCustomToast.getState();
+export const { openErrorToast, openSuccessToast, openInfoToast } = useCustomToast.getState();
