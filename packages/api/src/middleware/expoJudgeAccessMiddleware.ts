@@ -33,6 +33,7 @@ export const expoJudgeAccessMiddleware = async (
       res.sendStatus(403);
       return;
     }
+
     next();
   } catch (error) {
     logger.error('Failed to evaluate expo judge access', error);
