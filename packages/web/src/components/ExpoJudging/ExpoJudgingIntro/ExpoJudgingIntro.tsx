@@ -1,8 +1,6 @@
 import React from 'react';
 import { Box, Button, Flex, List, ListItem, ListIcon, Heading } from '@chakra-ui/react';
 import { BsFill1CircleFill, BsFill2CircleFill, BsFill3CircleFill } from 'react-icons/bs';
-import { PageContainer } from '../../layout/PageContainer';
-import { useExpoJudgingSessionFetcher } from '../../../pageUtils/expoJudgingSession/[id]/useExpoJudgingSessionFetcher';
 import { colors } from '../../../theme/colors';
 
 type ExpoJudgingIntroProps = { onStart: () => void };
