@@ -14,6 +14,7 @@ import { judge } from './judge';
 import { expoJudgingSession } from './expoJudgingSession';
 import { expoJudgingVote } from './expoJudgingVote';
 import { criteriaJudgingSession } from './criteriaJudgingSession';
+import { criteriaJudgingSubmission } from './criteriaJudgingSubmission';
 
 export const api = Router();
 api.use(json());
@@ -39,6 +40,7 @@ api.use('/prize', prize);
 // SELF-PROTECTED ROUTES
 api.use('/admin', admin);
 api.use('/criteriaJudgingSession', criteriaJudgingSession);
+api.use('/criteriaJudgingSubmission', criteriaJudgingSubmission);
 api.use('/expoJudgingSession', expoJudgingSession);
 api.use('/judge', judge);
 api.use('/project', project);
