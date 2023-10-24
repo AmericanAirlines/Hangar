@@ -18,7 +18,7 @@ export class ExpoJudgingSessionSeeder extends Seeder {
         em.persist(expoJudgingSession);
       } catch {
         // eslint-disable-next-line no-console
-        console.error('Failed to create judge for primary user');
+        console.error('Failed to create a judging session');
       }
     }
   };

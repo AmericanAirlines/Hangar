@@ -14,7 +14,7 @@ export class JudgeSeeder extends Seeder {
         em.persist(judge);
       } catch {
         // eslint-disable-next-line no-console
-        console.error('a', 'Failed to create judge for primary user');
+        console.error('Failed to create judge for primary user');
       }
     }
     try {
@@ -22,7 +22,7 @@ export class JudgeSeeder extends Seeder {
       const users = await em.find(User, { id: { $ne: '1' } });
       // create a judge for some users, ensure the judges are fewer
       // than all users minus the primary user and one base user
-      let makeJudges = Math.min(judgesToMake, users.length - 1);
+      let numJudgesToMake = Math.min(judgesToMake, users.length - 1);
       let usedUsers = ['1'];
       while (makeJudges > 0) {
         const user = users[Math.floor(Math.random() * users.length)];

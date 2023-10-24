@@ -37,7 +37,7 @@ export class ExpoJudgingVoteSeeder extends Seeder {
     if (env.primaryUserIsAdmin) {
       try {
         const projects = shuffle(await em.find(Project, {}), '1');
-        const judges = await em.find(Judge, { id: { $ne: '1' } });
+        const judges = await em.find(Judge, env.primaryUserIsJudge ? { id: { $ne: '1' } } : {});
         for (let i = 0; i < judges.length; i += 1) {
           const judge = judges[i];
           const expoJudgingSession = await em.findOne(ExpoJudgingSession, { id: '1' });
@@ -60,7 +60,7 @@ export class ExpoJudgingVoteSeeder extends Seeder {
         }
       } catch (e) {
         // eslint-disable-next-line no-console
-        console.error(e, 'Failed to create votes');
+        console.error('Failed to create votes: ', e);
       }
     }
   };
