@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Schema } from '@hangar/shared';
 import { z } from 'zod';
+import { DriverException } from '@mikro-orm/core';
 import { CriteriaJudgingSubmission, CriteriaScore } from '@hangar/database';
 import { validatePayload } from '../../utils/validatePayload';
 import { logger } from '../../utils/logger';
@@ -76,7 +77,12 @@ export const post = async (req: Request, res: Response) => {
 
     res.sendStatus(201);
   } catch (error) {
-    // TODO: Handle the 409
+    if ((error as DriverException).code === '23505') {
+      // Unique constraint violation
+      res.sendStatus(409);
+      return;
+    }
+
     logger.error('Unable to create criteria judging submission', error);
     res.sendStatus(500);
   }
