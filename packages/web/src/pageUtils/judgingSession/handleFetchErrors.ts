@@ -1,8 +1,8 @@
 import { NextRouter } from 'next/router';
 import { wait } from '@hangar/shared';
-import { openErrorToast, openInfoToast } from '../../../components/utils/CustomToast';
+import { openErrorToast, openInfoToast } from '../../components/utils/CustomToast';
 import { createOrUpdateJudge } from './createOrUpdateJudge';
-import { signInWithSlack } from '../../../components/layout/AppLayout/NavBar/NavElements/AuthButtons/utils';
+import { signInWithSlack } from '../../components/layout/AppLayout/NavBar/NavElements/AuthButtons/utils';
 
 type HandleFetchErrorArgs = {
   router: NextRouter;
@@ -20,7 +20,7 @@ export const handleFetchError = async ({
   onJudgeAccessSuccess,
 }: HandleFetchErrorArgs) => {
   if (status === 404) {
-    openErrorToast({ title: 'Expo Judging Session Not Found' });
+    openErrorToast({ title: 'Judging Session Not Found' });
     return;
   }
 
@@ -38,7 +38,7 @@ export const handleFetchError = async ({
       openErrorToast({
         title: 'Access Denied',
         description:
-          'You do not have access to that Expo Judging Session; please contact an administrator if you think this is an error',
+          'You do not have access to that Judging Session; please contact an administrator if you think this is an error',
       });
       void router.push('/');
       return;
@@ -52,7 +52,7 @@ export const handleFetchError = async ({
       console.error('Failed to create or update judge: ', error);
 
       openErrorToast({
-        title: `Unable to join Expo Judging Session`,
+        title: `Unable to join Judging Session`,
         description: 'An unexpected error occurred',
       });
       return;
@@ -64,7 +64,7 @@ export const handleFetchError = async ({
 
   // All other status codes
   openErrorToast({
-    title: 'Failed to fetch Expo Judging Session details',
+    title: 'Failed to fetch Judging Session details',
     description: 'An unexpected error occurred',
   });
   void router.push('/');

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { ExpoJudgingSessionContext, Judge } from '@hangar/database';
+import { CriteriaJudgingSession, ExpoJudgingSessionContext, Judge } from '@hangar/database';
 import { put } from '../../../src/api/judge/put';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
@@ -39,7 +39,7 @@ describe('judge put endpoint', () => {
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOne).toBeCalledTimes(1);
+    expect(req.entityManager.findOne).toBeCalledTimes(2);
     expect(res.sendStatus).toHaveBeenLastCalledWith(403);
   });
 
@@ -83,6 +83,34 @@ describe('judge put endpoint', () => {
 
     expect(req.entityManager.findOne).toBeCalledTimes(1);
     expect(mockJudge.expoJudgingSessionContexts.add).toBeCalledWith(mockExpoJudgingSessionContext);
+    expect(req.entityManager.persistAndFlush).toBeCalledTimes(1);
+    expect(res.send).toHaveBeenLastCalledWith(mockJudge);
+  });
+
+  it('should look for a matching criteria judging session if an expo judging session cannot be found', async () => {
+    validatePayloadMock.mockReturnValueOnce({
+      errorHandled: false,
+      data: { inviteCode: 'xyz' },
+    } as any);
+    const mockJudge = { toReference: jest.fn(), criteriaJudgingSessions: { add: jest.fn() } };
+
+    const req = createMockRequest({
+      query: { inviteCode: 'xyz' },
+      judge: mockJudge as any,
+    });
+
+    const mockCriteriaJudgingSession = { toReference: jest.fn() };
+    req.entityManager.findOne
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(mockCriteriaJudgingSession as any);
+
+    const res = createMockResponse();
+
+    await put(req as any, res as any);
+
+    expect(req.entityManager.findOne).toBeCalledTimes(2);
+    expect(req.entityManager.findOne).toBeCalledWith(CriteriaJudgingSession, expect.anything());
+    expect(mockJudge.criteriaJudgingSessions.add).toBeCalledWith(mockCriteriaJudgingSession);
     expect(req.entityManager.persistAndFlush).toBeCalledTimes(1);
     expect(res.send).toHaveBeenLastCalledWith(mockJudge);
   });
