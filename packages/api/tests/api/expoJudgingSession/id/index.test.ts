@@ -3,6 +3,7 @@ import supertest from 'supertest';
 import { createMockHandler } from '../../../testUtils/expressHelpers/createMockHandler';
 import { createMockNext } from '../../../testUtils/expressHelpers/createMockNext';
 import { judgeMiddleware } from '../../../../src/middleware/judgeMiddleware';
+import { expoJudgeAccessMiddleware } from '../../../../src/middleware/expoJudgeAccessMiddleware';
 import { getMock } from '../../../testUtils/getMock';
 
 jest.mock('../../../../src/api/expoJudgingSession/id/get', () => ({
@@ -15,6 +16,10 @@ jest.mock('../../../../src/api/expoJudgingSession/id/projects', () => ({
 
 jest.mock('../../../../src/middleware/judgeMiddleware', () => ({
   judgeMiddleware: createMockNext(),
+}));
+
+jest.mock('../../../../src/middleware/expoJudgeAccessMiddleware', () => ({
+  expoJudgeAccessMiddleware: createMockNext(),
 }));
 
 const mockJudgeMiddleware = getMock(judgeMiddleware);
@@ -33,6 +38,7 @@ describe('id router', () => {
       await supertest(app).get('/continueSession');
       await supertest(app).get('');
       expect(mockJudgeMiddleware).toBeCalledTimes(4);
+      expect(expoJudgeAccessMiddleware).toBeCalledTimes(4);
     });
   });
 });
