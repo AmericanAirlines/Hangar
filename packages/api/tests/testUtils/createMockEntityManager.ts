@@ -4,6 +4,7 @@ type MockEntityManagerDefaults = Partial<jest.Mocked<EntityManager>>;
 
 export const createMockEntityManager = (defaults?: MockEntityManagerDefaults) => {
   const em = {
+    count: jest.fn(),
     getConnection: jest.fn().mockReturnValue({ isConnected: jest.fn().mockReturnValue(true) }),
     find: jest.fn(),
     findOne: jest.fn(),

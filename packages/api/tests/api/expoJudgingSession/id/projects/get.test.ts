@@ -23,7 +23,7 @@ describe('expoJudgingSession/id/projects GET handler', () => {
     };
     const req = createMockRequest({ params: { id: mockId }, judge: mockJudge as any });
     const mockEjs = {};
-    req.entityManager.findOne.mockResolvedValueOnce(mockEjs);
+    req.entityManager.findOneOrFail.mockResolvedValueOnce(mockEjs);
 
     const res = createMockResponse();
 
