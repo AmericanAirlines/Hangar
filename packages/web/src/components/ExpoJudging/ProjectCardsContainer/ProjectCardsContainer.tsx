@@ -4,13 +4,14 @@ import { Flex } from '@chakra-ui/react';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useExpoJudging } from '../hooks/useExpoJudging';
 import { PageSpinner } from '../../layout/PageSpinner';
-import JudgingIntro from '../../../pages/judgingIntro';
+import { ExpoJudgingIntro } from '../ExpoJudgingIntro';
 
 type ProjectCardsContainerProps = {};
 
 export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () => {
   const router = useRouter();
-  const { isLoading, previousProject, currentProject, expoJudgingSessionId } = useExpoJudging();
+  const { isLoading, previousProject, currentProject, expoJudgingSessionId, continueToNext } =
+    useExpoJudging();
 
   React.useEffect(() => {
     if (previousProject && !currentProject) {
@@ -33,9 +34,7 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
       w="100%"
     >
       {isAtStart ? (
-        <>
-          <JudgingIntro />
-        </>
+        <ExpoJudgingIntro onStart={continueToNext} />
       ) : (
         <>
           <ProjectCard type="Current" />
