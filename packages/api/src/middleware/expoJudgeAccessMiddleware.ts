@@ -2,7 +2,11 @@ import { ExpoJudgingSession, ExpoJudgingSessionContext } from '@hangar/database'
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../utils/logger';
 
-export const post = async (req: Request, res: Response, next: NextFunction) => {
+export const expoJudgeAccessMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const {
     judge,
     entityManager: em,
