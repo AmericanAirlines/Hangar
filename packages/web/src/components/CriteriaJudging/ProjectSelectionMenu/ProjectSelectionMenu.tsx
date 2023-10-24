@@ -29,7 +29,7 @@ export const ProjectSelectionMenu: React.FC<ProjectSelectionMenuProps> = ({
         </Flex>
       </MenuButton>
 
-      <MenuList maxH="50%">
+      <MenuList>
         {projects?.map((project) => (
           <MenuItem key={project.id} onClick={() => onSelect(project)}>
             <Flex py={5} direction="column">
