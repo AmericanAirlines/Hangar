@@ -1,11 +1,14 @@
 import React from 'react';
 import { NextPage } from 'next';
-import { Select } from '@chakra-ui/react';
+import { Project } from '@hangar/shared';
+import { Center } from '@chakra-ui/react';
 import { PageContainer } from '../../../components/layout/PageContainer';
 import { useJudgingSessionFetcher } from '../../../pageUtils/judgingSession';
-import { useCriteriaJudging } from '../../../components/CriteriaJudging/hooks/useCriteriaJudging';
+import { ProjectSelectionMenu, useCriteriaJudging } from '../../../components/CriteriaJudging';
+import { CriteriaJudgingForm } from '../../../components/CriteriaJudging/CriteriaJudgingForm';
 
 const CriteriaJudgingSessionDetails: NextPage = () => {
+  const [selectedProject, setSelectedProject] = React.useState<Project>();
   const { criteriaJudgingSession } = useJudgingSessionFetcher({ sessionType: 'criteria' });
   const { projects, isLoading } = useCriteriaJudging();
 
@@ -18,16 +21,18 @@ const CriteriaJudgingSessionDetails: NextPage = () => {
   return (
     <PageContainer
       pageTitle={'Criteria Judging'}
-      heading={'Criteria Judging'}
+      heading={criteriaJudgingSession?.title ?? ''}
+      subHeading={criteriaJudgingSession?.description ?? ''}
       isLoading={!criteriaJudgingSession || isLoading}
     >
-      <Select placeholder="Select a Project">
-        {projects?.map((project) => (
-          <option key={project.id} value={project.name}>
-            {project.name}
-          </option>
-        ))}
-      </Select>
+      {projects && <ProjectSelectionMenu projects={projects} onSelect={setSelectedProject} />}
+      {selectedProject ? (
+        <CriteriaJudgingForm project={selectedProject} />
+      ) : (
+        <Center p={5} w="full">
+          Select a project to begin judging...
+        </Center>
+      )}
     </PageContainer>
   );
 };
