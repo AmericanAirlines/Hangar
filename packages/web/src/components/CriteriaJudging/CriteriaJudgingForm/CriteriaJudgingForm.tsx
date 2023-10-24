@@ -1,16 +1,22 @@
-import { Flex, Heading, Text } from '@chakra-ui/react';
-import { Config, Project } from '@hangar/shared';
+import { Button, Flex } from '@chakra-ui/react';
+import { CriteriaJudgingSession, Project } from '@hangar/shared';
 import React from 'react';
-import { colors } from '../../../theme';
+import { ProjectDetails } from './ProjectDetails';
 
-type CriteriaJudgingFormProps = { project: Project };
+type CriteriaJudgingFormProps = {
+  project: Project;
+  criteriaJudgingSession: CriteriaJudgingSession;
+};
 
-export const CriteriaJudgingForm: React.FC<CriteriaJudgingFormProps> = ({ project }) => (
-  <Flex direction="column" w="full">
-    <Heading>{project.name}</Heading>
-    <Text>{project.description}</Text>
-    <Text color={colors.muted}>
-      {Config.project.locationLabel}: {project.location}
-    </Text>
+export const CriteriaJudgingForm: React.FC<CriteriaJudgingFormProps> = ({
+  project,
+  // criteriaJudgingSession,
+}) => (
+  <Flex direction="column" w="full" gap={10}>
+    <ProjectDetails project={project} />
+
+    <form onSubmit={() => {}}>
+      <Button>Submit</Button>
+    </form>
   </Flex>
 );

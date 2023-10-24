@@ -26,8 +26,11 @@ const CriteriaJudgingSessionDetails: NextPage = () => {
       isLoading={!criteriaJudgingSession || isLoading}
     >
       {projects && <ProjectSelectionMenu projects={projects} onSelect={setSelectedProject} />}
-      {selectedProject ? (
-        <CriteriaJudgingForm project={selectedProject} />
+      {selectedProject && criteriaJudgingSession ? (
+        <CriteriaJudgingForm
+          project={selectedProject}
+          criteriaJudgingSession={criteriaJudgingSession}
+        />
       ) : (
         <Center p={5} w="full">
           Select a project to begin judging...
