@@ -15,7 +15,7 @@ export const expoJudgeAccessMiddleware = async (
 
   try {
     const ejsCount = await em.count(ExpoJudgingSession, { id: ejsId as string });
-    if (ejsCount < 0) {
+    if (ejsCount === 0) {
       res.sendStatus(404);
       return;
     }
@@ -33,11 +33,9 @@ export const expoJudgeAccessMiddleware = async (
       res.sendStatus(403);
       return;
     }
-
-    res.sendStatus(204);
+    next();
   } catch (error) {
-    logger.error('Failed to get access', error);
+    logger.error('Failed to evaluate expo judge access', error);
     res.sendStatus(500);
   }
-  next();
 };

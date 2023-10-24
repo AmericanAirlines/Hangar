@@ -31,7 +31,7 @@ describe('expoJudgingSession/id/continueSession post handler', () => {
 
   it('returns a 500 if something goes wrong', async () => {
     const req = createMockRequest();
-    req.entityManager.findOne.mockRejectedValueOnce('An error occurred');
+    req.entityManager.findOneOrFail.mockRejectedValueOnce('An error occurred');
     const res = createMockResponse();
 
     await post(req as any, res as any);
