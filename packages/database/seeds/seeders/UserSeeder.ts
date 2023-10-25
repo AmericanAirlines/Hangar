@@ -3,6 +3,9 @@ import { EntityManager } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
 import { User } from '../../src';
+import { UserFactory } from '../factories/UserFactory';
+
+const usersToMake = 20;
 
 export class UserSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {
@@ -15,5 +18,6 @@ export class UserSeeder extends Seeder {
       });
       em.persist(user);
     }
+    new UserFactory(em).make(usersToMake);
   };
 }
