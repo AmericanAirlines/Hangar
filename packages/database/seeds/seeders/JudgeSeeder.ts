@@ -16,7 +16,6 @@ export class JudgeSeeder extends Seeder {
         em.persist(judge);
       } catch {
         // eslint-disable-next-line no-console
-        console.error('Failed to create judge for primary user');
       }
     }
     try {
