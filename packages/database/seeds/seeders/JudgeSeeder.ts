@@ -7,7 +7,6 @@ import { ExpoJudgingSession, Judge, User } from '../../src';
 const judgesToMake = 5;
 export class JudgeSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {
-    const ejs = await em.findOne(ExpoJudgingSession, { id: '1' as string });
     if (env.primaryUserIsAdmin) {
       try {
         const initialUser = await em.findOneOrFail(User, { id: '1' });
