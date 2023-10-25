@@ -61,7 +61,7 @@ export const post = async (req: Request, res: Response) => {
 
       if (score < criteria.scaleMin || score > criteria.scaleMax) {
         // Score is outside the range of acceptable values
-        res.status(400).send(`Invalid score (for criteria ${criteriaId}): ${score} `);
+        res.status(400).send(`Invalid score (for criteria ${criteria.title}): ${score} `);
         return;
       }
 
