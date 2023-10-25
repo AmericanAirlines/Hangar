@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { Schema } from '@hangar/shared';
 import { DriverException } from '@mikro-orm/core';
-import { ExpoJudgingSession, ExpoJudgingSessionContext } from '@hangar/database';
+import {
+  CriteriaJudgingSession,
+  ExpoJudgingSession,
+  ExpoJudgingSessionContext,
+} from '@hangar/database';
 import { logger } from '../../utils/logger';
 import { validatePayload } from '../../utils/validatePayload';
 
@@ -22,17 +26,28 @@ export const put = async (req: Request, res: Response) => {
       inviteCode: data.inviteCode,
     });
 
-    if (!expoJudgingSession) {
+    const criteriaJudgingSession = expoJudgingSession
+      ? null
+      : await req.entityManager.findOne(CriteriaJudgingSession, {
+          inviteCode: data.inviteCode,
+        });
+
+    if (!expoJudgingSession && !criteriaJudgingSession) {
       res.sendStatus(403);
       return;
     }
 
-    judge.expoJudgingSessionContexts.add(
-      new ExpoJudgingSessionContext({
-        judge: judge.toReference(),
-        expoJudgingSession: expoJudgingSession.toReference(),
-      }),
-    );
+    if (expoJudgingSession) {
+      judge.expoJudgingSessionContexts.add(
+        new ExpoJudgingSessionContext({
+          judge: judge.toReference(),
+          expoJudgingSession: expoJudgingSession.toReference(),
+        }),
+      );
+    } else {
+      judge.criteriaJudgingSessions.add(criteriaJudgingSession as CriteriaJudgingSession);
+    }
+
     await entityManager.persistAndFlush(judge);
 
     res.send(judge);

@@ -1,30 +1,27 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Button, Flex, Heading } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useExpoJudging } from '../hooks/useExpoJudging';
 import { PageSpinner } from '../../layout/PageSpinner';
+import { ExpoJudgingIntro } from '../ExpoJudgingIntro';
 
 type ProjectCardsContainerProps = {};
 
 export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () => {
   const router = useRouter();
-  const { isLoading, previousProject, currentProject, continueToNext, expoJudgingSessionId } =
+  const { isLoading, previousProject, currentProject, expoJudgingSessionId, continueToNext } =
     useExpoJudging();
 
   React.useEffect(() => {
     if (previousProject && !currentProject) {
       // Judging has finished
-      void router.push(`/expoJudgingSession/${expoJudgingSessionId}/sessionComplete`);
+      void router.push(`/judgingSessionComplete`);
     }
   }, [previousProject, currentProject, router, expoJudgingSessionId]);
 
   const isAtStart = !previousProject && !currentProject;
   const isAtEnd = previousProject && !currentProject;
-
-  const start = () => {
-    void continueToNext();
-  };
 
   if (isLoading || isAtEnd) return <PageSpinner />;
 
@@ -37,15 +34,7 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
       w="100%"
     >
       {isAtStart ? (
-        <>
-          {/* TODO: Create a proper Start component and add it here */}
-          <Flex direction="column" gap={5}>
-            <Heading>Start Judging</Heading>
-            <Button isLoading={isLoading} onClick={start}>
-              Continue
-            </Button>
-          </Flex>
-        </>
+        <ExpoJudgingIntro onStart={continueToNext} />
       ) : (
         <>
           <ProjectCard type="Current" />

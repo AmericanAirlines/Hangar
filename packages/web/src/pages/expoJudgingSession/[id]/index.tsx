@@ -1,11 +1,11 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { PageContainer } from '../../../components/layout/PageContainer';
-import { useExpoJudgingSessionFetcher } from '../../../pageUtils/expoJudgingSession/[id]/useExpoJudgingSessionFetcher';
+import { useJudgingSessionFetcher } from '../../../pageUtils/judgingSession';
 import { ProjectCardsContainer, useExpoJudging } from '../../../components/ExpoJudging';
 
 const ExpoJudgingSessionDetails: NextPage = () => {
-  const { expoJudgingSession } = useExpoJudgingSessionFetcher();
+  const { expoJudgingSession } = useJudgingSessionFetcher({ sessionType: 'expo' });
   React.useEffect(() => {
     if (expoJudgingSession) {
       useExpoJudging.getState().init({ expoJudgingSessionId: expoJudgingSession.id });
