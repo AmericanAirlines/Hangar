@@ -6,7 +6,7 @@ export const criteriaScore = z.object({
     .number()
     .or(z.string())
     .transform<number>((value, ctx) => {
-      if (typeof value === 'number') return value;
+      if (typeof value === 'number') return Math.floor(value);
 
       const int = Number.parseInt(value, 10);
 
