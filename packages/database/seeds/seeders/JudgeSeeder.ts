@@ -2,7 +2,7 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
-import { ExpoJudgingSession, Judge, User } from '../../src';
+import { Judge, User } from '../../src';
 
 const judgesToMake = 5;
 export class JudgeSeeder extends Seeder {
