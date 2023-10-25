@@ -10,10 +10,12 @@ export class ExpoJudgingSessionContextSeeder extends Seeder {
       try {
         // non primary user judges
         const judges = await em.find(Judge, env.primaryUserIsJudge ? { id: { $ne: '1' } } : {});
-        const expoJudgingSession: ExpoJudgingSession = await em.findOneOrFail(ExpoJudgingSession, {});
+        const expoJudgingSession: ExpoJudgingSession = await em.findOneOrFail(
+          ExpoJudgingSession,
+          {},
+        );
 
         judges.forEach((judge) => {
-
           judge.expoJudgingSessionContexts.add(
             new ExpoJudgingSessionContext({
               judge: judge.toReference(),
