@@ -38,9 +38,9 @@ export class ExpoJudgingVoteSeeder extends Seeder {
       try {
         const projects = shuffle(await em.find(Project, {}), '1');
         const judges = await em.find(Judge, env.primaryUserIsJudge ? { id: { $ne: '1' } } : {});
+        const expoJudgingSession = await em.findOne(ExpoJudgingSession, { id: '1' });
         for (let i = 0; i < judges.length; i += 1) {
           const judge = judges[i];
-          const expoJudgingSession = await em.findOne(ExpoJudgingSession, { id: '1' });
 
           const currentProject = projects.pop()?.toReference();
           const previousProject = projects.pop()?.toReference();
@@ -48,7 +48,6 @@ export class ExpoJudgingVoteSeeder extends Seeder {
           if (!currentProject || !previousProject) return; // no projects to vote on
           if (!judge || !expoJudgingSession) return;
 
-          await em.populate(judge, ['expoJudgingSessionContexts']);
           const vote = new ExpoJudgingVote({
             judge: judge.toReference(),
             previousProject,
