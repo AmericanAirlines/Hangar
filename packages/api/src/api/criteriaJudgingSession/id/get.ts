@@ -9,7 +9,11 @@ export const get = async (req: Request, res: Response) => {
   } = req;
 
   try {
-    const cjs = await em.findOneOrFail(CriteriaJudgingSession, { id: cjsId as string });
+    const cjs = await em.findOneOrFail(
+      CriteriaJudgingSession,
+      { id: cjsId as string },
+      { populate: ['criteriaList'] },
+    );
 
     res.send(cjs);
   } catch (error) {

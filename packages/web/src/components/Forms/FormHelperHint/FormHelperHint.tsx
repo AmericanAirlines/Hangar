@@ -12,7 +12,7 @@ export const FormHelperHint: React.FC<FormHelperHintProps> = ({ hint, error: err
   const error = Array.isArray(errors) ? (errors[0] as string) : errors ?? null;
 
   return (
-    <FormHelperText color={error ? statusColors.error : colors.muted}>
+    <FormHelperText color={error ? statusColors.error : colors.muted} whiteSpace="pre-wrap">
       {error ?? hint}&nbsp;
     </FormHelperText>
   );

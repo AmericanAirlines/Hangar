@@ -24,6 +24,7 @@ describe('criteriaJudgingSession/id GET handler', () => {
     expect(req.entityManager.findOneOrFail).toBeCalledWith(
       CriteriaJudgingSession,
       expect.objectContaining({ id: mockId }),
+      expect.objectContaining({ populate: ['criteriaList'] }),
     );
     expect(res.send).toHaveBeenCalledWith(mockCjs);
   });
