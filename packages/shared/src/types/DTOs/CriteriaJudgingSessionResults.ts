@@ -1,3 +1,5 @@
+export type CriteriaJudgingSessionResult = number;
+
 export type CriteriaJudgingSessionResults = {
-  [projectId: string]: number;
+  [projectId: string]: CriteriaJudgingSessionResult;
 };
