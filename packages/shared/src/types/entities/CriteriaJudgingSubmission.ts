@@ -1,3 +1,6 @@
-import { CriteriaSubmissionDTO } from '@hangar/database';
+import { CriteriaJudgingSubmissionDTO } from '@hangar/database';
 
-export type CriteriaJudgingSubmission = Omit<CriteriaSubmissionDTO, 'createdAt' | 'updatedAt'>;
+export type CriteriaJudgingSubmission = Omit<
+  CriteriaJudgingSubmissionDTO,
+  'createdAt' | 'updatedAt'
+>;
