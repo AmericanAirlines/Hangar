@@ -34,11 +34,13 @@ const ProgressBadge: React.FC<BadgeProps> = ({ badge }) =>
     </Tag>
   );
 
+const timeFormat = 'h:mm a';
+const dateFormat = 'dddd MM/DD';
+
 export const EventCard: React.FC<EventCardProps> = ({ event, containerRef }) => {
   const { name, description, start, end } = event;
   const inProgress = dayjs().isBetween(start, end);
 
-  const format = 'h:mm a';
   const past = dayjs().isAfter(end);
   let badge: EventStatus = 'IN PROGRESS';
   if (past) {
@@ -53,15 +55,19 @@ export const EventCard: React.FC<EventCardProps> = ({ event, containerRef }) => 
         <ProgressBadge {...{ badge }} />
       </Flex>
 
-      <Heading as="h2" size="md">
-        {name}
-      </Heading>
+      <Flex w="full" direction="column" gap={3}>
+        <Heading as="h2" size="md">
+          {name}
+        </Heading>
 
-      <Text>{description}</Text>
+        <Text>{description}</Text>
 
-      <Text>
-        {start.format(format)} - {end.format(format)}
-      </Text>
+        <Flex w="full" justifyContent="center" gap={5}>
+          <Text variant="outline" fontWeight="bold">
+            {start.format(timeFormat)} - {end.format(timeFormat)} on {start.format(dateFormat)}
+          </Text>
+        </Flex>
+      </Flex>
     </ListItem>
   );
 };
