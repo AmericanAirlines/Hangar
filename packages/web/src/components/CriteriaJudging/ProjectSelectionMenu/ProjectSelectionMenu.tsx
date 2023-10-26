@@ -35,9 +35,11 @@ export const ProjectSelectionMenu: React.FC<ProjectSelectionMenuProps> = ({
             <Flex py={5} direction="column">
               <Heading size="sm">{project.name}</Heading>
               <Text>{project.description}</Text>
-              <Text color={colors.muted}>
-                {Config.project.locationLabel}: {project.location}
-              </Text>
+              {project.location && (
+                <Text color={colors.muted}>
+                  {Config.project.locationLabel}: {project.location}
+                </Text>
+              )}
             </Flex>
           </MenuItem>
         ))}

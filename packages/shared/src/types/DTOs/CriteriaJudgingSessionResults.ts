@@ -1,1 +1,5 @@
-export type CriteriaJudgingSessionResults = Record<string, number>;
+export type CriteriaJudgingSessionResult = number;
+
+export type CriteriaJudgingSessionResults = {
+  [projectId: string]: CriteriaJudgingSessionResult;
+};
