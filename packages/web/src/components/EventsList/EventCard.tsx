@@ -63,7 +63,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, containerRef }) => 
         <Text>{description}</Text>
 
         <Flex w="full" justifyContent="center" gap={5}>
-          <Text variant="outline">
+          <Text variant="outline" fontWeight="bold">
             {start.format(timeFormat)} - {end.format(timeFormat)} on {start.format(dateFormat)}
           </Text>
         </Flex>
