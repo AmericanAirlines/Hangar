@@ -1,0 +1,17 @@
+diff --git a/node_modules/@mikro-orm/knex/query/QueryBuilder.d.ts b/node_modules/@mikro-orm/knex/query/QueryBuilder.d.ts
+index 5aba22e..439fbe3 100644
+--- a/node_modules/@mikro-orm/knex/query/QueryBuilder.d.ts
++++ b/node_modules/@mikro-orm/knex/query/QueryBuilder.d.ts
+@@ -99,9 +99,9 @@ export declare class QueryBuilder<T extends object = AnyEntity> {
+     join(field: string | Knex.QueryBuilder | QueryBuilder<any>, alias: string, cond?: QBFilterQuery, type?: 'leftJoin' | 'innerJoin' | 'pivotJoin', path?: string, schema?: string): this;
+     innerJoin(field: string | Knex.QueryBuilder | QueryBuilder<any>, alias: string, cond?: QBFilterQuery, schema?: string): this;
+     leftJoin(field: string | Knex.QueryBuilder | QueryBuilder<any>, alias: string, cond?: QBFilterQuery, schema?: string): this;
+-    joinAndSelect(field: string | [field: string, Knex.QueryBuilder | QueryBuilder<any>], alias: string, cond?: QBFilterQuery, type?: 'leftJoin' | 'innerJoin' | 'pivotJoin', path?: string, fields?: string[], schema?: string): SelectQueryBuilder<T>;
+-    leftJoinAndSelect(field: string | [field: string, Knex.QueryBuilder | QueryBuilder<any>], alias: string, cond?: QBFilterQuery, fields?: string[], schema?: string): SelectQueryBuilder<T>;
+-    innerJoinAndSelect(field: string | [field: string, Knex.QueryBuilder | QueryBuilder<any>], alias: string, cond?: QBFilterQuery, fields?: string[], schema?: string): SelectQueryBuilder<T>;
++    joinAndSelect(field: string | [field: string, queryBuilder: Knex.QueryBuilder | QueryBuilder<any>], alias: string, cond?: QBFilterQuery, type?: 'leftJoin' | 'innerJoin' | 'pivotJoin', path?: string, fields?: string[], schema?: string): SelectQueryBuilder<T>;
++    leftJoinAndSelect(field: string | [field: string, queryBuilder: Knex.QueryBuilder | QueryBuilder<any>], alias: string, cond?: QBFilterQuery, fields?: string[], schema?: string): SelectQueryBuilder<T>;
++    innerJoinAndSelect(field: string | [field: string, queryBuilder: Knex.QueryBuilder | QueryBuilder<any>], alias: string, cond?: QBFilterQuery, fields?: string[], schema?: string): SelectQueryBuilder<T>;
+     protected getFieldsForJoinedLoad(prop: EntityProperty<T>, alias: string, explicitFields?: string[]): Field<T>[];
+     withSubQuery(subQuery: Knex.QueryBuilder, alias: string): this;
+     where(cond: QBFilterQuery<T>, operator?: keyof typeof GroupOperator): this;

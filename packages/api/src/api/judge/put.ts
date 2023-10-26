@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Schema } from '@hangar/shared';
-import { DriverException } from '@mikro-orm/core';
+import { DriverException, ref } from '@mikro-orm/core';
 import {
   CriteriaJudgingSession,
   ExpoJudgingSession,
@@ -40,8 +40,8 @@ export const put = async (req: Request, res: Response) => {
     if (expoJudgingSession) {
       judge.expoJudgingSessionContexts.add(
         new ExpoJudgingSessionContext({
-          judge: judge.toReference(),
-          expoJudgingSession: expoJudgingSession.toReference(),
+          judge: ref(judge),
+          expoJudgingSession: ref(expoJudgingSession),
         }),
       );
     } else {

@@ -6,7 +6,7 @@ import {
   CriteriaJudgingSession,
 } from '@hangar/database';
 import { Schema } from '@hangar/shared';
-import { DriverException } from '@mikro-orm/core';
+import { DriverException, ref } from '@mikro-orm/core';
 import { logger } from '../../utils/logger';
 import { validatePayload } from '../../utils/validatePayload';
 
@@ -38,12 +38,12 @@ export const post = async (req: Request, res: Response) => {
       return;
     }
 
-    const judge = new Judge({ user: user.toReference() });
+    const judge = new Judge({ user: ref(user) });
     if (expoJudgingSession) {
       judge.expoJudgingSessionContexts.add(
         new ExpoJudgingSessionContext({
-          judge: judge.toReference(),
-          expoJudgingSession: expoJudgingSession.toReference(),
+          judge: ref(judge),
+          expoJudgingSession: ref(expoJudgingSession),
         }),
       );
     } else {
