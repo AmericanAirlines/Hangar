@@ -1,17 +1,14 @@
 import React from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Text } from '@chakra-ui/react';
-import {
-  CriteriaJudgingSessionResult,
-  CriteriaJudgingSessionResults,
-  Project,
-} from '@hangar/shared';
+import { CriteriaJudgingSessionResults, Project } from '@hangar/shared';
 import { PageContainer } from '../../../../components/layout/PageContainer';
 import { fetchCriteriaJudgingSessionResults } from '../../../../pageUtils/admin/criteriaJudgingSession/[id]/fetchCriteriaJudgingSessionResults';
 import { fetchProjects } from '../../../../components/CriteriaJudging/hooks/useCriteriaJudging/fetchProjects';
-
-type ProjectWithScore = Project & { results?: CriteriaJudgingSessionResult };
+import {
+  CriteriaJudgingSessionProjectResults,
+  ProjectWithResults,
+} from '../../../../components/Admin/CriteriaJudgingSessionProjectResults';
 
 const CriteriaJudgingSessionDetailsPage: NextPage = () => {
   const router = useRouter();
@@ -37,7 +34,7 @@ const CriteriaJudgingSessionDetailsPage: NextPage = () => {
   /**
    * An array of sorted projects with their score data
    */
-  const projectsWithResults = React.useMemo<ProjectWithScore[] | null>(() => {
+  const projectsWithResults = React.useMemo<ProjectWithResults[] | null>(() => {
     if (!projects || !results) return null;
 
     return projects
@@ -49,9 +46,12 @@ const CriteriaJudgingSessionDetailsPage: NextPage = () => {
     <PageContainer
       pageTitle={'Criteria Judging Session Details'}
       heading={'Criteria Judging Session Details'}
+      subHeading="Projects are sorted by score with highest score at the top"
       isLoading={!projectsWithResults}
     >
-      <Text whiteSpace={'pre-wrap'}>{JSON.stringify(projectsWithResults, null, 2)}</Text>
+      {projectsWithResults?.map((project) => (
+        <CriteriaJudgingSessionProjectResults key={project.id} projectWithResults={project} />
+      ))}
     </PageContainer>
   );
 };
