@@ -18,23 +18,34 @@ const mockCriteria2: Partial<Criteria> = {
   scaleMax: 5,
   weight: 0.3,
 };
-const mockCriteriaJudgingSubmission = {
-  project: { id: '456' },
-  scores: [
-    {
-      score: 2,
-      criteria: { $: mockCriteria1 },
-    },
-    {
-      score: 5,
-      criteria: { $: mockCriteria2 },
-    },
-  ],
-};
+const mockCriteriaJudgingSubmissions = [
+  {
+    project: { id: '456' },
+    scores: [
+      {
+        score: 2,
+        criteria: { id: mockCriteria1.id, $: mockCriteria1 },
+      },
+      {
+        score: 5,
+        criteria: { id: mockCriteria2.id, $: mockCriteria2 },
+      },
+    ],
+  },
+  {
+    project: { id: '456' },
+    scores: [
+      {
+        score: 5,
+        criteria: { id: mockCriteria2.id, $: mockCriteria2 },
+      },
+    ],
+  },
+];
 
 describe('results get handler', () => {
   it('generates a score object for a submission', async () => {
-    req.entityManager.find.mockResolvedValueOnce([mockCriteriaJudgingSubmission]);
+    req.entityManager.find.mockResolvedValueOnce(mockCriteriaJudgingSubmissions);
 
     await get(req as any, res as any);
 
@@ -45,7 +56,7 @@ describe('results get handler', () => {
     );
 
     expect(res.send).toBeCalledWith({
-      [mockCriteriaJudgingSubmission.project.id]: 0.65,
+      [mockCriteriaJudgingSubmissions[0]!.project.id]: 0.65,
     });
   });
 

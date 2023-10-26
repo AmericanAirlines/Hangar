@@ -58,7 +58,7 @@ export const get = async (req: Request, res: Response) => {
         projectCriteriaScore.count += 1;
         projectCriteriaScore.sum += score;
 
-        projectResults[criteria.$.id] = projectCriteriaScore;
+        projectResults[criteria.id] = projectCriteriaScore;
       }
 
       sessionResults[submission.project.id] = projectResults;
