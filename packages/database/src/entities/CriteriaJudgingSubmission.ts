@@ -7,7 +7,7 @@ import { Project } from './Project';
 import { CriteriaJudgingSession } from './CriteriaJudgingSession';
 import { CriteriaScore } from './CriteriaScore';
 
-export type CriteriaSubmissionDTO = EntityDTO<CriteriaJudgingSubmission>;
+export type CriteriaJudgingSubmissionDTO = EntityDTO<CriteriaJudgingSubmission>;
 type ConstructorArgs = ConstructorValues<CriteriaJudgingSubmission, 'scores'>;
 
 @Entity()

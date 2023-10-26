@@ -58,10 +58,10 @@ export const get = async (req: Request, res: Response) => {
         projectCriteriaScore.count += 1;
         projectCriteriaScore.sum += score;
 
-        projectResults[criteria.id] = projectCriteriaScore;
+        projectResults[criteria.$.id] = projectCriteriaScore;
       }
 
-      sessionResults[submission.id] = projectResults;
+      sessionResults[submission.project.id] = projectResults;
     }
 
     // Iterate over all projects to determine their final score
@@ -86,7 +86,9 @@ export const get = async (req: Request, res: Response) => {
         // Update the total with the weighted average
         score += percentile * weight;
       });
-      finalScores[projectId] = score;
+
+      // Round to 2 decimals
+      finalScores[projectId] = Math.round(score * 100) / 100;
     });
 
     res.send(finalScores);
