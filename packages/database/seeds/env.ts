@@ -10,5 +10,6 @@ export const env = setEnv({
     primaryUserFirstName: 'PRIMARY_USER_FIRST_NAME',
     primaryUserLastName: 'PRIMARY_USER_LAST_NAME',
     primaryUserIsAdmin: 'PRIMARY_USER_IS_ADMIN',
+    primaryUserIsJudge: 'PRIMARY_USER_IS_JUDGE',
   },
 });

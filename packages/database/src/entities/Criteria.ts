@@ -14,7 +14,7 @@ export class Criteria extends Node<Criteria> {
   @Property({ columnType: 'text' })
   description: string;
 
-  @Property({ columnType: 'int' })
+  @Property({ columnType: 'decimal' })
   weight: number;
 
   @Property({ columnType: 'int' })

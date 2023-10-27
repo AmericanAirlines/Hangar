@@ -35,12 +35,14 @@
     "dotenv-flow": "^3.2.0",
     "mikro-orm": "^6.0.0-dev",
     "readline-sync": "^1.4.10",
+    "seedrandom": "^3.0.5",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.2.1",
     "@types/node": "^16.9.1",
     "@types/readline-sync": "^1.4.4",
+    "@types/seedrandom": "^3.0.7",
     "@types/uuid": "^9.0.3",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",

@@ -23,12 +23,12 @@ type UseJudgingSessionFetcherProps = Pick<FetchJudgingSessionArgs, 'sessionType'
 export function useJudgingSessionFetcher(
   args: UseJudgingSessionFetcherProps & { sessionType: 'expo' },
 ): {
-  expoJudgingSession: ExpoJudgingSession;
+  expoJudgingSession?: ExpoJudgingSession;
 };
 export function useJudgingSessionFetcher(
   args: UseJudgingSessionFetcherProps & { sessionType: 'criteria' },
 ): {
-  criteriaJudgingSession: CriteriaJudgingSession;
+  criteriaJudgingSession?: CriteriaJudgingSession;
 };
 export function useJudgingSessionFetcher({ sessionType }: UseJudgingSessionFetcherProps) {
   const router = useRouter();

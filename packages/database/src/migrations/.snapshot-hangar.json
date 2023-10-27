@@ -135,12 +135,12 @@
         },
         "weight": {
           "name": "weight",
-          "type": "int",
+          "type": "decimal",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
           "nullable": false,
-          "mappedType": "integer"
+          "mappedType": "decimal"
         },
         "scaleMin": {
           "name": "scaleMin",
