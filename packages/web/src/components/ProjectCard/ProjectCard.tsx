@@ -51,7 +51,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </Text>
           <Link href={repoUrl} isExternal display="flex" alignItems="center">
             {repoUrl}
-            <FiExternalLink style={{ marginLeft: '4px' }} />
+            <Box>ml={2}</Box>
           </Link>
         </Flex>
       </Box>
