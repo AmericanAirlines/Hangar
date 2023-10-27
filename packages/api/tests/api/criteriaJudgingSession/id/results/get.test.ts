@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Criteria, CriteriaJudgingSession, CriteriaJudgingSubmission } from '@hangar/database';
 import { get } from '../../../../../src/api/criteriaJudgingSession/id/results/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
@@ -18,18 +19,22 @@ const mockCriteria2: Partial<Criteria> = {
   scaleMax: 5,
   weight: 0.3,
 };
-const mockProject = {
+const mockProject1 = {
   id: '456',
+  serialize: jest.fn().mockReturnThis(),
+};
+const mockProject2 = {
+  id: '789',
   serialize: jest.fn().mockReturnThis(),
 };
 const mockCriteriaJudgingSession = {
   projects: {
-    getItems: jest.fn().mockReturnValue([mockProject]),
+    getItems: jest.fn().mockReturnValue([mockProject2, mockProject1]),
   },
 };
 const mockCriteriaJudgingSubmissions = [
   {
-    project: { id: mockProject.id },
+    project: { id: mockProject1.id },
     scores: [
       {
         score: 2,
@@ -42,11 +47,20 @@ const mockCriteriaJudgingSubmissions = [
     ],
   },
   {
-    project: { id: mockProject.id },
+    project: { id: mockProject1.id },
     scores: [
       {
         score: 5,
         criteria: { id: mockCriteria2.id, $: mockCriteria2 },
+      },
+    ],
+  },
+  {
+    project: { id: mockProject2.id },
+    scores: [
+      {
+        score: 0,
+        criteria: { id: mockCriteria1.id, $: mockCriteria1 },
       },
     ],
   },
@@ -70,14 +84,17 @@ describe('results get handler', () => {
       expect.objectContaining({ populate: ['projects'] }),
     );
 
-    expect(res.send).toBeCalledWith(
-      expect.arrayContaining([
-        {
-          ...mockProject,
-          results: { score: 0.65 },
-        },
-      ]),
-    );
+    // It returns data in the correct order (project 2 has lower score and is second)
+    expect(res.send).toBeCalledWith([
+      {
+        ...mockProject1,
+        results: { score: 0.65 },
+      },
+      {
+        ...mockProject2,
+        results: { score: 0 },
+      },
+    ]);
   });
 
   it('returns a 500 if something goes wrong', async () => {
