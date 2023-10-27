@@ -19,7 +19,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       <Box
         borderRadius="lg"
         p={6}
-        background="linear-gradient(45deg, #4CAF50, #2196F3)"
+        background="linear-gradient(45deg, #00467F, #36495A)"
         borderWidth="2"
         borderColor={colors.brandPrimary}
         boxShadow="lg"
