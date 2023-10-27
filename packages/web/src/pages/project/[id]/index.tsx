@@ -12,14 +12,6 @@ const fetchProject: (id: string) => Promise<Project> = async (id) => {
   const { data } = await axios.get<SerializedProject>(`/api/project/${id}`);
   return { ...data, createdAt: dayjs(data.createdAt), updatedAt: dayjs(data.updatedAt) };
 };
-// // > {
-// //   const { name, description, location, judgeVisits, repoUrl, ...rest } = serializedProject;
-// //   return {
-// //     ...rest,
-// //     createdAt: dayjs(createdAt),
-// //     updatedAt: dayjs(updatedAt),
-// //   };
-// });
 
 const ProjectDetails: NextPage = () => {
   const router = useRouter();
@@ -45,7 +37,7 @@ const ProjectDetails: NextPage = () => {
   }, [router]);
 
   return (
-    <PageContainer pageTitle={'Project Details'} heading={'Project details'} isLoading={!project}>
+    <PageContainer pageTitle={'Project Details'} heading={'Project Details'} isLoading={!project}>
       {project && <ProjectCard project={project} />}
     </PageContainer>
   );

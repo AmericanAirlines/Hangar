@@ -17,11 +17,9 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     >
       <Box
         borderRadius="lg"
-        overflow="hidden"
         p={6}
         background="linear-gradient(45deg, #4CAF50, #2196F3)"
-        color="white"
-        border="2px solid"
+        borderWidth="2"
         borderColor="teal.500"
         boxShadow="lg"
         transition="all 0.3s"
@@ -30,7 +28,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           borderColor: 'teal.300',
         }}
       >
-        <Heading as="h2" size="lg" mb={2} textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)">
+        <Heading size="lg" mb={2} textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)">
           {name}
         </Heading>
 
@@ -47,8 +45,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </Text>
         </Flex>
 
-        <Flex align="center">
-          <Text fontSize="sm" fontWeight="bold" mr={2}>
+        <Flex align="center" gap={2}>
+          <Text fontSize="sm" fontWeight="bold">
             Repo URL:
           </Text>
           <Link href={repoUrl} isExternal display="flex" alignItems="center">
