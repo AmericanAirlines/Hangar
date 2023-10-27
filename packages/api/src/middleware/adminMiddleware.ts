@@ -22,7 +22,7 @@ export const adminMiddleware = async (req: Request, res: Response, next: NextFun
     req.admin = userAdmin;
   } else {
     // Admin does not exist in the database
-    res.sendStatus(403);
+    res.status(403).send('Admin validation failed for user');
     return;
   }
 

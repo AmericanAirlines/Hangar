@@ -4,6 +4,9 @@ import NextDocument, { Html, Head, Main, NextScript } from 'next/document';
 import { colors, theme } from '../theme';
 import { defaultPageTitle, ogPageTitleKey } from '../components/layout/PageContainer';
 
+const description = 'Hackathon sponsorship made easy';
+const semPreviewFilePath = '/SEM/Logo.png';
+
 export default class Document extends NextDocument {
   // eslint-disable-next-line class-methods-use-this
   render() {
@@ -13,6 +16,11 @@ export default class Document extends NextDocument {
           <meta name="theme-color" content={colors.brandPrimary} />
 
           <meta property="og:title" key={ogPageTitleKey} content={defaultPageTitle} />
+          <meta property="og:type" content="website" />
+          <meta property="og:description" content={description} />
+          <meta property="og:image" content={semPreviewFilePath} />
+          <meta name="description" content={description} />
+
           <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png" />
           <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png" />
           <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png" />
@@ -26,9 +34,9 @@ export default class Document extends NextDocument {
           <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
           <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-          <link rel="manifest" href="/manifest.json" />
           <meta name="msapplication-TileColor" content={colors.brandPrimary} />
           <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+          <link rel="manifest" href="/manifest.json" />
         </Head>
         <body style={{ minHeight: '100%' }}>
           {/* Load color mode script for non-SSR pages */}
