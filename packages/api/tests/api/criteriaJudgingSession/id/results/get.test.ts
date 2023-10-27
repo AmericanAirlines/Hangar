@@ -20,16 +20,20 @@ const mockCriteria2: Partial<Criteria> = {
   weight: 0.3,
 };
 const mockProject1 = {
-  id: '456',
+  id: '123',
   serialize: jest.fn().mockReturnThis(),
 };
 const mockProject2 = {
+  id: '456',
+  serialize: jest.fn().mockReturnThis(),
+};
+const mockProject3 = {
   id: '789',
   serialize: jest.fn().mockReturnThis(),
 };
 const mockCriteriaJudgingSession = {
   projects: {
-    getItems: jest.fn().mockReturnValue([mockProject2, mockProject1]),
+    getItems: jest.fn().mockReturnValue([mockProject2, mockProject1, mockProject3]),
   },
 };
 const mockCriteriaJudgingSubmissions = [
@@ -64,6 +68,15 @@ const mockCriteriaJudgingSubmissions = [
       },
     ],
   },
+  {
+    project: { id: mockProject3.id },
+    scores: [
+      {
+        score: 4,
+        criteria: { id: mockCriteria1.id, $: mockCriteria1 },
+      },
+    ],
+  },
 ];
 
 describe('results get handler', () => {
@@ -86,6 +99,10 @@ describe('results get handler', () => {
 
     // It returns data in the correct order (project 2 has lower score and is second)
     expect(res.send).toBeCalledWith([
+      {
+        ...mockProject3,
+        results: { score: 0.7 },
+      },
       {
         ...mockProject1,
         results: { score: 0.65 },
