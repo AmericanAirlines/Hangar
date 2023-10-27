@@ -9,7 +9,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const { name, description, location, repoUrl } = project;
 
   return (
-    <Flex>
+    <Flex direction={'column'}>
       <Heading size="md">{name}</Heading>
 
       <Text>{description}</Text>
