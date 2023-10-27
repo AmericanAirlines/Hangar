@@ -1,4 +1,4 @@
-import { Criteria, CriteriaJudgingSubmission } from '@hangar/database';
+import { Criteria, CriteriaJudgingSession, CriteriaJudgingSubmission } from '@hangar/database';
 import { get } from '../../../../../src/api/criteriaJudgingSession/id/results/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
@@ -18,9 +18,18 @@ const mockCriteria2: Partial<Criteria> = {
   scaleMax: 5,
   weight: 0.3,
 };
+const mockProject = {
+  id: '456',
+  serialize: jest.fn().mockReturnThis(),
+};
+const mockCriteriaJudgingSession = {
+  projects: {
+    getItems: jest.fn().mockReturnValue([mockProject]),
+  },
+};
 const mockCriteriaJudgingSubmissions = [
   {
-    project: { id: '456' },
+    project: { id: mockProject.id },
     scores: [
       {
         score: 2,
@@ -33,7 +42,7 @@ const mockCriteriaJudgingSubmissions = [
     ],
   },
   {
-    project: { id: '456' },
+    project: { id: mockProject.id },
     scores: [
       {
         score: 5,
@@ -46,6 +55,7 @@ const mockCriteriaJudgingSubmissions = [
 describe('results get handler', () => {
   it('generates a score object for a submission', async () => {
     req.entityManager.find.mockResolvedValueOnce(mockCriteriaJudgingSubmissions);
+    req.entityManager.findOneOrFail.mockResolvedValueOnce(mockCriteriaJudgingSession);
 
     await get(req as any, res as any);
 
@@ -54,10 +64,20 @@ describe('results get handler', () => {
       expect.objectContaining({ criteriaJudgingSession: mockCjsId }),
       expect.objectContaining({ populate: ['scores.criteria'] }),
     );
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(
+      CriteriaJudgingSession,
+      expect.objectContaining({ id: mockCjsId }),
+      expect.objectContaining({ populate: ['projects'] }),
+    );
 
-    expect(res.send).toBeCalledWith({
-      [mockCriteriaJudgingSubmissions[0]!.project.id]: 0.65,
-    });
+    expect(res.send).toBeCalledWith(
+      expect.arrayContaining([
+        {
+          ...mockProject,
+          results: { score: 0.65 },
+        },
+      ]),
+    );
   });
 
   it('returns a 500 if something goes wrong', async () => {

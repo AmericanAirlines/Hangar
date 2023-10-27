@@ -1,6 +1,7 @@
 /* eslint-disable max-lines, no-underscore-dangle */
 import {
   Button,
+  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -20,17 +21,22 @@ import { colors } from '../../../theme';
 type CriteriaJudgingFormProps = {
   project: Project;
   criteriaJudgingSession: CriteriaJudgingSession;
+  onSubmission: () => void;
 };
 
 export const CriteriaJudgingForm: React.FC<CriteriaJudgingFormProps> = ({
   project,
   criteriaJudgingSession,
+  onSubmission,
 }) => {
   const [submissionCreated, setSubmissionCreated] = React.useState(false);
   const { formik, isLoading, errors } = useCriteriaJudgingForm({
     project,
     criteriaJudgingSession,
-    onSubmissionComplete: () => setSubmissionCreated(true),
+    onSubmissionComplete: () => {
+      setSubmissionCreated(true);
+      onSubmission();
+    },
   });
 
   React.useEffect(() => {
@@ -45,6 +51,14 @@ export const CriteriaJudgingForm: React.FC<CriteriaJudgingFormProps> = ({
 
   return (
     <Flex direction="column" w="full" gap={10}>
+      {submissionCreated && (
+        <Flex bgColor={colors.brandPrimary} p={5} rounded="xl">
+          <Center w="full" fontSize="lg">
+            Pick your next team to continue 👆
+          </Center>
+        </Flex>
+      )}
+
       <ProjectDetails project={project} />
 
       <form onSubmit={formik.handleSubmit}>

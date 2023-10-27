@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Flex } from '@chakra-ui/react';
+import { Center, Flex, Heading } from '@chakra-ui/react';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
 import { useExpoJudging } from '../hooks/useExpoJudging';
 import { PageSpinner } from '../../layout/PageSpinner';
@@ -30,7 +30,7 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
       direction={{ base: 'column', md: 'row-reverse' }}
       alignItems="stretch"
       justifyContent="center"
-      gap={20}
+      gap={{ base: 5, md: 10 }}
       w="100%"
     >
       {isAtStart ? (
@@ -38,6 +38,11 @@ export const ProjectCardsContainer: React.FC<ProjectCardsContainerProps> = () =>
       ) : (
         <>
           <ProjectCard type="Current" />
+          {previousProject && (
+            <Center>
+              <Heading mb={{ base: 8, md: 50 }}>VS</Heading>
+            </Center>
+          )}
           <ProjectCard type="Previous" />
         </>
       )}

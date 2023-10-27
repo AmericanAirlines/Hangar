@@ -1,11 +1,9 @@
 import { Box, Flex, Heading, Stat, StatLabel, StatNumber, Text } from '@chakra-ui/react';
-import { CriteriaJudgingSessionResult, Project } from '@hangar/shared';
+import { CriteriaJudgingSessionResult } from '@hangar/shared';
 import { colors } from '../../../theme';
 
-export type ProjectWithResults = Project & { results?: CriteriaJudgingSessionResult };
-
 type CriteriaJudgingSessionProjectResultsProps = {
-  projectWithResults: ProjectWithResults;
+  projectWithResults: CriteriaJudgingSessionResult;
 };
 
 export const CriteriaJudgingSessionProjectResults: React.FC<
@@ -20,7 +18,7 @@ export const CriteriaJudgingSessionProjectResults: React.FC<
         <Box>
           <Stat>
             <StatLabel>Score</StatLabel>
-            <StatNumber>{project.results.toFixed(2)}</StatNumber>
+            <StatNumber>{project.results.score.toFixed(2)}</StatNumber>
           </Stat>
         </Box>
       </Flex>
