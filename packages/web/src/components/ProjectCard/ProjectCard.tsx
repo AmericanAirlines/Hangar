@@ -2,6 +2,7 @@ import { Heading, Text, Flex, Box, Link } from '@chakra-ui/react';
 import { FiExternalLink } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { Project } from '@hangar/shared';
+import { colors } from '../../theme';
 
 type ProjectCardProps = {
   project: Project;
@@ -20,7 +21,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         p={6}
         background="linear-gradient(45deg, #4CAF50, #2196F3)"
         borderWidth="2"
-        borderColor="teal.500"
+        borderColor={colors.brandPrimary}
         boxShadow="lg"
         transition="all 0.3s"
         _hover={{
