@@ -1,7 +1,13 @@
+/* eslint-disable max-lines */
 import { Request, Response } from 'express';
 import { EntityDTO } from '@mikro-orm/core';
-import { CriteriaJudgingSessionResults } from '@hangar/shared';
-import { Criteria, CriteriaJudgingSubmission } from '@hangar/database';
+import { SerializedCriteriaJudgingSessionResults } from '@hangar/shared';
+import {
+  Criteria,
+  CriteriaJudgingSession,
+  CriteriaJudgingSubmission,
+  Project,
+} from '@hangar/database';
 import { logger } from '../../../../utils/logger';
 
 export type ProjectCriteriaScore = Pick<EntityDTO<Criteria>, 'weight' | 'scaleMin' | 'scaleMax'> & {
@@ -64,9 +70,17 @@ export const get = async (req: Request, res: Response) => {
       sessionResults[submission.project.id] = projectResults;
     }
 
+    const criteriaJudgingSession = await em.findOneOrFail(
+      CriteriaJudgingSession,
+      { id: cjsId },
+      { populate: ['projects'] },
+    );
+    const projects = criteriaJudgingSession.projects.getItems();
+
     // Iterate over all projects to determine their final score
-    const finalScores: CriteriaJudgingSessionResults = {};
+    const finalScores: SerializedCriteriaJudgingSessionResults = [];
     Object.entries(sessionResults).forEach(([projectId, projectResults]) => {
+      const project = projects.find((p) => p.id === projectId) as Project;
       let score = 0;
       // For each project, add weighted averages for each criteria's score
       Object.values(projectResults).forEach(({ scaleMin, scaleMax, weight, count, sum }) => {
@@ -88,10 +102,14 @@ export const get = async (req: Request, res: Response) => {
       });
 
       // Round to 2 decimals
-      finalScores[projectId] = Math.round(score * 100) / 100;
+      finalScores.push({
+        ...project.serialize(),
+        results: { score: Math.round(score * 100) / 100 },
+      });
     });
 
-    res.send(finalScores);
+    const sortedScores = finalScores.sort((l, r) => (l.results.score > r.results.score ? -1 : 1));
+    res.send(sortedScores);
   } catch (error) {
     logger.error('Failed to fetch criteria judging session results', error);
     res.sendStatus(500);

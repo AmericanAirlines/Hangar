@@ -29,7 +29,10 @@ describe('Judge Middleware', () => {
     const mockNext = jest.fn();
 
     await judgeMiddleware(mockReq as any, mockRes as any, mockNext);
-    expect(mockRes.sendStatus).toHaveBeenCalledWith(403);
+    expect(mockRes.status).toHaveBeenCalledWith(403);
+    expect(mockRes.send).toHaveBeenCalledWith(
+      expect.stringContaining('Judge validation failed for user'),
+    );
     expect(mockNext).not.toHaveBeenCalled();
   });
 

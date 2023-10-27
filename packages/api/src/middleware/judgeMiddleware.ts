@@ -30,7 +30,7 @@ export const judgeMiddleware = async (req: Request, res: Response, next: NextFun
   if (!judge) {
     // Judge does not exits in database
     logger.debug(`JudgeMiddleware failed to authenticate user - ${req.originalUrl}`);
-    res.sendStatus(403);
+    res.status(403).send('Judge validation failed for user');
     return;
   }
   req.judge = judge;

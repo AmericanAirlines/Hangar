@@ -7,13 +7,15 @@ import { colors } from '../../../theme';
 type ProjectSelectionMenuProps = {
   projects: Project[];
   onSelect: (project: Project) => void;
+  containerRef?: React.RefObject<HTMLDivElement>;
 };
 
 export const ProjectSelectionMenu: React.FC<ProjectSelectionMenuProps> = ({
   projects,
   onSelect,
+  containerRef,
 }) => (
-  <Flex w="full" justifyContent="stretch" position="relative">
+  <Flex w="full" justifyContent="stretch" position="relative" ref={containerRef} scrollMargin={20}>
     <Menu matchWidth>
       <MenuButton w="full">
         <Flex
