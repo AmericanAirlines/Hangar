@@ -42,9 +42,16 @@ export const components: ThemeComponents = {
         },
       },
       secondary: {
-        borderColor: colors.brandCta,
-        borderWidth: 2,
-        color: colors.brandCta,
+        bg: colors.brandPrimaryLight,
+        color: colors.white,
+        _hover: {
+          bg: colors.brandPrimaryDark,
+          color: colors.white,
+          _disabled: {
+            bgColor: colors.brandPrimaryLight,
+            color: colors.white,
+          },
+        },
       },
       outline: {
         borderWidth: 2,

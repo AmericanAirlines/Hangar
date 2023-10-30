@@ -70,16 +70,16 @@ export const RedirectToAuthModal: React.FC = () => {
                 ? `Redirecting to login in ${secondsRemaining} seconds...`
                 : 'Redirecting...'}
             </Heading>
-            <Text>
+            <Text fontWeight="bold" fontSize="xl">
               The next screen will ask for a <Code>Slack Workspace Name</Code>
             </Text>
-            <Flex direction={{ base: 'column', md: 'row' }} alignItems="center" gap={3}>
-              <Heading size="lg">Workspace Name:</Heading>
+            <Flex direction="column" alignItems="center" gap={1}>
+              <Text>Workspace Name:</Text>
               <Code>{env.slackWorkspaceName}</Code>
             </Flex>
             <Button
               maxW="full"
-              variant="cta"
+              variant="secondary"
               onClick={() => {
                 onCopy();
                 setSecondsRemaining(undefined); // Reset in case the user tries to come back
