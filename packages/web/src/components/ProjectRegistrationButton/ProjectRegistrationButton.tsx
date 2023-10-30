@@ -12,7 +12,7 @@ import {
 import { useRouter } from 'next/router';
 import { RegistrationForm } from './RegistrationForm';
 import { useUserStore } from '../../stores/user';
-import { signInWithSlack } from '../layout/AppLayout/NavBar/NavElements/AuthButtons/utils';
+import { useRedirectToAuth } from '../layout/RedirectToAuthModal';
 
 const openModalQueryKey = 'registration';
 
@@ -20,6 +20,7 @@ export const ProjectRegistrationButton: React.FC = () => {
   const router = useRouter();
   const hasHandledQueryRef = React.useRef(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { triggerRedirect } = useRedirectToAuth();
 
   React.useEffect(() => {
     // Handle `registration=true`
@@ -36,7 +37,7 @@ export const ProjectRegistrationButton: React.FC = () => {
     if (useUserStore.getState().user) {
       onOpen();
     } else {
-      void signInWithSlack({ returnTo: `/?${openModalQueryKey}=true` });
+      triggerRedirect({ returnTo: `/?${openModalQueryKey}=true` });
     }
   };
 

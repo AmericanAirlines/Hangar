@@ -1,8 +1,7 @@
 import { NextRouter } from 'next/router';
-import { wait } from '@hangar/shared';
-import { openErrorToast, openInfoToast } from '../../components/utils/CustomToast';
+import { openErrorToast } from '../../components/utils/CustomToast';
 import { createOrUpdateJudge } from './createOrUpdateJudge';
-import { signInWithSlack } from '../../components/layout/AppLayout/NavBar/NavElements/AuthButtons/utils';
+import { triggerRedirect } from '../../components/layout/RedirectToAuthModal';
 
 type HandleFetchErrorArgs = {
   router: NextRouter;
@@ -25,9 +24,7 @@ export const handleFetchError = async ({
   }
 
   if (status === 401) {
-    openInfoToast({ title: 'Redirecting to login' });
-    await wait(2500);
-    void signInWithSlack({ returnTo: originalUrl });
+    void triggerRedirect({ returnTo: originalUrl });
     return;
   }
 

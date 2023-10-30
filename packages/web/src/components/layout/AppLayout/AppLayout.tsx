@@ -4,6 +4,7 @@ import { colors, forcedColorMode } from '../../../theme';
 import { NavBar } from './NavBar/NavBar';
 import { useUserStore } from '../../../stores/user';
 import { CustomToast } from '../../utils/CustomToast/CustomToast';
+import { RedirectToAuthModal } from '../RedirectToAuthModal/RedirectToAuthModal';
 
 type AppLayoutProps = ChakraProps & {
   children: React.ReactNode;
@@ -49,6 +50,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children, ...chakraProps }
         </Flex>
       </Center>
       <CustomToast />
+      <RedirectToAuthModal />
     </>
   );
 };
