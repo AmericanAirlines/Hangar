@@ -1,10 +1,10 @@
 import { Button } from '@chakra-ui/react';
-import { signInWithSlack } from './utils';
+import { triggerRedirect } from '../../../../RedirectToAuthModal/useRedirectToAuth';
 
 export const Login: React.FC = () => (
   <Button
-    onClick={async () => {
-      await signInWithSlack();
+    onClick={() => {
+      triggerRedirect();
     }}
   >
     Login
