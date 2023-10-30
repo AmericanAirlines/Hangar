@@ -13,6 +13,7 @@ COPY packages/database/package.json packages/database/package.json
 RUN yarn install --frozen-lockfile
 
 ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_SLACK_WORKSPACE_NAME
 
 ENV NODE_ENV production
 ENV PORT 8080
