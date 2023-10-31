@@ -37,14 +37,16 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           {description}
         </Text>
 
-        <Flex align="center" mb={2}>
-          <Text fontSize="sm" fontWeight="bold" mr={2}>
-            Location:
-          </Text>
-          <Text fontSize="sm" fontWeight="bold">
-            {location}
-          </Text>
-        </Flex>
+        {location && (
+          <Flex align="center" mb={2}>
+            <Text fontSize="sm" fontWeight="bold" mr={2}>
+              Location:
+            </Text>
+            <Text fontSize="sm" fontWeight="bold">
+              {location}
+            </Text>
+          </Flex>
+        )}
 
         <Flex align="center" gap={2}>
           <Text fontSize="sm" fontWeight="bold">
