@@ -27,8 +27,8 @@ const ExpoJudgingSessionDetails: NextPage = () => {
             openErrorToast({ title: 'Expo Judging Session Not Found' });
           } else if (status === 403) {
             openErrorToast({ title: 'You are not authorized to view this Expo Judging Session' });
-          } else if (status === 500) {
-            openErrorToast({ title: 'Internal Server Error' });
+          } else if (status === 409) {
+            openErrorToast({ title: 'More votes needed', description: results.data });
           } else {
             openErrorToast({ title: 'Unknown Error' });
           }

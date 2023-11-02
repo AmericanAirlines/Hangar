@@ -13,6 +13,7 @@ export const components: ThemeComponents = {
   Heading: {
     variants: {
       cta: {
+        fontWeight: 'normal',
         fontFamily: 'Pacifico', // cspell:disable-line
       },
     },
