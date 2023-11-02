@@ -16,6 +16,7 @@ import { NavLogo } from './NavLogo';
 import { Schedule } from './NavElements/PageLinks/Schedule';
 import { useAdminStore } from '../../../../stores/admin';
 import { AdminDashboard } from './NavElements/PageLinks/AdminDashboard';
+import { JoinSlackButton } from '../../../JoinSlackButton';
 
 type NavDrawerProps = {
   isOpen: boolean;
@@ -42,11 +43,11 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({ onClose, isOpen }) => {
             <Flex direction="column" gap={5} alignItems="left">
               <Flex position="relative" w="full" justify="center" alignItems="center">
                 <NavLogo />
-
                 <IconButton aria-label="Close nav button" icon={<MdClose />} onClick={onClose} />
               </Flex>
 
               <Schedule />
+              <JoinSlackButton />
 
               {admin && <AdminDashboard />}
 

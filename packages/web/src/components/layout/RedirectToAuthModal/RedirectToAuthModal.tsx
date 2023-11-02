@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React from 'react';
 import {
   Button,
@@ -15,6 +16,7 @@ import {
 import { wait } from '@hangar/shared';
 import { useRedirectToAuth } from './useRedirectToAuth';
 import { env } from '../../../env';
+import { JoinSlackButton } from '../../JoinSlackButton';
 
 const countdownDurationSeconds = 15;
 
@@ -91,6 +93,8 @@ export const RedirectToAuthModal: React.FC = () => {
             >
               Copy Workspace Name and Continue
             </Button>
+
+            <JoinSlackButton variant="ghost" />
           </Flex>
         </ModalBody>
       </ModalContent>
