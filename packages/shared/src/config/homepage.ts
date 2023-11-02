@@ -1,7 +1,11 @@
+type Link = {
+  title?: string;
+  url: string;
+};
 type HomepageSection = {
   title: string;
   content: string[];
-  link?: string;
+  links?: Link[];
 };
 
 type HomepageContent = {
@@ -32,7 +36,7 @@ const welcome: HomepageSection = {
 const loremIpsum: HomepageSection = {
   title: 'Lorem Ipsum',
   content: ['Lorem ipsum dolor sit'],
-  link: 'https://aa.com',
+  links: [{ url: 'https://aa.com' }],
 };
 
 export const homepage: HomepageContent = {
