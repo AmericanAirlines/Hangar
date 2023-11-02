@@ -44,25 +44,29 @@ const Home: NextPage = () => {
           </Flex>
 
           {Config.homepage.sections.map((section) => (
-            <Flex key={section.title} direction="column" flex={{ base: 1, md: 2 }} gap={2}>
+            <Flex key={section.title} direction="column" gap={2}>
               <Heading>{section.title}</Heading>
 
               {section.content.map((text) => (
-                <Text key={text.substring(0, 15)} fontSize="xl">
+                <Text key={text.substring(0, 15)} fontSize="xl" whiteSpace="pre-wrap">
                   {text}
                 </Text>
               ))}
 
-              {section.link && (
-                <Box>
-                  <Button
-                    onClick={() => {
-                      window.open(section.link, '_blank');
-                    }}
-                  >
-                    View More
-                  </Button>
-                </Box>
+              {section.links && (
+                <Flex direction={{ base: 'column', sm: 'row' }} gap={2}>
+                  {section.links.map(({ url, title }) => (
+                    <Box key={url}>
+                      <Button
+                        onClick={() => {
+                          window.open(url, '_blank');
+                        }}
+                      >
+                        {title ?? 'Read More'}
+                      </Button>
+                    </Box>
+                  ))}
+                </Flex>
               )}
             </Flex>
           ))}
