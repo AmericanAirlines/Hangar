@@ -15,7 +15,6 @@ const fetchProject: (id: string) => Promise<Project> = async (id) => {
 
 const ProjectDetails: NextPage = () => {
   const router = useRouter();
-
   const [project, setProject] = React.useState<Project>();
 
   React.useEffect(() => {
