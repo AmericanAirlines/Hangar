@@ -11,7 +11,7 @@ export const Prizes: React.FC<PrizesProps> = () => {
   if (!prizes?.length) return null;
 
   return (
-    <Flex direction="column" gap={3}>
+    <Flex direction="column" gap={3} scrollBehavior="smooth" id="prizes">
       <Heading>Prizes</Heading>
 
       <UnorderedList variant="card" m={0} spacing={5}>
