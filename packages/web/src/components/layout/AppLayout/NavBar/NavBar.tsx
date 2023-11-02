@@ -16,6 +16,7 @@ import { Login } from './NavElements/AuthButtons/Login';
 import { SignUp } from './NavElements/AuthButtons/SignUp';
 import { Schedule } from './NavElements/PageLinks/Schedule';
 import { NavLogo } from './NavLogo';
+import { JoinSlackButton } from '../../../JoinSlackButton';
 
 export const NavBar: React.FC = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -35,6 +36,7 @@ export const NavBar: React.FC = () => {
             {!isMobile && (
               <>
                 <Schedule />
+                <JoinSlackButton />
               </>
             )}
 
