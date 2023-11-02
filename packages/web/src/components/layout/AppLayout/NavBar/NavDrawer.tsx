@@ -17,6 +17,7 @@ import { Schedule } from './NavElements/PageLinks/Schedule';
 import { useAdminStore } from '../../../../stores/admin';
 import { AdminDashboard } from './NavElements/PageLinks/AdminDashboard';
 import { JoinSlackButton } from '../../../JoinSlackButton';
+import { Prizes } from './NavElements/PageLinks/Prizes';
 
 type NavDrawerProps = {
   isOpen: boolean;
@@ -37,7 +38,7 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({ onClose, isOpen }) => {
     <Drawer placement="left" size={'xs'} onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay />
 
-      <DrawerContent>
+      <DrawerContent onClick={onClose}>
         <DrawerBody>
           <Fade in={doneLoading}>
             <Flex direction="column" gap={5} alignItems="left">
@@ -45,12 +46,10 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({ onClose, isOpen }) => {
                 <NavLogo />
                 <IconButton aria-label="Close nav button" icon={<MdClose />} onClick={onClose} />
               </Flex>
-
+              <Prizes />
               <Schedule />
               <JoinSlackButton />
-
               {admin && <AdminDashboard />}
-
               {user && <Logout />}
             </Flex>
           </Fade>
