@@ -26,8 +26,8 @@
     "reset": "yarn clean",
     "postreset": "rimraf **/node_modules",
     "postinstall": "patch-package",
-    "docker:build": "docker build . --tag delete-me",
-    "docker:run": "docker rm -f delete-me && docker run -p 3001:8080 --env-file packages/api/.env.local --env-file .env.docker --name delete-me delete-me",
+    "docker:build": "docker build . --tag hangar",
+    "docker:run": "docker rm -f hangar && docker run -p 3001:8080 --env-file packages/api/.env.local --env-file .env.docker --name hangar hangar",
     "spellcheck": "yarn cspell --no-progress ."
   },
   "dependencies": {

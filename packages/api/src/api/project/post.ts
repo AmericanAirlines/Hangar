@@ -14,8 +14,12 @@ export const post = async (req: Request, res: Response) => {
 
   let project: Project | undefined;
 
-  const repoFetchRes = await axios.get(data.repoUrl);
-  if (repoFetchRes.status !== 200) {
+  try {
+    const repoFetchRes = await axios.get(data.repoUrl);
+    if (repoFetchRes.status !== 200) {
+      throw new Error('Failed to find repo');
+    }
+  } catch {
     res.status(400).send('Repo URL could not be validated');
     return;
   }
