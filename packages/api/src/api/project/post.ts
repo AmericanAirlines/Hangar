@@ -20,7 +20,9 @@ export const post = async (req: Request, res: Response) => {
       throw new Error('Failed to find repo');
     }
   } catch {
-    res.status(400).send('Repo URL could not be validated');
+    res
+      .status(400)
+      .send('Repo URL could not be validated; make sure your repo is publicly accessible');
     return;
   }
 
