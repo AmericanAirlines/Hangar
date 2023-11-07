@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { DriverException } from '@mikro-orm/core';
+import { DriverException, ref } from '@mikro-orm/core';
 import { z } from 'zod';
 import { Schema } from '@hangar/shared';
 import { CriteriaJudgingSubmission, CriteriaScore } from '@hangar/database';
@@ -25,31 +25,25 @@ const validPayload: z.infer<typeof Schema.criteriaJudgingSubmission.post> = {
   ],
 };
 
-const mockProjects = [{ id: '2', toReference: jest.fn().mockReturnThis() }];
+const mockProjects = [{ id: '2' }];
 const mockCriteria = {
   id: validPayload.scores[0]?.criteria,
   scaleMin: 0,
   scaleMax: 2,
-  toReference: jest.fn().mockReturnThis(),
 };
 const mockCriteriaList = [mockCriteria];
 const mockCriteriaJudgingSession = {
-  toReference: jest.fn().mockReturnThis(),
   projects: { load: jest.fn().mockResolvedValue(mockProjects) },
   criteriaList: { getItems: jest.fn().mockReturnValue(mockCriteriaList) },
 };
 
 const mockJudge = {
-  toReference: jest.fn().mockReturnThis(),
   criteriaJudgingSessions: {
     load: jest.fn().mockResolvedValue([{ ...mockCriteriaJudgingSession }]),
   },
 };
 
-const mockCriteriaJudgingSubmission = {
-  toReference: jest.fn().mockReturnThis(),
-  scores: { add: jest.fn() },
-};
+const mockCriteriaJudgingSubmission = { scores: { add: jest.fn() } };
 
 describe('criteriaJudgingSubmission GET handler', () => {
   it('creates a criteriaJudgingSubmission', async () => {
@@ -80,16 +74,16 @@ describe('criteriaJudgingSubmission GET handler', () => {
 
     expect(CriteriaJudgingSubmission.prototype.constructor).toBeCalledWith(
       expect.objectContaining({
-        judge: mockJudge,
-        project: mockProjects[0],
-        criteriaJudgingSession: mockCriteriaJudgingSession,
+        judge: ref(mockJudge),
+        project: ref(mockProjects[0]),
+        criteriaJudgingSession: ref(mockCriteriaJudgingSession),
       }),
     );
 
     expect(CriteriaScore.prototype.constructor).toBeCalledWith(
       expect.objectContaining({
-        submission: mockCriteriaJudgingSubmission,
-        criteria: expect.objectContaining({ id: validPayload.scores[0]!.criteria }),
+        submission: ref(mockCriteriaJudgingSubmission),
+        criteria: ref(mockCriteria),
         score: validPayload.scores[0]!.score,
       }),
     );

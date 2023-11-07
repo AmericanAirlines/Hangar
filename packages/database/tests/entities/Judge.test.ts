@@ -1,10 +1,10 @@
 /* eslint-disable max-lines */
+import { ref } from '@mikro-orm/core';
 import { ExpoJudgingSessionContext, ExpoJudgingVote, Judge, JudgeErrorCode } from '../../src';
 import { createMockEntityManager } from '../testUtils/createMockEntityManager';
 
 const mockProjectValues = {
   id: '1',
-  toReference: jest.fn(),
   incrementActiveJudgeCount: jest.fn(),
   incrementJudgeVisits: jest.fn(),
   $: jest.fn().mockReturnThis(),
@@ -102,7 +102,7 @@ describe('Judge', () => {
 
       await rootJudge.skip({
         entityManager: mockEntityManager as any,
-        expoJudgingSession: { id: '5', toReference: jest.fn() } as any,
+        expoJudgingSession: { id: '5' } as any,
       });
 
       expect(context.currentProject).not.toEqual(mockOriginalCurrentProject);
@@ -125,7 +125,6 @@ describe('Judge', () => {
       const mockEntityManager = createMockEntityManager();
       const rootJudge = new Judge({ user: { id: '1' } as any });
       (rootJudge.id as any) = '1';
-      rootJudge.toReference = jest.fn();
       const mockProject = { ...mockProjectValues };
       Judge.getNextProject = jest.fn().mockResolvedValueOnce(mockProject);
       (rootJudge.expoJudgingVotes as any) = {
@@ -134,20 +133,17 @@ describe('Judge', () => {
       };
 
       // Mock the judge that gets locked
-      const mockProjectReference = 'next project';
-      mockProject.toReference.mockReturnValueOnce(mockProjectReference);
       const currentProject = { ...mockProjectValues };
       const context = {
         id: '2',
         previousProject: { ...mockProjectValues },
         currentProject,
-        toReference: jest.fn(() => ({ id: '2' })),
       };
       mockEntityManager.findOne.mockResolvedValueOnce(context);
 
       const mockVote = {};
       (ExpoJudgingVote.prototype.constructor as jest.Mock).mockReturnValueOnce(mockVote);
-      const mockExpoJudgingSession = { id: '5', toReference: jest.fn() };
+      const mockExpoJudgingSession = { id: '5' };
 
       const vote = await rootJudge.vote({
         entityManager: mockEntityManager as any,
@@ -174,7 +170,7 @@ describe('Judge', () => {
         }),
       );
       expect(context.previousProject).toBe(currentProject);
-      expect(context.currentProject).toBe(mockProjectReference);
+      expect(context.currentProject).toEqual(ref(currentProject));
 
       expect(mockProject.incrementActiveJudgeCount).toHaveBeenCalledTimes(1);
       expect(mockProject.incrementJudgeVisits).toHaveBeenCalledTimes(1);

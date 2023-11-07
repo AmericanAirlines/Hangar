@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { ref } from '@mikro-orm/core';
 import { CriteriaJudgingSession, ExpoJudgingSessionContext, Judge } from '@hangar/database';
 import { post } from '../../../src/api/judge/post';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
@@ -59,22 +60,22 @@ describe('judge post endpoint', () => {
   });
 
   it('should register user as judge', async () => {
-    const mockUserReference = { id: '1' };
+    const mockUser = { id: '1' };
 
     validatePayloadMock.mockReturnValueOnce({
       errorHandled: false,
       data: { inviteCode: 'xyz' },
     } as any);
     const req = createMockRequest({
-      user: { toReference: jest.fn().mockReturnValueOnce(mockUserReference) } as any,
+      user: mockUser as any,
       query: { inviteCode: 'xyz' },
     });
 
-    const mockExpoJudgingSession = { toReference: jest.fn() };
+    const mockExpoJudgingSession = {};
     req.entityManager.findOne.mockReturnValueOnce(mockExpoJudgingSession as any);
 
     const res = createMockResponse();
-    const mockJudge = { toReference: jest.fn(), expoJudgingSessionContexts: { add: jest.fn() } };
+    const mockJudge = { expoJudgingSessionContexts: { add: jest.fn() } };
     (Judge.prototype.constructor as jest.Mock).mockReturnValueOnce(mockJudge);
     const mockEjsContext = {};
     (ExpoJudgingSessionContext.prototype.constructor as jest.Mock).mockReturnValueOnce(
@@ -85,7 +86,7 @@ describe('judge post endpoint', () => {
 
     expect(req.entityManager.findOne).toBeCalledTimes(1);
     expect(Judge.prototype.constructor as jest.Mock).toHaveBeenCalledWith({
-      user: mockUserReference,
+      user: ref(mockUser),
     });
 
     expect(mockJudge.expoJudgingSessionContexts.add).toBeCalledWith(mockEjsContext);
@@ -95,24 +96,24 @@ describe('judge post endpoint', () => {
   });
 
   it('looks for a matching criteria judging session if an expo judging session cannot be found', async () => {
-    const mockUserReference = { id: '1' };
+    const mockUser = { id: '1' };
 
     validatePayloadMock.mockReturnValueOnce({
       errorHandled: false,
       data: { inviteCode: 'xyz' },
     } as any);
     const req = createMockRequest({
-      user: { toReference: jest.fn().mockReturnValueOnce(mockUserReference) } as any,
+      user: mockUser as any,
       query: { inviteCode: 'xyz' },
     });
 
-    const mockCriteriaJudgingSession = { toReference: jest.fn() };
+    const mockCriteriaJudgingSession = { id: 'session' };
     req.entityManager.findOne
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(mockCriteriaJudgingSession as any);
 
     const res = createMockResponse();
-    const mockJudge = { toReference: jest.fn(), criteriaJudgingSessions: { add: jest.fn() } };
+    const mockJudge = { id: 'judge', criteriaJudgingSessions: { add: jest.fn() } };
     (Judge.prototype.constructor as jest.Mock).mockReturnValueOnce(mockJudge);
 
     await post(req as any, res as any);
@@ -120,7 +121,7 @@ describe('judge post endpoint', () => {
     expect(req.entityManager.findOne).toBeCalledTimes(2);
     expect(req.entityManager.findOne).toBeCalledWith(CriteriaJudgingSession, expect.anything());
     expect(Judge.prototype.constructor as jest.Mock).toHaveBeenCalledWith({
-      user: mockUserReference,
+      user: ref(mockUser),
     });
 
     expect(mockJudge.criteriaJudgingSessions.add).toBeCalledWith(mockCriteriaJudgingSession);
@@ -130,14 +131,14 @@ describe('judge post endpoint', () => {
   });
 
   it('should return 500 when it fails to create a judge', async () => {
-    const mockUserReference = { id: '1' };
+    const mockUser = { id: '1' };
 
     validatePayloadMock.mockReturnValueOnce({
       errorHandled: false,
       data: { inviteCode: 'xyz' },
     } as any);
     const req = createMockRequest({
-      user: { toReference: jest.fn().mockReturnValueOnce(mockUserReference) } as any,
+      user: mockUser as any,
       query: { inviteCode: 'xyz' },
     });
     const res = createMockResponse();
