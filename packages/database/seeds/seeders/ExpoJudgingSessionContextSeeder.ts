@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, ref } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
 import { ExpoJudgingSession, ExpoJudgingSessionContext, Judge } from '../../src';
@@ -17,8 +17,8 @@ export class ExpoJudgingSessionContextSeeder extends Seeder {
         judges.forEach((judge) => {
           judge.expoJudgingSessionContexts.add(
             new ExpoJudgingSessionContext({
-              judge: judge.toReference(),
-              expoJudgingSession: expoJudgingSession.toReference(),
+              judge: ref(judge),
+              expoJudgingSession: ref(expoJudgingSession),
             }),
           );
 

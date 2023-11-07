@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, ref } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
 import { Project, ExpoJudgingSession, ExpoJudgingVote, Judge } from '../../src';
@@ -42,18 +42,18 @@ export class ExpoJudgingVoteSeeder extends Seeder {
         for (let i = 0; i < judges.length; i += 1) {
           const judge = judges[i];
 
-          const currentProject = projects.pop()?.toReference();
-          const previousProject = projects.pop()?.toReference();
+          const currentProject = projects.pop();
+          const previousProject = projects.pop();
 
           if (!currentProject || !previousProject) return; // no projects to vote on
           if (!judge || !expoJudgingSession) return;
 
           const vote = new ExpoJudgingVote({
-            judge: judge.toReference(),
-            previousProject,
-            currentProject,
+            judge: ref(judge),
+            previousProject: ref(previousProject),
+            currentProject: ref(currentProject),
             currentProjectChosen: randomVote(),
-            judgingSession: expoJudgingSession.toReference(),
+            judgingSession: ref(expoJudgingSession),
           });
           em.persist(vote);
         }

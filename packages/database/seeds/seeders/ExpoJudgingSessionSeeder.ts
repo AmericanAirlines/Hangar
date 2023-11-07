@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, ref } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
 import { ExpoJudgingSession, Project, User } from '../../src';
@@ -10,7 +10,7 @@ export class ExpoJudgingSessionSeeder extends Seeder {
       try {
         const admin = await em.findOneOrFail(User, { id: '1' });
         const expoJudgingSession = new ExpoJudgingSession({
-          createdBy: admin.toReference(),
+          createdBy: ref(admin),
         });
         const projects = await em.find(Project, {});
         expoJudgingSession.projects.set(projects);
