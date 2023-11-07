@@ -20,7 +20,7 @@ export const EventsList: React.FC<{ events: Event[] }> = ({ events }) => {
   }, [nextEventId]);
 
   return (
-    <UnorderedList variant="card" spacing={5} m={0}>
+    <UnorderedList variant="card" spacing={8} m={0}>
       {events.map((event) => (
         <EventCard
           {...{ event }}

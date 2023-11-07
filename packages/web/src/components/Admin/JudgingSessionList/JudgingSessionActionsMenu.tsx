@@ -66,7 +66,7 @@ export const JudgingSessionActionsMenu: React.FC<JudgingSessionActionsMenuProps>
         <MenuItem
           {...menuItemStyle}
           onClick={() => {
-            void router.push(`/admin/${judgingSessionType}/${judgingSession.id}/results`);
+            void router.push(`/admin/${judgingSessionType}/${judgingSession.id}`);
           }}
         >
           See Results

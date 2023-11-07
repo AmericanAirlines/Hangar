@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import { colors } from '../../../../../../theme';
-import { signInWithSlack } from './utils';
+import { triggerRedirect } from '../../../../RedirectToAuthModal/useRedirectToAuth';
 
 type SignUpProps = {
   mentionLogin?: boolean;
@@ -9,8 +9,8 @@ type SignUpProps = {
 export const SignUp: React.FC<SignUpProps> = ({ mentionLogin }) => (
   <Button
     backgroundColor={colors.success}
-    onClick={async () => {
-      await signInWithSlack();
+    onClick={() => {
+      triggerRedirect();
     }}
     size={{ base: 'sm', sm: 'md' }}
   >

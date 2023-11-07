@@ -3,7 +3,7 @@ import axios, { AxiosResponse, isAxiosError } from 'axios';
 type FetchExpoJudgingSessionArgs = {
   expoJudgingSessionId: string;
 };
-type FetchExpoJudgingSessionError = Pick<AxiosResponse, 'status'>;
+type FetchExpoJudgingSessionError = Pick<AxiosResponse, 'status' | 'data'>;
 
 export type ExpoJudgingSessionResult = {
   id: string;
@@ -22,7 +22,7 @@ export const fetchExpoJudgingSessionResults = async ({
     );
     return res.data;
   } catch (error) {
-    const defaultError: FetchExpoJudgingSessionError = { status: 500 };
+    const defaultError: FetchExpoJudgingSessionError = { status: 500, data: undefined };
     if (isAxiosError(error)) {
       return error.response ?? defaultError;
     }

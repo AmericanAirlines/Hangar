@@ -44,7 +44,8 @@ describe('expoJudgingSession/id/results GET handler', () => {
 
     const tabulate = jest.spyOn(ExpoJudgingVote, 'tabulate');
 
-    tabulate.mockRejectedValueOnce(new Error('', { cause: insufficientVoteCountError }));
+    const errorMessage = 'need more votes';
+    tabulate.mockRejectedValueOnce(new Error(errorMessage, { cause: insufficientVoteCountError }));
     const req = createMockRequest({
       params: { id: mockId },
     });
@@ -55,7 +56,8 @@ describe('expoJudgingSession/id/results GET handler', () => {
 
     await get(req as any, res as any);
 
-    expect(res.sendStatus).toHaveBeenCalledWith(409);
+    expect(res.status).toHaveBeenCalledWith(409);
+    expect(res.send).toBeCalledWith(errorMessage);
   });
 
   it('returns a 500 if something goes wrong', async () => {

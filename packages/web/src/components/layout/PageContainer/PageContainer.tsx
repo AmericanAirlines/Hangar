@@ -67,7 +67,12 @@ export const PageContainer: React.FC<PageContainerProps> = ({
             )}
             <Heading fontWeight="700">{heading}</Heading>
             {subHeading !== undefined && (
-              <Text size={{ base: 'md', md: 'lg' }} color={colors.muted} wordBreak="break-word">
+              <Text
+                size={{ base: 'md', md: 'lg' }}
+                color={colors.muted}
+                wordBreak="break-word"
+                whiteSpace="pre-wrap"
+              >
                 {subHeading}&nbsp;
               </Text>
             )}
