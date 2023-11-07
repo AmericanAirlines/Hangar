@@ -1,7 +1,7 @@
 import { AnyEntity, BaseEntity, BigIntType, PrimaryKey, Property } from '@mikro-orm/core';
 
 export abstract class Node<T extends AnyEntity> extends BaseEntity {
-  @PrimaryKey({ type: BigIntType })
+  @PrimaryKey({ type: new BigIntType('string') })
   public id!: string;
 
   @Property({ defaultRaw: 'clock_timestamp()' })
