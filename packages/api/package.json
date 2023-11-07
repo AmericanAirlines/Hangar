@@ -9,7 +9,7 @@
     "typecheck": "tsc",
     "test": "jest",
     "test:coverage": "yarn test --coverage",
-    "lint": "eslint \"src/**/*.ts\" --max-warnings 0",
+    "lint": "eslint \"**/*.ts\" --max-warnings 0",
     "lint:fix": "yarn lint --fix",
     "clean": "rimraf dist coverage"
   },

@@ -10,7 +10,8 @@ import { Judge } from './Judge';
 
 export { ProjectResult, ProjectScore } from '../entitiesUtils/scoreVotes';
 
-const shuffle = (arr: any) => arr.sort(() => Math.random() - 0.5);
+const shuffle = <T extends (ExpoJudgingVote | Project)[]>(arr: T) =>
+  arr.sort(() => Math.random() - 0.5) as T;
 
 export const insufficientVoteCountError = 'InsufficientVoteCount';
 

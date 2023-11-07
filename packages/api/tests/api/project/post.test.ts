@@ -1,5 +1,3 @@
-/* eslint-disable max-lines */
-// import { Response } from 'express';
 import { Project } from '@hangar/database';
 import axios from 'axios';
 import { post } from '../../../src/api/project/post';

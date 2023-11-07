@@ -7,6 +7,7 @@ export enum AppConfigKey {
   Test,
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type JSONValue = string | number | boolean | Record<string, any> | any[];
 
 export type AppConfigDTO = EntityDTO<AppConfig>;

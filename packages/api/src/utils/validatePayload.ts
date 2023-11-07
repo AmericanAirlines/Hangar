@@ -6,7 +6,7 @@ type ValidatePayloadArgs<T extends ZodObject<ZodRawShape>> = {
   req: Request;
   res: Response;
   schema: T;
-  data?: Record<any, any>;
+  data?: Record<string, unknown>;
 };
 
 type ValidatePayloadError = {

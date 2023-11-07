@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ExpoJudgingSessionContext, ExpoJudgingVote, Judge, JudgeErrorCode } from '../../src';
 import { createMockEntityManager } from '../testUtils/createMockEntityManager';
 
