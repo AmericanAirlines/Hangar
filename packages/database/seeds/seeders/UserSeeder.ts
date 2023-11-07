@@ -5,7 +5,7 @@ import { env } from '../env';
 import { User } from '../../src';
 import { UserFactory } from '../factories/UserFactory';
 
-const usersToMake = 20;
+const usersToMake = 40;
 
 export class UserSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {

@@ -4,7 +4,7 @@ import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
 import { Judge, User } from '../../src';
 
-const judgesToMake = 5;
+const judgesToMake = 20;
 export class JudgeSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {
     if (env.primaryUserIsAdmin) {
@@ -19,23 +19,16 @@ export class JudgeSeeder extends Seeder {
     try {
       // find all other users
       const users = await em.find(User, env.primaryUserIsJudge ? { id: { $ne: '1' } } : {});
-      // create a judge for some users, ensure the judges are fewer
-      // than all users minus the primary user and one base user
-      let numJudgesToMake = Math.min(judgesToMake, users.length - 1);
-      let usedUsers = ['1'];
-      while (numJudgesToMake > 0) {
-        const user = users[Math.floor(Math.random() * users.length)];
-        if (user && usedUsers.indexOf(user.id) === -1) break;
+      const numJudgesToMake = Math.min(judgesToMake, users.length - 1);
+      for (let i = 0; i < numJudgesToMake; i += 1) {
+        const user = users[i] as User;
+        // User was NOT used already
 
-        if (user && usedUsers.indexOf(user.id) === -1) {
-          usedUsers = [...usedUsers, user.id];
+        const judge = new Judge({ user: user.toReference() });
 
-          const judge = new Judge({ user: user.toReference() });
-
-          em.persist(judge);
-          numJudgesToMake -= 1;
-        }
+        em.persist(judge);
       }
+      await em.flush();
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e, 'Failed to create additional judges');

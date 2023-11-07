@@ -116,4 +116,19 @@ describe('project post endpoint', () => {
 
     expect(req.entityManager.transactional).not.toBeCalled();
   });
+
+  it('should return 400 when repoUrl fetch fails', async () => {
+    const data = { repoUrl: 'https://google.com/' };
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
+    const req = createMockRequest();
+    const res = createMockResponse();
+    (axios.get as jest.Mock).mockRejectedValueOnce(new Error(''));
+
+    await post(req as any, res as any);
+
+    expect(axios.get as jest.Mock).toBeCalled();
+    expect(res.status).toBeCalledWith(400);
+
+    expect(req.entityManager.transactional).not.toBeCalled();
+  });
 });

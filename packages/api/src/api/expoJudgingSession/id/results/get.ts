@@ -19,7 +19,7 @@ export const get = async (req: Request, res: Response) => {
     res.send(results);
   } catch (error) {
     if ((error as Error).cause === insufficientVoteCountError) {
-      res.sendStatus(409);
+      res.status(409).send((error as Error).message);
       return;
     }
     logger.error('Failed to calculate results', error);

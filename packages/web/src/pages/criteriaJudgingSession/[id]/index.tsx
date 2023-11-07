@@ -8,6 +8,7 @@ import { ProjectSelectionMenu, useCriteriaJudging } from '../../../components/Cr
 import { CriteriaJudgingForm } from '../../../components/CriteriaJudging/CriteriaJudgingForm';
 
 const CriteriaJudgingSessionDetails: NextPage = () => {
+  const projectSelectionMenuRef = React.useRef<HTMLDivElement>(null);
   const [selectedProject, setSelectedProject] = React.useState<Project>();
   const { criteriaJudgingSession } = useJudgingSessionFetcher({ sessionType: 'criteria' });
   const { projects, isLoading } = useCriteriaJudging();
@@ -25,11 +26,20 @@ const CriteriaJudgingSessionDetails: NextPage = () => {
       subHeading={criteriaJudgingSession?.description ?? ''}
       isLoading={!criteriaJudgingSession || isLoading}
     >
-      {projects && <ProjectSelectionMenu projects={projects} onSelect={setSelectedProject} />}
+      {projects && (
+        <ProjectSelectionMenu
+          projects={projects}
+          onSelect={setSelectedProject}
+          containerRef={projectSelectionMenuRef}
+        />
+      )}
       {selectedProject && criteriaJudgingSession ? (
         <CriteriaJudgingForm
           project={selectedProject}
           criteriaJudgingSession={criteriaJudgingSession}
+          onSubmission={() => {
+            projectSelectionMenuRef.current?.scrollIntoView({ behavior: 'smooth' });
+          }}
         />
       ) : (
         <Center p={5} w="full">

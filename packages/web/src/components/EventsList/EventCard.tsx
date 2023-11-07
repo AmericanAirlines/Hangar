@@ -1,16 +1,12 @@
-import { Ref } from 'react';
+import React, { Ref } from 'react';
 import { FlexProps, Tag, Flex, ListItem, Heading, Text } from '@chakra-ui/react';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { Event } from '@hangar/shared';
 import { EventStatus, eventStyle } from './utils';
 
 type EventCardProps = {
   event: Event;
   containerRef?: Ref<HTMLLIElement>;
-};
-
-type BadgeProps = {
-  badge: EventStatus;
 };
 
 const BadgeContainerStyle: FlexProps = {
@@ -22,46 +18,53 @@ const BadgeContainerStyle: FlexProps = {
   mt: '-12px',
 };
 
-const ProgressBadge: React.FC<BadgeProps> = ({ badge }) =>
-  badge !== 'IN PROGRESS' ? (
-    <></>
-  ) : (
-    <Tag variant={badge === 'IN PROGRESS' ? 'success' : 'solid'}>
-      <Flex gap={2} direction={'row'}>
-        <Text>{badge}</Text>
-        <Text>🕑</Text>
-      </Flex>
-    </Tag>
-  );
+const timeFormat = 'h:mm a';
+const dateFormat = 'dddd MM/DD';
+
+const getRelativeTimeStatus: (start: Dayjs, end: Dayjs) => EventStatus = (start, end) => {
+  if (dayjs().isBetween(start, end)) return 'IN PROGRESS';
+  if (dayjs().isAfter(end)) return 'PAST';
+  return 'FUTURE';
+};
 
 export const EventCard: React.FC<EventCardProps> = ({ event, containerRef }) => {
   const { name, description, start, end } = event;
-  const inProgress = dayjs().isBetween(start, end);
+  const [status, setStatus] = React.useState<EventStatus>(getRelativeTimeStatus(start, end));
 
-  const format = 'h:mm a';
-  const past = dayjs().isAfter(end);
-  let badge: EventStatus = 'IN PROGRESS';
-  if (past) {
-    badge = 'PAST';
-  } else if (!inProgress) {
-    badge = 'FUTURE';
-  }
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setStatus(getRelativeTimeStatus(start, end));
+    }, 1000); // Trigger every 60 seconds
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [end, start]);
 
   return (
-    <ListItem style={eventStyle(badge)} ref={containerRef}>
-      <Flex {...BadgeContainerStyle}>
-        <ProgressBadge {...{ badge }} />
+    <ListItem style={eventStyle(status)} ref={containerRef}>
+      <Flex {...BadgeContainerStyle} hidden={status !== 'IN PROGRESS'}>
+        <Tag variant={'success'}>
+          <Flex gap={2} direction={'row'}>
+            <Text>In Progress</Text>
+            <Text>🕑</Text>
+          </Flex>
+        </Tag>
       </Flex>
 
-      <Heading as="h2" size="md">
-        {name}
-      </Heading>
+      <Flex w="full" direction="column" gap={3}>
+        <Heading as="h2" size="md">
+          {name}
+        </Heading>
 
-      <Text>{description}</Text>
+        <Text>{description}</Text>
 
-      <Text>
-        {start.format(format)} - {end.format(format)}
-      </Text>
+        <Flex w="full" justifyContent="center" gap={5}>
+          <Text variant="outline" fontWeight="bold">
+            {start.format(timeFormat)} - {end.format(timeFormat)} on {start.format(dateFormat)}
+          </Text>
+        </Flex>
+      </Flex>
     </ListItem>
   );
 };

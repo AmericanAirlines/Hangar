@@ -81,9 +81,32 @@ export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
 
     // If the number of calibration votes is >= 50% of the votes for the project; throw error
     if (avgNumVotesPerProject === 0 || votesNeededForCalibration / avgNumVotesPerProject >= 0.75) {
-      throw new Error('Insufficient vote count for judging', {
-        cause: insufficientVoteCountError,
-      });
+      throw new Error(
+        `Insufficient vote count for judging. ${avgNumVotesPerProject.toFixed(
+          1,
+        )} votes cast per project but need ${votesNeededForCalibration} votes.`,
+        { cause: insufficientVoteCountError },
+      );
+    }
+
+    // Check for anomalies where individual projects do not have enough votes
+    const projectsBelowCalibrationThreshold = projects.reduce((counts, { id }) => {
+      const votesForProject = allVotes.filter(
+        ({ previousProject, currentProject }) =>
+          currentProject.id === id || previousProject.id === id,
+      ).length;
+      if (votesForProject < votesNeededForCalibration) return { ...counts, [id]: votesForProject };
+      return counts;
+    }, {} as { [id: string]: number });
+
+    if (Object.keys(projectsBelowCalibrationThreshold).length) {
+      const projectDetailsString = Object.entries(projectsBelowCalibrationThreshold)
+        .map(([id, count]) => `${id} (${count})`)
+        .join(', ');
+      throw new Error(
+        `Project(s) without required calibration votes (${votesNeededForCalibration}): ${projectDetailsString}`,
+        { cause: insufficientVoteCountError },
+      );
     }
 
     // Pass over the data in random order to obtain an unbiased baseline

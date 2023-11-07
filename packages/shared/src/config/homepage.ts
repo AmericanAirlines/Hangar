@@ -1,6 +1,17 @@
+type Link = {
+  title?: string;
+  url: string;
+};
 type HomepageSection = {
   title: string;
   content: string[];
+  links?: Link[];
+};
+
+type HomepageContent = {
+  challenge: HomepageSection;
+  welcome: HomepageSection;
+  sections: HomepageSection[];
 };
 
 const challenge: HomepageSection = {
@@ -22,7 +33,14 @@ const welcome: HomepageSection = {
   ],
 };
 
-export const homepage = {
+const loremIpsum: HomepageSection = {
+  title: 'Lorem Ipsum',
+  content: ['Lorem ipsum dolor sit'],
+  links: [{ url: 'https://aa.com' }],
+};
+
+export const homepage: HomepageContent = {
   challenge,
   welcome,
+  sections: [loremIpsum], // Add additional homepage sections here
 };

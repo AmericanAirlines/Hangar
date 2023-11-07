@@ -12,6 +12,10 @@ COPY packages/database/package.json packages/database/package.json
 # Install all dependencies
 RUN yarn install --frozen-lockfile
 
+ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_SLACK_WORKSPACE_NAME
+ARG NEXT_PUBLIC_SLACK_INVITE_URL
+
 ENV NODE_ENV production
 ENV PORT 8080
 

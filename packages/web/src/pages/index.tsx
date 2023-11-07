@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 import { Config } from '@hangar/shared';
-import { Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import React from 'react';
 import { PageContainer } from '../components/layout/PageContainer';
 import { Prizes } from '../components/Prizes';
@@ -31,13 +31,44 @@ const Home: NextPage = () => {
       <ProjectRegistrationCTA />
 
       <Flex gap={5} direction={{ base: 'column', sm: 'row' }}>
-        <Flex direction="column" flex={{ base: 1, md: 2 }} gap={2}>
-          <Heading>{Config.homepage.challenge.title}</Heading>
+        <Flex direction="column" gap={10} flex={{ base: 1, md: 2 }}>
+          {/* Content sections */}
+          <Flex direction="column" gap={2}>
+            <Heading>{Config.homepage.challenge.title}</Heading>
 
-          {Config.homepage.challenge.content.map((text) => (
-            <Text key={text.substring(0, 15)} fontSize="xl">
-              {text}
-            </Text>
+            {Config.homepage.challenge.content.map((text) => (
+              <Text key={text.substring(0, 15)} fontSize="xl">
+                {text}
+              </Text>
+            ))}
+          </Flex>
+
+          {Config.homepage.sections.map((section) => (
+            <Flex key={section.title} direction="column" gap={2}>
+              <Heading>{section.title}</Heading>
+
+              {section.content.map((text) => (
+                <Text key={text.substring(0, 15)} fontSize="xl" whiteSpace="pre-wrap">
+                  {text}
+                </Text>
+              ))}
+
+              {section.links && (
+                <Flex direction={{ base: 'column', sm: 'row' }} gap={2}>
+                  {section.links.map(({ url, title }) => (
+                    <Box key={url}>
+                      <Button
+                        onClick={() => {
+                          window.open(url, '_blank');
+                        }}
+                      >
+                        {title ?? 'Read More'}
+                      </Button>
+                    </Box>
+                  ))}
+                </Flex>
+              )}
+            </Flex>
           ))}
         </Flex>
 

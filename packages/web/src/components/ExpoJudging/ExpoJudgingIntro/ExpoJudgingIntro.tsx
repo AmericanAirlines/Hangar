@@ -9,14 +9,14 @@ export const ExpoJudgingIntro: React.FC<ExpoJudgingIntroProps> = ({ onStart }) =
   <Flex direction="column" gap={5}>
     <Heading>How Judging Works </Heading>
     <Box>
-      <List spacing={4}>
+      <List spacing={5}>
         <ListItem fontSize={20}>
           <ListIcon as={BsFill1CircleFill} color={colors.brandPrimaryLight} boxSize={6} />
           {`Locate the project you need to judge and listen to their amazing pitch.`}
         </ListItem>
         <ListItem fontSize={20}>
           <ListIcon as={BsFill2CircleFill} color={colors.brandPrimaryLight} boxSize={6} />
-          {`After you heard the pitch and judged the project, quickly find you next one.`}
+          {`After you heard the pitch and judged the project, quickly find the next one.`}
         </ListItem>
         <ListItem fontSize={20}>
           <ListIcon as={BsFill3CircleFill} color={colors.brandPrimaryLight} boxSize={6} />

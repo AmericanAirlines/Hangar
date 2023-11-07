@@ -48,7 +48,7 @@ export const useRegistrationConfig = ({ onSubmit }: RegistrationFormProps) => {
         await useUserStore.getState().fetchUser(); // Refresh user to populate project
         onSubmit?.();
       } catch (error) {
-        let errorMessage = '';
+        let errorMessage = isAxiosError(error) ? error.response?.data : '';
         if (isAxiosError(error)) {
           switch (error.response?.status) {
             case 409:
@@ -57,7 +57,10 @@ export const useRegistrationConfig = ({ onSubmit }: RegistrationFormProps) => {
             default:
           }
         }
-        openErrorToast({ title: 'Failed to create project', description: errorMessage });
+        openErrorToast({
+          title: 'Failed to create project',
+          description: errorMessage,
+        });
       }
       setIsLoading(false);
     },
