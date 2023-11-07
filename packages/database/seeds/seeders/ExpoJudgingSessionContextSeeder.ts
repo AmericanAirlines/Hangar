@@ -10,10 +10,9 @@ export class ExpoJudgingSessionContextSeeder extends Seeder {
       try {
         // non primary user judges
         const judges = await em.find(Judge, env.primaryUserIsJudge ? { id: { $ne: '1' } } : {});
-        const expoJudgingSession: ExpoJudgingSession = await em.findOneOrFail(
-          ExpoJudgingSession,
-          {},
-        );
+        const expoJudgingSession: ExpoJudgingSession = await em.findOneOrFail(ExpoJudgingSession, {
+          id: '1',
+        });
 
         judges.forEach((judge) => {
           judge.expoJudgingSessionContexts.add(
@@ -25,9 +24,9 @@ export class ExpoJudgingSessionContextSeeder extends Seeder {
 
           em.persist(judge);
         });
-      } catch {
+      } catch (error) {
         // eslint-disable-next-line no-console
-        console.error('Failed to create judge for primary user');
+        console.error('Failed to create judge for primary user', error);
       }
     }
   };

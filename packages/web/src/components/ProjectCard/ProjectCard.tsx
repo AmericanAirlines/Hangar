@@ -1,7 +1,7 @@
 import { Heading, Text, Flex, Box, Link } from '@chakra-ui/react';
 import { FiExternalLink } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import { Project } from '@hangar/shared';
+import { Config, Project } from '@hangar/shared';
 import { colors } from '../../theme';
 
 type ProjectCardProps = {
@@ -40,7 +40,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         {location && (
           <Flex align="center" mb={2}>
             <Text fontSize="sm" fontWeight="bold" mr={2}>
-              Location:
+              {Config.project.locationLabel}:
             </Text>
             <Text fontSize="sm" fontWeight="bold">
               {location}
