@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { CriteriaJudgingSession, ExpoJudgingSessionContext, Judge } from '@hangar/database';
 import { put } from '../../../src/api/judge/put';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';

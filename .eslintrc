@@ -1,15 +1,26 @@
 {
   "env": {
-    "es6": true
+    "es6": true,
+    "jest": true
   },
+  "ignorePatterns": ["dist", "node_modules", "**/*.js"],
   "rules": {
     "@typescript-eslint/no-floating-promises": ["error"],
     "@typescript-eslint/no-require-imports": ["error"],
+    "@typescript-eslint/no-explicit-any": ["error"],
+    "@typescript-eslint/no-non-null-assertion": ["error"],
     "curly": ["error"],
-    "import/prefer-default-export": ["off"],
     "no-void": ["error", { "allowAsStatement": true }],
-    "no-await-in-loop": ["off"],
     "max-lines": ["error", 100],
+    "no-plusplus": ["error"],
+    "import/order": ["error"],
+    "prefer-template": ["error"],
+    "import/no-extraneous-dependencies": ["error"],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      { "js": "never", "ts": "never", "tsx": "never" }
+    ],
     "no-restricted-imports": [
       "error",
       {
@@ -30,6 +41,20 @@
           }
         ]
       }
-    ]
-  }
+    ],
+    "object-curly-newline": ["off"],
+    "operator-linebreak": ["off"],
+    "import/prefer-default-export": ["off"],
+    "no-await-in-loop": ["off"]
+  },
+  "overrides": [
+    {
+      "files": ["**/tests/**/*"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "max-lines": "off"
+      }
+    }
+  ]
 }

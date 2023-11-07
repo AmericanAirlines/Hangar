@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ref } from '@mikro-orm/core';
 import { CriteriaJudgingSession, ExpoJudgingSessionContext, Judge } from '@hangar/database';
 import { post } from '../../../src/api/judge/post';

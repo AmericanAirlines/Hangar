@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { DriverException, ref } from '@mikro-orm/core';
 import { z } from 'zod';
 import { Schema } from '@hangar/shared';

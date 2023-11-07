@@ -14,7 +14,7 @@ jest.mock('../../../../src/middleware/mountUserMiddleware', () => ({
 describe('/project put endpoint registration', () => {
   it('registers the route for the put handler', async () => {
     await jest.isolateModulesAsync(async () => {
-      const { contributors } = await import('../../../../src/api/project/contributors/');
+      const { contributors } = await import('../../../../src/api/project/contributors');
 
       const app = express();
       app.use(contributors);

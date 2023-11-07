@@ -1,4 +1,3 @@
-import { Response } from 'express';
 import { put } from '../../../src/api/user/put';
 import { validatePayload } from '../../../src/utils/validatePayload';
 import { getMock } from '../../testUtils/getMock';

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ref } from '@mikro-orm/core';
 import { ExpoJudgingSessionContext, ExpoJudgingVote, Judge, JudgeErrorCode } from '../../src';
 import { createMockEntityManager } from '../testUtils/createMockEntityManager';
