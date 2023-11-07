@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ExpoJudgingSession } from '@hangar/database';
 import { validatePayload } from '../../../src/utils/validatePayload';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';

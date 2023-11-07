@@ -11,7 +11,7 @@ import { ExpoJudgingVoteSeeder } from './seeders/ExpoJudgingVoteSeeder';
 import { ExpoJudgingSessionContextSeeder } from './seeders/ExpoJudgingSessionContextSeeder';
 
 export class DatabaseSeeder extends Seeder {
-  run = async (em: EntityManager): Promise<any> =>
+  run = async (em: EntityManager): Promise<void> =>
     this.call(em, [
       UserSeeder,
       AdminSeeder,

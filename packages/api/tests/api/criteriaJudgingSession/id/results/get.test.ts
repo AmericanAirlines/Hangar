@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { Criteria, CriteriaJudgingSession, CriteriaJudgingSubmission } from '@hangar/database';
 import { get } from '../../../../../src/api/criteriaJudgingSession/id/results/get';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
