@@ -27,7 +27,7 @@
    <!-- cSpell:disable -->
 
    ```Dockerfile
-   FROM node:16
+   FROM node:18
    WORKDIR /usr/src/app
 
    COPY yarn.lock package.json ./

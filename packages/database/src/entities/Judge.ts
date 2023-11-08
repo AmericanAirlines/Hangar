@@ -8,6 +8,7 @@ import {
   LockMode,
   OneToMany,
   ManyToMany,
+  ref,
 } from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
@@ -121,11 +122,11 @@ export class Judge extends Node<Judge> {
 
         // VOTE CREATION
         vote = new ExpoJudgingVote({
-          judge: this.toReference(),
+          judge: ref(this),
           previousProject: context.previousProject,
           currentProject: context.currentProject,
           currentProjectChosen: args.currentProjectChosen,
-          judgingSession: args.expoJudgingSession.toReference(),
+          judgingSession: ref(args.expoJudgingSession),
         });
         em.persist(vote);
       }
@@ -168,7 +169,7 @@ export class Judge extends Node<Judge> {
       });
 
       if (nextProject) {
-        context.currentProject = nextProject.toReference();
+        context.currentProject = ref(nextProject);
         await nextProject.incrementActiveJudgeCount({ entityManager: em });
         await nextProject.incrementJudgeVisits({ entityManager: em });
       } else {

@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager, ref } from '@mikro-orm/postgresql';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
 import { Judge, User } from '../../src';
@@ -10,7 +10,7 @@ export class JudgeSeeder extends Seeder {
     if (env.primaryUserIsAdmin) {
       try {
         const initialUser = await em.findOneOrFail(User, { id: '1' });
-        const judge = new Judge({ user: initialUser.toReference() });
+        const judge = new Judge({ user: ref(initialUser) });
         em.persist(judge);
       } catch {
         // eslint-disable-next-line no-console
@@ -24,7 +24,7 @@ export class JudgeSeeder extends Seeder {
         const user = users[i] as User;
         // User was NOT used already
 
-        const judge = new Judge({ user: user.toReference() });
+        const judge = new Judge({ user: ref(user) });
 
         em.persist(judge);
       }

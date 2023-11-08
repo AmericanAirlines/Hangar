@@ -62,14 +62,14 @@ describe('judge put endpoint', () => {
       errorHandled: false,
       data: { inviteCode: 'xyz' },
     } as any);
-    const mockJudge = { toReference: jest.fn(), expoJudgingSessionContexts: { add: jest.fn() } };
+    const mockJudge = { id: 'judge', expoJudgingSessionContexts: { add: jest.fn() } };
 
     const req = createMockRequest({
       query: { inviteCode: 'xyz' },
       judge: mockJudge as any,
     });
 
-    const mockExpoJudgingSession = { toReference: jest.fn() };
+    const mockExpoJudgingSession = { id: 'session' };
     req.entityManager.findOne.mockReturnValueOnce(mockExpoJudgingSession as any);
 
     const res = createMockResponse();
@@ -91,14 +91,14 @@ describe('judge put endpoint', () => {
       errorHandled: false,
       data: { inviteCode: 'xyz' },
     } as any);
-    const mockJudge = { toReference: jest.fn(), criteriaJudgingSessions: { add: jest.fn() } };
+    const mockJudge = { id: 'judge', criteriaJudgingSessions: { add: jest.fn() } };
 
     const req = createMockRequest({
       query: { inviteCode: 'xyz' },
       judge: mockJudge as any,
     });
 
-    const mockCriteriaJudgingSession = { toReference: jest.fn() };
+    const mockCriteriaJudgingSession = { id: 'session' };
     req.entityManager.findOne
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(mockCriteriaJudgingSession as any);
@@ -115,14 +115,14 @@ describe('judge put endpoint', () => {
   });
 
   it('should return 500 when it fails to update a judge', async () => {
-    const mockUserReference = { id: '1' };
+    const mockUser = { id: '1' };
 
     validatePayloadMock.mockReturnValueOnce({
       errorHandled: false,
       data: { inviteCode: 'xyz' },
     } as any);
     const req = createMockRequest({
-      user: { toReference: jest.fn().mockReturnValueOnce(mockUserReference) } as any,
+      user: mockUser as any,
       query: { inviteCode: 'xyz' },
     });
     const res = createMockResponse();

@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { EntityManager } from '@mikro-orm/core';
+import { EntityManager, ref } from '@mikro-orm/core';
 import { Seeder } from '@mikro-orm/seeder';
 import { ProjectFactory } from '../factories/ProjectFactory';
 import { Judge, User } from '../../src';
@@ -34,7 +34,7 @@ export class ProjectSeeder extends Seeder {
         // some users will not have a project
         if (!project) return;
 
-        user.project = project.toReference();
+        user.project = ref(project);
         em.persist(user);
       });
     } catch (e) {

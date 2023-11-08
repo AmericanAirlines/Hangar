@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Schema } from '@hangar/shared';
 import { z } from 'zod';
-import { DriverException } from '@mikro-orm/core';
+import { DriverException, ref } from '@mikro-orm/core';
 import { CriteriaJudgingSubmission, CriteriaScore } from '@hangar/database';
 import { validatePayload } from '../../utils/validatePayload';
 import { logger } from '../../utils/logger';
@@ -42,9 +42,9 @@ export const post = async (req: Request, res: Response) => {
     // Judge has access to session, project is relevant to session... create submission
 
     const criteriaJudgingSubmission = new CriteriaJudgingSubmission({
-      judge: judge.toReference(),
-      criteriaJudgingSession: criteriaJudgingSession.toReference(),
-      project: project.toReference(),
+      judge: ref(judge),
+      criteriaJudgingSession: ref(criteriaJudgingSession),
+      project: ref(project),
     });
 
     const criteriaList = criteriaJudgingSession.criteriaList.getItems();
@@ -66,8 +66,8 @@ export const post = async (req: Request, res: Response) => {
       }
 
       const criteriaScore = new CriteriaScore({
-        submission: criteriaJudgingSubmission.toReference(),
-        criteria: criteria.toReference(),
+        submission: ref(criteriaJudgingSubmission),
+        criteria: ref(criteria),
         score,
       });
       criteriaJudgingSubmission.scores.add(criteriaScore);
