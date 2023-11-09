@@ -2,7 +2,7 @@ import { Schema } from '../../../../src';
 import { PutValidation } from '../../../../src/schema/project/id';
 
 const validProject = {
-  name: 'Code Crafters Hub',
+  name: 'Coders Hub',
   description: 'Where coding meets coffee, creating chaos and laughter on line code at a time!',
   location: 'cloud 9 3/4',
   repoUrl: 'https://github.com/',
