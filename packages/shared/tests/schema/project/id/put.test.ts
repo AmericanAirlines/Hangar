@@ -52,4 +52,38 @@ describe('project put schema', () => {
       }).success,
     ).toBe(false);
   });
+
+  it('does not validate an object with an invalid description', () => {
+    expect(
+      Schema.project.id.put.safeParse({
+        ...validProject,
+        description: Array(PutValidation.MAX_DESCRIPTION_LENGTH + 1).fill('A'),
+      }).success,
+    ).toBe(false);
+
+    expect(
+      Schema.project.id.put.safeParse({
+        ...validProject,
+        description: Array(PutValidation.MIN_DESCRIPTION_LENGTH - 1).fill('A'),
+      }).success,
+    ).toBe(false);
+  });
+
+  it('does not validate an object with an invalid location', () => {
+    expect(
+      Schema.project.id.put.safeParse({
+        ...validProject,
+        location: Array(PutValidation.MAX_LOCATION_LENGTH + 1).fill('A'),
+      }).success,
+    ).toBe(false);
+  });
+
+  it('does not validates an invalid repoUrl', () => {
+    expect(
+      Schema.project.id.put.safeParse({
+        ...validProject,
+        repoUrl: 'https://google.com',
+      }).success,
+    ).toBe(false);
+  });
 });
