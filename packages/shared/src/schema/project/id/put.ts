@@ -8,7 +8,7 @@ export const PutValidation = {
   MAX_LOCATION_LENGTH: 100,
 };
 
-export const post = z.object({
+export const put = z.object({
   name: z.string().trim().min(PutValidation.MIN_NAME_LENGTH).max(PutValidation.MAX_NAME_LENGTH),
   description: z
     .string()
