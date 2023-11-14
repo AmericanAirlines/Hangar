@@ -1,5 +1,5 @@
-import { Schema } from '../../../../src';
-import { PutValidation } from '../../../../src/schema/project/id';
+import { Schema } from '../../../src';
+import { validation } from '../../../src/schema/project';
 
 const validProject = {
   name: 'Coders Hub',
@@ -10,14 +10,14 @@ const validProject = {
 
 describe('project put schema', () => {
   it('validates matching object', () => {
-    expect(Schema.project.id.put.safeParse(validProject).success).toBe(true);
+    expect(Schema.project.put.safeParse(validProject).success).toBe(true);
   });
 
   it('validates a matching object without a location', () => {
     const projectWithoutLocation = { ...validProject } as Record<string, string>;
     delete projectWithoutLocation.location;
 
-    expect(Schema.project.id.put.safeParse(projectWithoutLocation).success).toBe(true);
+    expect(Schema.project.put.safeParse(projectWithoutLocation).success).toBe(true);
   });
 
   it('trims relevant field', () => {
@@ -27,7 +27,7 @@ describe('project put schema', () => {
       name: 'someone',
       description: 'something something dark side',
     };
-    const result = Schema.project.id.put.safeParse(project);
+    const result = Schema.project.put.safeParse(project);
 
     if (!result.success) throw new Error(result.error.toString());
 
@@ -39,48 +39,48 @@ describe('project put schema', () => {
 
   it('does not validate an object with an invalid name', () => {
     expect(
-      Schema.project.id.put.safeParse({
+      Schema.project.put.safeParse({
         ...validProject,
-        name: Array(PutValidation.MAX_NAME_LENGTH + 1).fill('A'),
+        name: Array(validation.MAX_NAME_LENGTH + 1).fill('A'),
       }).success,
     ).toBe(false);
 
     expect(
-      Schema.project.id.put.safeParse({
+      Schema.project.put.safeParse({
         ...validProject,
-        name: Array(PutValidation.MIN_NAME_LENGTH - 1).fill('A'),
+        name: Array(validation.MIN_NAME_LENGTH - 1).fill('A'),
       }).success,
     ).toBe(false);
   });
 
   it('does not validate an object with an invalid description', () => {
     expect(
-      Schema.project.id.put.safeParse({
+      Schema.project.put.safeParse({
         ...validProject,
-        description: Array(PutValidation.MAX_DESCRIPTION_LENGTH + 1).fill('A'),
+        description: Array(validation.MAX_DESCRIPTION_LENGTH + 1).fill('A'),
       }).success,
     ).toBe(false);
 
     expect(
-      Schema.project.id.put.safeParse({
+      Schema.project.put.safeParse({
         ...validProject,
-        description: Array(PutValidation.MIN_DESCRIPTION_LENGTH - 1).fill('A'),
+        description: Array(validation.MIN_DESCRIPTION_LENGTH - 1).fill('A'),
       }).success,
     ).toBe(false);
   });
 
   it('does not validate an object with an invalid location', () => {
     expect(
-      Schema.project.id.put.safeParse({
+      Schema.project.put.safeParse({
         ...validProject,
-        location: Array(PutValidation.MAX_LOCATION_LENGTH + 1).fill('A'),
+        location: Array(validation.MAX_LOCATION_LENGTH + 1).fill('A'),
       }).success,
     ).toBe(false);
   });
 
   it('does not validates an invalid repoUrl', () => {
     expect(
-      Schema.project.id.put.safeParse({
+      Schema.project.put.safeParse({
         ...validProject,
         repoUrl: 'https://google.com',
       }).success,
