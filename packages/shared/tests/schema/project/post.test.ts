@@ -2,7 +2,7 @@ import { Schema } from '../../../src';
 
 const validProject = {
   name: 'Coders Hub',
-  description: 'Where coding meets coffee, creating chaos and laughter on line code at a time!',
+  description: 'Where coding meets coffee, creating chaos and laughter on line code at a time!!',
   location: 'cloud 9 3/4',
   repoUrl: 'https://github.com/',
 };
