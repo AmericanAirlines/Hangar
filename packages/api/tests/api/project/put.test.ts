@@ -1,6 +1,6 @@
 import { Project } from '@hangar/database';
 import axios from 'axios';
-import { put } from '../../../src/api/project/put';
+import { put } from '../../../src/api/project/id/put';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
 import { getMock } from '../../testUtils/getMock';
