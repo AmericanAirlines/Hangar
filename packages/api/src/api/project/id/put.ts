@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { Project } from '@hangar/database';
 import { Schema } from '@hangar/shared';
-import { DriverException } from '@mikro-orm/core';
 import axios from 'axios';
 import { logger } from '../../../utils/logger';
 import { validatePayload } from '../../../utils/validatePayload';
