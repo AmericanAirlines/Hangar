@@ -6,10 +6,6 @@ import { createMockResponse } from '../../../testUtils/expressHelpers/createMock
 import { getMock } from '../../../testUtils/getMock';
 import { validatePayload } from '../../../../src/utils/validatePayload';
 
-jest.mock('@hangar/database', () => ({
-  Project: jest.fn(),
-}));
-
 jest.mock('axios', () => ({
   __esModule: true,
   default: { get: jest.fn() },
