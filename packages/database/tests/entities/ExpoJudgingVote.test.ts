@@ -28,9 +28,13 @@ const createMockVoteData = ({
   percentOfVotesCast,
   percentOfHumanError,
 }: CreateMockVotesArgs) => {
-  const projects = Array(numProjects).map((_, i) => ({ id: i } as any as Ref<Project>));
+  const projects = Array(numProjects)
+    .fill(undefined)
+    .map((_, i) => ({ id: i } as any as Ref<Project>));
   const projectsSortedByExpectedScore = [...projects].sort(compareProjects);
-  const judgeIds = Array(numJudges).map((_, i) => i);
+  const judgeIds = Array(numJudges)
+    .fill(undefined)
+    .map((_, i) => i);
   const votes: Partial<ExpoJudgingVote>[] = [];
   const countOfVotesCastPerProject: { [id: string]: number } = {};
 
