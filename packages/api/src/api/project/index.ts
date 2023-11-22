@@ -7,7 +7,6 @@ import { id } from './id';
 export const project = Router();
 
 project.post('', mountUserMiddleware, post);
-project.put('', mountUserMiddleware, post);
 project.use('/contributors', mountUserMiddleware, contributors);
 
 // this route must be registered last to prevent collisions
