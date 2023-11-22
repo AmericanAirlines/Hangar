@@ -80,12 +80,12 @@ export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
     // Use percentOfVotesToUseForCalibration percent of the votes OR 2, whichever is bigger
     const votesNeededForCalibration = Math.max(percentBasedCalibrationVotes, 2);
 
-    // If the number of calibration votes is >= 50% of the votes for the project; throw error
+    // If the number of calibration votes is >= 75% of the votes for the project; throw error
     if (avgNumVotesPerProject === 0 || votesNeededForCalibration / avgNumVotesPerProject >= 0.75) {
       throw new Error(
         `Insufficient vote count for judging. ${avgNumVotesPerProject.toFixed(
           1,
-        )} votes cast per project but need ${votesNeededForCalibration} votes.`,
+        )} votes cast per project but need ${(votesNeededForCalibration / 0.75).toFixed(1)} votes.`,
         { cause: insufficientVoteCountError },
       );
     }
@@ -155,7 +155,7 @@ export class ExpoJudgingVote extends Node<ExpoJudgingVote> {
       }
     }
 
-    const orderedProjects = projects.sort((a: Project, b: Project) =>
+    const orderedProjects = [...projects].sort((a: Project, b: Project) =>
       (trimmedMeanScores[a.id] as number) > (trimmedMeanScores[b.id] as number) ? -1 : 1,
     );
 
