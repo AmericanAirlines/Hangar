@@ -1,14 +1,6 @@
 import React from 'react';
-import { useRouter } from 'next/router';
-import {
-  Menu,
-  MenuButton,
-  Button,
-  MenuList,
-  MenuItem,
-  MenuItemProps,
-  useClipboard,
-} from '@chakra-ui/react';
+import NextLink from 'next/link';
+import { Menu, MenuButton, Button, MenuList, MenuItem, useClipboard } from '@chakra-ui/react';
 import { BsChevronDown } from 'react-icons/bs';
 import { ExpoJudgingSession, CriteriaJudgingSession } from '@hangar/shared';
 import { openSuccessToast } from '../../utils/CustomToast';
@@ -18,14 +10,9 @@ type JudgingSessionActionsMenuProps = {
   judgingSession: ExpoJudgingSession | CriteriaJudgingSession;
 };
 
-const menuItemStyle: MenuItemProps = {
-  py: 3,
-};
-
 export const JudgingSessionActionsMenu: React.FC<JudgingSessionActionsMenuProps> = ({
   judgingSession,
 }) => {
-  const router = useRouter();
   const judgingSessionType =
     'criteriaList' in judgingSession ? 'criteriaJudgingSession' : 'expoJudgingSession';
 
@@ -45,7 +32,7 @@ export const JudgingSessionActionsMenu: React.FC<JudgingSessionActionsMenuProps>
       </MenuButton>
       <MenuList>
         <MenuItem
-          {...menuItemStyle}
+          py={3}
           onClick={() => {
             onCopy();
             openSuccessToast({ title: 'Link copied to clipboard' });
@@ -54,23 +41,17 @@ export const JudgingSessionActionsMenu: React.FC<JudgingSessionActionsMenuProps>
           Copy Invite Link
         </MenuItem>
 
-        <MenuItem
-          {...menuItemStyle}
-          onClick={() => {
-            void router.push(invitePath);
-          }}
-        >
-          Join Session
-        </MenuItem>
+        <NextLink href={invitePath}>
+          <MenuItem as="a" py={3}>
+            Join Session
+          </MenuItem>
+        </NextLink>
 
-        <MenuItem
-          {...menuItemStyle}
-          onClick={() => {
-            void router.push(`/admin/${judgingSessionType}/${judgingSession.id}`);
-          }}
-        >
-          See Results
-        </MenuItem>
+        <NextLink href={`/admin/${judgingSessionType}/${judgingSession.id}`}>
+          <MenuItem as="a" py={3}>
+            See Results
+          </MenuItem>
+        </NextLink>
       </MenuList>
     </Menu>
   );
