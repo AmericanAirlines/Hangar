@@ -41,7 +41,7 @@ export const JudgingSessionActionsMenu: React.FC<JudgingSessionActionsMenuProps>
           Copy Invite Link
         </MenuItem>
 
-        <NextLink href={invitePath}>
+        <NextLink passHref href={invitePath}>
           <MenuItem as="a" py={3}>
             Join Session
           </MenuItem>
