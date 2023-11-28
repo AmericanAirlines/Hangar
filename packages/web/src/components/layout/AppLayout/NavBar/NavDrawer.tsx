@@ -47,9 +47,9 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({ onClose, isOpen }) => {
                 <NavLogo />
                 <IconButton aria-label="Close nav button" icon={<MdClose />} onClick={onClose} />
               </Flex>
+              <MyProject />
               <Prizes />
               <Schedule />
-              <MyProject />
               <JoinSlackButton />
               {admin && <AdminDashboard />}
               {user && <Logout />}
