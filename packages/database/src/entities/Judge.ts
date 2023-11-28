@@ -164,14 +164,15 @@ export class Judge extends Node<Judge> {
 
       // Get a new project for the judge and assign it
       const nextProject = await Judge.getNextProject({
+        judge: this,
         entityManager: em,
         excludedProjectIds: uniqueExcludedProjectIds,
+        expoJudgingSession,
       });
 
       if (nextProject) {
         context.currentProject = ref(nextProject);
         await nextProject.incrementActiveJudgeCount({ entityManager: em });
-        await nextProject.incrementJudgeVisits({ entityManager: em });
       } else {
         // No remaining projects left to assign
         context.currentProject = undefined;
