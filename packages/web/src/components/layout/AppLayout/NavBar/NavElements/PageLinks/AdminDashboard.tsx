@@ -1,16 +1,8 @@
 import { Link } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 
-export const AdminDashboard: React.FC = () => {
-  const router = useRouter();
-
-  return (
-    <Link
-      onClick={() => {
-        void router.push('/admin/dashboard');
-      }}
-    >
-      Admin Dashboard
-    </Link>
-  );
-};
+export const AdminDashboard: React.FC = () => (
+  <NextLink passHref href="/admin/dashboard">
+    <Link>Admin Dashboard</Link>
+  </NextLink>
+);

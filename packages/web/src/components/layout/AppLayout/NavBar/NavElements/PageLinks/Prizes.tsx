@@ -1,16 +1,8 @@
 import { Link } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 
-export const Prizes: React.FC = () => {
-  const router = useRouter();
-
-  return (
-    <Link
-      onClick={() => {
-        void router.push('/#prizes');
-      }}
-    >
-      Prizes
-    </Link>
-  );
-};
+export const Prizes: React.FC = () => (
+  <NextLink passHref href="/#prizes">
+    <Link>Prizes</Link>
+  </NextLink>
+);
