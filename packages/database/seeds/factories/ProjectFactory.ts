@@ -10,15 +10,11 @@ export class ProjectFactory extends Factory<Project> {
 
   definition = (): FakerEntity<
     Project,
-    | 'contributors'
-    | 'incrementActiveJudgeCount'
-    | 'decrementActiveJudgeCount'
-    | 'incrementJudgeVisits'
+    'contributors' | 'incrementActiveJudgeCount' | 'decrementActiveJudgeCount'
   > => ({
     name: faker.lorem.words(),
     description: faker.lorem.paragraph(),
     activeJudgeCount: 0,
-    judgeVisits: 0,
     inviteCode: v4(),
     repoUrl: faker.internet.url(),
     location: Math.random() > 0.5 ? v4().substring(0, 5) : undefined,
