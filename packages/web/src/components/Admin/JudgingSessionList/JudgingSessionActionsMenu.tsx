@@ -47,7 +47,7 @@ export const JudgingSessionActionsMenu: React.FC<JudgingSessionActionsMenuProps>
           </MenuItem>
         </NextLink>
 
-        <NextLink href={`/admin/${judgingSessionType}/${judgingSession.id}`}>
+        <NextLink passHref href={`/admin/${judgingSessionType}/${judgingSession.id}`}>
           <MenuItem as="a" py={3}>
             See Results
           </MenuItem>
