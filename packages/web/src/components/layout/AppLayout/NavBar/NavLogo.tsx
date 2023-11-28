@@ -9,7 +9,6 @@ export const NavLogo: React.FC = () => {
 
   return (
     <Heading
-      w="full"
       variant={'cta'}
       py={3}
       px={{ base: 1, sm: 3 }}
