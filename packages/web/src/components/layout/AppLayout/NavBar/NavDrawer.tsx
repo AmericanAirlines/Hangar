@@ -18,6 +18,7 @@ import { useAdminStore } from '../../../../stores/admin';
 import { AdminDashboard } from './NavElements/PageLinks/AdminDashboard';
 import { JoinSlackButton } from '../../../JoinSlackButton';
 import { Prizes } from './NavElements/PageLinks/Prizes';
+import { MyProject } from './NavElements/PageLinks/MyProject';
 
 type NavDrawerProps = {
   isOpen: boolean;
@@ -48,6 +49,7 @@ export const NavDrawer: React.FC<NavDrawerProps> = ({ onClose, isOpen }) => {
               </Flex>
               <Prizes />
               <Schedule />
+              <MyProject />
               <JoinSlackButton />
               {admin && <AdminDashboard />}
               {user && <Logout />}
