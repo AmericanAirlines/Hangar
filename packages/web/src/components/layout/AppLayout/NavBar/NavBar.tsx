@@ -18,6 +18,7 @@ import { Schedule } from './NavElements/PageLinks/Schedule';
 import { NavLogo } from './NavLogo';
 import { JoinSlackButton } from '../../../JoinSlackButton';
 import { Prizes } from './NavElements/PageLinks/Prizes';
+import { MyProject } from './NavElements/PageLinks/MyProject';
 
 export const NavBar: React.FC = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -36,6 +37,7 @@ export const NavBar: React.FC = () => {
             {/* PAGE LINKS – NON-MOBILE ONLY */}
             {!isMobile && (
               <>
+                <MyProject />
                 <Prizes />
                 <Schedule />
                 <JoinSlackButton />
