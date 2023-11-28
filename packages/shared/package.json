@@ -1,6 +1,6 @@
 {
   "name": "@hangar/shared",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "description": "Shared resources for Hangar",
   "main": "dist/index.js",
   "private": true,

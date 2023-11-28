@@ -13,11 +13,47 @@
   </a>
 
   <center width="400">
-    Sponsoring a student hackathon? You've come to the right place! American Airlines loves to help students learn new tech and we're passionate about being a big part of hackathons.
+    Managing a hackathon? You've come to the right place! American Airlines loves to help devs learn new tech and we're passionate about being a big part of hackathons.
   </center>
 </p>
 
-## Getting Started
+## What is Hangar?
+
+Hangar is a hackathon management platform that can help with everything from project registration, communicating prizes, listing schedule info, and provides judging.
+
+#### Features
+
+- **Event info**: share info about the hack with your attendees and link to resources
+- **Project registration**: collect info from attendees about their hack
+- **Prize info**: communicate prizes of various types
+- **Schedule**: list your event schedule so attendees have access
+- **Judging**: judge projects either by fixed criteria or by "expo" style comparison judging
+
+---
+
+## Using Hangar
+
+Interested in deploying an instance of Hangar to help with your hack? Follow the steps below to deploy and customize an instance of Hangar to use with your hack.
+
+#### Deployment
+
+Hangar is containerized via Docker; simply build the docker image and deploy to a cloud environment of your choice. See the sections within [Setup](#setup) to generate the necessary environment variables and make them accessible to your app at runtime.
+
+#### Authentication
+
+Authentication uses OAuth via Slack but it can be easily modified to use a new callback from a different OAuth provider. See the [Slack](#slack) section below for full details on how to setup and configure your Slack app.
+
+#### Feature Utilization
+
+After deploying Hangar youIn Hangar's current state, you'll need to manually modify the `Admin` table to create a new record for your admin users. Once created, your admin users will have full access to create judging sessions and see their results.
+
+#### Customization
+
+In order to modify the content of the homepage and to make other modifications to the presentation of the app, simply modify the values in `packages/shared/src/config`.
+
+---
+
+## Development
 
 ### Prerequisites
 
@@ -215,7 +251,7 @@ Hangar is containerized to make deployment efficient and to prevent vendor-depen
 
 1. Installing relevant dependencies
 1. Duplicate `.env.docker.sample` as `.env.docker` and modify values as needed
-1. Downloading [Docker Desktop](https://docs.docker.com/desktop/) and start it
+1. Download [Docker Desktop](https://docs.docker.com/desktop/) and start it
    - Optionally modify `Settings > Resources > Advanced` to provide more resources to Docker and speed up your build commands
 1. Run `yarn docker:build` from the root to build your image
 1. Run `yarn docker:run` to start your container
