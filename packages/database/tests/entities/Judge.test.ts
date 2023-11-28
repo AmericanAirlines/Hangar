@@ -5,7 +5,6 @@ import { createMockEntityManager } from '../testUtils/createMockEntityManager';
 const mockProjectValues = {
   id: '1',
   incrementActiveJudgeCount: jest.fn(),
-  incrementJudgeVisits: jest.fn(),
   $: jest.fn().mockReturnThis(),
   decrementActiveJudgeCount: jest.fn(),
   load: jest.fn().mockReturnThis(),
@@ -73,7 +72,6 @@ describe('Judge', () => {
       );
 
       expect(mockProject.incrementActiveJudgeCount).toHaveBeenCalledTimes(1);
-      expect(mockProject.incrementJudgeVisits).toHaveBeenCalledTimes(1);
       expect(mockEntityManager.persist).toBeCalledWith(context);
     });
   });
@@ -172,7 +170,6 @@ describe('Judge', () => {
       expect(context.currentProject).toEqual(ref(currentProject));
 
       expect(mockProject.incrementActiveJudgeCount).toHaveBeenCalledTimes(1);
-      expect(mockProject.incrementJudgeVisits).toHaveBeenCalledTimes(1);
       expect(mockEntityManager.persist).toBeCalledWith(context);
       expect(mockEntityManager.persist).toBeCalledWith(mockVote);
     });
