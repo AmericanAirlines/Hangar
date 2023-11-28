@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import seedrandom from 'seedrandom';
 import { Entity, Property, Ref, ManyToOne, EntityDTO } from '@mikro-orm/core';
 import { EntityManager as em } from '@mikro-orm/postgresql';
 import { ConstructorValues } from '../types/ConstructorValues';
@@ -10,8 +11,10 @@ import { Judge } from './Judge';
 
 export { ProjectResult, ProjectScore } from '../entitiesUtils/scoreVotes';
 
+const random = seedrandom('high accuracy pls');
+
 const shuffle = <T extends (ExpoJudgingVote | Project)[]>(arr: T) =>
-  arr.sort(() => Math.random() - 0.5) as T;
+  arr.sort(() => random() - 0.5) as T;
 
 export const insufficientVoteCountError = 'InsufficientVoteCount';
 
