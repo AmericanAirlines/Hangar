@@ -98,6 +98,7 @@ describe('ExpoJudgingVote', () => {
       { numProjects: 20, numJudges: 20, percentOfVotesCastVariations: [0.5, 0.7], percentOfHumanErrorVariations, },
       { numProjects: 30, numJudges: 10, percentOfVotesCastVariations: [0.6, 0.8], percentOfHumanErrorVariations, },
       { numProjects: 30, numJudges: 20, percentOfVotesCastVariations: [0.5, 0.7], percentOfHumanErrorVariations, },
+      { numProjects: 35, numJudges: 15, percentOfVotesCastVariations: [0.5, 0.6], percentOfHumanErrorVariations, },
       { numProjects: 30, numJudges: 30, percentOfVotesCastVariations: [0.3, 0.5], percentOfHumanErrorVariations, },
       { numProjects: 40, numJudges: 20, percentOfVotesCastVariations: [0.3, 0.4], percentOfHumanErrorVariations, },
       { numProjects: 40, numJudges: 30, percentOfVotesCastVariations: [0.2, 0.4], percentOfHumanErrorVariations, },
