@@ -42,7 +42,7 @@ type SkipOrContinueAndReleaseProjectArgs = ReleaseProjectAndContinueBaseArgs & {
 type ReleaseAndContinueArgs = VoteAndReleaseProjectArgs | SkipOrContinueAndReleaseProjectArgs;
 
 export enum JudgeErrorCode {
-  UnableToLockJudge = 'Judge was locked by another process; unable to proceed',
+  UnableToLockContext = 'ExpoJudgingSessionContext was locked by another process; unable to proceed',
   CannotContinue = 'State of the Judge does not allow the continue action',
   CannotSkip = 'No current project to skip',
   MissingProjectForVote = 'Either current or past project was missing; cannot vote',
@@ -98,7 +98,9 @@ export class Judge extends Node<Judge> {
       );
 
       if (!context) {
-        throw new Error('Unable to lock Judge', { cause: JudgeErrorCode.UnableToLockJudge });
+        throw new Error('Unable to lock ExpoJudgingSessionContext', {
+          cause: JudgeErrorCode.UnableToLockContext,
+        });
       }
 
       // PRE-REQUISITE CHECKING
