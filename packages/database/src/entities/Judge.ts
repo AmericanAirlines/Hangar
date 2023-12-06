@@ -129,6 +129,7 @@ export class Judge extends Node<Judge> {
           judgingSession: ref(args.expoJudgingSession),
         });
         em.persist(vote);
+        // console.log([context.currentProject.id, context.previousProject.id]);
       }
 
       // Save a copy of the current project's ID to ignore it when looking for a new project

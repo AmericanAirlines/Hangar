@@ -2,8 +2,9 @@
 import { EntityManager, Loaded, ref } from '@mikro-orm/postgresql';
 import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
-import { Project, ExpoJudgingSession, ExpoJudgingVote, Judge, ExpoJudgingSessionContext } from '../../src';
+import { ExpoJudgingSession, ExpoJudgingVote, Judge, ExpoJudgingSessionContext } from '../../src';
 import { createSeededRandomGenerator } from '../utils';
+import seedrandom from 'seedrandom';
 
 const randomVote = ((seed) => {
   const rng = createSeededRandomGenerator(seed);
@@ -13,24 +14,8 @@ const randomVote = ((seed) => {
   };
 })('1');
 
-const shuffle = <T>(array: T[], seed: string | undefined): T[] => {
-  const rng = createSeededRandomGenerator(seed);
-  let currentIndex = array.length;
-  let randomIndex;
-  const newArray: T[] = [...array];
-  // While there remain elements to shuffle:
-  while (currentIndex !== 0) {
-    // Pick a remaining element:
-    randomIndex = Math.floor(rng() * currentIndex);
-    currentIndex -= 1;
-    // And swap it with the current element.
-    [newArray[currentIndex], newArray[randomIndex]] = [
-      newArray[randomIndex] as T,
-      newArray[currentIndex] as T,
-    ];
-  }
-  return newArray;
-};
+const rnd = seedrandom('2');
+const randomVotes = seedrandom('vote');
 
 export class ExpoJudgingVoteSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {
@@ -38,7 +23,8 @@ export class ExpoJudgingVoteSeeder extends Seeder {
       try {
         const query = env.primaryUserIsJudge ? { id: { $ne: '1' } } : {}
         // const projects = shuffle(await em.find(Project, {}), '1');
-        let judges = shuffle(await em.find(Judge, query), '1');
+        const unsortedJudges = await em.find(Judge, query);
+        let judges = unsortedJudges.sort((a, b) => randomVote() ? -1 : 1);
         const expoJudgingSession = await em.findOneOrFail(ExpoJudgingSession, { id: '1' });
         await em.populate(judges, ['expoJudgingSessionContexts']);
 
@@ -54,40 +40,33 @@ export class ExpoJudgingVoteSeeder extends Seeder {
         // for each judge, .continue() at some time in the future
         // when the N
         
-        const getNextProject = async (judge:Judge,votes:number)=>{
+        const getNextProject = async (judge: Judge, votes: number) => {
           // console.log(judge.id,votes)
           // wrap timeout in a promise so we can await it
-          return new Promise(async (resolve)=>{
-            // wait a random amount of time
-            setTimeout(async ()=>{
-              if (votes>5) {
-                resolve(0)
-                return
-              }
-              if (!judge.expoJudgingSessionContexts[0]) {
-                resolve(0)
-                return
-              }
-              const ejsc = judge.expoJudgingSessionContexts[0] as Loaded<ExpoJudgingSessionContext, 'currentProject' | 'previousProject'>;
-              await em.refresh(ejsc)
-              const { currentProject , previousProject } = ejsc
-              const [cLen , pLen] = [ currentProject?.$.name.length , previousProject?.$.name.length ]
-              console.log([currentProject?.$.id,previousProject?.$.id])
-              if(currentProject?.$.id===previousProject?.$.id)
-              console.log('error')
-              await judge.vote({
-                entityManager:em.fork() ,
-                currentProjectChosen: cLen===Math.min( cLen??0 , pLen??0 ) ,
-                expoJudgingSession ,
-              })
+          if (votes > 5) {
+            return
+          }
+          if (!judge.expoJudgingSessionContexts[0]) {
+            return
+          }
+          // const ejsc = judge.expoJudgingSessionContexts[0];
+          // const { currentProject, previousProject } = await ejsc.populate(['currentProject', 'previousProject']);
+          // const [cLen, pLen] = [currentProject?.$.name.length, previousProject?.$.name.length]
+          // console.log([currentProject?.$.id, previousProject?.$.id])
+          // if (currentProject?.$.id === previousProject?.$.id) console.log('error')
+          await judge.vote({
+            entityManager: em.fork(),
+            currentProjectChosen: randomVotes() > 0.5,
+            expoJudgingSession,
+          });
 
-              await em.persistAndFlush(judge)
-              // await em.flush()
-              await getNextProject(judge,votes+1)
-              resolve(0)
-            },Math.random()*5000+1000)
-          })
+          // await em.persistAndFlush(judge)
+          // await em.flush()
+          // wait a random amount of time
+          await new Promise((resolve) => {setTimeout(resolve, rnd() * 1000 + 1500);});
+          await getNextProject(judge, votes + 1)
         }
+
         let all=[]
         for (let i=0;i<judges.length;i++){
           const judge = judges[i] as Judge
