@@ -8,14 +8,16 @@ export class ExpoJudgingSessionSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {
     if (env.primaryUserIsAdmin) {
       try {
-        const admin = await em.findOneOrFail(User, { id: '1' });
-        const expoJudgingSession = new ExpoJudgingSession({
-          createdBy: ref(admin),
-        });
-        const projects = await em.find(Project, {});
-        expoJudgingSession.projects.set(projects);
+        for(let i=0;i<2;i=i+1){
+          const admin = await em.findOneOrFail(User, { id: '1' });
+          const expoJudgingSession = new ExpoJudgingSession({
+            createdBy: ref(admin),
+          });
+          const projects = await em.find(Project, {});
+          expoJudgingSession.projects.set(projects);
 
-        em.persist(expoJudgingSession);
+          em.persist(expoJudgingSession);
+        }
       } catch {
         // eslint-disable-next-line no-console
         console.error('Failed to create a judging session');

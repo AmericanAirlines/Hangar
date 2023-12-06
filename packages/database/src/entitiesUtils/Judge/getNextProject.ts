@@ -61,8 +61,8 @@ export const getNextProject = async ({
   }
 
   const random = seedrandom(judge.id); // Create a deterministic random number generator based on the judge's ID
-  const sortedProjects = projects
-    .sort(() => (random() > 0.5 ? -1 : 1)) // Shuffle the order of the projects as the baseline
+  const shuffledProjects = projects.sort(() => (random() > 0.5 ? -1 : 1)); // Shuffle the order of the projects as the baseline
+  const sortedProjects = shuffledProjects
     .sort((a, b) => {
       if (voteCounts[a.id] === voteCounts[b.id]) {
         // Teams have the same vote count; sort by active judge count
