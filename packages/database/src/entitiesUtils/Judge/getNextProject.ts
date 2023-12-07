@@ -60,16 +60,20 @@ export const getNextProject = async ({
     }
   }
 
-  const random = seedrandom(judge.id); // Create a deterministic random number generator based on the judge's ID
-  const shuffledProjects = projects.sort(() => (random() > 0.5 ? -1 : 1)); // Shuffle the order of the projects as the baseline
-  const sortedProjects = shuffledProjects
-    .sort((a, b) => {
-      if (voteCounts[a.id] === voteCounts[b.id]) {
-        // Teams have the same vote count; sort by active judge count
-        return a.activeJudgeCount - b.activeJudgeCount;
-      }
-      return (voteCounts[a.id] ?? 0) - (voteCounts[b.id] ?? 0);
-    });
+  // Create a deterministic random number generator based on the judge's ID that will always generate the same value for each project
+  const genRandom = (projectId: string) => seedrandom(`${judge.id}-${projectId}`);
+
+  // TIE BREAKER: Shuffle the projects into the exact same order but missing the excluded projects
+  const shuffledProjects = projects.sort((a, b) => genRandom(a.id)() - genRandom(b.id)());
+
+  const sortedProjects = shuffledProjects.sort((a, b) => {
+    const aCount = voteCounts[a.id] ?? 0;
+    const bCount = voteCounts[b.id] ?? 0;
+
+    // Consider the max possible votes per team by evaluating the past votes
+    // and the potential votes of the current judges
+    return a.activeJudgeCount + aCount - (b.activeJudgeCount + bCount);
+  });
 
   const nextProject = sortedProjects[0] as (typeof sortedProjects)[0]; // Assert the type; it WILL exist due to the empty array check above
 
