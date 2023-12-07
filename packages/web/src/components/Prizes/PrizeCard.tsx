@@ -1,6 +1,6 @@
 import { ListItem, Heading, Flex, Text, Button } from '@chakra-ui/react';
 import { Prize } from '@hangar/shared';
-import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import { colors } from '../../theme';
 
 type PrizeCardProps = {
@@ -11,7 +11,6 @@ const RANKING = ['🥇', '🥈', '🥉'];
 const BONUS = '✨';
 
 export const PrizeCard: React.FC<PrizeCardProps> = ({ prize }) => {
-  const router = useRouter();
   const { name, description, position, isBonus, winner } = prize;
 
   return (
@@ -26,13 +25,9 @@ export const PrizeCard: React.FC<PrizeCardProps> = ({ prize }) => {
 
         <Text>{description}</Text>
         {winner && (
-          <Button
-            onClick={() => {
-              void router.push(`/project/${winner}`);
-            }}
-          >
-            View Winner
-          </Button>
+          <NextLink passHref href={`/project/${winner}`}>
+            <Button as="a">View Winner</Button>
+          </NextLink>
         )}
       </Flex>
     </ListItem>

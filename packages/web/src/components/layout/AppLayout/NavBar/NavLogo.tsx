@@ -1,14 +1,13 @@
 import { Heading } from '@chakra-ui/react';
 import { Config } from '@hangar/shared';
-import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 
 const LOGO_HEIGHT = { base: '24px', sm: '28px', md: '40px' };
 
-export const NavLogo: React.FC = () => {
-  const router = useRouter();
-
-  return (
+export const NavLogo: React.FC = () => (
+  <NextLink passHref href="/">
     <Heading
+      as="a"
       w="full"
       variant={'cta'}
       py={3}
@@ -16,11 +15,8 @@ export const NavLogo: React.FC = () => {
       lineHeight={LOGO_HEIGHT}
       cursor="pointer"
       mb={1}
-      onClick={() => {
-        void router.push('/');
-      }}
     >
       {Config.global.appName}
     </Heading>
-  );
-};
+  </NextLink>
+);
