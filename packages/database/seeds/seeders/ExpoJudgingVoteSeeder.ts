@@ -5,11 +5,6 @@ import { Seeder } from '@mikro-orm/seeder';
 import { env } from '../env';
 import { ExpoJudgingSession, Judge, Project } from '../../src';
 
-const wait = (duration: number) =>
-  new Promise((resolve) => {
-    setTimeout(resolve, duration);
-  });
-
 const randomJudgeOrder = seedrandom('judgeOrder');
 const realisticMaxVotesCastPerJudge = 15; // 45 mins, 3 mins per team
 
@@ -69,7 +64,6 @@ export class ExpoJudgingVoteSeeder extends Seeder {
               // Judge is ready to vote
               await executeJudging({ em: em.fork(), judge, expoJudgingSession, maxVotesToCast });
             }
-            await wait(25); // Brief delay between judges starting judging
           }
         }
       } catch (error) {
