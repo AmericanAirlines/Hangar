@@ -140,8 +140,7 @@ export class Judge extends Node<Judge> {
           // Only update the previous project when action is NOT skip
           context.previousProject = context.currentProject;
         }
-        const currentProject = await context.currentProject.load();
-        await currentProject.decrementActiveJudgeCount({ entityManager: em });
+        await ref(context.currentProject).$.decrementActiveJudgeCount({ entityManager: em });
       }
 
       await this.expoJudgingVotes.load({ where: { judgingSession: expoJudgingSession.id } });
