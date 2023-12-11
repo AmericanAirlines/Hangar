@@ -19,7 +19,7 @@ export const ProjectsSelectItem: React.FC<ProjectsSelectItemProps> = ({
   );
 
   return (
-    <Flex px={rowPadding}>
+    <Flex px={rowPadding} cursor="pointer">
       <Checkbox
         size={checkboxSize}
         isChecked={isSelected}
