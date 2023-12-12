@@ -15,10 +15,6 @@ export const JudgingSessionOptionsButton: React.FC = () => {
   const tryFetchProjects = async () => {
     try {
       projects = await fetchProjects();
-      openSuccessToast({
-        title: 'Success!',
-        description: 'Projects successfully fetched.',
-      });
     } catch {
       openErrorToast({
         title: 'An error occurred.',
