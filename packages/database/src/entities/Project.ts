@@ -1,5 +1,13 @@
 /* istanbul ignore file */
-import { Entity, Property, OneToMany, Collection, EntityDTO, raw } from '@mikro-orm/core';
+import {
+  Entity,
+  Property,
+  OneToMany,
+  Collection,
+  EntityDTO,
+  raw,
+  HiddenProps,
+} from '@mikro-orm/core';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { v4 } from 'uuid';
 import { ConstructorValues } from '../types/ConstructorValues';
@@ -23,7 +31,9 @@ type UpdateActiveJudgeCountArgs = ActiveJudgeCountModifierArgs & {
 
 @Entity()
 export class Project extends Node<Project> {
-  @Property({ columnType: 'text', unique: true })
+  [HiddenProps]?: 'inviteCode' | 'activeJudgeCount';
+
+  @Property({ columnType: 'text', unique: true, hidden: true })
   inviteCode: string = v4();
 
   @Property({ columnType: 'text' })

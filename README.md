@@ -166,7 +166,7 @@ In order to modify the content of the homepage and to make other modifications t
    yarn workspace @hangar/api add @mikro-orm/core@^6.0 @mikro-orm/knex@^6.0 @mikro-orm/postgresql@^6.0 mikro-orm@^6.0
 
    # DB
-   yarn workspace @hangar/database add @mikro-orm/cli@^6.0 @mikro-orm/core@^6.0 @mikro-orm/knex@^6.0 @mikro-orm/migrations@^6.0 @mikro-orm/postgresql@^6.0 @mikro-orm/seeder@^6.0 mikro-orm@^6.0
+   yarn workspace @hangar/database add @mikro-orm/cli@^6.0 @mikro-orm/core@^6.0 @mikro-orm/knex@^6.0 @mikro-orm/migrations@^6.0 @mikro-orm/postgresql@^6.0 @mikro-orm/seeder@^6.0 @mikro-orm/postgresql@^6.0 mikro-orm@^6.0
    ```
 
    #### Restoring a Production DB locally

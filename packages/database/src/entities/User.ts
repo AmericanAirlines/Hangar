@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-import { Entity, Property, ManyToOne, Ref, EntityDTO } from '@mikro-orm/core';
+import { Entity, Property, ManyToOne, Ref, EntityDTO, HiddenProps } from '@mikro-orm/core';
 import { ConstructorValues } from '../types/ConstructorValues';
 import { Project } from './Project';
 import { Node } from './Node';
@@ -10,6 +10,8 @@ export type UserConstructorValues = ConstructorValues<User>;
 
 @Entity()
 export class User extends Node<User> {
+  [HiddenProps]?: 'email';
+
   @Property({ columnType: 'text' })
   firstName: string;
 
