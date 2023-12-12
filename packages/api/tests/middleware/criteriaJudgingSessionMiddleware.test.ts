@@ -11,7 +11,7 @@ describe('criteriaJudgingSessionMiddleware', () => {
     const res = createMockResponse();
     const next = jest.fn();
 
-    req.entityManager.findOne.mockResolvedValueOnce({ id: mockId });
+    req.entityManager.findOne.mockResolvedValueOnce({ id: mockId } as any);
 
     await criteriaJudgingSessionMiddleware(req as any, res as any, next as any);
 

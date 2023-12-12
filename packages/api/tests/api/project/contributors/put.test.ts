@@ -105,7 +105,10 @@ describe('project contributors put endpoint', () => {
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data: validPayload } as any);
     const req = createMockRequest({ user: mockUser, ...validPayload } as any);
     const res = createMockResponse();
-    req.entityManager.findOneOrFail.mockResolvedValueOnce({ ...validPayload, inviteCode: '2' });
+    req.entityManager.findOneOrFail.mockResolvedValueOnce({
+      ...validPayload,
+      inviteCode: '2',
+    } as any);
     req.entityManager.findOneOrFail.mockRejectedValueOnce({ name: 'NotFoundError' });
 
     await put(req as any, res as any);
