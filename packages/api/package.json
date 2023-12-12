@@ -1,6 +1,6 @@
 {
   "name": "@hangar/api",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "dev": "ts-node-dev --exit-child --watch .env.local --ignore-watch ../web/.next  --files --respawn src/index.ts",

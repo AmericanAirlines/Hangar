@@ -186,7 +186,9 @@ describe('Judge', () => {
 
       await expect(
         judge.continue({ entityManager: mockEntityManager as any, expoJudgingSession: {} as any }),
-      ).rejects.toThrowError(expect.objectContaining({ cause: JudgeErrorCode.UnableToLockJudge }));
+      ).rejects.toThrowError(
+        expect.objectContaining({ cause: JudgeErrorCode.UnableToLockContext }),
+      );
 
       expect(mockEntityManager.transactional).toBeCalledTimes(1);
       expect(mockEntityManager.findOne).toBeCalledTimes(1);

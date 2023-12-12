@@ -3,21 +3,87 @@
   <br />
   <br />
   <img src="https://img.shields.io/badge/Author-%40AmericanAirlines-blue" />
-  <img src="https://img.shields.io/badge/Version-v3-%5B0%2C0%2C255%5D" />
-  <img src="https://github.com/AmericanAirlines/Hangar/actions/workflows/build.yml/badge.svg?branch=v3" />
-  <a href="https://app.codecov.io/gh/AmericanAirlines/Hangar/tree/v3">
-    <img src="https://codecov.io/github/AmericanAirlines/Hangar/branch/v3/graph/badge.svg" />
+  <img src="https://img.shields.io/badge/Version-main-%5B0%2C0%2C255%5D" />
+  <img src="https://github.com/AmericanAirlines/Hangar/actions/workflows/build.yml/badge.svg?branch=main" />
+  <a href="https://app.codecov.io/gh/AmericanAirlines/Hangar/tree/main">
+    <img src="https://codecov.io/github/AmericanAirlines/Hangar/branch/main/graph/badge.svg" />
   </a>
   <a href="https://opensource.org/licenses/MIT">
     <img src="https://img.shields.io/badge/License-MIT-blue.svg" aria-title="License: MIT" />
   </a>
 
   <center width="400">
-    Sponsoring a student hackathon? You've come to the right place! American Airlines loves to help students learn new tech and we're passionate about being a big part of hackathons.
+    Managing a hackathon? You've come to the right place! American Airlines loves to help devs learn new tech and we're passionate about being a big part of hackathons.
   </center>
 </p>
 
-## Getting Started
+## What is Hangar?
+
+Hangar is a hackathon management platform that can help with everything from project registration, communicating prizes, listing schedule info, and provides judging.
+
+#### Features
+
+- **Event info**: share info about the hack with your attendees and link to resources
+- **Project registration**: collect info from attendees about their hack
+- **Prize info**: communicate prizes of various types
+- **Schedule**: list your event schedule so attendees have access
+- **Judging**: judge projects either by fixed criteria or by "expo" style comparison judging
+
+## Table of Contents
+
+- [What is Hangar?](#what-is-hangar)
+  - [Features](#features)
+- [Table of Contents](#table-of-contents)
+- [Using Hangar](#using-hangar)
+  - [Deployment](#deployment)
+  - [Authentication](#authentication)
+  - [Feature Utilization](#feature-utilization)
+  - [Customization](#customization)
+- [Development](#development)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [PostgreSQL](#postgresql)
+    - [macOS](#macos)
+    - [Windows/macOS/Linux](#windowsmacoslinux)
+    - [Viewing/Editing the DB](#viewingediting-the-db)
+    - [Seeding the Database](#seeding-the-database)
+    - [Database migrations](#database-migrations)
+      - [Reverting a migration locally](#reverting-a-migration-locally)
+    - [Updating Mikro-ORM](#updating-mikro-orm)
+    - [Restoring a Production DB locally](#restoring-a-production-db-locally)
+    - [Restarting Table Sequences](#restarting-table-sequences)
+  - [Slack](#slack)
+  - [Containerization](#containerization)
+    - [Building and Running Docker Locally](#building-and-running-docker-locally)
+      - [Environment Variables](#environment-variables)
+        - [Database User](#database-user)
+        - [Troubleshooting](#troubleshooting)
+
+---
+
+## Using Hangar
+
+Interested in deploying an instance of Hangar to help with your hack? Follow the steps below to deploy and customize an instance of Hangar to use with your hack.
+
+#### Deployment
+
+Hangar is containerized via Docker; simply build the docker image and deploy to a cloud environment of your choice. See the sections within [Setup](#setup) to generate the necessary environment variables and make them accessible to your app at runtime.
+
+#### Authentication
+
+Authentication uses OAuth via Slack but it can be easily modified to use a new callback from a different OAuth provider. See the [Slack](#slack) section below for full details on how to setup and configure your Slack app.
+
+#### Feature Utilization
+
+In Hangar's current state, you'll need to manually modify the `Admin` table to create a new record for your admin users. Once created, your admin users will have full access to create judging sessions and see their results.
+
+#### Customization
+
+In order to modify the content of the homepage and to make other modifications to the presentation of the app, simply modify the values in `packages/shared/src/config`.
+
+---
+
+## Development
 
 ### Prerequisites
 
@@ -53,7 +119,7 @@
 
    #### macOS
 
-   We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
+   Using [Postgres.app](https://postgresapp.com/) is recommended as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
 
    #### Windows/macOS/Linux
 
@@ -215,7 +281,7 @@ Hangar is containerized to make deployment efficient and to prevent vendor-depen
 
 1. Installing relevant dependencies
 1. Duplicate `.env.docker.sample` as `.env.docker` and modify values as needed
-1. Downloading [Docker Desktop](https://docs.docker.com/desktop/) and start it
+1. Download [Docker Desktop](https://docs.docker.com/desktop/) and start it
    - Optionally modify `Settings > Resources > Advanced` to provide more resources to Docker and speed up your build commands
 1. Run `yarn docker:build` from the root to build your image
 1. Run `yarn docker:run` to start your container

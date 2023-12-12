@@ -32,6 +32,8 @@ export const NavBar: React.FC = () => {
 
         <NavLogo />
 
+        <Spacer />
+
         <Fade in={doneLoading}>
           <Flex gap={5} alignItems="center">
             {/* PAGE LINKS – NON-MOBILE ONLY */}
