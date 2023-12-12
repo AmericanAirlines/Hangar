@@ -42,7 +42,7 @@ type SkipOrContinueAndReleaseProjectArgs = ReleaseProjectAndContinueBaseArgs & {
 type ReleaseAndContinueArgs = VoteAndReleaseProjectArgs | SkipOrContinueAndReleaseProjectArgs;
 
 export enum JudgeErrorCode {
-  UnableToLockJudge = 'Judge was locked by another process; unable to proceed',
+  UnableToLockContext = 'ExpoJudgingSessionContext was locked by another process; unable to proceed',
   CannotContinue = 'State of the Judge does not allow the continue action',
   CannotSkip = 'No current project to skip',
   MissingProjectForVote = 'Either current or past project was missing; cannot vote',
@@ -98,7 +98,9 @@ export class Judge extends Node<Judge> {
       );
 
       if (!context) {
-        throw new Error('Unable to lock Judge', { cause: JudgeErrorCode.UnableToLockJudge });
+        throw new Error('Unable to lock ExpoJudgingSessionContext', {
+          cause: JudgeErrorCode.UnableToLockContext,
+        });
       }
 
       // PRE-REQUISITE CHECKING
@@ -140,8 +142,7 @@ export class Judge extends Node<Judge> {
           // Only update the previous project when action is NOT skip
           context.previousProject = context.currentProject;
         }
-        const currentProject = await context.currentProject.load();
-        await currentProject.decrementActiveJudgeCount({ entityManager: em });
+        await ref(context.currentProject).$.decrementActiveJudgeCount({ entityManager: em });
       }
 
       await this.expoJudgingVotes.load({ where: { judgingSession: expoJudgingSession.id } });

@@ -2,11 +2,11 @@ name: Build
 
 on:
   push:
-    branches: [main, v3]
+    branches: [main]
   pull_request:
-    branches: [main, v3]
+    branches: [main]
   merge_group:
-    branches: [main, v3]
+    branches: [main]
 
 env:
   NODE_VERSION: 18

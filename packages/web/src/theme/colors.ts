@@ -15,7 +15,7 @@ export const statusColors: Colors = {
   warning: '#FAAF00',
   success: '#00B989',
   alert: brandCta,
-};
+} as const;
 
 export const colors: Colors = {
   brandPrimary,
