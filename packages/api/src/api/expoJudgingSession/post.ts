@@ -7,7 +7,7 @@ import { logger } from '../../utils/logger';
 export const post = async (req: Request, res: Response) => {
   const { entityManager, admin } = req;
 
-  const { errorHandled } = validatePayload({
+  const { errorHandled, data } = validatePayload({
     req,
     res,
     schema: Schema.expoJudgingSession.post,
@@ -21,8 +21,7 @@ export const post = async (req: Request, res: Response) => {
       createdBy: admin.user,
     });
 
-    // TODO: Refactor UI to pass in a list of project IDs
-    const projects = await entityManager.find(Project, {});
+    const projects = await entityManager.find(Project, { id: { $in: data.projectIds } });
     expoJudgingSession.projects.set(projects);
 
     await entityManager.persistAndFlush(expoJudgingSession);
