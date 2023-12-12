@@ -75,7 +75,7 @@ Authentication uses OAuth via Slack but it can be easily modified to use a new c
 
 #### Feature Utilization
 
-After deploying Hangar youIn Hangar's current state, you'll need to manually modify the `Admin` table to create a new record for your admin users. Once created, your admin users will have full access to create judging sessions and see their results.
+In Hangar's current state, you'll need to manually modify the `Admin` table to create a new record for your admin users. Once created, your admin users will have full access to create judging sessions and see their results.
 
 #### Customization
 
