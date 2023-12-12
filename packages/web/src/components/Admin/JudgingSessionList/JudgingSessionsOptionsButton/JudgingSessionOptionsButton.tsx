@@ -10,8 +10,8 @@ import { fetchProjects } from '../../../ProjectsSelect/fetchProjects';
 export const JudgingSessionOptionsButton: React.FC = () => {
   const { addExpoJudgingSession } = useExpoJudgingSessionStore();
   let expoJudgingSession: ExpoJudgingSession | undefined;
-  
-  let projects:Project[] = [];
+
+  let projects: Project[] = [];
   const tryFetchProjects = async () => {
     try {
       projects = await fetchProjects();
@@ -26,12 +26,12 @@ export const JudgingSessionOptionsButton: React.FC = () => {
       });
     }
 
-    return projects.map(({id}) => id);
+    return projects.map(({ id }) => id);
   };
 
   const tryPostExpoJudgingSession = async () => {
     try {
-      await addExpoJudgingSession({projectIds: await tryFetchProjects()});
+      await addExpoJudgingSession({ projectIds: await tryFetchProjects() });
       openSuccessToast({
         title: 'Success!',
         description: 'Expo Judging Session successfully created.',

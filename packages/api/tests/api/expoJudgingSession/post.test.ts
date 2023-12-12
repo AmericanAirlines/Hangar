@@ -14,7 +14,10 @@ const validatePayloadMock = getMock(validatePayload);
 
 describe('expoJudgingSession post endpoint', () => {
   it('should create an ExpoJudgingSession, add a createdBy, and return a 200', async () => {
-    validatePayloadMock.mockReturnValueOnce({ errorHandled: false , data:{ projectIds: ['1', '2'] } } as any);
+    validatePayloadMock.mockReturnValueOnce({
+      errorHandled: false,
+      data: { projectIds: ['1', '2'] },
+    } as any);
     const mockAdmin = { user: { id: 1 } };
     const req = createMockRequest({ admin: mockAdmin as any });
     const { entityManager, admin } = req;
