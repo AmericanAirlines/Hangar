@@ -6,46 +6,12 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { Prizes } from '../components/Prizes';
 import { usePrizesStore } from '../stores/prizes';
 import { ProjectRegistrationCTA } from '../components/ProjectRegistrationCTA';
-import { useRouter } from 'next/router';
-import { useUserStore } from '../stores/user';
 
 const Home: NextPage = () => {
   const { doneLoading: prizesFetched } = usePrizesStore();
   React.useEffect(() => {
     const { prizes } = usePrizesStore.getState();
     if (!prizes) void usePrizesStore.getState().fetchPrizes();
-  }, []);
-
-  const router = useRouter();
-  const handledRef = React.useRef(false);
-  const { user, doneLoading } = useUserStore();
-
-  React.useEffect(() => {
-    const handleUrl = async () => {
-      // Check for query param
-      // If query param present; perform actions
-
-      // Update the router to remove query params
-      await router.replace(router.pathname, undefined, { shallow: true });
-    };
-
-    if (!handledRef.current) {
-      // First time router is ready AND we haven't evaluated query params
-      handledRef.current = true;
-      void handleUrl();
-    } else {
-      // Router isn't ready for use
-      // OR
-      // We've already looked at the URL
-    }
-  }, [user, doneLoading]);
-
-  const countRef = React.useRef(0);
-  React.useEffect(() => {
-    setInterval(() => {
-      console.log('wat');
-      countRef.current += 1;
-    }, 1000);
   }, []);
 
   return (
@@ -61,8 +27,9 @@ const Home: NextPage = () => {
           </Text>
         ))}
       </Flex>
-      <Text>Count: {countRef.current}</Text>
+
       <ProjectRegistrationCTA />
+
       <Flex gap={5} direction={{ base: 'column', sm: 'row' }}>
         <Flex direction="column" gap={10} flex={{ base: 1, md: 2 }}>
           {/* Content sections */}
