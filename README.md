@@ -29,6 +29,36 @@ Hangar is a hackathon management platform that can help with everything from pro
 - **Schedule**: list your event schedule so attendees have access
 - **Judging**: judge projects either by fixed criteria or by "expo" style comparison judging
 
+## Table of Contents
+
+- [What is Hangar?](#what-is-hangar)
+  - [Features](#features)
+- [Table of Contents](#table-of-contents)
+- [Using Hangar](#using-hangar)
+  - [Deployment](#deployment)
+  - [Authentication](#authentication)
+  - [Feature Utilization](#feature-utilization)
+  - [Customization](#customization)
+- [Development](#development)
+  - [Prerequisites](#prerequisites)
+  - [Setup](#setup)
+  - [PostgreSQL](#postgresql)
+    - [macOS](#macos)
+    - [Windows/macOS/Linux](#windowsmacoslinux)
+    - [Viewing/Editing the DB](#viewingediting-the-db)
+    - [Seeding the Database](#seeding-the-database)
+    - [Database migrations](#database-migrations)
+      - [Reverting a migration locally](#reverting-a-migration-locally)
+    - [Updating Mikro-ORM](#updating-mikro-orm)
+    - [Restoring a Production DB locally](#restoring-a-production-db-locally)
+    - [Restarting Table Sequences](#restarting-table-sequences)
+  - [Slack](#slack)
+  - [Containerization](#containerization)
+    - [Building and Running Docker Locally](#building-and-running-docker-locally)
+      - [Environment Variables](#environment-variables)
+        - [Database User](#database-user)
+        - [Troubleshooting](#troubleshooting)
+
 ---
 
 ## Using Hangar
@@ -89,7 +119,7 @@ In order to modify the content of the homepage and to make other modifications t
 
    #### macOS
 
-   We recommend using [Postgres.app](https://postgresapp.com/) as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
+   Using [Postgres.app](https://postgresapp.com/) is recommended as the installation doesn't require a password and is generally easier to use that the traditional Postgres app below.
 
    #### Windows/macOS/Linux
 
