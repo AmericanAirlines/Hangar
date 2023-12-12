@@ -65,6 +65,7 @@
           ],
           "composite": false,
           "keyName": "AppConfig_key_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -74,6 +75,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -179,6 +181,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -268,6 +271,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -354,15 +358,6 @@
           "nullable": true,
           "mappedType": "text"
         },
-        "judgeVisits": {
-          "name": "judgeVisits",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
         "activeJudgeCount": {
           "name": "activeJudgeCount",
           "type": "int",
@@ -382,6 +377,7 @@
           ],
           "composite": false,
           "keyName": "Project_inviteCode_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -391,6 +387,7 @@
           ],
           "composite": false,
           "keyName": "Project_location_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -400,6 +397,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -496,6 +494,7 @@
           ],
           "composite": false,
           "keyName": "Prize_position_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -505,6 +504,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -606,6 +606,7 @@
           ],
           "composite": false,
           "keyName": "User_email_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -615,6 +616,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -689,6 +691,7 @@
           ],
           "composite": false,
           "keyName": "Judge_user_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -698,6 +701,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -780,6 +784,7 @@
           ],
           "composite": false,
           "keyName": "ExpoJudgingSession_inviteCode_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -789,6 +794,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -898,6 +904,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1035,6 +1042,7 @@
             "expoJudgingSession"
           ],
           "composite": true,
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -1044,6 +1052,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1134,6 +1143,7 @@
             "project"
           ],
           "composite": true,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1248,6 +1258,7 @@
           ],
           "composite": false,
           "keyName": "CriteriaJudgingSession_inviteCode_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -1257,6 +1268,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1309,6 +1321,7 @@
             "criteriaJudgingSession"
           ],
           "composite": true,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1416,6 +1429,7 @@
             "project"
           ],
           "composite": true,
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -1425,6 +1439,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1541,6 +1556,7 @@
             "criteria"
           ],
           "composite": true,
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -1550,6 +1566,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1614,6 +1631,7 @@
             "project"
           ],
           "composite": true,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1680,6 +1698,7 @@
             "criteria"
           ],
           "composite": true,
+          "constraint": true,
           "primary": true,
           "unique": true
         }
@@ -1767,6 +1786,7 @@
           ],
           "composite": false,
           "keyName": "Admin_user_unique",
+          "constraint": true,
           "primary": false,
           "unique": true
         },
@@ -1776,6 +1796,7 @@
             "id"
           ],
           "composite": false,
+          "constraint": true,
           "primary": true,
           "unique": true
         }

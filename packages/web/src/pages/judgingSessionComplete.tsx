@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { NextPage } from 'next';
 import { Box, Button, keyframes } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import { PageContainer } from '../components/layout/PageContainer';
 import { useConfetti } from '../pageUtils/Confetti/Confetti';
 
@@ -28,7 +28,6 @@ const largeIcon = {
 const animation = `${bob} infinite 2s linear`;
 
 const SessionComplete: NextPage = () => {
-  const router = useRouter();
   const [trigger1, Cannon1] = useConfetti();
   const [trigger2, Cannon2] = useConfetti();
 
@@ -53,14 +52,11 @@ const SessionComplete: NextPage = () => {
         <Box style={{ ...centered, opacity: 0.3, margin: '8px' }}>
           You can safely close your browser
         </Box>
-        <Button
-          style={centered}
-          onClick={() => {
-            void router.push('/');
-          }}
-        >
-          Return to Home
-        </Button>
+        <NextLink passHref href="/">
+          <Button as="a" style={centered}>
+            Return to Home
+          </Button>
+        </NextLink>
       </Box>
     </PageContainer>
   );

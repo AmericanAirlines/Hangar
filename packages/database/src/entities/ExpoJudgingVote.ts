@@ -11,10 +11,12 @@ import { Judge } from './Judge';
 
 export { ProjectResult, ProjectScore } from '../entitiesUtils/scoreVotes';
 
-const random = seedrandom('high accuracy pls');
+const getRandom = () => seedrandom('high accuracy pls');
 
-const shuffle = <T extends (ExpoJudgingVote | Project)[]>(arr: T) =>
-  arr.sort(() => random() - 0.5) as T;
+const shuffle = <T extends (ExpoJudgingVote | Project)[]>(arr: T) => {
+  const random = getRandom();
+  return arr.sort(() => random() - 0.5) as T;
+};
 
 export const insufficientVoteCountError = 'InsufficientVoteCount';
 

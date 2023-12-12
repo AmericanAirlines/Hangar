@@ -142,8 +142,7 @@ export class Judge extends Node<Judge> {
           // Only update the previous project when action is NOT skip
           context.previousProject = context.currentProject;
         }
-        const currentProject = await context.currentProject.load();
-        await currentProject.decrementActiveJudgeCount({ entityManager: em });
+        await ref(context.currentProject).$.decrementActiveJudgeCount({ entityManager: em });
       }
 
       await this.expoJudgingVotes.load({ where: { judgingSession: expoJudgingSession.id } });
@@ -166,14 +165,15 @@ export class Judge extends Node<Judge> {
 
       // Get a new project for the judge and assign it
       const nextProject = await Judge.getNextProject({
+        judge: this,
         entityManager: em,
         excludedProjectIds: uniqueExcludedProjectIds,
+        expoJudgingSession,
       });
 
       if (nextProject) {
         context.currentProject = ref(nextProject);
         await nextProject.incrementActiveJudgeCount({ entityManager: em });
-        await nextProject.incrementJudgeVisits({ entityManager: em });
       } else {
         // No remaining projects left to assign
         context.currentProject = undefined;

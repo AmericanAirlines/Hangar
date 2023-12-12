@@ -10,7 +10,7 @@ export type ProjectDTO = EntityDTO<Project>;
 
 export type ProjectConstructorValues = ConstructorValues<
   Project,
-  'contributors' | 'judgeVisits' | 'activeJudgeCount' | 'inviteCode',
+  'contributors' | 'activeJudgeCount' | 'inviteCode',
   'location'
 >;
 
@@ -42,9 +42,6 @@ export class Project extends Node<Project> {
   contributors = new Collection<User>(this);
 
   @Property({ columnType: 'int', hidden: true })
-  judgeVisits: number = 0;
-
-  @Property({ columnType: 'int', hidden: true })
   activeJudgeCount: number = 0;
 
   constructor({ name, description, repoUrl, ...extraValues }: ProjectConstructorValues) {
@@ -72,18 +69,6 @@ export class Project extends Node<Project> {
         activeJudgeCount: raw(
           `"${activeJudgeCountColumnName}" ${action === 'increment' ? '+' : '-'} 1`,
         ),
-      })
-      .where({ id: this.id })
-      .execute();
-  }
-
-  async incrementJudgeVisits({ entityManager }: ActiveJudgeCountModifierArgs) {
-    const qb = entityManager.createQueryBuilder(Project);
-    const judgeVisitsColumnName =
-      entityManager.getMetadata(Project).properties.activeJudgeCount.name;
-    await qb
-      .update({
-        judgeVisits: raw(`"${judgeVisitsColumnName}" + 1`),
       })
       .where({ id: this.id })
       .execute();
