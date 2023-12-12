@@ -11,6 +11,7 @@ import { ProjectCard } from '../../../components/ProjectCard';
 import { openErrorToast } from '../../../components/utils/CustomToast';
 import { colors } from '../../../theme';
 import { useUserStore } from '../../../stores/user';
+import { EditProjectForm } from '../../../components/EditProjectForm';
 
 const fetchProject: (id: string) => Promise<Project> = async (id) => {
   const { data } = await axios.get<SerializedProject>(`/api/project/${id}`);
@@ -21,6 +22,7 @@ const ProjectDetails: NextPage = () => {
   const router = useRouter();
   const { user } = useUserStore();
   const [project, setProject] = React.useState<Project>();
+  const [isEditing, setIsEditing] = React.useState(false);
 
   React.useEffect(() => {
     const fetchAndSetProjects = async (id: string) => {
@@ -41,12 +43,13 @@ const ProjectDetails: NextPage = () => {
   }, [router]);
 
   const editProjectButton =
-    user?.project === project?.id ? (
+    user?.project === project?.id && !isEditing ? (
       <Circle
         size="40px"
         bg={colors.brandPrimary}
         cursor={'pointer'}
-        _hover={{ bg: colors.brandPrimaryDark }}
+        _hover={{ bg: colors.brandPrimaryLight }}
+        onClick={() => setIsEditing(true)}
       >
         <MdEdit />
       </Circle>
@@ -59,7 +62,18 @@ const ProjectDetails: NextPage = () => {
       isLoading={!project}
       headerActionElement={editProjectButton}
     >
-      {project && <ProjectCard project={project} />}
+      {}
+      {project &&
+        (isEditing ? (
+          <EditProjectForm
+            onComplete={(updatedProject) => {
+              setProject(updatedProject);
+              setIsEditing(false);
+            }}
+          />
+        ) : (
+          <ProjectCard project={project} />
+        ))}
     </PageContainer>
   );
 };
