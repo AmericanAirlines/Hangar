@@ -6,7 +6,7 @@ import { openErrorToast } from '../../components/utils/CustomToast';
 
 type CreateExpoJudgingSessionArgs = z.infer<typeof Schema.expoJudgingSession.post>;
 
-export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArgs = {}) => {
+export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArgs) => {
   try {
     const { data } = await axios.post<SerializedExpoJudgingSession>(
       `/api/expoJudgingSession`,
