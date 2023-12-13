@@ -62,7 +62,6 @@ const ProjectDetails: NextPage = () => {
       isLoading={!project}
       headerActionElement={editProjectButton}
     >
-      {}
       {project &&
         (isEditing ? (
           <RegistrationForm
