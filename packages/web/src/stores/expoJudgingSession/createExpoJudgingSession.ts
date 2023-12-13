@@ -27,7 +27,6 @@ export const createExpoJudgingSession = async (args: CreateExpoJudgingSessionArg
         description: (error as Error).message,
       });
     }
+    throw error;
   }
-
-  return undefined;
 };
