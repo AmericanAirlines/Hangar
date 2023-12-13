@@ -11,7 +11,7 @@ import { ProjectCard } from '../../../components/ProjectCard';
 import { openErrorToast } from '../../../components/utils/CustomToast';
 import { colors } from '../../../theme';
 import { useUserStore } from '../../../stores/user';
-import { EditProjectForm } from '../../../components/EditProjectForm';
+import { RegistrationForm } from '../../../components/ProjectRegistrationButton/RegistrationForm';
 
 const fetchProject: (id: string) => Promise<Project> = async (id) => {
   const { data } = await axios.get<SerializedProject>(`/api/project/${id}`);
@@ -65,7 +65,8 @@ const ProjectDetails: NextPage = () => {
       {}
       {project &&
         (isEditing ? (
-          <EditProjectForm
+          <RegistrationForm
+            project={project}
             onComplete={(updatedProject) => {
               setProject(updatedProject);
               setIsEditing(false);

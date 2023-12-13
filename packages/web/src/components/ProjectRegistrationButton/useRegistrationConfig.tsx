@@ -1,62 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { ZodFormattedError, z } from 'zod';
 import { useFormik } from 'formik';
 import axios, { isAxiosError } from 'axios';
-import { Schema } from '@hangar/shared';
-import { RegistrationFormProps, RegistrationSchema } from './utils';
+import { Project, Schema } from '@hangar/shared';
 import { openErrorToast, openSuccessToast } from '../utils/CustomToast';
 import { useUserStore } from '../../stores/user';
 
-export const useRegistrationConfig = ({ onSubmit }: RegistrationFormProps) => {
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [validateWhileTyping, setValidateWhileTyping] = useState(false);
+type CreateProjectValues = z.infer<typeof Schema.project.post>;
+type UpdateProjectValues = z.infer<typeof Schema.project.post>;
+type CreateOrUpdateProjectValues = CreateProjectValues | UpdateProjectValues;
 
-  const formik = useFormik<RegistrationSchema>({
-    initialValues: {
-      name: '',
-      description: '',
-      location: '',
-      repoUrl: '',
-    },
+export type RegistrationFormProps = {
+  project?: Project;
+  onComplete?: (project: Project) => void;
+};
+
+export const useRegistrationConfig = ({ onComplete, project }: RegistrationFormProps) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [validateWhileTyping, setValidateWhileTyping] = React.useState(false);
+  const [errors, setErrors] = React.useState<ZodFormattedError<CreateOrUpdateProjectValues>>();
+
+  const { id } = project ?? {};
+  const initialValues = {
+    name: project?.name ?? '',
+    description: project?.description ?? '',
+    location: project?.location ?? '',
+    repoUrl: project?.repoUrl ?? '',
+  };
+  const projectExists = !!id;
+
+  const formik = useFormik<CreateOrUpdateProjectValues>({
+    initialValues,
     validateOnChange: validateWhileTyping,
     validateOnBlur: true,
     validate: (values) => {
-      const errors: Partial<RegistrationSchema> = {};
-      const parsed = Schema.project.post.safeParse(values);
+      const result = Schema.project[projectExists ? 'put' : 'post'].safeParse(values);
 
-      if (!parsed.success) {
-        parsed.error.issues.forEach((issue) => {
-          if (issue.path && (issue.path[0] as string) in values) {
-            errors[issue.path[0] as keyof RegistrationSchema] = issue.message;
-          }
-        });
+      if (result.success) {
+        setErrors(undefined);
+        return undefined;
       }
-
-      return errors;
+      setErrors(result.error.format());
+      return { errorsExist: true };
     },
     async onSubmit(values) {
       try {
         setIsLoading(true);
-        await axios(`/api/project`, {
-          method: 'POST',
-          data: JSON.stringify({
-            ...values,
-            location: (values?.location ?? '').trim(),
-          }),
-          headers: { 'Content-Type': 'application/json' },
+        const { data: updatedProject } = await axios<Project>(
+          projectExists ? `/api/project/${id}` : `/api/project`,
+          {
+            method: projectExists ? 'PUT' : 'POST',
+            data: JSON.stringify({
+              ...values,
+              location: (values?.location ?? '').trim(),
+            }),
+            headers: { 'Content-Type': 'application/json' },
+          },
+        );
+        openSuccessToast({
+          title: `Project ${projectExists ? 'Updated' : 'Registered'}`,
+          description: projectExists ? undefined : "You're all set! 🚀",
         });
-        openSuccessToast({ title: 'Project Registered', description: "You're all set! 🚀" });
         await useUserStore.getState().fetchUser(); // Refresh user to populate project
-        onSubmit?.();
+        onComplete?.(updatedProject);
       } catch (error) {
-        let errorMessage = isAxiosError(error) ? error.response?.data : '';
-        if (isAxiosError(error)) {
-          switch (error.response?.status) {
-            case 409:
-              errorMessage = 'Project already exists for user';
-              break;
-            default:
-          }
+        let errorMessage =
+          isAxiosError(error) && typeof error.response?.data === 'string'
+            ? error.response.data
+            : '';
+
+        if (isAxiosError(error) && error.response?.status === 409) {
+          errorMessage = 'Project already exists for user';
         }
+
         openErrorToast({
           title: 'Failed to create project',
           description: errorMessage,
@@ -66,11 +82,11 @@ export const useRegistrationConfig = ({ onSubmit }: RegistrationFormProps) => {
     },
   });
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (formik.submitCount && !validateWhileTyping) {
       setValidateWhileTyping(true);
     }
   }, [formik.submitCount, validateWhileTyping]);
 
-  return { formik, isLoading };
+  return { formik, isLoading, errors };
 };

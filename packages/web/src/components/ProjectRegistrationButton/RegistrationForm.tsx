@@ -1,9 +1,9 @@
+/* eslint-disable no-underscore-dangle */
 import React from 'react';
 import {
   Input,
   FormControl,
   VStack,
-  FormHelperText,
   FormLabel,
   Button,
   Textarea,
@@ -11,38 +11,32 @@ import {
   TextareaProps,
 } from '@chakra-ui/react';
 import { Config } from '@hangar/shared';
-import { useRegistrationConfig } from './useRegistrationConfig';
-import { RegistrationFormProps, FormProps, RegistrationSchema, RegistrationFormik } from './utils';
+import { RegistrationFormProps, useRegistrationConfig } from './useRegistrationConfig';
 import { HintTooltip } from '../HintTooltip';
-import { statusColors } from '../../theme/colors';
+import { FormHelperHint } from '../Forms';
 
-const handleBlur = async (e: React.FocusEvent<HTMLInputElement>, formik: RegistrationFormik) => {
-  const values = {
-    [e.target.id]: e.target.value,
-    // if any outstanding validation errors exist, add them to be validated
-    ...Object.entries(formik.errors)
-      .map(([key]) => {
-        const value = formik.values[key as keyof RegistrationSchema];
-        return { [key]: value };
-      })
-      .reduce((acc, curr) => ({ ...acc, ...curr }), {}),
-  };
-  await formik.validateForm(values);
+export type FormElementProps = {
+  key: keyof ReturnType<typeof useRegistrationConfig>['formik']['values'];
+  formik: ReturnType<typeof useRegistrationConfig>['formik'];
+  errors: ReturnType<typeof useRegistrationConfig>['errors'];
 };
 
-const formProps: FormProps = (key, formik) => ({
+const formElementProps: (props: FormElementProps) => InputProps | TextareaProps = ({
+  key,
+  formik,
+  errors,
+}) => ({
   variant: 'filled',
   type: 'text',
   value: formik.values[key],
-  isInvalid: !!formik.errors[key],
+  isInvalid: !!errors?.[key],
   onChange: formik.handleChange,
-  onBlur: (e: React.FocusEvent<HTMLInputElement>) => handleBlur(e, formik),
 });
 
-export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValues, onSubmit }) => {
-  const { formik, isLoading } = useRegistrationConfig({
-    initialValues,
-    onSubmit,
+export const RegistrationForm: React.FC<RegistrationFormProps> = ({ project, onComplete }) => {
+  const { formik, isLoading, errors } = useRegistrationConfig({
+    project,
+    onComplete,
   });
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -52,8 +46,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
             Name
             <HintTooltip>A descriptive title for your app</HintTooltip>
           </FormLabel>
-          <Input {...(formProps('name', formik) as InputProps)} />
-          <FormHelperText color={statusColors.error}>{formik.errors.name}&nbsp;</FormHelperText>
+          <Input {...(formElementProps({ key: 'name', formik, errors }) as InputProps)} />
+          <FormHelperHint error={errors?.name?._errors} />
         </FormControl>
 
         <FormControl id="description">
@@ -64,16 +58,16 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
               it.
             </HintTooltip>
           </FormLabel>
-          <Textarea {...(formProps('description', formik) as TextareaProps)} />
-          <FormHelperText color={statusColors.error}>
-            {formik.errors.description}&nbsp;
-          </FormHelperText>
+          <Textarea
+            {...(formElementProps({ key: 'description', formik, errors }) as TextareaProps)}
+          />
+          <FormHelperHint error={errors?.description?._errors} />
         </FormControl>
 
         <FormControl id="location">
           <FormLabel>{Config.project.locationLabel}</FormLabel>
-          <Input {...(formProps('location', formik) as InputProps)} />
-          <FormHelperText color={statusColors.error}>{formik.errors.location}&nbsp;</FormHelperText>
+          <Input {...(formElementProps({ key: 'location', formik, errors }) as InputProps)} />
+          <FormHelperHint error={errors?.location?._errors} />
         </FormControl>
 
         <FormControl id="repoUrl">
@@ -81,8 +75,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ initialValue
             Repository URL
             <HintTooltip>Provide a full url including https</HintTooltip>
           </FormLabel>
-          <Input {...(formProps('repoUrl', formik) as InputProps)} />
-          <FormHelperText color={statusColors.error}>{formik.errors.repoUrl}&nbsp;</FormHelperText>
+          <Input {...(formElementProps({ key: 'repoUrl', formik, errors }) as InputProps)} />
+          <FormHelperHint error={errors?.repoUrl?._errors} />
         </FormControl>
 
         <Button type="submit" isLoading={isLoading}>

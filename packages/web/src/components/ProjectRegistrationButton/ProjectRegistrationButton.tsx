@@ -52,7 +52,7 @@ export const ProjectRegistrationButton: React.FC = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            <RegistrationForm onSubmit={onClose} />
+            <RegistrationForm onComplete={onClose} />
           </ModalBody>
         </ModalContent>
       </Modal>
