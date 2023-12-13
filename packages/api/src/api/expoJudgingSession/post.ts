@@ -31,5 +31,6 @@ export const post = async (req: Request, res: Response) => {
     return;
   }
 
+  expoJudgingSession.projects.populated(false); // Remove projects from response object
   res.send(expoJudgingSession);
 };
