@@ -15,7 +15,7 @@ export type RegistrationFormProps = {
   onComplete?: (project: Project) => void;
 };
 
-export const useRegistrationConfig = ({ onComplete, project }: RegistrationFormProps) => {
+export const useProjectRegistrationForm = ({ onComplete, project }: RegistrationFormProps) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [validateWhileTyping, setValidateWhileTyping] = React.useState(false);
   const [errors, setErrors] = React.useState<ZodFormattedError<CreateOrUpdateProjectValues>>();

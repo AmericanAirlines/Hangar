@@ -11,14 +11,14 @@ import {
   TextareaProps,
 } from '@chakra-ui/react';
 import { Config } from '@hangar/shared';
-import { RegistrationFormProps, useRegistrationConfig } from './useRegistrationConfig';
+import { RegistrationFormProps, useProjectRegistrationForm } from './useProjectRegistrationForm';
 import { HintTooltip } from '../HintTooltip';
 import { FormHelperHint } from '../Forms';
 
 export type FormElementProps = {
-  key: keyof ReturnType<typeof useRegistrationConfig>['formik']['values'];
-  formik: ReturnType<typeof useRegistrationConfig>['formik'];
-  errors: ReturnType<typeof useRegistrationConfig>['errors'];
+  key: keyof ReturnType<typeof useProjectRegistrationForm>['formik']['values'];
+  formik: ReturnType<typeof useProjectRegistrationForm>['formik'];
+  errors: ReturnType<typeof useProjectRegistrationForm>['errors'];
 };
 
 const formElementProps: (props: FormElementProps) => InputProps | TextareaProps = ({
@@ -33,8 +33,11 @@ const formElementProps: (props: FormElementProps) => InputProps | TextareaProps 
   onChange: formik.handleChange,
 });
 
-export const RegistrationForm: React.FC<RegistrationFormProps> = ({ project, onComplete }) => {
-  const { formik, isLoading, errors } = useRegistrationConfig({
+export const ProjectRegistrationForm: React.FC<RegistrationFormProps> = ({
+  project,
+  onComplete,
+}) => {
+  const { formik, isLoading, errors } = useProjectRegistrationForm({
     project,
     onComplete,
   });

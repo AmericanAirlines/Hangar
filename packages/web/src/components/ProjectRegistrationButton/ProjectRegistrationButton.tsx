@@ -10,7 +10,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { RegistrationForm } from './RegistrationForm';
+import { ProjectRegistrationForm } from '../ProjectRegistrationForm';
 import { useUserStore } from '../../stores/user';
 import { useRedirectToAuth } from '../layout/RedirectToAuthModal';
 
@@ -52,7 +52,7 @@ export const ProjectRegistrationButton: React.FC = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            <RegistrationForm onComplete={onClose} />
+            <ProjectRegistrationForm onComplete={onClose} />
           </ModalBody>
         </ModalContent>
       </Modal>
