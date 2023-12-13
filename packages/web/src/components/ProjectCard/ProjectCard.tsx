@@ -16,9 +16,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       mx={{ base: 3, xl: 0 }}
       borderRadius="lg"
       p={6}
-      background={`linear-gradient(45deg, ${colors.brandPrimary}, ${colors.grayscale})`}
-      borderWidth="2"
-      borderColor={colors.brandPrimary}
+      background={`linear-gradient(45deg, ${colors.brandPrimaryLight}, ${colors.brandPrimaryDark})`}
       boxShadow="lg"
       as={motion.div}
       whileHover={{ scale: 1.05, boxShadow: '0px 10px 20px rgba(0, 0, 0, 0.2)' }}
