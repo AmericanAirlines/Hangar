@@ -21,8 +21,9 @@ export const ProjectsSelect: React.FC<ProjectsSelectProps> = ({ onChange, isInva
     [selectedProjects],
   );
 
-  // eslint-disable-next-line react/no-array-index-key
-  const skeletons = Array(10).map((val, i) => <Skeleton key={i} flexShrink={0} height={'50px'} />);
+  const skeletons = Array(10)
+    .fill('')
+    .map((val, i) => <Skeleton key={i} flexShrink={0} height={'30px'} />); // eslint-disable-line react/no-array-index-key
 
   React.useEffect(() => {
     const makeInitialFetch = async () => {
@@ -31,9 +32,10 @@ export const ProjectsSelect: React.FC<ProjectsSelectProps> = ({ onChange, isInva
     void makeInitialFetch();
   }, []);
 
-  React.useEffect(() => {
-    onChange(selectedProjects);
-  }, [onChange, selectedProjects]);
+  const updatedSelectedProjects = (updatedProjects: Project[]) => {
+    setSelectedProjects(updatedProjects);
+    onChange(updatedProjects);
+  };
 
   return (
     <ProjectsSelectStyleContext.Provider
@@ -50,12 +52,13 @@ export const ProjectsSelect: React.FC<ProjectsSelectProps> = ({ onChange, isInva
           projects={projects}
           selectedProjects={selectedProjects}
           onSelectAll={() => {
-            setSelectedProjects(projects ?? []);
+            updatedSelectedProjects(projects ?? []);
           }}
           onDeselectAll={() => {
-            setSelectedProjects([]);
+            updatedSelectedProjects([]);
           }}
         />
+
         <Flex direction="column" w="full" maxH={'300px'} overflow="scroll" gap={3} pb="5">
           {projects?.length
             ? projects.map((project) => (
@@ -65,9 +68,9 @@ export const ProjectsSelect: React.FC<ProjectsSelectProps> = ({ onChange, isInva
                   isSelected={selectedProjectIds.includes(project.id)}
                   onClick={() => {
                     if (selectedProjectIds.includes(project.id)) {
-                      setSelectedProjects(selectedProjects.filter((p) => p.id !== project.id));
+                      updatedSelectedProjects(selectedProjects.filter((p) => p.id !== project.id));
                     } else {
-                      setSelectedProjects([...selectedProjects, project]);
+                      updatedSelectedProjects([...selectedProjects, project]);
                     }
                   }}
                 />
