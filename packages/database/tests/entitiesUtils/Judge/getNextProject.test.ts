@@ -5,7 +5,12 @@ const mockJudge = {
   id: '123',
 };
 
+const mockProjectsForSession = ['1', '2', '3', '4'];
+const mockProjectsForSessionCollection = {
+  getIdentifiers: jest.fn().mockReturnValue(mockProjectsForSession),
+};
 const mockExpoJudgingSession = {
+  projects: { load: jest.fn().mockResolvedValue(mockProjectsForSessionCollection) },
   id: '2',
 };
 
@@ -32,9 +37,17 @@ describe('getNextProject', () => {
 
     const excludedProjectIds = ['1'];
 
+    // Because the two calls are independent of each other,
+    // create implementation to return the correct data for each call
+    const returnProjectsOrVotes = async (entityClass: any) => {
+      if (entityClass === Project) {
+        return mockProjectData;
+      }
+      return mockVotes;
+    };
     mockEntityManager.find
-      .mockResolvedValueOnce(mockProjectData) // Projects is the first call
-      .mockResolvedValueOnce(mockVotes); // Votes is the second call
+      .mockImplementationOnce(returnProjectsOrVotes)
+      .mockImplementationOnce(returnProjectsOrVotes);
 
     await getNextProject({
       judge: mockJudge as any,
@@ -45,7 +58,7 @@ describe('getNextProject', () => {
 
     expect(mockEntityManager.find).toHaveBeenCalledWith(
       Project,
-      expect.objectContaining({ id: { $nin: excludedProjectIds } }),
+      expect.objectContaining({ id: { $nin: excludedProjectIds, $in: mockProjectsForSession } }),
       expect.objectContaining({ fields: ['id', 'activeJudgeCount'] }),
     );
 
@@ -72,9 +85,17 @@ describe('getNextProject', () => {
 
     const excludedProjectIds = ['1'];
 
+    // Because the two calls are independent of each other,
+    // create implementation to return the correct data for each call
+    const returnProjectsOrVotes = async (entityClass: any) => {
+      if (entityClass === Project) {
+        return mockProjectData;
+      }
+      return mockVotes;
+    };
     mockEntityManager.find
-      .mockResolvedValueOnce(mockProjectData) // Projects is the first call
-      .mockResolvedValueOnce(mockVotes); // Votes is the second call
+      .mockImplementationOnce(returnProjectsOrVotes)
+      .mockImplementationOnce(returnProjectsOrVotes);
 
     await getNextProject({
       judge: mockJudge as any,
