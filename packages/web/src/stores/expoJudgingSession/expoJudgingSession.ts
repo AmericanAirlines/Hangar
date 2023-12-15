@@ -23,10 +23,8 @@ export const useExpoJudgingSessionStore = create<ExpoJudgingSessionStore>((set) 
   addExpoJudgingSession: async (...args) => {
     const newEjs = await createExpoJudgingSession(...args);
 
-    if (newEjs) {
-      set((state) => ({
-        expoJudgingSessions: [...(state.expoJudgingSessions ?? []), newEjs],
-      }));
-    }
+    set((state) => ({
+      expoJudgingSessions: [...(state.expoJudgingSessions ?? []), newEjs],
+    }));
   },
 }));

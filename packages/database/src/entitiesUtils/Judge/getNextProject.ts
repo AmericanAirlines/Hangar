@@ -30,11 +30,14 @@ export const getNextProject = async ({
   excludedProjectIds,
   entityManager,
 }: GetNextProjectArgs): Promise<Project | null> => {
+  const includedProjectIds = expoJudgingSession.projects.load();
   const [projects, votesForSession] = await Promise.all([
-    entityManager.find(
-      Project,
-      { id: { $nin: excludedProjectIds } }, // Don't visit projects the judge has already visited or skipped
-      { fields: ['id', 'activeJudgeCount'] }, // Only pull the fields we need
+    includedProjectIds.then((projectsFromSession) =>
+      entityManager.find(
+        Project,
+        { id: { $nin: excludedProjectIds, $in: projectsFromSession.getIdentifiers() } }, // Don't visit projects the judge has already visited or skipped
+        { fields: ['id', 'activeJudgeCount'], populateWhere: {} }, // Only pull the fields we need
+      ),
     ),
     // Fetch all relevant votes to figure out which teams have been visited the most
     entityManager.find(
