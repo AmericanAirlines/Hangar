@@ -4,8 +4,6 @@ export * from './types';
 export * from './utils';
 export type {
   AdminDTO,
-  AppConfigDTO,
-  AppConfigKey,
   EventDTO,
   ExpoJudgingSessionDTO,
   ExpoJudgingVoteDTO,
