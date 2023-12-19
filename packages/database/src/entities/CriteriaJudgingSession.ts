@@ -12,18 +12,14 @@ type ConstructorArgs = ConstructorValues<
 @Entity()
 export class CriteriaJudgingSession extends JudgingSession {
   @Property({ columnType: 'text' })
-  title: string;
-
-  @Property({ columnType: 'text' })
   description: string;
 
   @ManyToMany({ entity: () => Criteria })
   criteriaList = new Collection<Criteria>(this);
 
   constructor({ title, description, createdBy }: ConstructorArgs) {
-    super({ createdBy });
+    super({ title, createdBy });
 
-    this.title = title;
     this.description = description;
   }
 }

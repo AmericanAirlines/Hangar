@@ -13,6 +13,9 @@ export type JudgingSessionConstructorValues = ConstructorValues<
 >;
 
 export abstract class JudgingSession extends Node<JudgingSession> {
+  @Property({ columnType: 'text' })
+  title: string;
+
   @Property({ unique: true })
   inviteCode: string = v4();
 
@@ -22,9 +25,10 @@ export abstract class JudgingSession extends Node<JudgingSession> {
   @ManyToMany({ entity: () => Project })
   projects = new Collection<Project>(this);
 
-  constructor({ createdBy }: JudgingSessionConstructorValues) {
+  constructor({ title, createdBy }: JudgingSessionConstructorValues) {
     super();
 
+    this.title = title;
     this.createdBy = createdBy;
   }
 }

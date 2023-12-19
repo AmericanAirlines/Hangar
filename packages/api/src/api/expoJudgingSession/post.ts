@@ -19,6 +19,7 @@ export const post = async (req: Request, res: Response) => {
   try {
     expoJudgingSession = new ExpoJudgingSession({
       createdBy: admin.user,
+      title: 'Expo Judging Session',
     });
 
     const projects = await entityManager.find(Project, { id: { $in: data.projectIds } });

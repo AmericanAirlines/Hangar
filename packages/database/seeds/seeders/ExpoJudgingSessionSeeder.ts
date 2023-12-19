@@ -16,6 +16,7 @@ export class ExpoJudgingSessionSeeder extends Seeder {
         for (let i = 0; i < numSessions; i += 1) {
           const expoJudgingSession = new ExpoJudgingSession({
             createdBy: ref(admin),
+            title: `Expo Judging Session ${i + 1}`,
           });
           expoJudgingSession.projects.set(projects);
 
