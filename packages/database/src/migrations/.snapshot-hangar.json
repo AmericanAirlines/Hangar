@@ -676,6 +676,15 @@
           "default": "clock_timestamp()",
           "mappedType": "datetime"
         },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
         "inviteCode": {
           "name": "inviteCode",
           "type": "varchar(255)",
@@ -1132,6 +1141,15 @@
           "default": "clock_timestamp()",
           "mappedType": "datetime"
         },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "text"
+        },
         "inviteCode": {
           "name": "inviteCode",
           "type": "varchar(255)",
@@ -1149,15 +1167,6 @@
           "primary": false,
           "nullable": false,
           "mappedType": "bigint"
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "text"
         },
         "description": {
           "name": "description",

@@ -14,6 +14,7 @@
     "migration:create": "mikro-orm migration:create",
     "migration:up": "mikro-orm migration:up",
     "migration:down": "mikro-orm migration:down",
+    "migration:fresh": "yarn mikro-orm migration:fresh --drop-db",
     "seed": "yarn mikro-orm migration:fresh --seed DatabaseSeeder",
     "typecheck": "tsc",
     "test": "jest",
