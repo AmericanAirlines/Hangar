@@ -11,6 +11,7 @@ import {
   InputProps,
   TextareaProps,
   useClipboard,
+  Text,
 } from '@chakra-ui/react';
 import { Config } from '@hangar/shared';
 import { RegistrationFormProps, useProjectRegistrationForm } from './useProjectRegistrationForm';
@@ -106,6 +107,10 @@ export const ProjectRegistrationForm: React.FC<RegistrationFormProps> = ({
             isReadOnly
           />
           <Button onClick={onCopy}>Copy Invite Code</Button>
+          <Text color="red.500" mt={2}>
+            Warning: The contributor invite code will not be accessible again after closing this
+            modal.
+          </Text>
         </FormControl>
 
         <Button type="submit" isLoading={isLoading}>
