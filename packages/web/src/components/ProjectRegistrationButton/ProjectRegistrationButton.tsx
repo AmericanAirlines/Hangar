@@ -8,11 +8,14 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  Text,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { ProjectRegistrationForm } from '../ProjectRegistrationForm';
 import { useUserStore } from '../../stores/user';
 import { useRedirectToAuth } from '../layout/RedirectToAuthModal';
+
+const [contributorInviteCode, setContributorInviteCode] = React.useState<string>('');
 
 const openModalQueryKey = 'registration';
 
@@ -45,14 +48,21 @@ export const ProjectRegistrationButton: React.FC = () => {
     <>
       <Button onClick={onRegistrationClick}>Register Project</Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <Modal isOpen={isOpen} onClose={onClose} size="xl" onOverlayClick={() => null}>
         <ModalOverlay />
         <ModalContent pb={4} mx={3}>
           <ModalHeader>Project Registration</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
-            <ProjectRegistrationForm onComplete={onClose} />
+            <ProjectRegistrationForm
+              onComplete={onClose}
+              setContributorInviteCode={setContributorInviteCode}
+            />
+            <Text color="red.500" mt={2}>
+              + Warning: The contributor invite code will not be accessible again after closing this
+              modal. +{' '}
+            </Text>
           </ModalBody>
         </ModalContent>
       </Modal>
