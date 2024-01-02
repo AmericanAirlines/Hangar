@@ -15,8 +15,6 @@ import { ProjectRegistrationForm } from '../ProjectRegistrationForm';
 import { useUserStore } from '../../stores/user';
 import { useRedirectToAuth } from '../layout/RedirectToAuthModal';
 
-const [contributorInviteCode, setContributorInviteCode] = React.useState<string>('');
-
 const openModalQueryKey = 'registration';
 
 export const ProjectRegistrationButton: React.FC = () => {
@@ -24,6 +22,8 @@ export const ProjectRegistrationButton: React.FC = () => {
   const hasHandledQueryRef = React.useRef(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { triggerRedirect } = useRedirectToAuth();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [contributorInviteCode, setContributorInviteCode] = React.useState<string>('');
 
   React.useEffect(() => {
     // Handle `registration=true`

@@ -13,6 +13,7 @@ type CreateOrUpdateProjectValues = CreateProjectValues | UpdateProjectValues;
 export type RegistrationFormProps = {
   project?: Project;
   onComplete?: (project: Project) => void;
+  setContributorInviteCode?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const useProjectRegistrationForm = ({ onComplete, project }: RegistrationFormProps) => {
