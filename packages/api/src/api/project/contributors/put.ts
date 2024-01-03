@@ -16,10 +16,9 @@ export const put = async (req: Request, res: Response) => {
   if (errorHandled) return;
 
   let project: Project;
-  try{
-    project = await entityManager.findOneOrFail(Project, { inviteCode:data.inviteCode });
-  }
-  catch {
+  try {
+    project = await entityManager.findOneOrFail(Project, { inviteCode: data.inviteCode });
+  } catch {
     res.sendStatus(404);
     return;
   }

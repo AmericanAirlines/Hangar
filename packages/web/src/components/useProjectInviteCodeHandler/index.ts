@@ -1,1 +1,1 @@
-export * from './useProjectInviteCodeHandler'
+export * from './useProjectInviteCodeHandler';
