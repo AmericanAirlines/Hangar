@@ -37,7 +37,9 @@ describe('project contributors put endpoint', () => {
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { inviteCode: validPayload.inviteCode });
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, {
+      inviteCode: validPayload.inviteCode,
+    });
     expect(mockProject.contributors.add).not.toBeCalled();
     expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(409);
@@ -53,7 +55,9 @@ describe('project contributors put endpoint', () => {
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { inviteCode: validPayload.inviteCode });
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, {
+      inviteCode: validPayload.inviteCode,
+    });
     expect(mockProject.contributors.add).not.toBeCalled();
     expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(423);
@@ -69,7 +73,9 @@ describe('project contributors put endpoint', () => {
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { inviteCode: validPayload.inviteCode });
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, {
+      inviteCode: validPayload.inviteCode,
+    });
     expect(mockProject.contributors.add).not.toBeCalled();
     expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(500);
@@ -94,7 +100,9 @@ describe('project contributors put endpoint', () => {
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { inviteCode: validPayload.inviteCode });
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, {
+      inviteCode: validPayload.inviteCode,
+    });
     expect(res.sendStatus).toHaveBeenCalledWith(404);
   });
 });
