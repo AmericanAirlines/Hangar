@@ -7,7 +7,7 @@ import { validatePayload } from '../../../../src/utils/validatePayload';
 
 jest.mock('../../../../src/utils/validatePayload');
 const validatePayloadMock = getMock(validatePayload);
-const validPayload = { projectId: '1', inviteCode: '00000000-0000-0000-0000-000000000000' };
+const validPayload = { inviteCode: '00000000-0000-0000-0000-000000000000' };
 const mockUser = { id: '1' };
 
 describe('project contributors put endpoint', () => {
@@ -27,21 +27,6 @@ describe('project contributors put endpoint', () => {
     expect(res.send).toHaveBeenCalledWith(mockProject);
   });
 
-  it('should return 404 if the invite code is invalid', async () => {
-    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data: validPayload } as any);
-    const req = createMockRequest({ user: mockUser, ...validPayload } as any);
-    const res = createMockResponse();
-    const mockProject = { inviteCode: 'invalid', contributors: { add: jest.fn() } };
-    req.entityManager.findOneOrFail.mockResolvedValueOnce(mockProject);
-
-    await put(req as any, res as any);
-
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { id: validPayload.projectId });
-    expect(mockProject.contributors.add).not.toBeCalled();
-    expect(req.entityManager.persist).not.toBeCalled();
-    expect(res.sendStatus).toHaveBeenCalledWith(404);
-  });
-
   it('should return 409 if the user is already a contributor', async () => {
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data: validPayload } as any);
     const req = createMockRequest({ user: mockUser, ...validPayload } as any);
@@ -52,7 +37,9 @@ describe('project contributors put endpoint', () => {
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { id: validPayload.projectId });
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, {
+      inviteCode: validPayload.inviteCode,
+    });
     expect(mockProject.contributors.add).not.toBeCalled();
     expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(409);
@@ -68,7 +55,9 @@ describe('project contributors put endpoint', () => {
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { id: validPayload.projectId });
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, {
+      inviteCode: validPayload.inviteCode,
+    });
     expect(mockProject.contributors.add).not.toBeCalled();
     expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(423);
@@ -84,7 +73,9 @@ describe('project contributors put endpoint', () => {
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { id: validPayload.projectId });
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, {
+      inviteCode: validPayload.inviteCode,
+    });
     expect(mockProject.contributors.add).not.toBeCalled();
     expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(500);
@@ -105,15 +96,13 @@ describe('project contributors put endpoint', () => {
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data: validPayload } as any);
     const req = createMockRequest({ user: mockUser, ...validPayload } as any);
     const res = createMockResponse();
-    req.entityManager.findOneOrFail.mockResolvedValueOnce({
-      ...validPayload,
-      inviteCode: '2',
-    } as any);
     req.entityManager.findOneOrFail.mockRejectedValueOnce({ name: 'NotFoundError' });
 
     await put(req as any, res as any);
 
-    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, { id: validPayload.projectId });
+    expect(req.entityManager.findOneOrFail).toBeCalledWith(Project, {
+      inviteCode: validPayload.inviteCode,
+    });
     expect(res.sendStatus).toHaveBeenCalledWith(404);
   });
 });
