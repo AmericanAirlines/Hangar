@@ -10,6 +10,7 @@ export class ExpoJudgingSessionSeeder extends Seeder {
   run = async (em: EntityManager): Promise<void> => {
     if (env.primaryUserIsAdmin) {
       try {
+<<<<<<< Updated upstream
         const projects = await em.find(Project, {});
         const admin = await em.findOneOrFail(User, { id: '1' });
 
@@ -20,6 +21,16 @@ export class ExpoJudgingSessionSeeder extends Seeder {
           });
           expoJudgingSession.projects.set(projects);
 
+=======
+        for(let i=0;i<2;i=i+1){
+          const admin = await em.findOneOrFail(User, { id: '1' });
+          const expoJudgingSession = new ExpoJudgingSession({
+            createdBy: ref(admin),
+          });
+          const projects = await em.find(Project, {});
+          expoJudgingSession.projects.set(projects);
+
+>>>>>>> Stashed changes
           em.persist(expoJudgingSession);
         }
       } catch {
