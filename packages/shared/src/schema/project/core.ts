@@ -15,7 +15,12 @@ export const core = z.object({
     .trim()
     .min(validation.MIN_DESCRIPTION_LENGTH)
     .max(validation.MAX_DESCRIPTION_LENGTH),
-  location: z.string().trim().max(validation.MAX_LOCATION_LENGTH).optional(),
+  location: z
+    .string()
+    .trim()
+    .max(validation.MAX_LOCATION_LENGTH)
+    .transform((data) => (data !== '' ? data : undefined)) // Make sure an empty string is always coerced to undefined
+    .optional(),
   repoUrl: z
     .string()
     .trim()

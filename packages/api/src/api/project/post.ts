@@ -51,6 +51,11 @@ export const post = async (req: Request, res: Response) => {
       res.sendStatus(423);
       return;
     }
+    if ((error as DriverException).code === '23505') {
+      // Duplicate key error
+      res.status(400).send('Project with that location already exists');
+      return;
+    }
     // All other errors
     logger.error(error);
     res.sendStatus(500);
