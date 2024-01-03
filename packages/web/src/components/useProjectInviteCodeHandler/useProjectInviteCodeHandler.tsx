@@ -54,7 +54,7 @@ const useProjectInviteCodeHandler = () => {
       await useUserStore.getState().fetchUser();
       void router.push(`/project/${project.id}`);
     })();
-  }, [projectInviteCode, userLoaded, triggerRedirect, user, router]);
+  }, [projectInviteCode, userLoaded, triggerRedirect]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
 export { useProjectInviteCodeHandler };
