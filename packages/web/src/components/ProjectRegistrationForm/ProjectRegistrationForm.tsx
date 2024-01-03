@@ -50,6 +50,7 @@ export const ProjectRegistrationForm: React.FC<RegistrationFormProps> = ({
 
   // Chakra UI hook to copy the invite code to the clipboard
   const { onCopy } = useClipboard(contributorsInviteCode);
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <VStack alignItems="stretch">
@@ -106,7 +107,9 @@ export const ProjectRegistrationForm: React.FC<RegistrationFormProps> = ({
             type="text"
             isReadOnly
           />
+
           <Button onClick={onCopy}>Copy Invite Code</Button>
+
           <Text color="red.500" mt={2}>
             Warning: The contributor invite code will not be accessible again after closing this
             modal.

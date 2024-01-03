@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-  Text,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { ProjectRegistrationForm } from '../ProjectRegistrationForm';
@@ -22,8 +21,7 @@ export const ProjectRegistrationButton: React.FC = () => {
   const hasHandledQueryRef = React.useRef(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { triggerRedirect } = useRedirectToAuth();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [contributorInviteCode, setContributorInviteCode] = React.useState<string>('');
+  const [, setContributorInviteCode] = React.useState<string>('');
 
   React.useEffect(() => {
     // Handle `registration=true`
@@ -59,10 +57,6 @@ export const ProjectRegistrationButton: React.FC = () => {
               onComplete={onClose}
               setContributorInviteCode={setContributorInviteCode}
             />
-            <Text color="red.500" mt={2}>
-              + Warning: The contributor invite code will not be accessible again after closing this
-              modal. +{' '}
-            </Text>
           </ModalBody>
         </ModalContent>
       </Modal>
