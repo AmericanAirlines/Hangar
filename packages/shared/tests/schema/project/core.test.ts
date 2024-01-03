@@ -23,8 +23,8 @@ describe('project put schema', () => {
   it('trims relevant fields', () => {
     const project = {
       ...validProject,
-      location: 'somewhere',
-      name: 'someone',
+      location: ' somewhere ',
+      name: ' someone ',
       description: ' something something dark side ',
     };
     const result = Schema.project.core.safeParse(project);
