@@ -20,12 +20,12 @@ describe('project put schema', () => {
     expect(Schema.project.core.safeParse(projectWithoutLocation).success).toBe(true);
   });
 
-  it('trims relevant field', () => {
+  it('trims relevant fields', () => {
     const project = {
       ...validProject,
-      location: 'somewhere',
-      name: 'someone',
-      description: 'something something dark side',
+      location: ' somewhere ',
+      name: ' someone ',
+      description: ' something something dark side ',
     };
     const result = Schema.project.core.safeParse(project);
 
@@ -85,5 +85,24 @@ describe('project put schema', () => {
         repoUrl: 'https://google.com',
       }).success,
     ).toBe(false);
+  });
+
+  it('coerces empty location strings to undefined', () => {
+    const result = Schema.project.core.safeParse({
+      ...validProject,
+      location: ' ',
+    });
+
+    if (!result.success) throw new Error(result.error.toString());
+
+    expect(result.data.location).toBeUndefined();
+  });
+
+  it('correctly validates location strings', () => {
+    const result = Schema.project.core.safeParse(validProject);
+
+    if (!result.success) throw new Error(result.error.toString());
+
+    expect(result.data.location).toBe(validProject.location);
   });
 });
