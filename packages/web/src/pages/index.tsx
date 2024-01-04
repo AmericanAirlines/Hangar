@@ -6,8 +6,10 @@ import { PageContainer } from '../components/layout/PageContainer';
 import { Prizes } from '../components/Prizes';
 import { usePrizesStore } from '../stores/prizes';
 import { ProjectRegistrationCTA } from '../components/ProjectRegistrationCTA';
+import { useProjectInviteCodeHandler } from '../components/useProjectInviteCodeHandler';
 
 const Home: NextPage = () => {
+  useProjectInviteCodeHandler();
   const { doneLoading: prizesFetched } = usePrizesStore();
   React.useEffect(() => {
     const { prizes } = usePrizesStore.getState();

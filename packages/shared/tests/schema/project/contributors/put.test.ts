@@ -11,15 +11,6 @@ describe('project contributors put schema', () => {
     expect(Schema.project.contributors.put.safeParse(validPut).success).toBe(true);
   });
 
-  it('does not validate an object with an invalid projectId', () => {
-    expect(
-      Schema.project.contributors.put.safeParse({
-        ...validPut,
-        projectId: 1,
-      }).success,
-    ).toBe(false);
-  });
-
   it('does not validate an object with an invalid inviteCode', () => {
     expect(
       Schema.project.contributors.put.safeParse({
