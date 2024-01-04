@@ -21,7 +21,6 @@ export const ProjectRegistrationButton: React.FC = () => {
   const hasHandledQueryRef = React.useRef(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { triggerRedirect } = useRedirectToAuth();
-  const [, setContributorInviteCode] = React.useState<string>('');
 
   React.useEffect(() => {
     // Handle `registration=true`
@@ -46,17 +45,14 @@ export const ProjectRegistrationButton: React.FC = () => {
     <>
       <Button onClick={onRegistrationClick}>Register Project</Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="xl" onOverlayClick={() => null}>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent pb={4} mx={3}>
           <ModalHeader>Project Registration</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
-            <ProjectRegistrationForm
-              onComplete={onClose}
-              setContributorInviteCode={setContributorInviteCode}
-            />
+            <ProjectRegistrationForm onComplete={onClose} />
           </ModalBody>
         </ModalContent>
       </Modal>
