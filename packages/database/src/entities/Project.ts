@@ -15,6 +15,7 @@ import { Node } from './Node';
 import { User } from './User';
 
 export type ProjectDTO = EntityDTO<Project>;
+export type ProjectDTOWithInviteCode = ProjectDTO & Pick<Project, 'inviteCode'>;
 
 export type ProjectConstructorValues = ConstructorValues<
   Project,

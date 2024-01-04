@@ -57,5 +57,6 @@ export const post = async (req: Request, res: Response) => {
     return;
   }
 
-  res.send(project);
+  const projectWithInviteCode = { ...project?.toPOJO(), inviteCode: project?.inviteCode };
+  res.send(projectWithInviteCode);
 };
