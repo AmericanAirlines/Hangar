@@ -167,4 +167,20 @@ describe('project post endpoint', () => {
     expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(500);
   });
+
+  it('returns a 400 when there is a duplicate constraint violation', async () => {
+    const data = { name: 'A cool project' };
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
+    const req = createMockRequest({ user: { id: '1' } as any });
+    const res = createMockResponse();
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200 });
+    req.entityManager.findOneOrFail.mockRejectedValueOnce({ code: '23505' }); // Unique constraint violation
+
+    await post(req as any, res as any);
+
+    expect(req.entityManager.transactional).toBeCalledTimes(1);
+    expect(req.entityManager.persist).not.toBeCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.send).toHaveBeenLastCalledWith('Project with that location already exists');
+  });
 });
