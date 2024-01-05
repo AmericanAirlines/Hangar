@@ -40,6 +40,7 @@ export const post = async (req: Request, res: Response) => {
       project.contributors.add(lockedUser);
       em.persist(project);
     });
+    if (!project) throw new Error('Project not created');
   } catch (error) {
     if ((error as Error).name === 'NotFoundError') {
       // User already has project
@@ -57,6 +58,6 @@ export const post = async (req: Request, res: Response) => {
     return;
   }
 
-  const projectWithInviteCode = { ...project?.toPOJO(), inviteCode: project?.inviteCode };
+  const projectWithInviteCode = { ...project.toPOJO(), inviteCode: project.inviteCode };
   res.send(projectWithInviteCode);
 };
