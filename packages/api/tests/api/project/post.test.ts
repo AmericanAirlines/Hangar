@@ -19,26 +19,48 @@ jest.mock('../../../src/utils/validatePayload');
 const validatePayloadMock = getMock(validatePayload);
 
 describe('project post endpoint', () => {
-  it('should create a project, add a contributor, and return a 200', async () => {
-    const data = { name: 'A cool project' };
-    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
+  it('should create a project, add a contributor, and return project with inviteCode and a 200 status', async () => {
+    const mockProjectData = { name: 'A cool project' };
+
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data: mockProjectData } as any);
+
     const mockUser = { id: '1' };
     const req = createMockRequest({ user: mockUser as any });
+    const res = createMockResponse();
+
     const { entityManager } = req;
     entityManager.findOneOrFail.mockResolvedValueOnce(mockUser);
-    const res = createMockResponse();
-    const mockProject = { contributors: { add: jest.fn() } };
+
+    const entityData = {
+      // Data returned from the creation of the entity
+      ...mockProjectData,
+      id: '123',
+      inviteCode: 'a code',
+    };
+    const mockProject = {
+      ...entityData,
+      contributors: { add: jest.fn() },
+      toPOJO: jest.fn(),
+    };
     (Project.prototype.constructor as jest.Mock).mockReturnValueOnce(mockProject);
+
+    const { inviteCode, ...entityDataWithoutInviteCode } = { ...entityData };
+    mockProject.toPOJO.mockReturnValueOnce(entityDataWithoutInviteCode);
+
     (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200 });
 
     await post(req as any, res as any);
 
-    expect(Project.prototype.constructor as jest.Mock).toHaveBeenCalledWith(data);
+    expect(Project.prototype.constructor as jest.Mock).toHaveBeenCalledWith(mockProjectData);
     expect(entityManager.transactional).toBeCalledTimes(1);
     expect(entityManager.findOneOrFail).toBeCalledTimes(1);
     expect(mockProject.contributors.add).toBeCalledWith(mockUser);
     expect(entityManager.persist).toBeCalledWith(mockProject);
-    expect(res.send).toHaveBeenCalledWith(mockProject);
+    expect(mockProject.toPOJO).toBeCalledTimes(1);
+    expect(res.send).toHaveBeenCalledWith({
+      inviteCode,
+      ...entityDataWithoutInviteCode,
+    });
   });
 
   it('should return 409 if the project already exists', async () => {
@@ -128,6 +150,22 @@ describe('project post endpoint', () => {
     expect(res.status).toBeCalledWith(400);
 
     expect(req.entityManager.transactional).not.toBeCalled();
+  });
+
+  it('should throw an error of project not created', async () => {
+    const data = { name: 'A cool project' };
+    validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
+    const req = createMockRequest();
+    const res = createMockResponse();
+    (req.entityManager.transactional as jest.Mock).mockResolvedValueOnce(undefined);
+    (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200 });
+
+    await post(req as any, res as any);
+
+    expect(req.entityManager.transactional).toBeCalledTimes(1);
+    expect(req.entityManager.findOneOrFail).not.toBeCalled();
+    expect(req.entityManager.persist).not.toBeCalled();
+    expect(res.sendStatus).toHaveBeenCalledWith(500);
   });
 
   it('returns a 400 when there is a duplicate constraint violation', async () => {

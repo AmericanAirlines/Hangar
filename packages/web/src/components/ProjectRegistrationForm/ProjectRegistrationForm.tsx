@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable no-underscore-dangle */
 import React from 'react';
 import {
@@ -41,6 +42,7 @@ export const ProjectRegistrationForm: React.FC<RegistrationFormProps> = ({
     project,
     onComplete,
   });
+
   return (
     <form onSubmit={formik.handleSubmit}>
       <VStack alignItems="stretch">

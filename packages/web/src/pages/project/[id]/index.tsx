@@ -8,7 +8,7 @@ import { Circle } from '@chakra-ui/react';
 import { MdEdit } from 'react-icons/md';
 import { PageContainer } from '../../../components/layout/PageContainer';
 import { ProjectCard } from '../../../components/ProjectCard';
-import { openErrorToast } from '../../../components/utils/CustomToast';
+import { openErrorToast, openSuccessToast } from '../../../components/utils/CustomToast';
 import { colors } from '../../../theme';
 import { useUserStore } from '../../../stores/user';
 import { ProjectRegistrationForm } from '../../../components/ProjectRegistrationForm';
@@ -69,6 +69,9 @@ const ProjectDetails: NextPage = () => {
             onComplete={(updatedProject) => {
               setProject(updatedProject);
               setIsEditing(false);
+              openSuccessToast({
+                title: 'Project Updated',
+              });
             }}
           />
         ) : (

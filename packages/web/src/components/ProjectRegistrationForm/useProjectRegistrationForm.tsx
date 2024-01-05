@@ -2,8 +2,9 @@ import React from 'react';
 import { ZodFormattedError, z } from 'zod';
 import { useFormik } from 'formik';
 import axios, { isAxiosError } from 'axios';
-import { Project, Schema } from '@hangar/shared';
-import { openErrorToast, openSuccessToast } from '../utils/CustomToast';
+import { Project, ProjectWithInviteCode, Schema, SerializedProject } from '@hangar/shared';
+import dayjs from 'dayjs';
+import { openErrorToast } from '../utils/CustomToast';
 import { useUserStore } from '../../stores/user';
 
 type CreateProjectValues = z.infer<typeof Schema.project.post>;
@@ -12,7 +13,7 @@ type CreateOrUpdateProjectValues = CreateProjectValues | UpdateProjectValues;
 
 export type RegistrationFormProps = {
   project?: Project;
-  onComplete?: (project: Project) => void;
+  onComplete: (project: Project | ProjectWithInviteCode) => void;
 };
 
 export const useProjectRegistrationForm = ({ onComplete, project }: RegistrationFormProps) => {
@@ -46,7 +47,7 @@ export const useProjectRegistrationForm = ({ onComplete, project }: Registration
     async onSubmit(values) {
       try {
         setIsLoading(true);
-        const { data: updatedProject } = await axios<Project>(
+        const { data: projectData } = await axios<SerializedProject>(
           projectExists ? `/api/project/${id}` : `/api/project`,
           {
             method: projectExists ? 'PUT' : 'POST',
@@ -57,12 +58,13 @@ export const useProjectRegistrationForm = ({ onComplete, project }: Registration
             headers: { 'Content-Type': 'application/json' },
           },
         );
-        openSuccessToast({
-          title: `Project ${projectExists ? 'Updated' : 'Registered'}`,
-          description: projectExists ? undefined : "You're all set! 🚀",
-        });
+
         await useUserStore.getState().fetchUser(); // Refresh user to populate project
-        onComplete?.(updatedProject);
+        onComplete?.({
+          ...projectData,
+          createdAt: dayjs(projectData.createdAt),
+          updatedAt: dayjs(projectData.updatedAt),
+        });
       } catch (error) {
         let errorMessage =
           isAxiosError(error) && typeof error.response?.data === 'string'
