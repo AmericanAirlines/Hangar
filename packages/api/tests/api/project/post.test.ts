@@ -152,19 +152,24 @@ describe('project post endpoint', () => {
     expect(req.entityManager.transactional).not.toBeCalled();
   });
 
-  it('should throw an error of project not created', async () => {
+  it('should throw an error if a project is not assigned to the variable', async () => {
     const data = { name: 'A cool project' };
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
     const req = createMockRequest();
     const res = createMockResponse();
+
+    // Prevent the transaction from executing which will prevent the project from being assigned to the variable
     (req.entityManager.transactional as jest.Mock).mockResolvedValueOnce(undefined);
     (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200 });
 
     await post(req as any, res as any);
 
     expect(req.entityManager.transactional).toBeCalledTimes(1);
+
+    // Make sure the transaction didn't execute
     expect(req.entityManager.findOneOrFail).not.toBeCalled();
     expect(req.entityManager.persist).not.toBeCalled();
+
     expect(res.sendStatus).toHaveBeenCalledWith(500);
   });
 
