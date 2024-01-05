@@ -152,18 +152,18 @@ describe('project post endpoint', () => {
     expect(req.entityManager.transactional).not.toBeCalled();
   });
 
-  it('should throw an error of project not created', async () => {
+  it('should throw an error if project not created', async () => {
     const data = { name: 'A cool project' };
     validatePayloadMock.mockReturnValueOnce({ errorHandled: false, data } as any);
-    const req = createMockRequest();
+    const req = createMockRequest({ user: { id: '1' } as any });
     const res = createMockResponse();
-    (req.entityManager.transactional as jest.Mock).mockResolvedValueOnce(undefined);
     (axios.get as jest.Mock).mockResolvedValueOnce({ status: 200 });
+    (Project.prototype.constructor as jest.Mock).mockReturnValueOnce(undefined);
 
     await post(req as any, res as any);
 
     expect(req.entityManager.transactional).toBeCalledTimes(1);
-    expect(req.entityManager.findOneOrFail).not.toBeCalled();
+    expect(req.entityManager.findOneOrFail).toHaveBeenCalled();
     expect(req.entityManager.persist).not.toBeCalled();
     expect(res.sendStatus).toHaveBeenCalledWith(500);
   });
