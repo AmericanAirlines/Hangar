@@ -1,2 +1,2 @@
-export * from './pingfedAuth.env';
-export * from './slackAuth.env';
+export * from './pingfedAuth';
+export * from './slackAuth';

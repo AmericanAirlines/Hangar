@@ -4,7 +4,7 @@ import { AuthUrlFormatter } from './types';
 
 /**
  *
- * @returns {string} The URL to redirect to for the initial step of the auth flow
+ * @returns The URL to redirect to for the initial step of the auth flow
  */
 export const formatPingfedAuthUrl: AuthUrlFormatter = ({ returnTo }) => {
   const queryArgs = new URLSearchParams({

@@ -1,7 +1,6 @@
 import { Config } from '@hangar/shared';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
-import { formatRedirectUri } from '../../../src/api/auth/utils/formatRedirectUri';
 import { getMock } from '../../testUtils/getMock';
 import {
   formatPingfedAuthUrl,
