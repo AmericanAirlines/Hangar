@@ -2,7 +2,7 @@ import { Config } from '@hangar/shared';
 import { get } from '../../../src/api/auth/get';
 import { createMockRequest } from '../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../testUtils/expressHelpers/createMockResponse';
-import { formatSlackRedirectUri } from '../../../src/slack/formatSlackRedirectUri';
+import { formatRedirectUri } from '../../../src/api/auth/utils/formatRedirectUri';
 import { getMock } from '../../testUtils/getMock';
 
 const slackAuthBaseUrl: string =
@@ -10,13 +10,13 @@ const slackAuthBaseUrl: string =
 
 const returnTo = '/api/expoJudgingSession';
 
-jest.mock('../../../src/slack/formatSlackRedirectUri');
-const formatSlackRedirectUriMock = getMock(formatSlackRedirectUri);
+jest.mock('../../../src/utils/auth/formatRedirectUri');
+const formatRedirectUriMock = getMock(formatRedirectUri);
 
 describe('auth SLACK', () => {
   it('redirects to correct url for happy path', async () => {
     const redirectUri = 'waffles';
-    formatSlackRedirectUriMock.mockReturnValueOnce(redirectUri);
+    formatRedirectUriMock.mockReturnValueOnce(redirectUri);
     const fullLink = `${slackAuthBaseUrl}redirect_uri=${redirectUri}&client_id=undefined`;
 
     const mockReq = createMockRequest({
@@ -28,7 +28,7 @@ describe('auth SLACK', () => {
 
     await get(mockReq as any, mockRes as any);
 
-    expect(formatSlackRedirectUriMock).toBeCalledWith(expect.objectContaining({ returnTo }));
+    expect(formatRedirectUriMock).toBeCalledWith(expect.objectContaining({ returnTo }));
     expect(mockRes.redirect).toHaveBeenCalledTimes(1);
     expect(mockRes.redirect).toHaveBeenCalledWith(fullLink);
   });

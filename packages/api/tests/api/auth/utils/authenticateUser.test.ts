@@ -1,8 +1,8 @@
 import { User } from '@hangar/database';
-import { authenticateUser, OAuthUserData } from '../../src/utils/authenticateUser';
-import { logger } from '../../src/utils/logger';
-import { createMockRequest } from '../testUtils/expressHelpers/createMockRequest';
-import { createMockResponse } from '../testUtils/expressHelpers/createMockResponse';
+import { authenticateUser, OAuthUserData } from '../../../../src/api/auth/utils/authenticateUser';
+import { logger } from '../../../../src/utils/logger';
+import { createMockRequest } from '../../../testUtils/expressHelpers/createMockRequest';
+import { createMockResponse } from '../../../testUtils/expressHelpers/createMockResponse';
 
 const loggerErrorSpy = jest.spyOn(logger, 'error').mockImplementation();
 

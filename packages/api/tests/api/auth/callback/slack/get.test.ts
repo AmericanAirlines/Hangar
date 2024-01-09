@@ -3,10 +3,10 @@ import { Config } from '@hangar/shared';
 import jwt_decode from 'jwt-decode';
 import { SlackTokenData, get } from '../../../../../src/api/auth/callback/slack/get';
 import { getMock } from '../../../../testUtils/getMock';
-import { authenticateUser } from '../../../../../src/utils/authenticateUser';
+import { authenticateUser } from '../../../../../src/api/auth/utils/authenticateUser';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
-import { formatSlackRedirectUri } from '../../../../../src/slack/formatSlackRedirectUri';
+import { formatSlackRedirectUri } from '../../../../../src/api/auth/utils/formatRedirectUri';
 
 jest.mock('@slack/web-api');
 jest.mock('jwt-decode');
