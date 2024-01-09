@@ -32,13 +32,13 @@ Hangar is a hackathon management platform that can help with everything from pro
 ## Table of Contents
 
 - [What is Hangar?](#what-is-hangar)
-    - [Features](#features)
+  - [Features](#features)
 - [Table of Contents](#table-of-contents)
 - [Using Hangar](#using-hangar)
-    - [Deployment](#deployment)
-    - [Authentication](#authentication)
-    - [Feature Utilization](#feature-utilization)
-    - [Customization](#customization)
+  - [Deployment](#deployment)
+  - [Authentication](#authentication)
+  - [Feature Utilization](#feature-utilization)
+  - [Customization](#customization)
 - [Development](#development)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
