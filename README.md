@@ -32,13 +32,13 @@ Hangar is a hackathon management platform that can help with everything from pro
 ## Table of Contents
 
 - [What is Hangar?](#what-is-hangar)
-  - [Features](#features)
+    - [Features](#features)
 - [Table of Contents](#table-of-contents)
 - [Using Hangar](#using-hangar)
-  - [Deployment](#deployment)
-  - [Authentication](#authentication)
-  - [Feature Utilization](#feature-utilization)
-  - [Customization](#customization)
+    - [Deployment](#deployment)
+    - [Authentication](#authentication)
+    - [Feature Utilization](#feature-utilization)
+    - [Customization](#customization)
 - [Development](#development)
   - [Prerequisites](#prerequisites)
   - [Setup](#setup)
@@ -74,7 +74,7 @@ Hangar is containerized via Docker; simply build the docker image and deploy to 
 
 #### Authentication
 
-Authentication uses OAuth via Ping Federate OR Slack but it can be easily modified to use a new callback from a different OAuth provider. See the [Slack](#slack) or [Ping Federate](#ping-federate) section below for full details on how to setup and configure your Slack app.
+Authentication uses OAuth via Ping Federate OR Slack but it can be easily modified to use a new callback from a different OAuth provider. See the [Ping Federate](#ping-federate) or [Slack](#slack) below for full details on how to setup and configure your SSO solution.
 
 #### Feature Utilization
 
