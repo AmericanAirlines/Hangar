@@ -3,7 +3,6 @@ import cookieSession from 'cookie-session';
 import { enforceRateLimiting } from './settings';
 import { env } from '../env';
 import { health } from './health';
-import { slack } from './slack';
 import { auth } from './auth';
 import { project } from './project';
 import { user } from './user';
@@ -45,9 +44,6 @@ api.use('/expoJudgingSession', expoJudgingSession);
 api.use('/judge', judge);
 api.use('/project', project);
 api.use('/user', user);
-
-// INGESTED ROUTERS
-api.use(slack);
 
 // Generic catch all for bad requests
 api.use((_req, res) => res.status(404).send({ error: 'API route not found' }));
