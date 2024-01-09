@@ -6,12 +6,20 @@ import { getMock } from '../../../../testUtils/getMock';
 import { authenticateUser } from '../../../../../src/api/auth/utils/authenticateUser';
 import { createMockRequest } from '../../../../testUtils/expressHelpers/createMockRequest';
 import { createMockResponse } from '../../../../testUtils/expressHelpers/createMockResponse';
-import { formatSlackRedirectUri } from '../../../../../src/api/auth/utils/formatRedirectUri';
+import { formatRedirectUri } from '../../../../../src/api/auth/utils/formatRedirectUri';
+import { slackAuth } from '../../../../../src/env/auth';
 
 jest.mock('@slack/web-api');
 jest.mock('jwt-decode');
-jest.mock('../../../../../src/utils/authenticateUser');
-jest.mock('../../../../../src/slack/formatSlackRedirectUri');
+jest.mock('../../../../../src/api/auth/utils/authenticateUser');
+jest.mock('../../../../../src/api/auth/utils/formatRedirectUri');
+jest.mock('../../../../../src/env/auth');
+
+(slackAuth as Partial<typeof slackAuth>) = {
+  slackClientID: 'mockClientID',
+  slackBotToken: 'mockBotToken',
+  slackClientSecret: 'mockClientSecret',
+};
 
 const mockToken = {
   ok: true,
@@ -22,7 +30,7 @@ const mockToken = {
 const jwtDecodeMock = getMock(jwt_decode);
 const webClientSpy = jest.spyOn(Slack, 'WebClient');
 const authenticateUserMock = getMock(authenticateUser);
-const formatSlackRedirectUriMock = getMock(formatSlackRedirectUri);
+const formatRedirectUriMock = getMock(formatRedirectUri);
 
 describe('Slack auth callback', () => {
   describe('handler', () => {
@@ -41,13 +49,16 @@ describe('Slack auth callback', () => {
         query: { code: 'mockCode', [Config.global.authReturnUriParamName]: returnToMock },
       });
       const mockRedirectUri = 'pancakes';
-      formatSlackRedirectUriMock.mockReturnValueOnce(mockRedirectUri);
+      formatRedirectUriMock.mockReturnValueOnce(mockRedirectUri);
 
       await get(mockReq as any, {} as any);
 
+      expect(webClientSpy).toBeCalledWith(slackAuth.slackBotToken);
       expect(mockTokenMethod).toHaveBeenCalledTimes(1);
       expect(mockTokenMethod).toHaveBeenCalledWith(
         expect.objectContaining({
+          client_id: slackAuth.slackClientID,
+          client_secret: slackAuth.slackClientSecret,
           code: mockReq.query.code,
           redirect_uri: mockRedirectUri,
         }),

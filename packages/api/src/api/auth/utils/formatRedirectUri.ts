@@ -20,6 +20,6 @@ export const formatRedirectUri = ({ returnTo }: FormatSlackRedirectUriArgs = {})
 
   const paramsString = params.toString();
   const returnToQuery = paramsString ? `?${paramsString}` : '';
-  console.log(`${env.baseUrl ?? ''}/api/auth/callback/${method}/${returnToQuery}`);
+
   return `${env.baseUrl ?? ''}/api/auth/callback/${method}/${returnToQuery}`;
 };
