@@ -6,7 +6,7 @@ import { useRedirectToAuth } from './useRedirectToAuth';
 import { SlackContent } from './SlackContent';
 import { PingfedContent } from './PingfedContent';
 
-const countdownDurationSeconds = 15;
+const countdownDurationSeconds = Config.Auth.method === 'slack' ? 15 : 5;
 
 export const RedirectToAuthModal: React.FC = () => {
   const { redirect } = useRedirectToAuth();
