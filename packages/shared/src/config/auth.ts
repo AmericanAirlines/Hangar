@@ -7,5 +7,5 @@ type AuthData = {
  * Configuration for authentication throughout the app
  */
 export const Auth: AuthData = {
-  method: 'slack', // Change this value to drive auth throughout the app
+  method: 'pingfed', // Change this value to drive auth throughout the app
 };
