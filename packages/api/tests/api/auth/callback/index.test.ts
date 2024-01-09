@@ -10,11 +10,8 @@ jest.mock('express');
 
 describe('callback router registrations', () => {
   describe('slack router', () => {
-    beforeEach(() => {
-      Config.Auth.method = 'slack';
-    });
-
     it('registers the slack callback router', async () => {
+      Config.Auth.method = 'slack';
       const mockRouter = { use: jest.fn() };
       Router.prototype.constructor.mockReturnValueOnce(mockRouter);
 
@@ -26,11 +23,8 @@ describe('callback router registrations', () => {
   });
 
   describe('pingfed router', () => {
-    beforeEach(() => {
-      Config.Auth.method = 'pingfed';
-    });
-
     it('registers the pingfed callback router', async () => {
+      Config.Auth.method = 'pingfed';
       const mockRouter = { use: jest.fn() };
       Router.prototype.constructor.mockReturnValueOnce(mockRouter);
 
