@@ -16,20 +16,16 @@ export type SlackTokenData = {
 
 export const get = async (req: Request, res: Response) => {
   const myCode: string = req.query[codeQueryParam] as string;
-  const {
-    clientId: slackClientID,
-    clientSecret: slackClientSecret,
-    botToken: slackBotToken,
-  } = slackAuth;
+  const { clientId, clientSecret, botToken } = slackAuth;
 
   const returnTo = req.query[Config.global.authReturnUriParamName] as string | undefined;
 
-  const client = new WebClient(slackBotToken);
+  const client = new WebClient(botToken);
   try {
     const fullToken = await client.openid.connect.token({
       code: myCode,
-      client_id: slackClientID,
-      client_secret: slackClientSecret,
+      client_id: clientId,
+      client_secret: clientSecret,
       redirect_uri: formatRedirectUri({ returnTo }),
     });
 
