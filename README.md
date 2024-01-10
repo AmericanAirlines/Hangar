@@ -52,7 +52,10 @@ Hangar is a hackathon management platform that can help with everything from pro
     - [Updating Mikro-ORM](#updating-mikro-orm)
     - [Restoring a Production DB locally](#restoring-a-production-db-locally)
     - [Restarting Table Sequences](#restarting-table-sequences)
-  - [Slack](#slack)
+  - [SSO](#sso)
+    - [Ping Federate](#ping-federate)
+    - [Slack](#slack)
+  - [Starting the App](#starting-the-app)
   - [Containerization](#containerization)
     - [Building and Running Docker Locally](#building-and-running-docker-locally)
       - [Environment Variables](#environment-variables)
@@ -71,7 +74,7 @@ Hangar is containerized via Docker; simply build the docker image and deploy to 
 
 #### Authentication
 
-Authentication uses OAuth via Slack but it can be easily modified to use a new callback from a different OAuth provider. See the [Slack](#slack) section below for full details on how to setup and configure your Slack app.
+Authentication uses OAuth via Ping Federate OR Slack but it can be easily modified to use a new callback from a different OAuth provider. See the [Ping Federate](#ping-federate) or [Slack](#slack) below for full details on how to setup and configure your SSO solution.
 
 #### Feature Utilization
 
@@ -210,9 +213,20 @@ In order to modify the content of the homepage and to make other modifications t
 
    </details>
 
-   ### Slack
+   ### SSO
 
-   To configure Slack notifications for certain events, create a Slack app use the following manifest after selecting `From an app manifest` (NOTE: watch out for whitespace issues when copying):
+   #### Ping Federate
+
+   Ping Federate is enabled by default for SSO. To configure it, simply add the following environment variables to your `.env.local`:
+
+   - `PINGFED_CLIENT_ID`: Your client ID
+   - `PINGFED_CLIENT_SECRET`: Your client secret
+   - `PINGFED_AUTH_BASE_URL`: The URL which starts the authentication flow
+   - `PINGFED_TOKEN_BASE_URL`: The URL from which the token containing user data can be retrieved
+
+   #### Slack
+
+   To configure the app to use Slack for SSO Authentication, modify the `packages/shared/src/config/auth.ts` and set `slack` as the auth method. Next, create a Slack app using the following manifest after selecting `From an app manifest` (NOTE: watch out for whitespace issues when copying):
 
    ```yml
    display_information:
@@ -248,7 +262,7 @@ In order to modify the content of the homepage and to make other modifications t
 
    For Slack OAuth to work, your bot needs to be configured with your redirect URL. Go to `OAuth & Permissions` if you need to update your Redirect URL (e.g., `[YOUR_NGROK_URL]/api/auth/callback/slack`).
 
-   Channel IDs can be obtained by right clicking a channel in the sidebar and removing the last path value from the URL.
+### Starting the App
 
 1. Start the development server
 

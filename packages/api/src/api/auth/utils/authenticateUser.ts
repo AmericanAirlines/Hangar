@@ -1,6 +1,6 @@
 import { User } from '@hangar/database';
 import { Response, Request } from 'express';
-import { logger } from './logger';
+import { logger } from '../../../utils/logger';
 
 export type OAuthUserData = {
   email: string;

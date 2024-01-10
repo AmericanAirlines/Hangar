@@ -2,10 +2,10 @@ import { WebClient } from '@slack/web-api';
 import { Request, Response } from 'express';
 import jwt_decode from 'jwt-decode';
 import { Config } from '@hangar/shared';
-import { env } from '../../../../env';
-import { authenticateUser } from '../../../../utils/authenticateUser';
+import { authenticateUser } from '../../utils/authenticateUser';
 import { logger } from '../../../../utils/logger';
-import { formatSlackRedirectUri } from '../../../../slack/formatSlackRedirectUri';
+import { slackAuth } from '../../../../env/auth';
+import { formatRedirectUri } from '../../utils/formatRedirectUri';
 
 const codeQueryParam = 'code';
 export type SlackTokenData = {
@@ -16,17 +16,17 @@ export type SlackTokenData = {
 
 export const get = async (req: Request, res: Response) => {
   const myCode: string = req.query[codeQueryParam] as string;
-  const { slackClientID, slackClientSecret } = env;
+  const { clientId, clientSecret, botToken } = slackAuth;
 
   const returnTo = req.query[Config.global.authReturnUriParamName] as string | undefined;
 
-  const client = new WebClient(env.slackBotToken);
+  const client = new WebClient(botToken);
   try {
     const fullToken = await client.openid.connect.token({
       code: myCode,
-      client_id: slackClientID,
-      client_secret: slackClientSecret,
-      redirect_uri: formatSlackRedirectUri({ returnTo }),
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: formatRedirectUri({ returnTo }),
     });
 
     const {
