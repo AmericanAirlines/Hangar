@@ -16,7 +16,11 @@ export type SlackTokenData = {
 
 export const get = async (req: Request, res: Response) => {
   const myCode: string = req.query[codeQueryParam] as string;
-  const { slackClientID, slackClientSecret, slackBotToken } = slackAuth;
+  const {
+    clientId: slackClientID,
+    clientSecret: slackClientSecret,
+    botToken: slackBotToken,
+  } = slackAuth;
 
   const returnTo = req.query[Config.global.authReturnUriParamName] as string | undefined;
 

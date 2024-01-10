@@ -11,7 +11,7 @@ jest.mock('../../../../../../../src/api/auth/utils/formatRedirectUri');
 const formatRedirectUriMock = getMock(formatRedirectUri);
 
 (slackAuth as Partial<typeof slackAuth>) = {
-  slackClientID: 'mockClientId',
+  clientId: 'mockClientId',
 };
 
 describe('formatSlackAuthUrl', () => {
@@ -26,7 +26,7 @@ describe('formatSlackAuthUrl', () => {
     expect(formatRedirectUriMock).toBeCalledWith({ returnTo });
 
     expect(redirectUri).toEqual(
-      `${slackAuthBaseUrl}redirect_uri=${mockRedirectUri}&client_id=${slackAuth.slackClientID}`,
+      `${slackAuthBaseUrl}redirect_uri=${mockRedirectUri}&client_id=${slackAuth.clientId}`,
     );
   });
 });

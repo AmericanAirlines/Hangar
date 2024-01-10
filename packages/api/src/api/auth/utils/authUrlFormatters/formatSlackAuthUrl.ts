@@ -12,7 +12,7 @@ export const slackAuthBaseUrl: string =
 export const formatSlackAuthUrl: AuthUrlFormatter = ({ returnTo }) => {
   const queryArgs = new URLSearchParams({
     redirect_uri: formatRedirectUri({ returnTo }),
-    client_id: slackAuth.slackClientID,
+    client_id: slackAuth.clientId,
   }).toString();
 
   return `${slackAuthBaseUrl}${queryArgs}`;

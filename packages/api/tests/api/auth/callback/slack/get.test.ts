@@ -16,9 +16,9 @@ jest.mock('../../../../../src/api/auth/utils/formatRedirectUri');
 jest.mock('../../../../../src/env/auth');
 
 (slackAuth as Partial<typeof slackAuth>) = {
-  slackClientID: 'mockClientID',
-  slackBotToken: 'mockBotToken',
-  slackClientSecret: 'mockClientSecret',
+  clientId: 'mockClientID',
+  botToken: 'mockBotToken',
+  clientSecret: 'mockClientSecret',
 };
 
 const mockToken = {
@@ -53,12 +53,12 @@ describe('Slack auth callback', () => {
 
       await get(mockReq as any, {} as any);
 
-      expect(webClientSpy).toBeCalledWith(slackAuth.slackBotToken);
+      expect(webClientSpy).toBeCalledWith(slackAuth.botToken);
       expect(mockTokenMethod).toHaveBeenCalledTimes(1);
       expect(mockTokenMethod).toHaveBeenCalledWith(
         expect.objectContaining({
-          client_id: slackAuth.slackClientID,
-          client_secret: slackAuth.slackClientSecret,
+          client_id: slackAuth.clientId,
+          client_secret: slackAuth.clientSecret,
           code: mockReq.query.code,
           redirect_uri: mockRedirectUri,
         }),
